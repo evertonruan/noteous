@@ -1,0 +1,2 @@
+# enote
+Simple notetaking app
