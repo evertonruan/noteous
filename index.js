@@ -2,7 +2,9 @@ var noteInput = document.querySelector("#noteInput");
 var noteButton = document.querySelector("#noteButton");
 var noteUl = document.querySelector("#noteUl");
 
-enoteObject = [{}]; //cria o array de objetos que irá "empacotar" todas as notes
+var enoteObject = JSON.parse(localStorage.getItem("Enote")) || [];
+
+renderNote();
 
 function addNote() {
     var noteInputValue = noteInput.value;
@@ -13,28 +15,45 @@ function addNote() {
     };
 
     enoteObject.push(obj);
-    console.log(enoteObject);
-    
-    for (var prop in obj) {
-        console.log("obj." + prop + " = " + obj[prop]);
-    }
 
     localStorage.setItem("Enote", JSON.stringify(enoteObject)); //transfere valor da ul para localStorage
+
+    renderNote();
 }
 
-function renderNote() {
-    renderNote = JSON.parse(localStorage.getItem("Enote"));
-    
-    for (var note in renderNote) { //percorre o array de objetos principal: o renderNote
-        console.log(renderNote[note]);
-        for (var prop in renderNote[note]) { //percorre cada objeto encontrado
-            console.log(renderNote[note][prop]);
 
-            var noteLi = document.createElement("li"); //cria um novo elemento li
-            var noteText = document.createTextNode(renderNote[note][prop]);
+function deleteNote(pos) {
+    enoteObject.splice(pos, 1);
+
+    localStorage.setItem("Enote", JSON.stringify(enoteObject));
+    renderNote();
+}
+
+
+function renderNote() {
+    noteUl.innerHTML = '';
+    
+    for (var note in enoteObject) { //percorre o array de objetos principal: o renderNote
+         
+        for (var prop in enoteObject[note]) { //percorre cada objeto encontrado
+            var noteLi = document.createElement("li"); //cria um novo elemento li 
+            var noteText = document.createTextNode(enoteObject[note][prop]);
+            
+            var linkElement = document.createElement('a');
+            linkElement.setAttribute('href', '#');
+
+            var pos = enoteObject.indexOf(enoteObject[note]);
+
+            linkElement.setAttribute('onclick', 'deleteNote(' + pos + ')');
+            var linkText = document.createTextNode('Concluído  |  ');
+            
+            linkElement.appendChild(linkText);
+
+            noteLi.appendChild(linkElement);
+            
+
             noteLi.appendChild(noteText); //coloca a variavel do input dentro do li
             noteUl.appendChild(noteLi); //adiciona li dentro do ul*/
-        }
-        
+            }
     }
 }
