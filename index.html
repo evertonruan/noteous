@@ -2,6 +2,8 @@
 <html>
     <head>
         <meta charset="UTF-8">
+        <link rel="stylesheet" href="style.css">
+        <title>Enote</title>
     </head>
     <body>
         <header>
@@ -9,10 +11,19 @@
         </header>
         <main>
             <label>O que você quer fazer?</label>
-            <input id="noteInput" type="text">
-            <button id="noteButton" onclick="addNote()">Adicionar</button>
-            
-            <ul id="noteUl"></ul>
+            <div>
+            <input id="noteInput" type="text" placeholder="Sua próxima tarefa">
+            </div>
+
+            <div>
+                <button id="noteButtonDo" onclick="addNoteDo()">Adicionar Do</button>
+                <button id="noteButtonMemo" onclick="addNoteMemo()">Adicionar Memo</button>
+            </div>
+
+            <div class="enoteList">
+                <ul id="listDo"></ul>
+                <ul id="listMemo"></ul>
+            </div>
         </main>
         <footer>
 

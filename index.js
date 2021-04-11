@@ -1,59 +1,114 @@
 var noteInput = document.querySelector("#noteInput");
-var noteButton = document.querySelector("#noteButton");
-var noteUl = document.querySelector("#noteUl");
+var noteButtonDo = document.querySelector("#noteButtonDo");
+var noteButtonMemo = document.querySelector("#noteButtonMemo");
 
-var enoteObject = JSON.parse(localStorage.getItem("Enote")) || [];
+var listDo = document.querySelector("#listDo");
+
+
+var enoteObjectDo = JSON.parse(localStorage.getItem("EnoteDo")) || [];
+var enoteObjectMemo = JSON.parse(localStorage.getItem("EnoteMemo")) || [];
 
 renderNote();
 
-function addNote() {
+function addNoteDo() {
     var noteInputValue = noteInput.value;
+
+    if (noteInputValue || "") {
+
+        var objDo = {
+            text: noteInputValue
+        };
     
-    var obj = {
-        id: Date.now(),
-        text: noteInputValue
-    };
+        enoteObjectDo.push(objDo);
+    
+        localStorage.setItem("EnoteDo", JSON.stringify(enoteObjectDo)); //transfere valor da ul para localStorage
+        
+        renderNote();
+        noteInput.value = '';
+    }
+}
 
-    enoteObject.push(obj);
+function addNoteMemo() {
+    var noteInputValue = noteInput.value;
 
-    localStorage.setItem("Enote", JSON.stringify(enoteObject)); //transfere valor da ul para localStorage
+    if (noteInputValue || "") {
 
+        var objMemo = {
+            text: noteInputValue
+        };
+    
+        enoteObjectMemo.push(objMemo);
+    
+        localStorage.setItem("EnoteMemo", JSON.stringify(enoteObjectMemo)); //transfere valor da ul para localStorage
+        
+        renderNote();
+        noteInput.value = '';
+    }
+}
+
+function deleteNoteDo(pos) {
+    enoteObjectDo.splice(pos, 1);
+
+    localStorage.setItem("EnoteDo", JSON.stringify(enoteObjectDo));
     renderNote();
 }
 
+function deleteNoteMemo(pos) {
+    enoteObjectMemo.splice(pos, 1);
 
-function deleteNote(pos) {
-    enoteObject.splice(pos, 1);
-
-    localStorage.setItem("Enote", JSON.stringify(enoteObject));
+    localStorage.setItem("EnoteMemo", JSON.stringify(enoteObjectMemo));
     renderNote();
 }
 
+function editNote(){
+    //soon!
+} 
 
 function renderNote() {
-    noteUl.innerHTML = '';
+    listDo.innerHTML = '';
+    listMemo.innerHTML = '';
     
-    for (var note in enoteObject) { //percorre o array de objetos principal: o renderNote
+    for (var note in enoteObjectDo) { //percorre o array de objetos principal: o renderNote
          
-        for (var prop in enoteObject[note]) { //percorre cada objeto encontrado
-            var noteLi = document.createElement("li"); //cria um novo elemento li 
-            var noteText = document.createTextNode(enoteObject[note][prop]);
-            
+        for (var prop in enoteObjectDo[note]) { //percorre cada objeto encontrado
+            var noteLi = document.createElement("p"); //cria um novo elemento li 
+            var noteText = document.createTextNode(enoteObjectDo[note][prop]);
+
+            var pos = enoteObjectDo.indexOf(enoteObjectDo[note]);
             var linkElement = document.createElement('a');
             linkElement.setAttribute('href', '#');
 
-            var pos = enoteObject.indexOf(enoteObject[note]);
-
-            linkElement.setAttribute('onclick', 'deleteNote(' + pos + ')');
+            linkElement.setAttribute('onclick', 'deleteNoteDo(' + pos + ')');
             var linkText = document.createTextNode('Concluído  |  ');
             
             linkElement.appendChild(linkText);
-
             noteLi.appendChild(linkElement);
             
 
             noteLi.appendChild(noteText); //coloca a variavel do input dentro do li
-            noteUl.appendChild(noteLi); //adiciona li dentro do ul*/
+            listDo.appendChild(noteLi); //adiciona li dentro do ul*/
+            }
+    }
+
+    for (var note in enoteObjectMemo) { //percorre o array de objetos principal: o renderNote
+         
+        for (var prop in enoteObjectMemo[note]) { //percorre cada objeto encontrado
+            var noteLi = document.createElement("p"); //cria um novo elemento li 
+            var noteText = document.createTextNode(enoteObjectMemo[note][prop]);
+
+            var pos = enoteObjectDo.indexOf(enoteObjectMemo[note]);
+            var linkElement = document.createElement('a');
+            linkElement.setAttribute('href', '#');
+
+            linkElement.setAttribute('onclick', 'deleteNoteMemo(' + pos + ')');
+            var linkText = document.createTextNode('Concluído  |  ');
+            
+            linkElement.appendChild(linkText);
+            noteLi.appendChild(linkElement);
+            
+
+            noteLi.appendChild(noteText); //coloca a variavel do input dentro do li
+            listMemo.appendChild(noteLi); //adiciona li dentro do ul*/
             }
     }
 }

@@ -1,0 +1,36 @@
+header {
+    margin: 30px;
+}
+
+main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+input {
+    width: 500px;
+    margin: 10px;
+    padding: 10px;
+    border-width: 5px;
+    border-radius: 20px;
+    border-color: #f3e304;
+    border-style: solid;
+    
+}
+
+input:focus {
+    outline: 0;
+}
+
+.enoteList {
+    margin-top: 30px;
+
+    display: flex;
+    flex-direction: row;
+}
+
+a {
+    text-decoration: none;
+}
