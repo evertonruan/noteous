@@ -2,7 +2,8 @@
 <html>
     <head>
         <meta charset="UTF-8">
-        <link rel="stylesheet" href="style.css">
+        <link rel="preconnect" href="https://fonts.gstatic.com">
+        <link href="https://fonts.googleapis.com/css2?family=Merriweather+Sans:wght@400;700&display=swap" rel="stylesheet"><link rel="stylesheet" href="style.css">
         <title>Enote</title>
     </head>
     <body>
@@ -10,19 +11,24 @@
             <h1>Enote</h1>
         </header>
         <main>
-            <label>O que você quer fazer?</label>
-            <div>
-            <input id="noteInput" type="text" placeholder="Sua próxima tarefa">
-            </div>
+            <label id="labelNote">Qual o próximo passo?</label>
+                <input id="noteInput" type="text" placeholder="Sua próxima tarefa ou algo para não esquecer">
 
-            <div>
-                <button id="noteButtonDo" onclick="addNoteDo()">Adicionar Do</button>
-                <button id="noteButtonMemo" onclick="addNoteMemo()">Adicionar Memo</button>
+            
+
+            <div class="containerNoteButton">
+                <button id="noteButtonDo" onclick="addNoteDo()">ADICIONAR DO</button>
+                <button id="noteButtonMemo" onclick="addNoteMemo()">ADICIONAR MEMO</button>
             </div>
 
             <div class="enoteList">
-                <ul id="listDo"></ul>
-                <ul id="listMemo"></ul>
+                <div class="enoteListDo">
+                    <ul id="listDo"></ul>
+                </div>
+                
+                <div class="enoteListMemo">
+                    <ul id="listMemo"></ul>
+                </div>
             </div>
         </main>
         <footer>
