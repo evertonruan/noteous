@@ -71,7 +71,7 @@ function renderNote() {
     for (var note in enoteObjectDo) { //percorre o array de objetos principal: o renderNote
          
         for (var prop in enoteObjectDo[note]) { //percorre cada objeto encontrado
-            var noteLi = document.createElement("p"); //cria um novo elemento li 
+            var noteLi = document.createElement("li"); //cria um novo elemento li 
             var noteText = document.createTextNode(enoteObjectDo[note][prop]);
 
             var pos = enoteObjectDo.indexOf(enoteObjectDo[note]);
@@ -93,7 +93,7 @@ function renderNote() {
     for (var note in enoteObjectMemo) { //percorre o array de objetos principal: o renderNote
          
         for (var prop in enoteObjectMemo[note]) { //percorre cada objeto encontrado
-            var noteLi = document.createElement("p"); //cria um novo elemento li 
+            var noteLi = document.createElement("li"); //cria um novo elemento li 
             var noteText = document.createTextNode(enoteObjectMemo[note][prop]);
 
             var pos = enoteObjectDo.indexOf(enoteObjectMemo[note]);
@@ -101,7 +101,7 @@ function renderNote() {
             linkElement.setAttribute('href', '#');
 
             linkElement.setAttribute('onclick', 'deleteNoteMemo(' + pos + ')');
-            var linkText = document.createTextNode('Concluído  |  ');
+            var linkText = document.createTextNode('Apagar Memo  |  ');
             
             linkElement.appendChild(linkText);
             noteLi.appendChild(linkElement);

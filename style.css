@@ -1,5 +1,9 @@
+body, button, input {
+    font-family: 'Merriweather Sans', sans-serif;
+}
 header {
     margin: 30px;
+    font-weight: 700;
 }
 
 main {
@@ -7,6 +11,11 @@ main {
     flex-direction: column;
     align-items: center;
     justify-content: center;
+}
+
+#labelNote{
+    font-weight: 700;
+    font-size: 20px;
 }
 
 input {
@@ -22,13 +31,72 @@ input {
 
 input:focus {
     outline: 0;
+    border-color: #e0d204;
+}
+
+button {
+    padding: 15px 150px;
+    border-style: none;
+    border-radius: 20px;
+    font-size: 1rem;
+    font-weight: 700;
+}
+
+button:focus {
+    outline: 0;
+
+}
+
+#noteButtonDo{
+    color: #3d2204;
+    background: #ff9011;
+}
+
+#noteButtonMemo{
+    color: #040842;
+    background: #8189ff;
+}
+
+.containerNoteButton {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-evenly;
+    margin: 30px 0 0;
 }
 
 .enoteList {
-    margin-top: 30px;
+    margin-top: 10px;
+    border-style: none;
+    border-radius: 30px;
+    background: #dddddd;
+
 
     display: flex;
     flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.enoteListDo {
+    width: 50%;
+    display: flex;
+    justify-content: flex-start;
+    word-break: break-word;    
+}
+
+.enoteListMemo {
+    width: 50%;
+    display: flex;
+    justify-content: flex-start;
+    word-break: break-word;
+}
+
+li {
+    list-style-type:none;
+    padding-left: 10px;
+    margin: 10px 0;
 }
 
 a {
