@@ -79,7 +79,7 @@ function renderNote() {
             linkElement.setAttribute('href', '#');
 
             linkElement.setAttribute('onclick', 'deleteNoteDo(' + pos + ')');
-            var linkText = document.createTextNode('Concluído  |  ');
+            var linkText = document.createTextNode('Do Concluído  |  ');
             
             linkElement.appendChild(linkText);
             noteLi.appendChild(linkElement);
