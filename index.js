@@ -1,9 +1,16 @@
 var noteInput = document.querySelector("#noteInput");
+var noteButtonEdit = document.querySelector('#noteButtonEdit');
 var noteButtonDo = document.querySelector("#noteButtonDo");
 var noteButtonMemo = document.querySelector("#noteButtonMemo");
+var posId = document.querySelector('#posId');
+var noteInputEdit = document.querySelector("#noteInputEdit");
+var editWindowBack = document.querySelector("#editWindowBack");
+var editWindow = document.querySelector("#editWindow");
 
 var listDo = document.querySelector("#listDo");
-
+var listMemo = document.querySelector("#listMemo");
+var pos;
+var editPos;
 
 var enoteObjectDo = JSON.parse(localStorage.getItem("EnoteDo")) || [];
 var enoteObjectMemo = JSON.parse(localStorage.getItem("EnoteMemo")) || [];
@@ -60,7 +67,37 @@ function deleteNoteMemo(pos) {
     renderNote();
 }
 
-function editNote(){
+
+function editNoteDo(pos){
+    console.log(pos);
+    editWindow.style.visibility = "visible";
+    editWindowBack.style.visibility = "visible";
+    enoteObjectDoOpened = enoteObjectDo[pos];
+    for (var note in enoteObjectDoOpened) { //percorre o array de objetos principal: o renderNote
+            console.log(posId.value);
+            noteInputEdit.value = enoteObjectDoOpened[note];
+            posId.value = pos;
+            console.log(posId.value);
+    }
+}
+
+function setEditNoteDo() {
+    var noteInputValue = noteInputEdit.value;
+    var objDo = {
+        text: noteInputValue
+    };
+
+    enoteObjectDo.splice(posId.value, 1, objDo);
+    console.log(enoteObjectDo);
+
+    localStorage.setItem("EnoteDo", JSON.stringify(enoteObjectDo));
+    renderNote();
+    noteInputEdit.value = '';
+    editWindow.style.visibility = "hidden";
+    editWindowBack.style.visibility = "hidden";
+}
+
+function editNoteMemo(){
     //soon!
 } 
 
@@ -74,18 +111,29 @@ function renderNote() {
             var noteLi = document.createElement("li"); //cria um novo elemento li 
             var noteText = document.createTextNode(enoteObjectDo[note][prop]);
 
-            var pos = enoteObjectDo.indexOf(enoteObjectDo[note]);
-            var linkElement = document.createElement('a');
-            linkElement.setAttribute('href', '#');
+            pos = enoteObjectDo.indexOf(enoteObjectDo[note]);
+            
+            var deleteLink = document.createElement('a');
+            deleteLink.classList.add("material-icons")
+            deleteLink.setAttribute('href', '#');
+            deleteLink.setAttribute('onclick', 'deleteNoteDo(' + pos + ')');
+            var deleteText = document.createTextNode('check_circle');
+            deleteLink.appendChild(deleteText);
+            noteLi.appendChild(deleteLink);
 
-            linkElement.setAttribute('onclick', 'deleteNoteDo(' + pos + ')');
-            var linkText = document.createTextNode('Do Concluído  |  ');
-            
-            linkElement.appendChild(linkText);
-            noteLi.appendChild(linkElement);
-            
+            var editLink = document.createElement('a');
+            editLink.classList.add("material-icons");
+            editLink.setAttribute('href', '#');
+            editLink.setAttribute('onclick', 'editNoteDo(' + pos + ')');            
+            var editText = document.createTextNode('edit')
+            editLink.appendChild(editText);
+            noteLi.appendChild(editLink);
+
+            var newLine = document.createElement('br');
+            noteLi.appendChild(newLine);   
 
             noteLi.appendChild(noteText); //coloca a variavel do input dentro do li
+
             listDo.appendChild(noteLi); //adiciona li dentro do ul*/
             }
     }
@@ -96,16 +144,19 @@ function renderNote() {
             var noteLi = document.createElement("li"); //cria um novo elemento li 
             var noteText = document.createTextNode(enoteObjectMemo[note][prop]);
 
-            var pos = enoteObjectDo.indexOf(enoteObjectMemo[note]);
+            pos = enoteObjectDo.indexOf(enoteObjectMemo[note]);
             var linkElement = document.createElement('a');
+            linkElement.classList.add("material-icons");
             linkElement.setAttribute('href', '#');
-
             linkElement.setAttribute('onclick', 'deleteNoteMemo(' + pos + ')');
-            var linkText = document.createTextNode('Apagar Memo  |  ');
             
+            linkText = document.createTextNode('delete');
+
             linkElement.appendChild(linkText);
             noteLi.appendChild(linkElement);
-            
+
+            var newLine = document.createElement("br");
+            noteLi.appendChild(newLine);
 
             noteLi.appendChild(noteText); //coloca a variavel do input dentro do li
             listMemo.appendChild(noteLi); //adiciona li dentro do ul*/

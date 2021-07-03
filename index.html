@@ -4,6 +4,7 @@
         <meta charset="UTF-8">
         <link rel="preconnect" href="https://fonts.gstatic.com">
         <link href="https://fonts.googleapis.com/css2?family=Merriweather+Sans:wght@400;700&display=swap" rel="stylesheet"><link rel="stylesheet" href="style.css">
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
         <title>Enote</title>
     </head>
     <body>
@@ -11,22 +12,26 @@
             <h1>Enote</h1>
         </header>
         <main>
-            <label id="labelNote">Qual o próximo passo?</label>
-                <input id="noteInput" type="text" placeholder="Sua próxima tarefa ou algo para não esquecer">
-
-            
-
-            <div class="containerNoteButton">
-                <button id="noteButtonDo" onclick="addNoteDo()">ADICIONAR DO</button>
-                <button id="noteButtonMemo" onclick="addNoteMemo()">ADICIONAR MEMO</button>
+            <div id="editWindowBack">
+                <div id="editWindow">
+                    <label>Editar nota</label>
+                    <textarea id="noteInputEdit" type="text"></textarea>
+                    <button id="noteButtonEdit" onclick="setEditNoteDo()">Confirmar edição</button>
+                </div>
             </div>
+            
+            <label id="labelNote">Qual o próximo passo?</label>
+                <textarea id="noteInput" type="text" placeholder="Sua próxima tarefa ou lembrete"></textarea>
+                <p id="posId"></p>
 
             <div class="enoteList">
                 <div class="enoteListDo">
+                    <button id="noteButtonDo" onclick="addNoteDo()">ADICIONAR DO</button>
                     <ul id="listDo"></ul>
                 </div>
                 
                 <div class="enoteListMemo">
+                    <button id="noteButtonMemo" onclick="addNoteMemo()">ADICIONAR MEMO</button>
                     <ul id="listMemo"></ul>
                 </div>
             </div>

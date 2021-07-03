@@ -1,8 +1,14 @@
-body, button, input {
+html, body {
+    margin: 0;
+    padding: 0;
+}
+
+body, button, textarea {
     font-family: 'Merriweather Sans', sans-serif;
 }
-header {
-    margin: 30px;
+
+h1 {
+    margin: 30px 30px;
     font-weight: 700;
 }
 
@@ -13,25 +19,58 @@ main {
     justify-content: center;
 }
 
-#labelNote{
+#editWindowBack {
+    visibility: hidden;
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 100%;
+    height: 100%;
+
+    background: #0f0f0f38;
+    
+}
+
+#editWindow {
+    visibility: hidden;
+    opacity: 100%;
+    
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    
+    width: 50%;
+    height: 50%;
+    
+    border-radius: 30px;
+    background: #ffffffa2;
+    backdrop-filter: blur(10px);
+}
+
+#labelNote {
     font-weight: 700;
     font-size: 20px;
 }
 
-input {
+textarea {
     width: 500px;
     margin: 10px;
     padding: 10px;
     border-width: 5px;
     border-radius: 20px;
-    border-color: #f3e304;
+    border-color: #ffe396;
     border-style: solid;
     
+    transition: all 0.2s ease;
 }
 
-input:focus {
+textarea:focus {
     outline: 0;
     border-color: #e0d204;
+    box-shadow: 0 9px 20px 3px #cac362;
 }
 
 button {
@@ -40,12 +79,22 @@ button {
     border-radius: 20px;
     font-size: 1rem;
     font-weight: 700;
+    transition: 0.1s;
 }
 
 button:focus {
     outline: 0;
-
 }
+
+button:active {
+    filter: brightness(85%);
+    transform:translateY(0.5rem);
+}
+
+button:hover {
+    filter: brightness(90%);
+}
+
 
 #noteButtonDo{
     color: #3d2204;
@@ -57,48 +106,57 @@ button:focus {
     background: #8189ff;
 }
 
-.containerNoteButton {
-    width: 100%;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-evenly;
-    margin: 30px 0 0;
-}
 
 .enoteList {
     margin-top: 10px;
     border-style: none;
-    border-radius: 30px;
-    background: #dddddd;
-
-
+    
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
+    justify-content: space-around;
     width: 100%;
 }
 
 .enoteListDo {
     width: 50%;
+    margin: 10px 50px;
     display: flex;
+    flex-direction: column;
+
+    background: #dddddd;
+    border-radius: 30px;
     justify-content: flex-start;
-    word-break: break-word;    
+    word-break: break-word;
 }
 
 .enoteListMemo {
     width: 50%;
+    margin: 10px 50px;
     display: flex;
+    flex-direction: column;
+    
+    background: #dddddd;
+    border-radius: 30px;
     justify-content: flex-start;
     word-break: break-word;
+}
+
+#listDo, #listMemo{
+    display: flex;
+    flex-direction: column-reverse;
 }
 
 li {
     list-style-type:none;
     padding-left: 10px;
-    margin: 10px 0;
+    margin: 20px 0;
 }
 
 a {
     text-decoration: none;
+    color: #505050;
+}
+
+a:hover {
+    filter: brightness(20%);
 }
