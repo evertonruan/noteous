@@ -1,5 +1,5 @@
-# enote
-Simple notetaking app
+# Enote
+Aplicativo de notas e lembretes com um design singular
 
-You can see it "alive" in:
-https://enoteapp.000webhostapp.com/
+Veja ele funcionando:
+https://enoteapp.vercel.app/
