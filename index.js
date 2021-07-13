@@ -1,7 +1,8 @@
 var noteInput = document.querySelector("#noteInput");
+var noteButtons = document.querySelector(".noteButtons");
 var noteButtonEdit = document.querySelector('#noteButtonEdit');
-var noteButtonDo = document.querySelector("#noteButtonDo");
-var noteButtonMemo = document.querySelector("#noteButtonMemo");
+var noteButtonDo = document.querySelector("#Do");
+var noteButtonMemo = document.querySelector("#Memo");
 var posId = document.querySelector('#posId');
 var noteInputEdit = document.querySelector("#noteInputEdit");
 var editWindowBack = document.querySelector("#editWindowBack");
@@ -17,39 +18,39 @@ var enoteObjectMemo = JSON.parse(localStorage.getItem("EnoteMemo")) || [];
 
 renderNote();
 
-function addNoteDo() {
-    var noteInputValue = noteInput.value;
+function addNote(noteButtons) {
+    if (noteButtons.id == "noteButtonDo") {
+        var noteInputValue = noteInput.value;
 
-    if (noteInputValue || "") {
-
-        var objDo = {
-            text: noteInputValue
-        };
+        if (noteInputValue || "") {
     
-        enoteObjectDo.push(objDo);
-    
-        localStorage.setItem("EnoteDo", JSON.stringify(enoteObjectDo)); //transfere valor da ul para localStorage
+            var objDo = {
+                text: noteInputValue
+            };
         
-        renderNote();
-        noteInput.value = '';
-    }
-}
-
-function addNoteMemo() {
-    var noteInputValue = noteInput.value;
-
-    if (noteInputValue || "") {
-
-        var objMemo = {
-            text: noteInputValue
-        };
-    
-        enoteObjectMemo.push(objMemo);
-    
-        localStorage.setItem("EnoteMemo", JSON.stringify(enoteObjectMemo)); //transfere valor da ul para localStorage
+            enoteObjectDo.push(objDo);
         
-        renderNote();
-        noteInput.value = '';
+            localStorage.setItem("EnoteDo", JSON.stringify(enoteObjectDo)); //transfere valor da ul para localStorage
+            
+            renderNote();
+            noteInput.value = '';
+        }
+    } else if (noteButtons.id == "noteButtonMemo") {
+        var noteInputValue = noteInput.value;
+
+        if (noteInputValue || "") {
+    
+            var objMemo = {
+                text: noteInputValue
+            };
+        
+            enoteObjectMemo.push(objMemo);
+        
+            localStorage.setItem("EnoteMemo", JSON.stringify(enoteObjectMemo)); //transfere valor da ul para localStorage
+            
+            renderNote();
+            noteInput.value = '';
+        }
     }
 }
 
