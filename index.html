@@ -1,49 +1,60 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="UTF-8">
-        <link rel="preconnect" href="https://fonts.gstatic.com">
-        <link href="https://fonts.googleapis.com/css2?family=Merriweather+Sans:wght@400;700&display=swap" rel="stylesheet"><link rel="stylesheet" href="style.css">
-        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-        <title>Enote</title>
-    </head>
-    <body>
-        <header>
-            <h1>Enote</h1>
-        </header>
-        <main>
-            <div id="editWindowBack">
-                <div id="editWindow">
-                    <label>Editar nota</label>
-                    <textarea id="noteInputEdit" type="text"></textarea>
-                    <button id="noteButtonEdit" onclick="setEditNoteDo()">Confirmar edição</button>
-                </div>
-            </div>
-            
-            <label id="labelNote">Qual o próximo passo?</label>
-                <textarea id="noteInput" type="text" placeholder="Sua próxima tarefa ou lembrete"></textarea>
-                <p id="posId"></p>
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Merriweather+Sans:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+    <link
+      href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet"
+    />
+    <title>Enote</title>
+  </head>
+  <body>
+    <header>
+      <h1>Enote</h1>
+    </header>
+    <main>
+      <!--
+      <div id="editWindowBack">
+        <div id="editWindow">
+          <label>Editar nota</label>
+          <textarea id="noteInputEdit" type="text"></textarea>
+          <button id="noteButtonEdit" onclick="setEditNoteDo()">
+            Confirmar edição
+          </button>
+        </div>
+      </div>
+      -->
 
-            <div class="enoteList">
-                <div class="enoteListDo">
-                    <button id="noteButtonDo" class="noteButtons" onclick="addNote(this)">ADICIONAR DO</button>
-                    <ul id="listDo"></ul>
-                </div>
+      <section id="writeSection">
+        <label id="labelNote">Qual o próximo passo?</label>
+        <textarea
+          id="noteInput"
+          type="text"
+          placeholder="Sua próxima tarefa ou lembrete"
+        ></textarea>
+        <button id="noteButtonDo" class="noteButtons" onclick="addNote(this)">
+          + ADICIONAR
+        </button>
+      </section>
 
-                <div class="enoteListMemo">
-                    <button id="noteButtonMemo" class="noteButtons" onclick="addNote(this)">ADICIONAR MEMO</button>
-                    <ul id="listMemo"></ul>
-                </div>
-                
-                
-            </div>
-        </main>
-        <footer>
+      <section id="readSection">
+        <div class="enoteList">
+          <ul id="listDo"></ul>
+        </div>
+      </section>
+    </main>
 
-        </footer>
+    <footer>
+      <p id="posId"></p>
+      <a href="about.html">Enote 0.5b</a>
+    </footer>
 
-        <script type="text/javascript" src="index.js"></script>
-    </body>
-
-    
+    <script type="text/javascript" src="index.js"></script>
+  </body>
 </html>
