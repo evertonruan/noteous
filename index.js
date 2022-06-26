@@ -1,19 +1,19 @@
 // ELEMENTOS /////////////////////////////////////
 
-var noteInput = document.querySelector('#noteInput')
-var noteButtons = document.querySelector('.noteButtons')
-var noteButtonEdit = document.querySelector('#noteButtonEdit')
-var noteButtonDo = document.querySelector('#Do')
-var posId = document.querySelector('#posId')
-var noteInputEdit = document.querySelector('#noteInputEdit')
-var editWindowBack = document.querySelector('#editWindowBack')
-var editWindow = document.querySelector('#editWindow')
+let noteInput = document.querySelector('#noteInput')
+let noteButtons = document.querySelector('.noteButtons')
+let noteButtonEdit = document.querySelector('#noteButtonEdit')
+let noteButtonDo = document.querySelector('#Do')
+let posId = document.querySelector('#posId')
+let noteInputEdit = document.querySelector('#noteInputEdit')
+let editWindowBack = document.querySelector('#editWindowBack')
+let editWindow = document.querySelector('#editWindow')
 
-var listDo = document.querySelector('#listDo')
-var pos
-var editPos
+let listDo = document.querySelector('#listDo')
+let pos
+let editPos
 
-var enoteObjectDo = JSON.parse(localStorage.getItem('EnoteDo')) || []
+let enoteObjectDo = JSON.parse(localStorage.getItem('EnoteDo')) || []
 
 renderNote()
 
@@ -21,10 +21,10 @@ renderNote()
 
 function addNote(noteButtons) {
   if (noteButtons.id == 'noteButtonDo') {
-    var noteInputValue = noteInput.value
+    let noteInputValue = noteInput.value
 
     if (noteInputValue || '') {
-      var objDo = {
+      let objDo = {
         text: noteInputValue
       }
 
@@ -41,41 +41,73 @@ function addNote(noteButtons) {
 function renderNote() {
   listDo.innerHTML = ''
 
-  for (var note in enoteObjectDo) {
-    for (var prop in enoteObjectDo[note]) {
+  for (let note of enoteObjectDo) {
+    console.log(note.text)
+    let noteLi = document.createElement('li')
+    let noteText = document.createTextNode(note.text)
+
+    pos = enoteObjectDo.indexOf(note)
+
+    //DELETE
+    let deleteLink = document.createElement('a')
+    deleteLink.classList.add('material-icons')
+    deleteLink.setAttribute('onclick', 'deleteNoteDo(' + pos + ')')
+    let deleteText = document.createTextNode('check_circle')
+    deleteLink.appendChild(deleteText)
+    noteLi.appendChild(deleteLink)
+
+    //EDIT
+    let editLink = document.createElement('a')
+    editLink.classList.add('material-icons')
+    editLink.setAttribute('href', '#')
+    editLink.setAttribute('onclick', 'editNoteDo(' + pos + ')')
+    let editText = document.createTextNode('edit')
+    editLink.appendChild(editText)
+    noteLi.appendChild(editLink)
+
+    let newLine = document.createElement('br')
+    noteLi.appendChild(newLine)
+    noteLi.appendChild(noteText)
+    listDo.appendChild(noteLi)
+  }
+}
+
+/*
+  for (let note in enoteObjectDo) {
+    for (let prop in enoteObjectDo[note]) {
       //percorre cada objeto encontrado
-      var noteLi = document.createElement('li')
-      var noteText = document.createTextNode(enoteObjectDo[note][prop])
+      let noteLi = document.createElement('li')
+      let noteText = document.createTextNode(enoteObjectDo[note][prop])
 
       pos = enoteObjectDo.indexOf(enoteObjectDo[note])
 
-      var deleteLink = document.createElement('a')
+      let deleteLink = document.createElement('a')
       deleteLink.classList.add('material-icons')
       deleteLink.setAttribute('href', '#')
       deleteLink.setAttribute('onclick', 'deleteNoteDo(' + pos + ')')
-      var deleteText = document.createTextNode('check_circle')
+      let deleteText = document.createTextNode('check_circle')
       deleteLink.appendChild(deleteText)
       noteLi.appendChild(deleteLink)
 
       /*
-      var editLink = document.createElement('a')
+      let editLink = document.createElement('a')
       editLink.classList.add('material-icons')
       editLink.setAttribute('href', '#')
       editLink.setAttribute('onclick', 'editNoteDo(' + pos + ')')
-      var editText = document.createTextNode('edit')
+      let editText = document.createTextNode('edit')
       editLink.appendChild(editText)
       noteLi.appendChild(editLink)
       */
-
-      var newLine = document.createElement('br')
+/*
+      let newLine = document.createElement('br')
       noteLi.appendChild(newLine)
 
-      noteLi.appendChild(noteText) //coloca a variavel do input dentro do li
+      noteLi.appendChild(noteText) //coloca a letiavel do input dentro do li
 
-      listDo.appendChild(noteLi) //adiciona li dentro do ul*/
-    }
+      listDo.appendChild(noteLi) //adiciona li dentro do ul
   }
 }
+*/
 
 function deleteNoteDo(pos) {
   enoteObjectDo.splice(pos, 1)
@@ -86,29 +118,33 @@ function deleteNoteDo(pos) {
 
 function editNoteDo(pos) {
   console.log(pos)
-  editWindow.style.visibility = 'visible'
-  editWindowBack.style.visibility = 'visible'
+  for (let note of enoteObjectDo) {
+    if (enoteObjectDo.indexOf(note) == pos) {
+      let editedNote = ''
+      editedNote = window.prompt('Editar nota', note.text)
+      if (editedNote != '' && editedNote != null) {
+        let objDo = {
+          text: editedNote
+        }
+
+        enoteObjectDo.splice(pos, 1, objDo)
+        console.log(enoteObjectDo)
+
+        localStorage.setItem('EnoteDo', JSON.stringify(enoteObjectDo))
+        renderNote()
+      }
+    }
+  }
+
+  /*
   enoteObjectDoOpened = enoteObjectDo[pos]
-  for (var note in enoteObjectDoOpened) {
+  for (let note in enoteObjectDoOpened) {
     console.log(posId.value)
     noteInputEdit.value = enoteObjectDoOpened[note]
-    posId.value = pos
+    
     console.log(posId.value)
   }
+  */
 }
 
-function setEditNoteDo() {
-  var noteInputValue = noteInputEdit.value
-  var objDo = {
-    text: noteInputValue
-  }
-
-  enoteObjectDo.splice(posId.value, 1, objDo)
-  console.log(enoteObjectDo)
-
-  localStorage.setItem('EnoteDo', JSON.stringify(enoteObjectDo))
-  renderNote()
-  noteInputEdit.value = ''
-  editWindow.style.visibility = 'hidden'
-  editWindowBack.style.visibility = 'hidden'
-}
+function setEditNoteDo() {}

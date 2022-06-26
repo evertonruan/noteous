@@ -1,7 +1,11 @@
+/*GENERAL DESIGN///////////////////////////*/
+
 * {
   margin: 0;
   padding: 0;
 }
+
+
 
 @media (max-width: 1000px) {
   html {
@@ -13,30 +17,45 @@
   html {
     font-size: 87.5%;
   }
-  main {
+  #index main {
     flex-direction: column;
   }
 }
 
-body {
+header {
+  display: flex;
+  flex-direction: row;
+  box-sizing: border-box;
+  align-items: center;
+  justify-content: space-between;
+}
+
+nav li {
+  margin: 1rem;
+  padding: 5px;
+  list-style-type: none;
+}
+
+#index {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
   background-color: hsl(32, 100%, 94%);
 }
 
-main {
+#index main {
   display: flex;
   flex: 1;
 }
 
-body,
-button,
-textarea {
+
+#index,
+#index button,
+#index textarea {
   font-family: 'Merriweather Sans', sans-serif;
 }
 
-h1 {
+#index h1 {
   margin: 30px 30px;
   font-weight: 700;
 }
@@ -60,7 +79,7 @@ h1 {
   font-size: 20px;
 }
 
-textarea {
+#index textarea {
   margin: 10px;
   padding: 10px;
   border-width: 5px;
@@ -71,13 +90,13 @@ textarea {
   transition: all 0.2s ease;
 }
 
-textarea:focus {
+#index textarea:focus {
   outline: 0;
   border-color: #e0d204;
   box-shadow: 0 9px 20px 3px #cac362;
 }
 
-button {
+#index button {
   border-style: none;
   border-radius: 20px;
   font-size: 1rem;
@@ -85,16 +104,16 @@ button {
   transition: 0.1s;
 }
 
-button:focus {
+#index button:focus {
   outline: 0;
 }
 
-button:active {
+#index button:active {
   filter: brightness(85%);
   transform: translateY(0.5rem);
 }
 
-button:hover {
+#index button:hover {
   filter: brightness(90%);
 }
 
@@ -119,7 +138,7 @@ button:hover {
 }
 
 
-li {
+#readSection li {
   flex-basis: 20%;
   
   margin: 1rem;
@@ -132,11 +151,42 @@ li {
   list-style-type: none;
 }
 
-a {
+#index a {
   text-decoration: none;
   color: #2f2723;
 }
 
-a:hover {
+#index a:hover {
   filter: brightness(20%);
+}
+
+/* ABOUT DESIGN///////////////////////////*/
+#about {
+  display: flex;
+  flex-direction: column;
+  font-family: 'Merriweather Sans', sans-serif;
+}
+
+#about h1 {
+    margin: 30px 30px 0 30px;
+    font-weight: 700;
+}
+
+#about h2 {
+  margin-left: 30px;
+}
+
+#about #logo {
+  display: flex;
+  flex-direction: column;
+}
+
+#about-history {
+  display: flex;
+  flex-direction: column;
+  margin: 50px;
+}
+
+.about-history-point{
+  margin-bottom: 20px;
 }
