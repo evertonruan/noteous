@@ -24,33 +24,34 @@
       <h1>Enote</h1>
       <nav>
         <ul>
-          <li><a href="about.html">Histórico de modificações</a></li>
+          <li><a href="about.html">Histórico de Modificações</a></li>
         </ul>
       </nav>
     </header>
     <main>
-      <section id="writeSection">
-        <label id="labelNote">Qual o próximo passo?</label>
+      <section id="section-write">
+        <label id="write-label">Qual o próximo passo?</label>
         <textarea
-          id="noteInput"
+          id="write-input"
           type="text"
+          autofocus
           placeholder="Sua próxima tarefa ou lembrete"
         ></textarea>
-        <button id="noteButtonDo" class="noteButtons" onclick="addNote(this)">
+        <button id="write-button-add" onclick="addNote(this)">
           + ADICIONAR
         </button>
       </section>
 
-      <section id="readSection">
-        <div class="enoteList">
-          <ul id="listDo"></ul>
+      <section id="section-read">
+        <div class="read-container">
+          <ul id="read-notes-list"></ul>
         </div>
       </section>
     </main>
 
     <footer>
-      <p id="posId"></p>
-      <p>Enote 0.7b</p>
+      <p id="note-id"></p>
+      <p>Enote 0.7.1b</p>
     </footer>
 
     <script type="text/javascript" src="index.js"></script>

@@ -61,25 +61,28 @@ nav li {
 }
 
 
-#writeSection {
+#section-write {
   flex: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 
-#readSection {
+#section-read {
   flex: 2;
 }
 
 
-#labelNote {
+#write-label {
   text-align: center;
   font-weight: 700;
-  font-size: 20px;
+  font-size: 1.3rem
 }
 
 #index textarea {
+  height: 4rem;
+  width: 10rem;
+  font-size: 1rem;
   margin: 10px;
   padding: 10px;
   border-width: 5px;
@@ -117,20 +120,20 @@ nav li {
   filter: brightness(90%);
 }
 
-#noteButtonDo {
+#write-button-add {
   color: #3d2204;
   background: #ff9011;
   padding: 10px 20px;
 }
 
-.enoteList {
+.read-container {
   margin-top: 10px;
   border-style: none;
 
 }
 
 
-#listDo {
+#read-notes-list {
   display: flex;
   flex-direction: row;
   justify-content: center;
@@ -138,7 +141,7 @@ nav li {
 }
 
 
-#readSection li {
+#section-read li {
   flex-basis: 20%;
   
   margin: 1rem;
