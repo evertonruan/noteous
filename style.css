@@ -36,6 +36,10 @@ nav li {
   list-style-type: none;
 }
 
+#index #nav-history {
+  color: #3d2204;
+}
+
 #index {
   display: flex;
   flex-direction: column;
@@ -96,40 +100,41 @@ nav li {
 #index textarea:focus {
   outline: 0;
   border-color: #e0d204;
-  box-shadow: 0 9px 20px 3px #cac362;
-}
-
-#index button {
-  border-style: none;
-  border-radius: 20px;
-  font-size: 1rem;
-  font-weight: 700;
-  transition: 0.1s;
-}
-
-#index button:focus {
-  outline: 0;
-}
-
-#index button:active {
-  filter: brightness(85%);
-  transform: translateY(0.5rem);
-}
-
-#index button:hover {
-  filter: brightness(90%);
+  box-shadow: 0 0px 30px 5px #cac362;
 }
 
 #write-button-add {
   color: #3d2204;
   background: #ff9011;
   padding: 10px 20px;
+  
+  border-style: none;
+  border-radius: 1rem;
+  font-size: 1rem;
+  font-weight: 700;
+  transition: all 0.2s;
+}
+
+#write-button-add:focus {
+  outline: 0;
+}
+
+#write-button-add:active:enabled {
+  transform: scale(0.9)
+}
+
+#write-button-add:hover:enabled {
+  filter: brightness(90%);
+  cursor: pointer;
+}
+
+#write-button-add:disabled {
+  filter: opacity(30%)
 }
 
 .read-container {
   margin-top: 10px;
   border-style: none;
-
 }
 
 
@@ -147,27 +152,40 @@ nav li {
   margin: 1rem;
   padding: 30px;
 
-  background-color:hsl(33, 38%, 82%);
+  background-image:linear-gradient(150deg, hsl(33, 38%, 82%), hsl(33, 24%, 72%));
   border-radius: 20px;
   box-shadow: 2px 9px 5px 1px hsla(33, 10%, 18%, 20%);
 
   list-style-type: none;
+
+  transition: transform 0.1s;
+}
+
+#index ul a {
+  color: #2e231d;
+  transition: transform 0.1s;
+}
+
+#index ul a:hover {
+  transform: scale(1.2);
+}
+
+#index ul a:active {
+  transform: scale(0.9);
+  outline: 0;
 }
 
 #index a {
   text-decoration: none;
-  color: #2f2723;
 }
 
-#index a:hover {
-  filter: brightness(20%);
-}
 
 /* ABOUT DESIGN///////////////////////////*/
 #about {
   display: flex;
   flex-direction: column;
   font-family: 'Merriweather Sans', sans-serif;
+  background-color: hsl(163, 100%, 94%);
 }
 
 #about h1 {
@@ -188,8 +206,20 @@ nav li {
   display: flex;
   flex-direction: column;
   margin: 50px;
+  max-width: fit-content;
 }
 
 .about-history-point{
   margin-bottom: 20px;
+}
+
+#about-history-point-actual {
+  border: 1px hsl(163, 11%, 62%) solid;
+  border-radius: 1rem;
+  padding: 1rem;
+  margin-bottom: 1rem;
+}
+
+.about-history-point-version {
+  font-size: 1.5rem;
 }

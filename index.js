@@ -13,6 +13,16 @@ renderNote()
 
 //FUNÇÕES /////////////////////////////////////
 
+//Habilitar/desabilitar botão Adicionar
+noteButtonAdd.disabled = true
+noteInput.addEventListener('input', function (event) {
+  if (noteInput.value === '') {
+    noteButtonAdd.disabled = true
+  } else {
+    noteButtonAdd.disabled = false
+  }
+})
+
 function renderNote() {
   noteList.innerHTML = ''
 
@@ -62,6 +72,7 @@ function addNote(noteButtonAdd) {
     renderNote()
     noteInput.value = ''
     noteInput.focus()
+    noteButtonAdd.disabled = true
   }
 }
 
