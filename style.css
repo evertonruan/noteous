@@ -3,6 +3,7 @@
 * {
   margin: 0;
   padding: 0;
+  box-sizing: border-box;
 }
 
 
@@ -19,6 +20,18 @@
   }
   #index main {
     flex-direction: column;
+  }
+
+  #section-write #write-input {
+    width: 60%;
+  }
+
+  #section-read #read-notes-list li {
+    flex-basis: 80%;
+  }
+
+  #section-read #read-notes-list {
+    flex-direction: column-reverse;
   }
 }
 
@@ -83,12 +96,14 @@ nav li {
   font-size: 1.3rem
 }
 
-#index textarea {
-  height: 4rem;
-  width: 10rem;
-  font-size: 1rem;
+#write-input {
+  height: 6rem;
+  width: auto;
   margin: 10px;
   padding: 10px;
+
+  font-size: 1rem;
+  
   border-width: 5px;
   border-radius: 20px;
   border-color: #ffe396;
@@ -97,7 +112,7 @@ nav li {
   transition: all 0.2s ease;
 }
 
-#index textarea:focus {
+#write-input:focus {
   outline: 0;
   border-color: #e0d204;
   box-shadow: 0 0px 30px 5px #cac362;
@@ -145,10 +160,8 @@ nav li {
   flex-wrap: wrap;
 }
 
-
 #section-read li {
-  flex-basis: 20%;
-  
+  flex-basis: 30%;
   margin: 1rem;
   padding: 30px;
 
@@ -210,14 +223,14 @@ nav li {
 }
 
 .about-history-point{
-  margin-bottom: 20px;
+  margin-bottom: 1rem;
 }
 
 #about-history-point-actual {
   border: 1px hsl(163, 11%, 62%) solid;
   border-radius: 1rem;
   padding: 1rem;
-  margin-bottom: 1rem;
+  margin-bottom: 1.5rem;
 }
 
 .about-history-point-version {
