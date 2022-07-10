@@ -1,12 +1,10 @@
-/*GENERAL DESIGN///////////////////////////*/
+/*GERAL///////////////////////////*/
 
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
-
-
 
 @media (max-width: 1000px) {
   html {
@@ -22,16 +20,8 @@
     flex-direction: column;
   }
 
-  #section-write #write-input {
-    width: 60%;
-  }
-
   #section-read #read-notes-list li {
     flex-basis: 80%;
-  }
-
-  #section-read #read-notes-list {
-    flex-direction: column-reverse;
   }
 }
 
@@ -49,9 +39,12 @@ nav li {
   list-style-type: none;
 }
 
-#index #nav-history {
-  color: #3d2204;
+h1 {
+  margin: 30px 30px;
+  font-weight: 700;
 }
+
+/*INDEX///////////////////////////*/
 
 #index {
   display: flex;
@@ -60,23 +53,26 @@ nav li {
   background-color: hsl(32, 100%, 94%);
 }
 
+#index a {
+  text-decoration: none;
+}
+
+#index #nav-history {
+  color: #3d2204;
+}
+
 #index main {
   display: flex;
   flex: 1;
 }
 
-
 #index,
-#index button,
-#index textarea {
+#index .write-buttons,
+#index #write-input {
   font-family: 'Merriweather Sans', sans-serif;
 }
 
-#index h1 {
-  margin: 30px 30px;
-  font-weight: 700;
-}
-
+/*-----SECTION-WRITE-----*/
 
 #section-write {
   flex: 1;
@@ -85,25 +81,20 @@ nav li {
   align-items: center;
 }
 
-#section-read {
-  flex: 2;
-}
-
-
 #write-label {
   text-align: center;
   font-weight: 700;
-  font-size: 1.3rem
+  font-size: 1.3rem;
 }
 
 #write-input {
   height: 6rem;
-  width: auto;
+  width: 60%;
   margin: 10px;
   padding: 10px;
 
   font-size: 1rem;
-  
+
   border-width: 5px;
   border-radius: 20px;
   border-color: #ffe396;
@@ -112,17 +103,30 @@ nav li {
   transition: all 0.2s ease;
 }
 
+#write-input.edit-mode {
+  width: 80%;
+  height: 60vh;
+}
+
 #write-input:focus {
   outline: 0;
   border-color: #e0d204;
   box-shadow: 0 0px 30px 5px #cac362;
 }
 
-#write-button-add {
+#write-buttons-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 1rem;
+}
+
+.write-buttons {
   color: #3d2204;
   background: #ff9011;
-  padding: 10px 20px;
-  
+  padding: 0.7rem 1.8rem;
+
   border-style: none;
   border-radius: 1rem;
   font-size: 1rem;
@@ -130,28 +134,38 @@ nav li {
   transition: all 0.2s;
 }
 
-#write-button-add:focus {
+.write-buttons:focus {
   outline: 0;
 }
 
-#write-button-add:active:enabled {
-  transform: scale(0.9)
+.write-buttons:active:enabled {
+  transform: scale(0.9);
 }
 
-#write-button-add:hover:enabled {
+.write-buttons:hover:enabled {
   filter: brightness(90%);
   cursor: pointer;
 }
 
-#write-button-add:disabled {
-  filter: opacity(30%)
+.write-buttons:disabled {
+  filter: opacity(30%);
+}
+
+/*-----SECTION-READ-----*/
+
+#section-read {
+  flex: 2;
+}
+
+#section-read.edit-mode {
+  pointer-events: none;
+  opacity: 0.4;
 }
 
 .read-container {
   margin-top: 10px;
   border-style: none;
 }
-
 
 #read-notes-list {
   display: flex;
@@ -165,7 +179,11 @@ nav li {
   margin: 1rem;
   padding: 30px;
 
-  background-image:linear-gradient(150deg, hsl(33, 38%, 82%), hsl(33, 24%, 72%));
+  background-image: linear-gradient(
+    150deg,
+    hsl(33, 38%, 82%),
+    hsl(33, 24%, 72%)
+  );
   border-radius: 20px;
   box-shadow: 2px 9px 5px 1px hsla(33, 10%, 18%, 20%);
 
@@ -174,24 +192,19 @@ nav li {
   transition: transform 0.1s;
 }
 
-#index ul a {
+.action-buttons {
   color: #2e231d;
   transition: transform 0.1s;
 }
 
-#index ul a:hover {
+.action-buttons:hover {
   transform: scale(1.2);
 }
 
-#index ul a:active {
+.action-buttons:active {
   transform: scale(0.9);
   outline: 0;
 }
-
-#index a {
-  text-decoration: none;
-}
-
 
 /* ABOUT DESIGN///////////////////////////*/
 #about {
@@ -202,8 +215,8 @@ nav li {
 }
 
 #about h1 {
-    margin: 30px 30px 0 30px;
-    font-weight: 700;
+  margin: 30px 30px 0 30px;
+  font-weight: 700;
 }
 
 #about h2 {
@@ -222,7 +235,7 @@ nav li {
   max-width: fit-content;
 }
 
-.about-history-point{
+.about-history-point {
   margin-bottom: 1rem;
 }
 

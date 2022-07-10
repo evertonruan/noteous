@@ -21,7 +21,7 @@
   </head>
   <body id="index">
     <header>
-      <h1>Enote</h1>
+      <h1 id="logo">Enote</h1>
       <nav>
         <ul>
           <li>
@@ -41,9 +41,17 @@
           autofocus
           placeholder="Sua próxima tarefa ou lembrete"
         ></textarea>
-        <button id="write-button-add" onclick="addNote(this)">
-          + ADICIONAR
-        </button>
+        <div id="write-buttons-container">
+          <button id="write-button-add" class="write-buttons">
+            + ADICIONAR
+          </button>
+          <button id="write-button-edit" class="write-buttons" hidden="true">
+            CONFIRMAR EDIÇÃO
+          </button>
+          <button id="write-button-cancel" class="write-buttons" hidden="true">
+            CANCELAR
+          </button>
+        </div>
       </section>
 
       <section id="section-read">
@@ -54,8 +62,7 @@
     </main>
 
     <footer>
-      <p id="note-id"></p>
-      <p><strong>Enote 0.7.3b</strong></p>
+      <p><strong>Enote 0.8b</strong></p>
     </footer>
 
     <script type="text/javascript" src="index.js"></script>
