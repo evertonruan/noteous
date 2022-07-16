@@ -20,7 +20,7 @@
     flex-direction: column;
   }
 
-  #section-read #read-notes-list li {
+  #section-read #read-notes-list p {
     flex-basis: 80%;
   }
 
