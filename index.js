@@ -6,10 +6,12 @@ let noteButtonAdd = document.querySelector('#write-button-add')
 let noteButtonEdit = document.querySelector('#write-button-edit')
 let noteButtonCancelEdit = document.querySelector('#write-button-cancel')
 let noteList = document.querySelector('#read-notes-list')
+
 let readSection = document.querySelector('#section-read')
+let writePanel = document.querySelector('#write-panel')
 
 let pos
-let noteId
+let notePos
 
 let enoteObject = JSON.parse(localStorage.getItem('Enote')) || []
 
@@ -23,7 +25,7 @@ function renderNote() {
   noteList.innerHTML = ''
 
   for (let note of enoteObject) {
-    let noteLi = document.createElement('li')
+    let noteP = document.createElement('p')
     let noteText = document.createTextNode(note.text)
 
     pos = enoteObject.indexOf(note)
@@ -36,7 +38,7 @@ function renderNote() {
     deleteLink.setAttribute('onclick', 'deleteNote(' + pos + ')')
     let deleteText = document.createTextNode('check_circle')
     deleteLink.appendChild(deleteText)
-    noteLi.appendChild(deleteLink)
+    noteP.appendChild(deleteLink)
 
     //EDIT
     let editLink = document.createElement('a')
@@ -46,12 +48,12 @@ function renderNote() {
     editLink.setAttribute('onclick', 'editNote(' + pos + ')')
     let editText = document.createTextNode('edit')
     editLink.appendChild(editText)
-    noteLi.appendChild(editLink)
+    noteP.appendChild(editLink)
 
     let newLine = document.createElement('br')
-    noteLi.appendChild(newLine)
-    noteLi.appendChild(noteText)
-    noteList.appendChild(noteLi)
+    noteP.appendChild(newLine)
+    noteP.appendChild(noteText)
+    noteList.appendChild(noteP)
   }
 }
 
@@ -70,14 +72,12 @@ noteInput.addEventListener('input', function (event) {
 })
 
 function addNote() {
-  let noteInputValue = noteInput.value
-
-  if (noteInputValue || '') {
-    let objDo = {
-      text: noteInputValue
+  if (noteInput.value || '') {
+    let objNote = {
+      text: noteInput.value
     }
 
-    enoteObject.unshift(objDo)
+    enoteObject.unshift(objNote)
 
     localStorage.setItem('Enote', JSON.stringify(enoteObject))
 
@@ -88,6 +88,8 @@ function addNote() {
   }
 }
 
+//APAGAR NOTA
+
 function deleteNote(pos) {
   enoteObject.splice(pos, 1)
 
@@ -95,13 +97,16 @@ function deleteNote(pos) {
   renderNote()
 }
 
+//EDITAR NOTA
+
 function editNote(pos) {
-  noteId = pos //noteId --> variável para identificar índice da nota
+  notePos = pos //notePos --> variável para identificar índice da nota
   for (let note of enoteObject) {
-    if (enoteObject.indexOf(note) == noteId) {
+    if (enoteObject.indexOf(note) == notePos) {
       //Entra no Modo de edição
       noteInput.classList.toggle('edit-mode')
       readSection.classList.toggle('edit-mode') //coloca a seção de leitura das nota no modo de edição (que desabilita as ações das notas enquanto uma nota está sendo editada)
+      writePanel.classList.toggle('edit-mode')
 
       noteButtonAdd.setAttribute('hidden', 'true')
       noteButtonEdit.removeAttribute('hidden')
@@ -114,11 +119,11 @@ function editNote(pos) {
       //Se durante Modo de edição clicar em "Confirmar edição"
       noteButtonEdit.addEventListener('click', function (event) {
         if (noteInput.value != '' && noteInput.value != null) {
-          let objDo = {
+          let objNote = {
             text: noteInput.value
           }
 
-          enoteObject.splice(noteId, 1, objDo)
+          enoteObject.splice(notePos, 1, objNote)
 
           localStorage.setItem('Enote', JSON.stringify(enoteObject))
 
@@ -135,6 +140,7 @@ function editNote(pos) {
 }
 
 function exitEditMode() {
+  writePanel.classList.toggle('edit-mode')
   readSection.classList.toggle('edit-mode')
   noteInput.classList.toggle('edit-mode')
   noteInput.value = ''

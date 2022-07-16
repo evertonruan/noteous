@@ -25,44 +25,48 @@
       <nav>
         <ul>
           <li>
-            <a id="nav-history" href="about.html"
-              >Histórico de Modificações →</a
-            >
+            <a id="nav-history" href="about.html">Saiba Mais→</a>
           </li>
         </ul>
       </nav>
     </header>
     <main>
       <section id="section-write">
-        <label id="write-label">Qual o próximo passo?</label>
-        <textarea
-          id="write-input"
-          type="text"
-          autofocus
-          placeholder="Sua próxima tarefa ou lembrete"
-        ></textarea>
-        <div id="write-buttons-container">
-          <button id="write-button-add" class="write-buttons">
-            + ADICIONAR
-          </button>
-          <button id="write-button-edit" class="write-buttons" hidden="true">
-            CONFIRMAR EDIÇÃO
-          </button>
-          <button id="write-button-cancel" class="write-buttons" hidden="true">
-            CANCELAR
-          </button>
+        <div id="write-panel">
+          <label id="write-label">Qual o próximo passo?</label>
+          <textarea
+            id="write-input"
+            type="text"
+            autofocus
+            placeholder="Sua próxima tarefa ou lembrete"
+          ></textarea>
+          <div id="write-buttons-container">
+            <button id="write-button-add" class="write-buttons">
+              + ADICIONAR
+            </button>
+            <button id="write-button-edit" class="write-buttons" hidden="true">
+              CONFIRMAR EDIÇÃO
+            </button>
+            <button
+              id="write-button-cancel"
+              class="write-buttons"
+              hidden="true"
+            >
+              CANCELAR
+            </button>
+          </div>
         </div>
       </section>
 
       <section id="section-read">
-        <div class="read-container">
-          <ul id="read-notes-list"></ul>
+        <div class="read-panel">
+          <div id="read-notes-list"></div>
         </div>
       </section>
     </main>
 
     <footer>
-      <p><strong>Enote 0.8b</strong></p>
+      <p><strong>Enote 0.9b</strong></p>
     </footer>
 
     <script type="text/javascript" src="index.js"></script>
