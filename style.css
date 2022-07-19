@@ -185,7 +185,7 @@ h1 {
 }
 
 #section-read p {
-  white-space: pre;
+  white-space: pre-wrap;
   flex-basis: 30%;
   margin: 1rem;
   padding: 30px;
