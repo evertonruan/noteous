@@ -203,7 +203,7 @@ h1 {
   transition: transform 0.1s;
 }
 
-#enote-all-notes-p {
+.enote-all-notes-p {
   white-space: pre-wrap;
   word-break: break-all;
   word-wrap: break-word;
