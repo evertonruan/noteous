@@ -6,6 +6,6 @@ Aplicativo de notas e lembretes com um design singular
 
 **Acesse:**
 
-:pencil2: https://enoteapp.vercel.app/
+:pencil2: https://noteous.vercel.app/
 
 *(obs: em breve será atualizado com novo nome)*
