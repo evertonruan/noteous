@@ -185,6 +185,7 @@ h1 {
 }
 
 #section-read p {
+  user-select: all;
   white-space: pre-wrap;
   flex-basis: 30%;
   margin: 1rem;

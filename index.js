@@ -25,37 +25,18 @@ function renderNote() {
   noteList.innerHTML = ''
 
   for (let note of enoteObject) {
-    let noteP = document.createElement('p')
-    let noteText = document.createTextNode(note.text)
+    note.id = Date.now() + enoteObject.indexOf(note)
+  }
 
-    pos = enoteObject.indexOf(note)
+  localStorage.setItem('Enote', JSON.stringify(enoteObject))
 
-    //DELETE
-    let deleteLink = document.createElement('a')
-    deleteLink.classList.add('action-buttons')
-    deleteLink.classList.add('material-icons')
-    deleteLink.setAttribute('href', '#')
-    deleteLink.setAttribute('onclick', 'deleteNote(' + pos + ')')
-    let deleteText = document.createTextNode('check_circle')
-    deleteLink.appendChild(deleteText)
-    noteP.appendChild(deleteLink)
+  enoteAllNotes = JSON.stringify(enoteObject)
 
-    //EDIT
-    let editLink = document.createElement('a')
-    editLink.classList.add('action-buttons')
-    editLink.classList.add('material-icons')
-    editLink.setAttribute('href', '#')
-    editLink.setAttribute('onclick', 'editNote(' + pos + ')')
-    let editText = document.createTextNode('edit')
-    editLink.appendChild(editText)
-    noteP.appendChild(editLink)
-
-    let newLine = document.createElement('br')
-    noteP.appendChild(newLine)
+  let noteP = document.createElement('p')
+  let noteText = document.createTextNode(enoteAllNotes)
     noteP.appendChild(noteText)
     noteList.appendChild(noteP)
   }
-}
 
 //ADICIONAR NOTA
 
