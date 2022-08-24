@@ -32,12 +32,12 @@ function renderNote() {
 
   enoteAllNotes = JSON.stringify(enoteObject)
 
-  let noteP = document.createElement('p')
-  let noteText = document.createTextNode(enoteAllNotes)
+    let noteP = document.createElement('p')
+    noteP.classList.add('enote-all-notes-p')
+    let noteText = document.createTextNode(enoteAllNotes)
     noteP.appendChild(noteText)
     noteList.appendChild(noteP)
-  }
-
+}
 //ADICIONAR NOTA
 
 noteButtonAdd.addEventListener('click', addNote)

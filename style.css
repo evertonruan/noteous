@@ -186,8 +186,6 @@ h1 {
 
 #section-read p {
   white-space: pre-wrap;
-  word-break: break-all;
-  word-wrap: break-word;
   flex-basis: 30%;
   margin: 1rem;
   padding: 30px;
@@ -203,6 +201,12 @@ h1 {
   list-style-type: none;
 
   transition: transform 0.1s;
+}
+
+#enote-all-notes-p {
+  white-space: pre-wrap;
+  word-break: break-all;
+  word-wrap: break-word;
 }
 
 .action-buttons {
