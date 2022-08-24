@@ -11,191 +11,287 @@
       rel="stylesheet"
     />
 
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Serif+Text:ital@0;1&display=swap"
+      rel="stylesheet"
+    />
+
+        <!--MATERIAL ICONS-->
+        <link
+        href="https://fonts.googleapis.com/icon?family=Material+Icons"
+        rel="stylesheet"
+      />
+
     <link rel="stylesheet" href="style.css" />
 
-    <title>Enote • Saiba mais</title>
+    <title>noteous • Saiba Mais</title>
+    <link rel="shortcut icon" href="favicon.png" type="image/x-icon" />
+    <!--from: https://developer.mozilla.org/pt-BR/docs/Learn/HTML/Introduction_to_HTML/The_head_metadata_in_HTML-->
   </head>
   <body id="about">
     <header>
-      <div id="logo">
-        <h1>Enote</h1>
+      <div id="logo-container">
+        <a href="index.html"><h1 id="logo">noteous</h1></a>
         <h2>Saiba Mais</h2>
       </div>
-
+      
       <nav>
         <ul>
-          <li><a href="index.html">← Voltar para notas</a></li>
+          <li>
+            <a id="nav-update" href="index.html">← Voltar para notas</a>
+          </li>
         </ul>
       </nav>
     </header>
-
+  <main>
     <section id="about-app">
-      <h3>📋 INFORMAÇÕES SOBRE ARMAZENAMENTO</h2>
+      <div id="about-author">
+        <img id="about-author-image" src="./social-chain.png" alt="Autor e Projeto">
+        <h3>Desenvolvido por Éverton Ruan</h3>
       <p class="about-app-point">
-        Suas notas são salvas no seu dispositivo utilizando uma tecnologia do navegador de internet. Isso quer dizer que se você desinstalar ou
-        limpar os dados de seu navegador, suas notas serão apagadas. Inclusive, se você usa o Enote em vários navegadores, cada um deles terá notas diferentes.
+        noteous é um projeto de código aberto, <a href="https://github.com/evertonruan/noteous">disponível no GitHub →</a>
       </p>
-    </section>
-
-    <section id="about-history">
-      <h3>🕑 HISTÓRICO DE ATUALIZAÇÕES</h2>
-        <div id="about-history-point-actual">
-          <div class="about-history-point-container">
-            <p class="about-history-point-version">0.9.1b</p>
-            <p class="about-history-point-version-date">19/07/2022</p>
-          </div>
-          <p><strong>• CORREÇÃO</strong> Quebra de linha em notas grandes (white-space: pre → pre-wrap)</p>
+      <div id="about-author-mail"><span class="material-icons">
+        email
+        </span> <a href="mailto:evertonr0798@gmail.com">evertonr0798@gmail.com</a></div>
+      
       </div>
       
-      <div class="about-history-point">
-        <div class="about-history-point-container">
-          <p class="about-history-point-version">0.9b</p>
-          <p class="about-history-point-version-date">16/07/2022</p>
+      <h3>📋 INFORMAÇÕES SOBRE PRIVACIDADE E ARMAZENAMENTO</h2>
+        <p class="about-app-point">
+          Suas notas não são enviadas a ninguém. Elas são salvas no seu dispositivo (celular, tablet ou computador) utilizando uma tecnologia do navegador de internet, chamada Armazenamento Local. Se você desinstalar ou limpar os dados de seu navegador, suas notas serão apagadas. Inclusive, se usar o noteous em vários navegadores, cada um deles terá notas diferentes.
+        </p>
+      </section>
+
+      <h3>📋 ATUALIZAÇÃO PARA O NOTEOUS</h2>
+        <p class="about-app-point">
+          Se você já utilizava o Enote, <strong>suas notas não são transferidas para o noteous</strong>. Porém, você pode copiar e colar elas manualmente. <br>
+          <p><strong>Siga estas instruções</strong></p>
+          <p>1º: Acesse o Enote e copie o código. <strong><a href="http://enoteapp.vercel.app"> Acessar Enote → </a></strong></p>
+
+          <p>2º: Cole o código no campo abaixo.</p>
+          
+          <p class="about-app-point">
+            <div id="enote-notes-container">
+              <textarea id="enote-notes"></textarea>
+              <button id="enote-notes-add" onclick="addEnoteNotes()">+ Adicionar notas</button>
+            </div>
+            <p>IMPORTANTE: 
+              Isso irá substituir qualquer nota adicionada no noteous
+              <br>
+              Suas notas terão a data de hoje, pois o suporte a datas se inicia nesta versão.
+            </p>
+          </p>
+        </p>
+      </section>
+
+    <section id="about-update">
+      <div id="about-update-logo-container">
+        <h3>🕑 HISTÓRICO DE ATUALIZAÇÕES</h2>
+        <div id="advanced-container">
+          <p id="advanced-switch">Informações técnicas</p>
         </div>
-        <p>• <strong>NOVO</strong> Página Saiba Mais (uma seção que contém o
+      </div>
+
+<div id="about-update-gen-actual">
+  <img src="./cupcake logo.png" alt="cupcake">
+  <p id="gen-child-1">noteous cupcake</p>
+  <p id="gen-child-2">1ª Geração</p>
+</div>
+
+        <div id="about-update-point-actual">
+          <div class="about-update-point-container">
+            <p class="about-update-point-version">noteous cupcake 1.0</p>
+            <p class="about-update-point-version-date">23/08/2022</p>
+          </div>
+          <p class="update-description"><span class="update-type">NOVOS</span><strong>Logotipo e Nome do aplicativo: </strong>A partir da versão 1.0, o Enote recebe um novo e incrível nome: <span style="font-family: 'DM Serif Text', serif; font-style: italic; font-weight: bold; font-size: 1.3rem;">noteous!</span> Inclusive, há um novo logotipo pensado e feito especialmente para ele.
+          <span class="update-advanced">Observação: o logotipo (n estilizado) e o desenho do cupcake é de minha autoria. O logotipo de texto (noteous) é feito a partir da fonte "DM Serif Text", com aplicação de estilo negrito e itálico.</span></p>
+
+          <p class="update-description"><span class="update-type">NOVO</span><strong>Nome das gerações: </strong>a partir da versão 1.0, cada conjunto de versões será chamado "geração", e cada geração recebe um nome. A 1ª geração é chamada de "cupcake". Esses doces são muito bons e há cores e sabores muito diferentes. Isso mostra as possibilidades de anotações que é possível fazer no noteous. <span class="update-advanced">E além disso, a escolha de um nome de doce relembra um dos sistemas operacionais mais famosos: o Android, que recebia um nome de doce a cada versão!</span></p>
+    
+          <p class="update-description"><span class="update-type">NOVO</span><strong>Tela de boas vindas: </strong>a cada nova versão, quando o noteous for acessado pela 1ª vez, será exibida uma tela mostrando as novidades.</p>
+
+          <p class="update-description"><span class="update-type">NOVO</span><strong>Suporte a temas: </strong>escolha seu noteous preferido com os temas claro e escuro!</p>
+
+          <p class="update-description"><span class="update-type">NOVO</span><strong>Suporte a diversas propriedades em cada nota: </strong>isso tornará possível desenvolver recursos incríveis para o noteous.
+          <span class="update-advanced">Informações técnicas: Antes o Enote suportava apenas 1 propriedade: o texto da nota. Agora, suporta múltiplas propriedades, como ID (que funciona também como data de criação) e Data de Edição. Isso foi possível por mudar a forma em que as notas são localizadas. Antes (Enote 0.6b e anterior) era o usado loop for..in, que tornava difícil ou impossível localizar propriedades específicas. A partir do Enote 0.7b passou a ser usado loop for..of, que facilita localizar propriedades específicas. Mas havia um problema ao editar as notas: era usado um objeto temporário a cada edição e este era aplicado na nota. Caso houvessem mais propriedades, elas seriam sobrescritas. Agora no noteous 1.0 o texto da edição é diretamente aplicado à propriedade. Ou seja: essas duas melhorias (na versão 0.7b e agora na 1.0) tornam possível existir várias propriedades dentro de cada nota e alterar cada propriedade individualmente.</span></p>
+
+          <p  class="update-description"><span class="update-type"> NOVO</span><strong>Suporte a datas: </strong>veja quando suas notas foram criadas e quando foi a última edição.</p>
+
+          <p  class="update-description"><span class="update-type"> MELHORIA</span>Código interno de edição de nota simplificado.
+          <span class="update-advanced">Informações técnicas: Ao editar uma nota, o novo valor de texto é aplicado a ela. Antes, para fazer essa aplicação era necessário: criar um objeto temporário contendo o novo texto da nota e inserir esse objeto na lista de notas usando o método splice (que apaga o texto antigo e insere o novo) e localizando a nota pela posição dela no índice. Agora, o novo valor é atribuído diretamente a nota, selecionando a propriedade que contém o texto da nota. E para localizar a nota agora é utilizada a nova propriedade ID.</span></p>
+
+          <p class="update-description"><span class="update-type"> MELHORIA</span>Ao apagar e editar uma nota, o sistema busca pelo ID, não pelo número no índice.
+          <span class="update-advanced">Informações técnicas: Ao renderizar as notas, um for..of percorre o array de notas e inclui em cada nota botões que chamam as funções apagar/editar. Ao clicar em um botão, um valor é enviado para a função. É por meio desse valor que é possível localizar a nota para apagá-la/editá-la. Antes, os botões localizavam a nota pela posição dela (por exemplo, se fosse a quarta nota, o valor embutido no botão era 3). Agora os botões localizam a nota pelo ID. Adicionalmente, agora os valores são enviados à função usando template literals, não por concatenação</p>
+
+          <p  class="update-description"><span class="update-type"> CORREÇÃO</span> No Modo de Edição, em telas pequenas, o teclado ficava acima dos botões. Agora, acompanham o espaço disponível. 
+          <span class="update-advanced">Informações técnicas: Antes height: 60vh era aplicado ao campo de input. Porém na tela de um celular, o teclado ficava em cima dos botões Confirmar e Cancelar. Ou seja, os botões não acompanhavam corretamente o tamanho disponível de tela. Agora a altura de 70vh é aplicada ao painel inteiro (que inclui o campo de input + botões); isso faz com que os botões sejam inclusos. Porém, o campo de input ficou com tamanho estático. Assim, foi adicionada propriedade height: inherit, para que ele herde o tamanho disponível do painel.</span></p>
+          
+          <p class="update-description"><span class="update-type"> MELHORIA</span><strong>Página Saiba Mais: </strong>Agora exibe informações sobre o desenvolvedor. A seção Histórico de Atualizações agora exibe informações de forma mais legível. Por exemplo, o tipo de atualização (uma melhoria ou algo novo) recebe um destaque especial. Também, em telas onde há largura suficiente, há uma margem maior. Inclusive há o novo botão "Informações técnicas", que exibe detalhes adicionais sobre como certas melhorias foram implementadas.</p>
+      </div>
+
+      <div class="about-update-point">
+        <div class="about-update-point-container">
+          <p class="about-update-point-version">0.9.2b</p>
+          <p class="about-update-point-version-date">23/08/2022</p>
+        </div>
+        <p class="update-description"><span class="update-type"> NOVO</span> Compatibilidade com a nova versão 1.0</p>
+    </div>
+
+        <div class="about-update-point">
+          <div class="about-update-point-container">
+            <p class="about-update-point-version">0.9.1b</p>
+            <p class="about-update-point-version-date">19/07/2022</p>
+          </div>
+          <p class="update-description"><span class="update-type"> CORREÇÃO</span> Quebra de linha em notas grandes (white-space: pre → pre-wrap)</p>
+      </div>
+      
+      <div class="about-update-point">
+        <div class="about-update-point-container">
+          <p class="about-update-point-version">0.9b</p>
+          <p class="about-update-point-version-date">16/07/2022</p>
+        </div>
+        <p  class="update-description"> <span class="update-type">NOVO</span> Página Saiba Mais (uma seção que contém o
         Histórico de Atualizações e também informações sobre como as
         notas são armazenadas</p>
-        <p>• <strong>MELHORIA</strong> Suporte a notas multilinha. Escreva tudo o que precisar, em quantas linhas quiser.</p>
-        <p>• <strong>MELHORIA</strong> Painel de escrita sempre presente (apenas quando a tela tiver largura suficiente)</p>
-        <p>• <strong>MELHORIA</strong> Animação do botão "Adicionar" quando se insere texto no campo de anotações: o botão aumenta levemente de tamanho</p>
-        <p>• Histórico de Modificações agora é Histórico de Atualizações: veja as melhorias feitas no aplicativo, desde o início</p>
-      </div>
-      <div class="about-history-point">
-        <div class="about-history-point-container">
-          <p class="about-history-point-version">0.8b</p>
-          <p class="about-history-point-version-date">10/07/2022</p>
-        </div>
-        <p>• Melhoria: novo design de edição de notas</p>
-        <p>+ Ao editar notas é habilitado o novo "Modo de edição"</p>
-        <p>
-          + Ao criar uma nota, a função addNote() é chamada pelo JS, não pelo
-          HTML
-        </p>
-        <p>+ Organização interna no código de estilo</p>
+        <p  class="update-description"> <span class="update-type">MELHORIA</span> Suporte a notas multilinha. Escreva tudo o que precisar, em quantas linhas quiser.</p>
+        <p  class="update-description"> <span class="update-type">MELHORIA</span> Painel de escrita sempre visível (apenas quando a tela tiver largura suficiente)</p>
+        <p  class="update-description"> <span class="update-type">MELHORIA</span> Animação do botão "Adicionar" quando se insere texto no campo de anotações: o botão aumenta levemente de tamanho</p>
+        <p  class="update-description"> Histórico de Modificações agora é Histórico de Atualizações: veja as melhorias feitas no aplicativo, desde o início</p>
       </div>
 
-      <div class="about-history-point">
-        <div class="about-history-point-container">
-          <p class="about-history-point-version">0.7.3b</p>
-          <p class="about-history-point-version-date">05/07/2022</p>
+      <div class="about-update-point">
+        <div class="about-update-point-container">
+          <p class="about-update-point-version">0.8b</p>
+          <p class="about-update-point-version-date">10/07/2022</p>
         </div>
-        <p>• Correção de exibição em mobile</p>
+        <p class="update-description"><span class="update-type">NOVO</span><strong>Modo de edição: </strong>Ao editar uma nota, ela ganha destaque e as outras são desativadas.</p>
+        <p class="update-description"><span class="update-type">MELHORIA</span>Ao criar uma nota, a função addNote() é chamada pelo JS, não pelo HTML</p>
+        <p class="update-description"><span class="update-type">MELHORIA</span>Organização interna no código de estilo</p>
       </div>
 
-      <div class="about-history-point">
-        <div class="about-history-point-container">
-          <p class="about-history-point-version">0.7.2b</p>
-          <p class="about-history-point-version-date">30/06/2022</p>
+      <div class="about-update-point">
+        <div class="about-update-point-container">
+          <p class="about-update-point-version">0.7.3b</p>
+          <p class="about-update-point-version-date">05/07/2022</p>
         </div>
-        <p>
-          • Melhorias nas animações <br />+ Botão Adicionar é desabilitado se o
-          campo de anotações estiver vazio <br />+ Melhorias no Histórico de
-          Modificações: lista por ordem recente e melhorias de design
-        </p>
+        <p class="update-description"><span class="update-type">CORREÇÃO</span>Problema de exibição em mobile</p>
       </div>
 
-      <div class="about-history-point">
-        <div class="about-history-point-container">
-          <p class="about-history-point-version">0.7.1b</p>
-          <p class="about-history-point-version-date">27/06/2022</p>
+      <div class="about-update-point">
+        <div class="about-update-point-container">
+          <p class="about-update-point-version">0.7.2b</p>
+          <p class="about-update-point-version-date">30/06/2022</p>
         </div>
-        <p>• Revisão no código interno</p>
-        <p>+ Melhorias de acessibilidade</p>
+        <p class="update-description"><span class="update-type">MELHORIA</span>Animações revisadas</p>
+        <p class="update-description"><span class="update-type">CORREÇÃO</span>Botão Adicionar é desabilitado se o campo de anotações estiver vazio</p>
+        <p class="update-description"><span class="update-type">MELHORIA</span><strong>Histórico de Modificações: </strong>exibe a lista por ordem recente + melhorias de design</p>
       </div>
 
-      <div class="about-history-point">
-        <div class="about-history-point-container">
-          <p class="about-history-point-version">0.7b</p>
-          <p class="about-history-point-version-date">26/06/2022</p>
+      <div class="about-update-point">
+        <div class="about-update-point-container">
+          <p class="about-update-point-version">0.7.1b</p>
+          <p class="about-update-point-version-date">27/06/2022</p>
         </div>
-        <p>
-          • Reestruturação no código de renderização de notas <br />+ Retorno da
-          função de editar notas <br />+ Novo layout no Histórico de
-          Modificações
+        <p class="update-description"><span class="update-type">MELHORIA</span>Revisão no código interno</p>
+        <p class="update-description"><span class="update-type">MELHORIA</span>Acessibilidade aprimorada</p>
+      </div>
+
+      <div class="about-update-point">
+        <div class="about-update-point-container">
+          <p class="about-update-point-version">0.7b</p>
+          <p class="about-update-point-version-date">26/06/2022</p>
+        </div>
+        <p class="update-description"><span class="update-type">MELHORIA</span>Reestruturação no código de renderização de notas. <span class="update-advanced"> O uso de loop for..in foi descontinuado. Agora é usado loop for..of, pois torna possível localizar propriedades específicas</span>
+        <p class="update-description"><span class="update-type">NOVO</span>Retorno da função de editar notas </p>
+        <p class="update-description"><span class="update-type">MELHORIA</span>Novo layout no Histórico de Modificações</p>
         </p>
       </div>
 
-      <div class="about-history-point">
-        <div class="about-history-point-container">
-          <p class="about-history-point-version">0.6b</p>
-          <p class="about-history-point-version-date">25/06/2022</p>
+      <div class="about-update-point">
+        <div class="about-update-point-container">
+          <p class="about-update-point-version">0.6b</p>
+          <p class="about-update-point-version-date">25/06/2022</p>
         </div>
-        <p>
-          • Layout compatível em mobile <br />+ Atualização de design: Paleta de
-          cores <br />+ Revisão no código interno
-        </p>
+        <p class="update-description"><span class="update-type">MELHORIA</span>Layout compatível em mobile</p>
+        <p class="update-description"><span class="update-type">MELHORIA</span><strong>Atualização de design: </strong>Paleta de cores</p>
+        <p class="update-description"><span class="update-type">MELHORIA</span>Revisão no código interno</p>
       </div>
 
-      <div class="about-history-point">
-        <div class="about-history-point-container">
-          <p class="about-history-point-version">0.5b</p>
-          <p class="about-history-point-version-date">23/06/2022</p>
+      <div class="about-update-point">
+        <div class="about-update-point-container">
+          <p class="about-update-point-version">0.5b</p>
+          <p class="about-update-point-version-date">23/06/2022</p>
         </div>
-        <p>Atualização Geral</p>
-        <p>Novo layout: Projetado no formato de notas separadas. Exclusão das listas "Do" e "Memo".</p>
-        <p>Layout adaptável para diferentes tamanhos de janela. Suporte apenas para computador.</p>
-        Novo: Histórico de Modificações. É possível acessá-lo clicando no número da versão do aplicativo, no canto inferior esquerdo da tela.
-        <p>Função Editar nota desativada</p>
+        <p class="update-description"><span class="update-type">ATUALIZAÇÃO GERAL</span></p>
+        <p class="update-description"><span class="update-type">NOVO</span><strong>Histórico de Modificações: </strong>É possível acessá-lo clicando no número da versão do aplicativo, no canto inferior esquerdo da tela.</p>
+        <p class="update-description"><span class="update-type">MELHORIA</span><strong>Novo layout e design: </strong>Projetado no formato de notas separadas. Exclusão das listas "Do" e "Memo".</p>
+        <p class="update-description">Layout adaptável para diferentes tamanhos de janela. Suporte apenas para computador.</p>
+        <p class="update-description">Função Editar nota desativada</p>
       </div>
 
-      <div class="about-history-point">
-        <div class="about-history-point-container">
-          <p class="about-history-point-version">0.4.1b</p>
-          <p class="about-history-point-version-date">12/07/2021</p>
+      <div class="about-update-point">
+        <div class="about-update-point-container">
+          <p class="about-update-point-version">0.4.1b</p>
+          <p class="about-update-point-version-date">12/07/2021</p>
         </div>
-        <p>Melhorias no código interno. Antes cada botão possuia uma função para adicionar nota, agora, há apenas 1 função, que adiciona a nota dependendo de qual botão foi clicado.</p>
+        <p class="update-description"><span class="update-type">MELHORIA</span>Função de Adicionar nota aprimorada. <span class="update-advanced"> Antes cada botão possuia uma função para adicionar nota, agora, há apenas 1 função, que adiciona a nota dependendo de qual botão foi clicado.</span></p>
       </div>
 
-      <div class="about-history-point">
-        <div class="about-history-point-container">
-          <p class="about-history-point-version">0.4b</p>
-          <p class="about-history-point-version-date">03/07/2021</p>
+      <div class="about-update-point">
+        <div class="about-update-point-container">
+          <p class="about-update-point-version">0.4b</p>
+          <p class="about-update-point-version-date">03/07/2021</p>
         </div>
-        <p>Novo recurso: Edição de notas (suporte apenas para Lista "Do"). Ao editar uma nota, é aberta uma janela, com design transparente, lembrando vidro.</p>
-        <p>Melhorias de design:</p>
-        <p>Animação de sombra ao clicar no campo de escrita da nota</p>
-        <p>Animação ao clicar nos botões para adicionar nota (Do e Memo)</p>
-        <p>Novo: ícones de ação da nota. Do: ícone de concluído (apagar nota) e lápis (editar nota). Memo: ícone de lixeira (apagar nota). Usando material-icons</p>
-        <p></p>
+        <p class="update-description"><span class="update-type">NOVO</span><strong>Edição de notas: </strong>um novo botão "Editar" (lápis) aparece ao lado de cada nota. Ao clicar nele, é aberto um campo de entrada onde é possível alterar o conteúdo da nota. Ele fica acima de todo o conteúdo e tem design que lembra vidro.</p>
+        <p class="update-description"><span class="update-type">MELHORIAS</span><strong>Design: </strong>Novos ícones de ação da nota. Do: ícone de concluído (apagar nota) e lápis (editar nota). Memo: ícone de lixeira (apagar nota) <span class="update-advanced">Os ícones usam material-icons</span> + <strong>Novas animações: </strong> Sombra ao clicar no campo de escrita da nota + Ao clicar nos botões para adicionar nota (Do e Memo)</p>
       </div>
 
-      <div class="about-history-point">
-        <div class="about-history-point-container">
-          <p class="about-history-point-version">0.3.1b</p>
-          <p class="about-history-point-version-date">12/04/2021</p>
+      <div class="about-update-point">
+        <div class="about-update-point-container">
+          <p class="about-update-point-version">0.3.1b</p>
+          <p class="about-update-point-version-date">12/04/2021</p>
         </div>
-        <p>Melhorias de design: botões maiores. Botão "Adicionar Do" laranja e botão "Adicionar Memo" azul. Notas são exibidas dentro de um painel cinza claro.</p>
-        <p>Atualização de links para apagar notas. Antes as duas lista exibiam: "Concluído". Agora é diferente para cada lista: "Do Concluído"/"Apagar Memo"</p>
+        <p class="update-description"><span class="update-type">MELHORIA</span><strong>Design aprimorado: </strong> Botões maiores. Botão "Adicionar Do" em laranja e botão "Adicionar Memo" em azul. Notas são exibidas dentro de um painel cinza claro.</p>
+        <p class="update-description">Atualização de links para apagar notas. Antes as duas lista exibiam: "Concluído". Agora é diferente para cada lista: "Do Concluído"/"Apagar Memo"</p>
       </div>
 
-      <div class="about-history-point">
-        <div class="about-history-point-container">
-          <p class="about-history-point-version">0.3b</p>
-          <p class="about-history-point-version-date">11/04/2021</p>
+      <div class="about-update-point">
+        <div class="about-update-point-container">
+          <p class="about-update-point-version">0.3b</p>
+          <p class="about-update-point-version-date">11/04/2021</p>
         </div>
-        <p>• Melhoria geral: design projetado em 2 listas: Lista "Do": Anotações de tarefas para serem feitas. Lista "Memo": Anotações de lembretes</p>
-        <p>• Cada lista possui um botão. Ao escrever a nota, você escolhe para qual lista ela irá, clicando no botão "Adicionar" correspondente</p>
-        <p>+ Campo de escrita da nota com borda amarela</p>
-        <p>+ Adição de arquivo de estilo. Layout compatível apenas para computador</p>
+        <p class="update-description"><span class="update-type">ATUALIZAÇÃO GERAL</span></p>
+        <p class="update-description"><strong>Design projetado em 2 listas: </strong>Lista "Do": Anotações de tarefas a serem feitas. Lista "Memo": Anotações de lembretes</p>
+        <p class="update-description">Cada lista possui um botão. Ao escrever a nota, você escolhe para qual lista ela irá, clicando no botão "Adicionar" correspondente</p>
+        <p class="update-description">Campo de escrita da nota com borda amarela</p>
+        <p class="update-description">Adição de arquivo de estilo. Layout compatível apenas para computador</p>
       </div>
 
-      <div class="about-history-point">
-        <div class="about-history-point-container">
-          <p class="about-history-point-version">0.2b</p>
-          <p class="about-history-point-version-date">09/04/2021</p>
+      <div class="about-update-point">
+        <div class="about-update-point-container">
+          <p class="about-update-point-version">0.2b</p>
+          <p class="about-update-point-version-date">09/04/2021</p>
         </div>
-        <p>• Novo recurso: Visualização das notas em tela</p>
-        <p>+ Nova função: Apagar notas, clicando em Concluído</p>
+        <p class="update-description"><span class="update-type">NOVO</span> Visualização das notas em tela</p>
+        <p class="update-description"><span class="update-type">NOVO</span><strong>Exclusão de notas:</strong>Ao lado de cada nota é exibido um botão "Concluído". Ao clicar nele, a nota é apagada no LocalStorage</p>
       </div>
 
-      <div class="about-history-point">
-        <div class="about-history-point-container">
-          <p class="about-history-point-version">0.1b</p>
-          <p class="about-history-point-version-date">05/04/2021</p>
+      <div class="about-update-point">
+        <div class="about-update-point-container">
+          <p class="about-update-point-version">0.1b</p>
+          <p class="about-update-point-version-date">05/04/2021</p>
         </div>
-        <p>• Lançamento inicial: Projeto pensado em anotação de tarefas a serem feitas.</p>
-        <p>• É possível adicionar notas e vê-las apenas no console</p>
+        <p class="update-description"><span class="update-type">LANÇAMENTO INICIAL</span></p>
+        <p><strong>Enote: aplicativo de notas</strong></p>
+        <p class="update-description"><strong>Projeto pensado em anotação de tarefas a serem feitas.</strong></p>
+        <p class="update-description"><span class="update-type">NOVO</span><strong>Adição de notas:</strong> É possível escrever anotações e salvá-las no LocalStorage. Elas ficam visíveis apenas no console do navegador.</p>
       </div>
     </section>
+  </main>
+
+    <script type="text/javascript" src="about.js"></script>
   </body>
 </html>

@@ -1,31 +1,50 @@
 <!DOCTYPE html>
-<html>
+<html lang="pt-br">
   <head>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
+    <!--MERRIWEATHER-->
     <link rel="preconnect" href="https://fonts.gstatic.com" />
     <link
       href="https://fonts.googleapis.com/css2?family=Merriweather+Sans:wght@400;700&display=swap"
       rel="stylesheet"
     />
 
+    <!--DM-SERIF-->
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Serif+Text:ital@0;1&display=swap"
+      rel="stylesheet"
+    />
+
     <link rel="stylesheet" href="style.css" />
 
+    <!--MATERIAL ICONS-->
     <link
       href="https://fonts.googleapis.com/icon?family=Material+Icons"
       rel="stylesheet"
     />
-    <title>Enote</title>
+    <title>noteous</title>
+    <link rel="shortcut icon" href="favicon.png" type="image/x-icon" />
+    <!--from: https://developer.mozilla.org/pt-BR/docs/Learn/HTML/Introduction_to_HTML/The_head_metadata_in_HTML-->
   </head>
   <body id="index">
     <header>
-      <h1 id="logo">Enote</h1>
+      <a href="index.html"><h1 id="logo">noteous</h1></a>
       <nav>
         <ul>
           <li>
-            <a id="nav-history" href="about.html">Saiba Mais→</a>
+            <a id="nav-update" href="about.html">Saiba Mais</a>
+          </li>
+          <li>
+            <div id="theme-container">
+              <p>Tema</p>
+              <div id="theme-color"></div>
+            </div>
           </li>
         </ul>
       </nav>
@@ -42,7 +61,7 @@
           ></textarea>
           <div id="write-buttons-container">
             <button id="write-button-add" class="write-buttons">
-              + ADICIONAR
+              + Adicionar
             </button>
             <button id="write-button-edit" class="write-buttons" hidden="true">
               CONFIRMAR EDIÇÃO
@@ -66,7 +85,7 @@
     </main>
 
     <footer>
-      <p><strong>Enote 0.9.1b</strong></p>
+      <p><span>noteous</span> 1ª Geração • v1.0</p>
     </footer>
 
     <script type="text/javascript" src="index.js"></script>
