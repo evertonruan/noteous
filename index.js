@@ -24,7 +24,6 @@ let noteIdEdit
 
 let noteousMain = JSON.parse(localStorage.getItem('noteous-main')) || []
 
-console.log(noteousMain)
 renderNote()
 
 //////////////////////////////////////////
@@ -208,11 +207,7 @@ function renderNote() {
     noteContainer.classList.add('note-container')
     noteContainer.setAttribute('onclick', `editNote(${note.id})`)
 
-    console.log(note.editedAt)
-    //transformar de número (timestamp) para Data --> new Date(note.id)
-
     //ACTION BUTTONS
-
     let actionButtonsContainer = document.createElement('div')
     actionButtonsContainer.classList.add('action-buttons-container')
 
@@ -237,9 +232,9 @@ function renderNote() {
       document.createTextNode(
         `Criado em: ${new Date(note.id).getDate()}/${findMonth(
           new Date(note.id).getMonth()
-        )}/${new Date(note.id).getUTCFullYear()} às ${new Date(
+        )}/${new Date(note.id).getUTCFullYear()} às ${setTimeNumber(new Date(
           note.id
-        ).getHours()}:${new Date(note.id).getMinutes()}`
+        ).getHours())}:${setTimeNumber(new Date(note.id).getMinutes())}`
       )
     )
     if (note.editedAt != undefined) {
@@ -248,9 +243,9 @@ function renderNote() {
         document.createTextNode(
           `Última edição: ${new Date(note.editedAt).getDate()}/${findMonth(
             new Date(note.editedAt).getMonth()
-          )}/${new Date(note.editedAt).getUTCFullYear()} às ${new Date(
+          )}/${new Date(note.editedAt).getUTCFullYear()} às ${setTimeNumber(new Date(
             note.editedAt
-          ).getHours()}:${new Date(note.editedAt).getMinutes()}`
+          ).getHours())}:${setTimeNumber(new Date(note.editedAt).getMinutes())}`
         )
       )
     }
@@ -296,6 +291,33 @@ function findMonth(number) {
   }
 }
 
+//função para retornar número com 00 --> Exmpl: 09:05 (pois Date.getMinutes, .getHours retorna hora/minuto apenas com '0' --> Exmpl: 9:5, mas é preciso ser com '00'
+function setTimeNumber(number) {
+  if (number == 0) {
+    return '00'
+  } else if (number == 1) {
+    return '01'
+  } else if (number == 2) {
+    return '02'
+  } else if (number == 3) {
+    return '03'
+  } else if (number == 4) {
+    return '04'
+  } else if (number == 5) {
+    return '05'
+  } else if (number == 6) {
+    return '06'
+  } else if (number == 7) {
+    return '07'
+  } else if (number == 8) {
+    return '08'
+  } else if (number == 9) {
+    return '09'
+  } else if (number >= 10) {
+    return number;
+  }
+}
+
 //ADICIONAR NOTA
 
 noteButtonAdd.addEventListener('click', addNote)
@@ -309,6 +331,8 @@ noteInput.addEventListener('input', function (event) {
     noteButtonAdd.disabled = false
   }
 })
+
+// ADICIONAR NOTA
 
 function addNote() {
   if (noteInput.value || '') {
@@ -327,26 +351,6 @@ function addNote() {
     noteButtonAdd.disabled = true
   }
 }
-
-/*
-//ADDNOTE ANTIGO
-function addNote() {
-  if (noteInput.value || '') {
-    let objNote = {
-      text: noteInput.value
-    }
-
-    enoteObject.unshift(objNote)
-
-    localStorage.setItem('Enote', JSON.stringify(enoteObject))
-
-    renderNote()
-    noteInput.value = ''
-    noteInput.focus()
-    noteButtonAdd.disabled = true
-  }
-}
-*/
 
 //APAGAR NOTA
 

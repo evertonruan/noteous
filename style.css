@@ -14,6 +14,14 @@
   #about main {
     margin: 0 25%;
   }
+
+  #section-write {
+    flex: 1;
+  }
+
+  #section-read {
+    flex: 2;
+  }
 }
 
 @media (max-width: 1000px) {
@@ -27,6 +35,24 @@
 
   #about main {
     margin: 0 20%;
+  }
+
+  #section-write {
+    flex: 1;
+  }
+
+  #section-read {
+    flex: 2;
+  }
+}
+
+@media (max-width: 800px) {
+  #index #section-write {
+    flex: 5;
+  }
+
+  #index #section-read {
+    flex: 4;
   }
 }
 
@@ -198,10 +224,6 @@ a {
 
 /*-----SECTION-WRITE-----*/
 
-#section-write {
-  flex: 1;
-}
-
 #write-panel {
   display: flex;
   position: sticky;
@@ -292,14 +314,25 @@ a {
 
 /*-----SECTION-READ-----*/
 
-#section-read {
-  flex: 2;
-}
-
 #section-read.edit-mode {
   pointer-events: none;
   opacity: 0.4;
 }
+
+/*----Search----*/
+/*
+#read-search-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#read-search-input {
+  font-size: 0.8rem;
+}
+*/
+
+/*----Read notes----*/
 
 .read-panel {
   margin-top: 10px;
@@ -481,6 +514,10 @@ footer p span {
   user-select: none;
 }
 
+#about a {
+  color: var(--base-text);
+}
+
 #about #logo-container {
   display: flex;
   flex-direction: column;
@@ -502,13 +539,16 @@ footer p span {
   margin: 3rem 0;
 }
 
+#about-app-point li {
+  text-indent: 5rem;
+}
+
 #about textarea {
-  border-radius: .5rem;
+  border-radius: 0.5rem;
 }
 
 #about #enote-notes-container {
   display: flex;
-
 }
 
 #about #enote-notes-add {
@@ -524,6 +564,7 @@ footer p span {
   transition: all 0.2s;
 
   user-select: none;
+  cursor: pointer;
 }
 
 #about #enote-notes-add:disabled {
@@ -611,6 +652,8 @@ footer p span {
   border: 1px solid;
   border-color: var(--base-text);
   border-radius: 2rem;
+
+  cursor: pointer;
 }
 
 #about-update {
@@ -644,6 +687,7 @@ footer p span {
 
 .update-advanced {
   font-style: italic;
+  font-size: 1.1rem;
 }
 
 #about-update-point-actual {
