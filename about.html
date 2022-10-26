@@ -27,8 +27,7 @@
     <link rel="stylesheet" href="style.css" />
 
     <title>noteous • Saiba Mais</title>
-    <link rel="shortcut icon" href="favicon.png" type="image/x-icon" />
-    <!--from: https://developer.mozilla.org/pt-BR/docs/Learn/HTML/Introduction_to_HTML/The_head_metadata_in_HTML-->
+    <link rel="shortcut icon" href="./img/favicon.png" type="image/x-icon">
   </head>
   <body id="about">
     <header>
@@ -48,7 +47,7 @@
   <main>
     <section id="about-app">
       <div id="about-author">
-        <img id="about-author-image" src="./social-chain.png" alt="Autor e Projeto">
+        <img id="about-author-image" src="./img/social-chain.png" alt="Autor e Projeto">
         <h3>Desenvolvido por Éverton Ruan</h3>
       <p class="about-app-point">
         noteous é um projeto de código aberto, <a href="https://github.com/evertonruan/noteous">disponível no GitHub →</a>
@@ -100,14 +99,24 @@
       </div>
 
 <div id="about-update-gen-actual">
-  <img src="./cupcake logo.png" alt="cupcake">
+  <img src="./img/cupcake logo.png" alt="cupcake">
   <p id="gen-child-1">noteous cupcake</p>
   <p id="gen-child-2">1ª Geração</p>
 </div>
 
-        <div id="about-update-point-actual">
+<div id="about-update-point-actual">
+  <div class="about-update-point-container">
+    <p class="about-update-point-version">noteous cupcake 1.1</p>
+    <p class="about-update-point-version-date">25/10/2022</p>
+  </div>
+  <p class="update-description"><span class="update-type">NOVO</span><strong>Tamanho máximo de exibição:</strong> São exibidos até 300 caracteres de cada nota. É possível ver a nota inteira clicando nela.</p>
+  <p class="update-description"><span class="update-type">AJUSTE</span><strong>Botões aprimorados:</strong> "adicionar nota" possui mesma fonte do logotipo; "confirmar/cancelar edição" agora são representados por ícones.</p>
+  <p class="update-description"><span class="update-type">CORREÇÃO</span>Campo de escrita da nota não é mais redimensionável.</p>
+  </div>
+
+        <div class="about-update-point">
           <div class="about-update-point-container">
-            <p class="about-update-point-version">noteous cupcake 1.0.1</p>
+            <p class="about-update-point-version">1.0.1</p>
             <p class="about-update-point-version-date">09/09/2022</p>
           </div>
           <p class="update-description"><span class="update-type">AJUSTE</span>Informações sobre privacidade e armazenamento atualizadas.</p>
@@ -169,8 +178,7 @@
           <p class="about-update-point-version-date">16/07/2022</p>
         </div>
         <p  class="update-description"> <span class="update-type">NOVO</span> Página Saiba Mais (uma seção que contém o
-        Histórico de Atualizações e também informações sobre como as
-        notas são armazenadas</p>
+        Histórico de Atualizações e também informações sobre o aplicativo)</p>
         <p  class="update-description"> <span class="update-type">MELHORIA</span> Suporte a notas multilinha. Escreva tudo o que precisar, em quantas linhas quiser.</p>
         <p  class="update-description"> <span class="update-type">MELHORIA</span> Painel de escrita sempre visível (apenas quando a tela tiver largura suficiente)</p>
         <p  class="update-description"> <span class="update-type">MELHORIA</span> Animação do botão "Adicionar" quando se insere texto no campo de anotações: o botão aumenta levemente de tamanho</p>

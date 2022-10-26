@@ -29,8 +29,7 @@
       rel="stylesheet"
     />
     <title>noteous</title>
-    <link rel="shortcut icon" href="favicon.png" type="image/x-icon" />
-    <!--from: https://developer.mozilla.org/pt-BR/docs/Learn/HTML/Introduction_to_HTML/The_head_metadata_in_HTML-->
+    <link rel="shortcut icon" href="./img/favicon.png" type="image/x-icon" />
   </head>
   <body id="index">
     <header>
@@ -61,17 +60,17 @@
           ></textarea>
           <div id="write-buttons-container">
             <button id="write-button-add" class="write-buttons">
-              + Adicionar
+              + adicionar nota
             </button>
             <button id="write-button-edit" class="write-buttons" hidden="true">
-              CONFIRMAR EDIÇÃO
+              <span class="material-icons"> check_circle </span>
             </button>
             <button
               id="write-button-cancel"
               class="write-buttons"
               hidden="true"
             >
-              CANCELAR
+              <span class="material-icons"> block </span>
             </button>
           </div>
         </div>
@@ -94,7 +93,7 @@
     </main>
 
     <footer>
-      <p><span>noteous</span> 1ª Geração • v1.0.1</p>
+      <p><span>noteous</span> 1ª Geração • v1.1</p>
     </footer>
 
     <script type="text/javascript" src="index.js"></script>

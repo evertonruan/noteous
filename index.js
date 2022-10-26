@@ -222,7 +222,27 @@ function renderNote() {
     let noteTextContainer = document.createElement('div')
     noteTextContainer.classList.add('note-text-container')
     let textElement = document.createElement('p')
-    textElement.appendChild(document.createTextNode(note.text))
+
+    let noteChar = note.text
+    if (noteChar.length < 300) {
+      //Se tamanho da nota for menor que 30, escrever nota inteira
+      textElement.appendChild(document.createTextNode(noteChar))
+    } else if (noteChar.length >= 300) {
+      //Se tamanho da nota for maior que 30, escrever apenas até o 30º caractere e acrescentar botão para ver nota inteira
+      let count = 0
+      for (let noteCharAt of noteChar) {
+        textElement.appendChild(document.createTextNode(noteCharAt))
+        count = count + 1
+        //"Ir escrevendo" cada caractere até chegar o 30º
+        if (count == 300) {
+          textElement.append(document.createTextNode(' ...'))
+          textElement.append(document.createElement('br'))
+          textElement.append(document.createTextNode('[VER MAIS]'))
+
+          break
+        }
+      }
+    }
 
     //DATE
     let noteDateContainer = document.createElement('div')
@@ -232,9 +252,9 @@ function renderNote() {
       document.createTextNode(
         `Criado em: ${new Date(note.id).getDate()}/${findMonth(
           new Date(note.id).getMonth()
-        )}/${new Date(note.id).getUTCFullYear()} às ${setTimeNumber(new Date(
-          note.id
-        ).getHours())}:${setTimeNumber(new Date(note.id).getMinutes())}`
+        )}/${new Date(note.id).getUTCFullYear()} às ${setTimeNumber(
+          new Date(note.id).getHours()
+        )}:${setTimeNumber(new Date(note.id).getMinutes())}`
       )
     )
     if (note.editedAt != undefined) {
@@ -243,9 +263,9 @@ function renderNote() {
         document.createTextNode(
           `Última edição: ${new Date(note.editedAt).getDate()}/${findMonth(
             new Date(note.editedAt).getMonth()
-          )}/${new Date(note.editedAt).getUTCFullYear()} às ${setTimeNumber(new Date(
-            note.editedAt
-          ).getHours())}:${setTimeNumber(new Date(note.editedAt).getMinutes())}`
+          )}/${new Date(note.editedAt).getUTCFullYear()} às ${setTimeNumber(
+            new Date(note.editedAt).getHours()
+          )}:${setTimeNumber(new Date(note.editedAt).getMinutes())}`
         )
       )
     }
@@ -314,7 +334,7 @@ function setTimeNumber(number) {
   } else if (number == 9) {
     return '09'
   } else if (number >= 10) {
-    return number;
+    return number
   }
 }
 
