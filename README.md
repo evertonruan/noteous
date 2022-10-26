@@ -1,5 +1,6 @@
-# Enote
-Aplicativo de notas e lembretes com um design singular
+![Apresentação do noteous](/img/preview.png)
+# noteous
+App de notas e lembretes com um design singular
 
-Veja ele funcionando:
+### :memo: Veja ele funcionando:
 https://noteous.vercel.app/
