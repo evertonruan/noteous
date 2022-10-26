@@ -148,7 +148,7 @@ if (theme == null) {
 
   greetingDescriptionLi6.append(
     document.createTextNode(
-      'IMPORTANTE: Se você já utilizava o Enote, você pode manualmente transferir suas notas para o noteous. Clique em Saiba Mais para obter instruções'
+      'IMPORTANTE: Se você já utilizava o Enote, poderá transferir manualmente suas notas para o noteous. Clique em Saiba Mais para obter instruções'
     )
   )
 
