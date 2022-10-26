@@ -225,15 +225,15 @@ function renderNote() {
 
     let noteChar = note.text
     if (noteChar.length < 300) {
-      //Se tamanho da nota for menor que 30, escrever nota inteira
+      //Se tamanho da nota for menor que 300, escrever/exibir nota inteira
       textElement.appendChild(document.createTextNode(noteChar))
     } else if (noteChar.length >= 300) {
-      //Se tamanho da nota for maior que 30, escrever apenas até o 30º caractere e acrescentar botão para ver nota inteira
+      //Se tamanho da nota for maior que 300, escrever/exibir apenas até o 300º caractere e acrescentar "Ver Mais"
       let count = 0
       for (let noteCharAt of noteChar) {
         textElement.appendChild(document.createTextNode(noteCharAt))
         count = count + 1
-        //"Ir escrevendo" cada caractere até chegar o 30º
+        //A cada iteração, escreve 1 caractere da nota. Ao chegar no 300° caractere, acrescenta "Ver Mais" e encerra.
         if (count == 300) {
           textElement.append(document.createTextNode(' ...'))
           textElement.append(document.createElement('br'))
