@@ -79,11 +79,10 @@ let enoteNotesButton = document.querySelector('#enote-notes-add')
 
 function addEnoteNotes() {
   let noteousGetEnote = JSON.parse(enoteNotes.value)
-  let noteousVersion = "1.0updated"
+  let noteousVersion = '1.0updated'
 
   localStorage.setItem('noteous-main', JSON.stringify(noteousGetEnote))
 
-  enoteNotes.value = "Suas notas foram adicionadas!"
-  enoteNotesButton.setAttribute('disabled', 'disabled');
-  
+  enoteNotes.value = 'Suas notas foram adicionadas ao noteous!'
+  enoteNotesButton.setAttribute('disabled', 'disabled')
 }

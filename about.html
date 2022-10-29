@@ -68,7 +68,7 @@
         </p>
       </section>
 
-      <h3>✅ ATUALIZAÇÃO PARA O NOTEOUS</h2>
+      <h3>✅ ATUALIZAÇÃO PARA O NOTEOUS</h3>
         <p class="about-app-point">
           Se você já utilizava o Enote, <strong>suas notas não são transferidas para o noteous</strong>. Porém, você pode copiar e colar elas manualmente. <br>
           <p><strong>Siga estas instruções</strong></p>
@@ -81,10 +81,13 @@
               <textarea id="enote-notes"></textarea>
               <button id="enote-notes-add" onclick="addEnoteNotes()">+ Adicionar notas</button>
             </div>
+            <br>
             <p>IMPORTANTE: 
               Isso irá substituir qualquer nota adicionada no noteous
               <br>
               Suas notas terão a data de hoje, pois o suporte a datas se inicia nesta versão.
+              <br>
+              Este recurso de atualização do Enote para o noteous será descontinuado em breve.
             </p>
           </p>
         </p>
@@ -104,9 +107,23 @@
   <p id="gen-child-2">1ª Geração</p>
 </div>
 
+<div id="about-update-list">
 <div id="about-update-point-actual">
   <div class="about-update-point-container">
-    <p class="about-update-point-version">noteous cupcake 1.1</p>
+    <p class="about-update-point-version">noteous cupcake 1.2</p>
+    <p class="about-update-point-version-date">29/10/2022</p>
+  </div>
+  <p class="update-description"><span class="update-type">NOVO</span><strong>Mensagem de boas-vindas:</strong> Agora você é bem recebido com um "olá" e ainda é informado com a data de hoje</p>
+  <p class="update-description"><span class="update-type">NOVO</span><strong>Botão para ordenar notas:</strong> Pela primeira vez é possível personalizar a ordem das notas. Agora você pode ordenar para exibir primeiro as mais recentes ou antigas.</p>
+  <p class="update-description"><span class="update-type">MELHORIA</span><strong>Animações revisadas:</strong> A experiência de adicionar e editar notas está mais fluida com animações incríveis</p>
+  <p class="update-description"><span class="update-type">MELHORIA</span>São exibidos alguns emojis para melhorar a experiência (✔ dentro do campo de escrita da nota e 📝 ao editar uma nota</p>
+  <p class="update-description"><span class="update-type">MELHORIA</span><strong>Histórico de Atualizações:</strong> O cabeçalho acompanha a tela, sendo possível mostrar/ocultar informações técnicas com facilidade</p>
+  <p class="update-description"><span class="update-type">CORREÇÃO</span>Diversos problemas de exibição corrigidos. <span class="update-advanced"><strong>1️⃣</strong> Havia um problema com a animação do redimensionamento do campo de escrita: quando uma edição de nota era concluída, por um instante, a animação exibia o campo ocupando toda a área restante da tela. Um ajuste no código corrigiu isso e aprimorou como as seções se dimensionam.2️⃣O header estava com várias inconsistências de margens, etc.</span></p>
+  </div>
+
+<div class="about-update-point">
+  <div class="about-update-point-container">
+    <p class="about-update-point-version">1.1</p>
     <p class="about-update-point-version-date">25/10/2022</p>
   </div>
   <p class="update-description"><span class="update-type">NOVO</span><strong>Tamanho máximo de exibição:</strong> São exibidos até 300 caracteres de cada nota. É possível ver a nota inteira clicando nela.</p>
@@ -312,6 +329,7 @@
         <p class="update-description"><strong>Projeto pensado em anotação de tarefas a serem feitas.</strong></p>
         <p class="update-description"><span class="update-type">NOVO</span><strong>Adição de notas:</strong> É possível escrever anotações e salvá-las no LocalStorage. Elas ficam visíveis apenas no console do navegador.</p>
       </div>
+    </div>
     </section>
   </main>
 

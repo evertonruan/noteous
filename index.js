@@ -3,6 +3,8 @@
 let settingsButton = document.querySelector('#nav-settings')
 let themeButton = document.querySelector('#theme-container')
 
+let welcomePanel = document.querySelector('#welcome-panel')
+let welcomeTextContainer = document.querySelector('#welcome-text-container')
 let labelWrite = document.querySelector('#write-label')
 let noteInput = document.querySelector('#write-input')
 let noteButtonAdd = document.querySelector('#write-button-add')
@@ -11,6 +13,7 @@ let noteButtonCancelEdit = document.querySelector('#write-button-cancel')
 let noteList = document.querySelector('#read-notes-list')
 
 let settingsSection = document.querySelector('#section-settings')
+let readOptionsSort = document.querySelector('#read-options-sort')
 let readSection = document.querySelector('#section-read')
 let writeSection = document.querySelector('#section-write')
 let writePanel = document.querySelector('#write-panel')
@@ -24,6 +27,8 @@ let noteIdEdit
 
 let noteousMain = JSON.parse(localStorage.getItem('noteous-main')) || []
 
+showWelcome()
+getSettings()
 renderNote()
 
 //////////////////////////////////////////
@@ -92,7 +97,7 @@ if (theme == null) {
   greetingTitle1.append(document.createTextNode('Enote agora é'))
 
   let greetingTitleIcon = document.createElement('img')
-  greetingTitleIcon.setAttribute('src', './logo-icon.png')
+  greetingTitleIcon.setAttribute('src', './img/logo-icon.png')
   greetingTitleIcon.classList.add('greeting-title-icon')
 
   greetingTitle2 = document.createElement('p')
@@ -197,7 +202,72 @@ themeButton.addEventListener('click', () => {
 
 //FUNÇÕES /////////////////////////////////////
 
+//GETSETTINGS --> ao atualizar página, recupera dados salvos
+function getSettings() {
+  let noteousSettings = JSON.parse(localStorage.getItem('noteous-settings'))
+  if (noteousSettings == null) {
+    let noteousSettings = { sort: 'recent' }
+    localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
+  } else if (noteousSettings.sort == 'recent') {
+    noteList.style.cssText = 'flex-wrap: wrap; flex-direction: row;'
+
+    readOptionsSort.innerHTML = ''
+    readOptionsSort.append(
+      document.createTextNode('Ordenando por: Recente primeiro')
+    )
+  } else if (noteousSettings.sort == 'old') {
+    noteList.style.cssText =
+      'flex-wrap: wrap-reverse; flex-direction: row-reverse;'
+
+    readOptionsSort.innerHTML = ''
+    readOptionsSort.append(
+      document.createTextNode('Ordenando por: Antigo primeiro')
+    )
+  }
+}
+
+//MOSTRAR BOAS VINDAS
+
+function showWelcome() {
+  let dateNow = new Date()
+  let welcomeText = document.createTextNode(
+    `Olá! Hoje é ${findWeek(new Date(dateNow).getDay())}, ${new Date(
+      dateNow
+    ).getDate()} de ${findMonth(new Date(dateNow).getMonth())}`
+  )
+  welcomeTextContainer.append(welcomeText)
+}
+
 //RENDERIZAR NOTAS
+
+//BOTÃO ORDENAR NOTAS
+readOptionsSort.addEventListener('click', sortNotes)
+
+function sortNotes() {
+  let noteousSettings = JSON.parse(localStorage.getItem('noteous-settings'))
+  if (noteousSettings.sort == 'recent') {
+    noteList.style.cssText =
+      'flex-wrap: wrap-reverse; flex-direction: row-reverse;'
+
+    readOptionsSort.innerHTML = ''
+    readOptionsSort.append(
+      document.createTextNode('Ordenando por: Antigo primeiro')
+    )
+    noteousSettings = { sort: 'old' }
+    renderNote()
+    localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
+  } else if (noteousSettings.sort == 'old') {
+    noteList.style.cssText = 'flex-wrap: wrap; flex-direction: row;'
+
+    readOptionsSort.innerHTML = ''
+    readOptionsSort.append(
+      document.createTextNode('Ordenando por: Recente primeiro')
+    )
+    noteousSettings = { sort: 'recent' }
+    renderNote()
+    localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
+  }
+}
 
 function renderNote() {
   noteList.innerHTML = ''
@@ -225,15 +295,15 @@ function renderNote() {
 
     let noteChar = note.text
     if (noteChar.length < 300) {
-      //Se tamanho da nota for menor que 300, escrever/exibir nota inteira
+      //Se tamanho da nota for menor que 30, escrever nota inteira
       textElement.appendChild(document.createTextNode(noteChar))
     } else if (noteChar.length >= 300) {
-      //Se tamanho da nota for maior que 300, escrever/exibir apenas até o 300º caractere e acrescentar "Ver Mais"
+      //Se tamanho da nota for maior que 30, escrever apenas até o 30º caractere e acrescentar botão para ver nota inteira
       let count = 0
       for (let noteCharAt of noteChar) {
         textElement.appendChild(document.createTextNode(noteCharAt))
         count = count + 1
-        //A cada iteração, escreve 1 caractere da nota. Ao chegar no 300° caractere, acrescenta "Ver Mais" e encerra.
+        //"Ir escrevendo" cada caractere até chegar o 30º
         if (count == 300) {
           textElement.append(document.createTextNode(' ...'))
           textElement.append(document.createElement('br'))
@@ -308,6 +378,24 @@ function findMonth(number) {
     return 'Novembro'
   } else if (number == 11) {
     return 'Dezembro'
+  }
+}
+
+function findWeek(number) {
+  if (number == 0) {
+    return 'Domingo'
+  } else if (number == 1) {
+    return 'Segunda-feira'
+  } else if (number == 2) {
+    return 'Terça-feira'
+  } else if (number == 3) {
+    return 'Quarta-feira'
+  } else if (number == 4) {
+    return 'Quinta-feira'
+  } else if (number == 5) {
+    return 'Sexta-feira'
+  } else if (number == 6) {
+    return 'Sábado'
   }
 }
 
@@ -397,13 +485,16 @@ function editNote(noteId) {
       readSection.classList.toggle('edit-mode') //coloca a seção de leitura das nota no modo de edição (que desabilita as ações das notas enquanto uma nota está sendo editada)
       writePanel.classList.toggle('edit-mode')
 
+      welcomeTextContainer.setAttribute('hidden', 'true')
+      welcomePanel.classList.toggle('edit-mode')
+
       noteButtonAdd.setAttribute('hidden', 'true')
       noteButtonEdit.removeAttribute('hidden')
       noteButtonCancelEdit.removeAttribute('hidden')
 
       noteInput.focus()
       noteInput.value = note.text //coloca o texto da nota dentro do campo de input
-      labelWrite.innerHTML = 'Edite aqui sua nota'
+      labelWrite.innerHTML = '📝 Edite aqui sua nota'
 
       //Se durante Modo de edição clicar em "Confirmar edição"
       noteButtonEdit.addEventListener('click', () => {
@@ -433,6 +524,9 @@ function exitEditMode() {
   readSection.classList.toggle('edit-mode')
   noteInput.classList.toggle('edit-mode')
   noteInput.value = ''
+
+  welcomePanel.classList.toggle('edit-mode')
+  welcomeTextContainer.removeAttribute('hidden')
 
   noteButtonAdd.removeAttribute('hidden')
   noteButtonAdd.disabled = true

@@ -37,26 +37,29 @@
       <nav>
         <ul>
           <li>
-            <a id="nav-update" href="about.html">Saiba Mais</a>
-          </li>
-          <li>
             <div id="theme-container">
               <p>Tema</p>
               <div id="theme-color"></div>
             </div>
+          </li>
+          <li>
+            <a id="nav-update" href="about.html">Saiba Mais</a>
           </li>
         </ul>
       </nav>
     </header>
     <main>
       <section id="section-write">
+        <div id="welcome-panel">
+          <p id="welcome-text-container"></p>
+        </div>
         <div id="write-panel">
           <label id="write-label">Qual o próximo passo?</label>
           <textarea
             id="write-input"
             type="text"
             autofocus
-            placeholder="Sua próxima tarefa ou lembrete"
+            placeholder="✔ Sua próxima tarefa ou lembrete"
           ></textarea>
           <div id="write-buttons-container">
             <button id="write-button-add" class="write-buttons">
@@ -77,15 +80,16 @@
       </section>
 
       <section id="section-read">
-        <div id="read-search-container" hidden="true">
-          <div>
-            <input
-              type="search"
-              id="read-search-input"
-              placeholder="Pesquisar no noteous"
-            />
-          </div>
+        <div id="read-options">
+          <input
+            hidden="true"
+            type="search"
+            id="read-search-input"
+            placeholder="Pesquisar no noteous"
+          />
+          <p id="read-options-sort"></p>
         </div>
+
         <div class="read-panel">
           <div id="read-notes-list"></div>
         </div>
@@ -93,7 +97,7 @@
     </main>
 
     <footer>
-      <p><span>noteous</span> 1ª Geração • v1.1</p>
+      <p><span>noteous</span> 1ª Geração • v1.2</p>
     </footer>
 
     <script type="text/javascript" src="index.js"></script>
