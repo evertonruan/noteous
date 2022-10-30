@@ -275,7 +275,7 @@ function renderNote() {
   for (let note of noteousMain) {
     let noteContainer = document.createElement('div')
     noteContainer.classList.add('note-container')
-    noteContainer.setAttribute('onclick', `openNote(${note.id})`)
+    noteContainer.setAttribute('onclick', `editNote(${note.id})`)
 
     //ACTION BUTTONS
     let actionButtonsContainer = document.createElement('div')
@@ -474,18 +474,6 @@ function deleteNote(noteId) {
   renderNote()
 }
 
-//ABRIR NOTA
-function openNote(noteId) {
-  if (window.screen.width <= 600) {
-    noteInput.setAttribute('readonly', true)
-    noteInput.focus()
-    editNote(noteId)
-  } else if (window.screen.width >= 601) {
-    noteInput.focus()
-    editNote(noteId)
-  }
-}
-
 //EDITAR NOTA
 
 function editNote(noteId) {
@@ -504,7 +492,7 @@ function editNote(noteId) {
       noteButtonEdit.removeAttribute('hidden')
       noteButtonCancelEdit.removeAttribute('hidden')
 
-      noteInput.removeAttribute('readonly')
+      noteInput.focus()
       noteInput.value = note.text //coloca o texto da nota dentro do campo de input
       labelWrite.innerHTML = '📝 Edite aqui sua nota'
 
