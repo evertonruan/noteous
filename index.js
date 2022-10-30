@@ -479,7 +479,6 @@ function openNote(noteId) {
   if (window.screen.width <= 600) {
     noteInput.setAttribute('readonly', true)
     noteInput.focus()
-    noteInput.removeAttribute('readonly')
     editNote(noteId)
   } else if (window.screen.width >= 601) {
     noteInput.focus()
@@ -505,6 +504,7 @@ function editNote(noteId) {
       noteButtonEdit.removeAttribute('hidden')
       noteButtonCancelEdit.removeAttribute('hidden')
 
+      noteInput.removeAttribute('readonly')
       noteInput.value = note.text //coloca o texto da nota dentro do campo de input
       labelWrite.innerHTML = '📝 Edite aqui sua nota'
 
