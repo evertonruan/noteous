@@ -479,7 +479,7 @@ function openNote(noteId) {
   if (window.screen.width <= 600) {
     noteInput.setAttribute('readonly', true)
     noteInput.focus()
-    //noteInput.removeAttribute('readonly')
+    noteInput.removeAttribute('readonly')
     editNote(noteId)
   } else if (window.screen.width >= 601) {
     noteInput.focus()
