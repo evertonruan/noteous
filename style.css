@@ -282,6 +282,22 @@ a {
   user-select: none;
 }
 
+#write-options {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  background-color: var(--base-buttons);
+  border-color: var(--base-text);
+  border-width: 5px;
+  box-shadow: 0px 3px 5px black;
+
+  transition: all 0.2s cubic-bezier(0.075, 0.82, 0.165, 1);
+}
+
 #write-input {
   height: 6rem;
   width: 65%;
@@ -292,10 +308,9 @@ a {
 
   font-size: 1rem;
 
-  border-width: 3px;
+  border-width: 5px;
   border-radius: 20px;
   border-color: var(--base-write-input);
-  border-style: solid;
 
   transition: all 0.5s cubic-bezier(0.075, 0.82, 0.165, 1);
 }
@@ -417,6 +432,8 @@ a {
   margin: 1rem;
 
   background-color: var(--base-note-container);
+
+  border-color: var(--base-text);
   border-radius: 1.2rem;
   box-shadow: 2px 9px 5px 1px hsla(33, 10%, 18%, 20%);
 
