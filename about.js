@@ -1,49 +1,52 @@
-//CONFIGURAÇÕES - TEMA
+let noteousSettings = JSON.parse(localStorage.getItem('noteous-settings'))
 
-function themeLight() {
-  themeParams = {
-    themeLum: 'light',
-    hue: '--hue: 30;',
-    str: '--str: 90%;',
-    lumBack: '--lum-back: 90%;',
-    lumMid: '--lum-mid: 60%;',
-    lumFront: '--lum-front: 10%;'
+function setTheme(context) {
+  if (context == 'light') {
+    noteousSettings.theme = themeParams = {
+      themeLum: 'light',
+      hue: '--hue: 30;',
+      str: '--str: 90%;',
+      lumBack: '--lum-back: 90%;',
+      lumMid: '--lum-mid: 60%;',
+      lumFront: '--lum-front: 10%;'
+    }
+
+    localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
+    noteousSettings = JSON.parse(localStorage.getItem('noteous-settings'))
+    document.querySelector(
+      ':root'
+    ).style.cssText = `${noteousSettings.theme.hue} ${noteousSettings.theme.str}
+${noteousSettings.theme.lumBack}
+${noteousSettings.theme.lumMid}
+${noteousSettings.theme.lumFront}`
+  } else if (context == 'dark') {
+    noteousSettings.theme = themeParams = {
+      themeLum: 'dark',
+      hue: '--hue: 30;',
+      str: '--str: 40%;',
+      lumBack: '--lum-back: 10%;',
+      lumMid: '--lum-mid: 30%;',
+      lumFront: '--lum-front: 90%;'
+    }
+
+    localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
+    noteousSettings = JSON.parse(localStorage.getItem('noteous-settings'))
+    document.querySelector(
+      ':root'
+    ).style.cssText = `${noteousSettings.theme.hue} ${noteousSettings.theme.str}
+${noteousSettings.theme.lumBack}
+${noteousSettings.theme.lumMid}
+${noteousSettings.theme.lumFront}`
   }
-
-  localStorage.setItem('theme', JSON.stringify(themeParams))
-  let theme = JSON.parse(localStorage.getItem('theme'))
-  document.querySelector(':root').style.cssText = `${theme.hue} ${theme.str}
-${theme.lumBack}
-${theme.lumMid}
-${theme.lumFront}`
-}
-
-function themeDark() {
-  themeParams = {
-    themeLum: 'dark',
-    hue: '--hue: 30;',
-    str: '--str: 40%;',
-    lumBack: '--lum-back: 10%;',
-    lumMid: '--lum-mid: 30%;',
-    lumFront: '--lum-front: 90%;'
-  }
-
-  localStorage.setItem('theme', JSON.stringify(themeParams))
-  let theme = JSON.parse(localStorage.getItem('theme'))
-  document.querySelector(':root').style.cssText = `${theme.hue} ${theme.str}
-${theme.lumBack}
-${theme.lumMid}
-${theme.lumFront}`
 }
 
 //inicializar tema: verifica qual foi o último tema salvo e aplica ele
-let theme = JSON.parse(localStorage.getItem('theme'))
-if (theme == null) {
-  themeLight()
-} else if (theme.themeLum == 'light') {
-  themeLight()
-} else if (theme.themeLum == 'dark') {
-  themeDark()
+if (noteousSettings.theme == null) {
+  setTheme('light')
+} else if (noteousSettings.theme.themeLum == 'light') {
+  setTheme('light')
+} else if (noteousSettings.theme.themeLum == 'dark') {
+  setTheme('dark')
 }
 
 //MODO AVANÇADO
@@ -79,7 +82,6 @@ let enoteNotesButton = document.querySelector('#enote-notes-add')
 
 function addEnoteNotes() {
   let noteousGetEnote = JSON.parse(enoteNotes.value)
-  let noteousVersion = '1.0updated'
 
   localStorage.setItem('noteous-main', JSON.stringify(noteousGetEnote))
 
