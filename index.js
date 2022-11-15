@@ -25,7 +25,7 @@ let noteList = document.querySelector('#read-notes-list')
 
 // VARIÁVEIS IMPORTANTES /////////////////////////////////////
 
-let currentVersion = 1.3
+let currentVersion = 1.3.1
 let noteIdEdit //usada para confirmar qual nota está sendo editada
 let editMode = false
 
