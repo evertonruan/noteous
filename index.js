@@ -235,6 +235,7 @@ function welcomeToNoteous(context) {
       btnNext
     )
     greetingPanel.append(greetingSectionMain)
+    body.innerHTML = ''
     body.append(greetingPanel)
   }
 }
