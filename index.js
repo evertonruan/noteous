@@ -1,238 +1,422 @@
 // ELEMENTOS /////////////////////////////////////
+let body = document.querySelector('body')
 
-let settingsButton = document.querySelector('#nav-settings')
 let themeButton = document.querySelector('#theme-container')
+
+//WRITE-SECTION
+let writeSection = document.querySelector('#section-write')
+let writePanel = document.querySelector('#write-panel')
 
 let welcomePanel = document.querySelector('#welcome-panel')
 let welcomeTextContainer = document.querySelector('#welcome-text-container')
-let labelWrite = document.querySelector('#write-label')
+
 let writeOptions = document.querySelector('#write-options')
+
+let labelWrite = document.querySelector('#write-label')
 let noteInput = document.querySelector('#write-input')
 let noteButtonAdd = document.querySelector('#write-button-add')
 let noteButtonEdit = document.querySelector('#write-button-edit')
 let noteButtonCancelEdit = document.querySelector('#write-button-cancel')
+
+//READ-SECTION
+let readSection = document.querySelector('#section-read')
+let readOptionsSort = document.querySelector('#read-options-sort')
 let noteList = document.querySelector('#read-notes-list')
 
-let settingsSection = document.querySelector('#section-settings')
-let readOptionsSort = document.querySelector('#read-options-sort')
-let readSection = document.querySelector('#section-read')
-let writeSection = document.querySelector('#section-write')
-let writePanel = document.querySelector('#write-panel')
-let body = document.querySelector('body')
+// VARIÁVEIS IMPORTANTES /////////////////////////////////////
 
-/////////////
-
-let noteIdEdit
-let editMode = false
 let currentVersion = 1.3
+let noteIdEdit //usada para confirmar qual nota está sendo editada
+let editMode = false
 
-//INICIALIZAÇÃO: coletar dados do LocalStorage
+///////////////////////////////////////////////////////////////
+
+//INICIALIZAÇÃO //////////////////////////////////////////////
 
 let noteousMain = JSON.parse(localStorage.getItem('noteous-main')) || []
 let noteousSettings = JSON.parse(localStorage.getItem('noteous-settings'))
 
-showWelcome()
 getSettings()
 renderNote()
+showWelcome()
 
-//////////////////////////////////////////
+/////////////////////////////////////////////////////////////
 
-//CONFIGURAÇÕES - TEMA
-
+//welcomeToNoteous --> ao acessar 1ª vez ou nova versão
 function welcomeToNoteous(context) {
-  //INICIALIZAÇÃO
-  themeLight()
-  console.log(context)
+  setTheme('setThemeLight')
+  //context --> primeiro acesso ou nova versão
+  if (context == 'first-access') {
+    //Configuração da tela de Boas vindas (noteous 1.0)
 
-  //Configuração da tela de Boas vindas (noteous 1.0)
+    //Panel e Section
+    //greetingPanel --> sectionMain + sectionTitle
+    let greetingPanel = document.createElement('div')
+    greetingPanel.classList.add('greeting-panel')
 
-  //Panel e Section
-  let greetingPanel = document.createElement('div')
-  greetingPanel.classList.add('greeting-panel')
+    let greetingSectionMain = document.createElement('div')
+    greetingSectionMain.classList.add('greeting-section-main')
 
-  let greetingSectionMain = document.createElement('div')
-  greetingSectionMain.classList.add('greeting-section-main')
+    let greetingSectionTitle = document.createElement('div')
+    greetingSectionTitle.classList.add('greeting-section-title')
 
-  let greetingSectionTitle = document.createElement('div')
-  greetingSectionTitle.classList.add('greeting-section-title')
+    //Titles e Descriptions
+    let greetingTitle1 = document.createElement('p')
+    greetingTitle1.classList.add('greeting-title1')
+    greetingTitle1.append(document.createTextNode('Bem-vindo ao'))
 
-  //Titles e Descriptions
-  let greetingTitle1 = document.createElement('p')
-  greetingTitle1.classList.add('greeting-title1')
-  greetingTitle1.append(document.createTextNode('Enote agora é'))
+    let greetingTitleIcon = document.createElement('img')
+    greetingTitleIcon.setAttribute('src', './img/logo-icon.png')
+    greetingTitleIcon.classList.add('greeting-title-icon')
 
-  let greetingTitleIcon = document.createElement('img')
-  greetingTitleIcon.setAttribute('src', './img/logo-icon.png')
-  greetingTitleIcon.classList.add('greeting-title-icon')
+    greetingTitle2 = document.createElement('p')
+    greetingTitle2.classList.add('greeting-title2')
+    greetingTitle2.append(document.createTextNode('noteous'))
+    greetingSectionTitle.append(greetingTitleIcon, greetingTitle2)
 
-  greetingTitle2 = document.createElement('p')
-  greetingTitle2.classList.add('greeting-title2')
-  greetingTitle2.append(document.createTextNode('noteous'))
-  greetingSectionTitle.append(greetingTitleIcon, greetingTitle2)
+    //greetingDescriptions
 
-  ////////////////////
-
-  let greetingDescriptionTitle = document.createElement('p')
-  greetingDescriptionTitle.classList.add('greeting-description-title')
-  greetingDescriptionTitle.append(document.createTextNode('O que há de novo'))
-  let greetingDescriptionUl = document.createElement('ul')
-  let greetingDescriptionLi1 = document.createElement('li')
-  let greetingDescriptionLi2 = document.createElement('li')
-  let greetingDescriptionLi3 = document.createElement('li')
-  let greetingDescriptionLi4 = document.createElement('li')
-  let greetingDescriptionLi5 = document.createElement('li')
-  let greetingDescriptionLi6 = document.createElement('li')
-
-  greetingDescriptionLi1.classList.add('greeting-description-point')
-  greetingDescriptionLi2.classList.add('greeting-description-point')
-  greetingDescriptionLi3.classList.add('greeting-description-point')
-  greetingDescriptionLi4.classList.add('greeting-description-point')
-  greetingDescriptionLi5.classList.add('greeting-description-point')
-  greetingDescriptionLi6.classList.add('greeting-description-point')
-
-  greetingDescriptionLi1.append(
-    document.createTextNode(
-      'Temas: personalize sua experiência com o novo suporte a temas. Escolha entre claro e escuro'
+    let greetingDescriptionTitle = document.createElement('p')
+    greetingDescriptionTitle.classList.add('greeting-description-title')
+    greetingDescriptionTitle.append(
+      document.createTextNode(
+        'Faça anotações, realize tarefas, seja mais produtivo'
+      )
     )
-  )
-  greetingDescriptionLi2.append(
-    document.createTextNode(
-      'Novo suporte a datas: agora quando você adiciona uma nota, verá também a data e hora em que ela foi criada. Inclusive, se editar a nota, também verá a data da última edição'
-    )
-  )
-  greetingDescriptionLi3.append(
-    document.createTextNode(
-      'Novo design de notas: veja todas as suas anotações com um design atualizado'
-    )
-  )
-  greetingDescriptionLi4.append(
-    document.createTextNode(
-      'Melhoria ao editar notas: agora você pode editar uma anotação simplesmente tocando ou clicando nela'
-    )
-  )
-  greetingDescriptionLi5.append(
-    document.createTextNode(
-      'Essa atualização também inclui diversas melhorias internas'
-    )
-  )
 
-  greetingDescriptionLi6.append(
-    document.createTextNode(
-      'IMPORTANTE: Se você já utilizava o Enote, poderá transferir manualmente suas notas para o noteous. Clique em Saiba Mais para obter instruções'
+    let greetingDescriptionUl = document.createElement('ul')
+    let greetingDescriptionLi1 = document.createElement('li')
+    let greetingDescriptionLi2 = document.createElement('li')
+    let greetingDescriptionLi3 = document.createElement('li')
+    let greetingDescriptionLi4 = document.createElement('li')
+
+    greetingDescriptionLi1.classList.add('greeting-description-point')
+    greetingDescriptionLi2.classList.add('greeting-description-point')
+    greetingDescriptionLi3.classList.add('greeting-description-point')
+    greetingDescriptionLi4.classList.add('greeting-description-point')
+
+    greetingDescriptionLi1.append(
+      document.createTextNode(
+        'Temas: personalize sua experiência com o novo suporte a temas. Escolha entre claro e escuro'
+      )
     )
-  )
+    greetingDescriptionLi2.append(
+      document.createTextNode(
+        'Organize suas tarefas por prioridade: quando adicionar uma nota é só tocar ou clicar no círculo ° para trocar entre diferentes bordas, que representam prioridades.'
+      )
+    )
+    greetingDescriptionLi3.append(
+      document.createTextNode(
+        'Melhoria ao editar notas: agora você pode editar uma anotação simplesmente tocando ou clicando nela'
+      )
+    )
+    greetingDescriptionLi4.append(
+      document.createTextNode(
+        'IMPORTANTE: Se você já utilizava o Enote, poderá transferir manualmente suas notas para o noteous. Clique em Saiba Mais para obter instruções'
+      )
+    )
 
-  greetingDescriptionUl.append(
-    greetingDescriptionLi1,
-    greetingDescriptionLi2,
-    greetingDescriptionLi3,
-    greetingDescriptionLi4,
-    greetingDescriptionLi5,
-    greetingDescriptionLi6
-  )
+    greetingDescriptionUl.append(
+      greetingDescriptionLi1,
+      greetingDescriptionLi2,
+      greetingDescriptionLi3,
+      greetingDescriptionLi4
+    )
 
-  //Next Button
-  btnNext = document.createElement('button')
-  btnNext.classList.add('write-buttons')
-  btnNext.appendChild(document.createTextNode('Acessar noteous'))
-  btnNext.addEventListener('click', () => {
-    document.location.reload()
-  })
+    //Next Button
+    btnNext = document.createElement('button')
+    btnNext.classList.add('write-buttons')
+    btnNext.appendChild(document.createTextNode('Acessar noteous'))
+    btnNext.addEventListener('click', () => {
+      document.location.reload()
+    })
 
-  //Appends
-  greetingSectionMain.append(
-    greetingTitle1,
-    greetingSectionTitle,
-    greetingDescriptionTitle,
-    greetingDescriptionUl,
-    btnNext
-  )
-  greetingPanel.append(greetingSectionMain)
-  body.append(greetingPanel)
+    //Appends
+    greetingSectionMain.append(
+      greetingTitle1,
+      greetingSectionTitle,
+      greetingDescriptionTitle,
+      greetingDescriptionUl,
+      btnNext
+    )
+    greetingPanel.append(greetingSectionMain)
+    body.append(greetingPanel)
+  } else if (context == 'new-version') {
+    //Panel e Section
+    let greetingPanel = document.createElement('div')
+    greetingPanel.classList.add('greeting-panel')
+
+    let greetingSectionMain = document.createElement('div')
+    greetingSectionMain.classList.add('greeting-section-main')
+
+    let greetingSectionTitle = document.createElement('div')
+    greetingSectionTitle.classList.add('greeting-section-title')
+
+    //Titles e Descriptions
+    let greetingTitle1 = document.createElement('p')
+    greetingTitle1.classList.add('greeting-title1')
+    greetingTitle1.append(document.createTextNode('Bem-vindo de volta!'))
+
+    let greetingTitle1b = document.createElement('p')
+    greetingTitle1b.classList.add('greeting-title1')
+    greetingTitle1b.append(document.createTextNode('Temos uma atualização'))
+
+    let greetingTitleIcon = document.createElement('img')
+    greetingTitleIcon.setAttribute('src', './img/logo-icon.png')
+    greetingTitleIcon.classList.add('greeting-title-icon')
+
+    greetingTitle2 = document.createElement('p')
+    greetingTitle2.classList.add('greeting-title2')
+    greetingTitle2.append(document.createTextNode('noteous 1.3'))
+    greetingSectionTitle.append(greetingTitleIcon, greetingTitle2)
+
+    ////////////////////
+
+    let greetingDescriptionTitle = document.createElement('p')
+    greetingDescriptionTitle.classList.add('greeting-description-title')
+    greetingDescriptionTitle.append(
+      document.createTextNode('Confira as novidades desta versão')
+    )
+
+    let greetingDescriptionUl = document.createElement('ul')
+    let greetingDescriptionLi1 = document.createElement('li')
+    let greetingDescriptionLi2 = document.createElement('li')
+    let greetingDescriptionLi3 = document.createElement('li')
+    let greetingDescriptionLi4 = document.createElement('li')
+
+    greetingDescriptionLi1.classList.add('greeting-description-point')
+    greetingDescriptionLi2.classList.add('greeting-description-point')
+    greetingDescriptionLi3.classList.add('greeting-description-point')
+    greetingDescriptionLi4.classList.add('greeting-description-point')
+
+    greetingDescriptionLi1.append(
+      document.createTextNode(
+        'Novo recurso: Prioridade de notas • Organize melhor suas tarefas com este recurso! Ao adicionar ou editar uma nota, toque/clique no círculo ° que aparecer no canto. Você poderá escolher entre 3 tipos de borda, que representam prioridades diferentes.'
+      )
+    )
+    greetingDescriptionLi2.append(
+      document.createTextNode(
+        'Melhoria: ao editar uma nota, o botão de "Confirmar" só vai aparecer quando você fizer alguma alteração.'
+      )
+    )
+    greetingDescriptionLi3.append(
+      document.createTextNode(
+        'Melhoria: Se você usa o noteous no celular, vai gostar disso: ao abrir uma nota o teclado não vai aparecer junto. Se quiser editar a nota é só tocar novamente e o teclado irá abrir.'
+      )
+    )
+    greetingDescriptionLi4.append(
+      document.createTextNode(
+        'Você não vai notar, mas várias revisões foram feitas no código interno!'
+      )
+    )
+
+    greetingDescriptionUl.append(
+      greetingDescriptionLi1,
+      greetingDescriptionLi2,
+      greetingDescriptionLi3,
+      greetingDescriptionLi4
+    )
+
+    //Next Button
+    btnNext = document.createElement('button')
+    btnNext.classList.add('write-buttons')
+    btnNext.appendChild(document.createTextNode('Atualizar noteous'))
+    btnNext.addEventListener('click', () => {
+      document.location.reload()
+    })
+
+    //Appends
+    greetingSectionMain.append(
+      greetingTitle1,
+      greetingTitle1b,
+      greetingSectionTitle,
+      greetingDescriptionTitle,
+      greetingDescriptionUl,
+      btnNext
+    )
+    greetingPanel.append(greetingSectionMain)
+    body.innerHTML = ''
+    body.append(greetingPanel)
+  }
 }
 
-function themeLight() {
-  noteousSettings.theme = themeParams = {
-    themeLum: 'light',
-    hue: '--hue: 30;',
-    str: '--str: 90%;',
-    lumBack: '--lum-back: 90%;',
-    lumMid: '--lum-mid: 60%;',
-    lumFront: '--lum-front: 10%;'
-  }
+// CONFIGURAÇÕES DE TEMA ////////////////////////////////////
+function setTheme(context) {
+  //context => recuperar tema, trocar tema, aplicar tema claro, aplicar tema escuro
+  if (context == 'retrieveTheme') {
+    if (noteousSettings.theme.themeLum == 'light') {
+      setTheme('setThemeLight')
+      console.log(context)
+    } else if (noteousSettings.theme.themeLum == 'dark') {
+      setTheme('setThemeDark')
+    }
+  } else if (context == 'changeTheme') {
+    console.log(context)
+    if (noteousSettings.theme.themeLum == 'light') {
+      setTheme('setThemeDark')
+    } else if (noteousSettings.theme.themeLum == 'dark') {
+      setTheme('setThemeLight')
+    }
+  } else if (context == 'setThemeLight') {
+    console.log(context)
+    noteousSettings.theme = themeParams = {
+      themeLum: 'light',
+      hue: '--hue: 30;',
+      str: '--str: 90%;',
+      lumBack: '--lum-back: 90%;',
+      lumMid: '--lum-mid: 60%;',
+      lumFront: '--lum-front: 10%;'
+    }
 
-  localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
-  noteousSettings = JSON.parse(localStorage.getItem('noteous-settings'))
-  document.querySelector(
-    ':root'
-  ).style.cssText = `${noteousSettings.theme.hue} ${noteousSettings.theme.str}
+    localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
+    noteousSettings = JSON.parse(localStorage.getItem('noteous-settings'))
+    document.querySelector(
+      ':root'
+    ).style.cssText = `${noteousSettings.theme.hue} ${noteousSettings.theme.str}
 ${noteousSettings.theme.lumBack}
 ${noteousSettings.theme.lumMid}
 ${noteousSettings.theme.lumFront}`
-}
+  } else if (context == 'setThemeDark') {
+    noteousSettings.theme = themeParams = {
+      themeLum: 'dark',
+      hue: '--hue: 30;',
+      str: '--str: 40%;',
+      lumBack: '--lum-back: 10%;',
+      lumMid: '--lum-mid: 30%;',
+      lumFront: '--lum-front: 90%;'
+    }
 
-function themeDark() {
-  noteousSettings.theme = themeParams = {
-    themeLum: 'dark',
-    hue: '--hue: 30;',
-    str: '--str: 40%;',
-    lumBack: '--lum-back: 10%;',
-    lumMid: '--lum-mid: 30%;',
-    lumFront: '--lum-front: 90%;'
-  }
-
-  localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
-  noteousSettings = JSON.parse(localStorage.getItem('noteous-settings'))
-  document.querySelector(
-    ':root'
-  ).style.cssText = `${noteousSettings.theme.hue} ${noteousSettings.theme.str}
+    localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
+    noteousSettings = JSON.parse(localStorage.getItem('noteous-settings'))
+    document.querySelector(
+      ':root'
+    ).style.cssText = `${noteousSettings.theme.hue} ${noteousSettings.theme.str}
 ${noteousSettings.theme.lumBack}
 ${noteousSettings.theme.lumMid}
 ${noteousSettings.theme.lumFront}`
+  }
 }
 
 themeButton.addEventListener('click', () => {
-  //verifica qual tema está ativo e muda para outro
-  noteousSettings = JSON.parse(localStorage.getItem('noteous-settings'))
-  if (noteousSettings.theme.themeLum == 'light') {
-    themeDark()
-  } else if (noteousSettings.theme.themeLum == 'dark') {
-    themeLight()
-  }
+  setTheme('changeTheme')
 })
 
 //FUNÇÕES /////////////////////////////////////
 
 //GETSETTINGS --> ao atualizar página, recupera dados salvos
 function getSettings() {
-  //JÁ ACESSOU --> recupera dados
+  //JÁ ACESSOU NOTEOUS --> recupera dados
   if (noteousSettings != null) {
-    //SE ÚLTIMO ACESSO FOI NA VERSÃO 1.2
-    //check de versão --> adicionado na 1.3 --> se não tiver check de versão, estava na 1.2
-    let checkVersion = noteousSettings.hasOwnProperty('noteousVersion')
-    console.log(checkVersion)
-    if (checkVersion == false) {
+    if (noteousSettings.noteousVersion != currentVersion) {
+      //VERIFICA SE HÁ NOVA VERSÃO
       noteousSettings = {
         noteousVersion: currentVersion,
         sort: 'recent',
-        theme: (themeParams = {
-          themeLum: 'light',
-          hue: '--hue: 30;',
-          str: '--str: 90%;',
-          lumBack: '--lum-back: 90%;',
-          lumMid: '--lum-mid: 60%;',
-          lumFront: '--lum-front: 10%;'
-        })
+        priority: 'solid'
       }
       welcomeToNoteous('new-version')
       localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
-    }
+    } else {
+      //SE NÃO HÁ NOVA VERSÃO
 
-    if (noteousSettings.theme.themeLum == 'light') {
-      themeLight()
-    } else if (noteousSettings.theme.themeLum == 'dark') {
-      themeDark()
+      //Aplica última ordenação
+      sortNotes('retrieveSort')
+      //Aplica último tema
+      setTheme('retrieveTheme')
     }
+  } else if (noteousSettings == null) {
+    //NÃO HÁ CONFIGURAÇÕES --> PRIMEIRO ACESSO AO NOTEOUS
+    noteousSettings = {
+      noteousVersion: currentVersion,
+      sort: 'recent',
+      priority: 'solid'
+    }
+    welcomeToNoteous('first-access')
+    localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
+  }
+}
+
+//MOSTRAR BOAS VINDAS
+function showWelcome() {
+  let dateNow = new Date()
+  let welcomeText = document.createTextNode(
+    `Olá! Hoje é ${findWeek(new Date(dateNow).getDay())}, ${new Date(
+      dateNow
+    ).getDate()} de ${findMonth(new Date(dateNow).getMonth())}`
+  )
+  welcomeTextContainer.append(welcomeText)
+}
+
+//OPÇÕES DE NOTA
+//Ao carregar, Define prioridade = solid, Salva nas configurações e Aplica
+noteousSettings.priority = 'solid'
+localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
+notePriority('retrievePriority', noteousSettings.priority)
+
+function notePriority(context, priority) {
+  //context ==> recuperar prioridade, recuperar prioridade ao tirar foco do input(ao tirar foco define opacidade = 0 de Opções da Nota. Mas, é necessário também definir junto a borda, pois ao contrário um sobrescreve o outro), trocar prioridade
+  if (context == 'retrievePriority') {
+    if (priority == 'solid') {
+      writeOptions.style.cssText = 'border-style: solid;'
+      noteInput.style.cssText = 'border-style: solid;'
+      noteousSettings.priority = 'solid'
+    } else if (priority == 'double') {
+      writeOptions.style.cssText = 'border-style: double;'
+      noteInput.style.cssText = 'border-style: double;'
+      noteousSettings.priority = 'double'
+    } else if (priority == 'dotted') {
+      writeOptions.style.cssText = 'border-style: dotted;'
+      noteInput.style.cssText = 'border-style: dotted;'
+      noteousSettings.priority = 'dotted'
+    }
+  } else if (context == 'retrievePriorityBlurInput') {
+    if (priority == 'solid') {
+      writeOptions.style.cssText = 'border-style: solid; opacity: 0'
+    } else if (priority == 'double') {
+      writeOptions.style.cssText = 'border-style: double;  opacity: 0'
+    } else if (priority == 'dotted') {
+      writeOptions.style.cssText = 'border-style: dotted;  opacity: 0'
+    }
+  } else if (context == 'changePriority') {
+    if (priority == 'solid') {
+      writeOptions.style.cssText = 'border-style: double;'
+      noteInput.style.cssText = 'border-style: double;'
+      noteousSettings.priority = 'double'
+      localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
+    } else if (priority == 'double') {
+      writeOptions.style.cssText = 'border-style: dotted;'
+      noteInput.style.cssText = 'border-style: dotted;'
+      noteousSettings.priority = 'dotted'
+      localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
+    } else if (priority == 'dotted') {
+      writeOptions.style.cssText = 'border-style: solid;'
+      noteInput.style.cssText = 'border-style: solid;'
+      noteousSettings.priority = 'solid'
+      localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
+    }
+  }
+}
+
+noteInput.addEventListener('focus', () => {
+  if (editMode == false) {
+    notePriority('retrievePriority', noteousSettings.priority)
+  }
+})
+
+noteInput.addEventListener('blur', () => {
+  if (editMode == false) {
+    notePriority('retrievePriorityBlurInput', noteousSettings.priority)
+  }
+})
+
+writeOptions.addEventListener('click', () => {
+  noteInput.focus()
+  notePriority('changePriority', noteousSettings.priority)
+})
+
+//BOTÃO ORDENAR NOTAS
+function sortNotes(context) {
+  if (context == 'retrieveSort') {
     if (noteousSettings.sort == 'recent') {
       noteList.style.cssText = 'flex-wrap: wrap; flex-direction: row;'
 
@@ -249,140 +433,33 @@ function getSettings() {
         document.createTextNode('Ordenando por: Antigo primeiro')
       )
     }
-  } else if (noteousSettings == null) {
-    //PRIMEIRO ACESSO
-    noteousSettings = {
-      noteousVersion: currentVersion,
-      sort: 'recent',
-      theme: (themeParams = {
-        themeLum: 'light',
-        hue: '--hue: 30;',
-        str: '--str: 90%;',
-        lumBack: '--lum-back: 90%;',
-        lumMid: '--lum-mid: 60%;',
-        lumFront: '--lum-front: 10%;'
-      })
+  } else {
+    if (noteousSettings.sort == 'recent') {
+      noteList.style.cssText =
+        'flex-wrap: wrap-reverse; flex-direction: row-reverse;'
+
+      readOptionsSort.innerHTML = ''
+      readOptionsSort.append(
+        document.createTextNode('Ordenando por: Antigo primeiro')
+      )
+      noteousSettings.sort = 'old'
+      renderNote()
+      localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
+    } else if (noteousSettings.sort == 'old') {
+      noteList.style.cssText = 'flex-wrap: wrap; flex-direction: row;'
+
+      readOptionsSort.innerHTML = ''
+      readOptionsSort.append(
+        document.createTextNode('Ordenando por: Recente primeiro')
+      )
+      noteousSettings.sort = 'recent'
+      renderNote()
+      localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
     }
-    welcomeToNoteous('first-access')
-    localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
   }
 }
 
-//MOSTRAR BOAS VINDAS
-
-function showWelcome() {
-  let dateNow = new Date()
-  let welcomeText = document.createTextNode(
-    `Olá! Hoje é ${findWeek(new Date(dateNow).getDay())}, ${new Date(
-      dateNow
-    ).getDate()} de ${findMonth(new Date(dateNow).getMonth())}`
-  )
-  welcomeTextContainer.append(welcomeText)
-}
-
-//OPÇÕES DE NOTA
-
-//INICIALIZAR AO CARREGAR PÁGINA
-let notePriority = 'solid'
-getNotePriority(notePriority)
-
-//GET
-function getNotePriority(notePriority) {
-  if (notePriority == 'solid') {
-    writeOptions.style.cssText = 'border-style: solid;'
-    noteInput.style.cssText = 'border-style: solid;'
-    notePriority = 'solid'
-  } else if (notePriority == 'double') {
-    writeOptions.style.cssText = 'border-style: double;'
-    noteInput.style.cssText = 'border-style: double;'
-    notePriority = 'double'
-  } else if (notePriority == 'dotted') {
-    writeOptions.style.cssText = 'border-style: dotted;'
-    noteInput.style.cssText = 'border-style: dotted;'
-    notePriority = 'dotted'
-  }
-}
-
-noteInput.addEventListener('focus', () => {
-  if (editMode == false) {
-    if (notePriority == 'solid') {
-      writeOptions.style.cssText = 'border-style: solid; opacity: 1'
-      noteInput.style.cssText = 'border-style: solid;'
-      notePriority = 'solid'
-    } else if (notePriority == 'double') {
-      writeOptions.style.cssText = 'border-style: double;  opacity: 1'
-      noteInput.style.cssText = 'border-style: double;'
-      notePriority = 'double'
-    } else if (notePriority == 'dotted') {
-      writeOptions.style.cssText = 'border-style: dotted;  opacity: 1'
-      noteInput.style.cssText = 'border-style: dotted;'
-      notePriority = 'dotted'
-    }
-  }
-})
-
-noteInput.addEventListener('blur', () => {
-  if (editMode == false) {
-    if (notePriority == 'solid') {
-      writeOptions.style.cssText = 'border-style: solid; opacity: 0'
-      noteInput.style.cssText = 'border-style: solid;'
-      notePriority = 'solid'
-    } else if (notePriority == 'double') {
-      writeOptions.style.cssText = 'border-style: double;  opacity: 0'
-      noteInput.style.cssText = 'border-style: double;'
-      notePriority = 'double'
-    } else if (notePriority == 'dotted') {
-      writeOptions.style.cssText = 'border-style: dotted;  opacity: 0'
-      noteInput.style.cssText = 'border-style: dotted;'
-      notePriority = 'dotted'
-    }
-  }
-})
-
-writeOptions.addEventListener('click', () => {
-  noteInput.focus()
-  if (notePriority == 'solid') {
-    notePriority = 'double'
-    writeOptions.style.cssText = 'border-style: double;'
-    noteInput.style.cssText = 'border-style: double;'
-  } else if (notePriority == 'double') {
-    notePriority = 'dotted'
-    writeOptions.style.cssText = 'border-style: dotted;'
-    noteInput.style.cssText = 'border-style: dotted;'
-  } else if (notePriority == 'dotted') {
-    notePriority = 'solid'
-    writeOptions.style.cssText = 'border-style: solid;'
-    noteInput.style.cssText = 'border-style: solid;'
-  }
-})
-
-//BOTÃO ORDENAR NOTAS
 readOptionsSort.addEventListener('click', sortNotes)
-
-function sortNotes() {
-  if (noteousSettings.sort == 'recent') {
-    noteList.style.cssText =
-      'flex-wrap: wrap-reverse; flex-direction: row-reverse;'
-
-    readOptionsSort.innerHTML = ''
-    readOptionsSort.append(
-      document.createTextNode('Ordenando por: Antigo primeiro')
-    )
-    noteousSettings.sort = 'old'
-    renderNote()
-    localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
-  } else if (noteousSettings.sort == 'old') {
-    noteList.style.cssText = 'flex-wrap: wrap; flex-direction: row;'
-
-    readOptionsSort.innerHTML = ''
-    readOptionsSort.append(
-      document.createTextNode('Ordenando por: Recente primeiro')
-    )
-    noteousSettings.sort = 'recent'
-    renderNote()
-    localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
-  }
-}
 
 //RENDERIZAR NOTAS
 function renderNote() {
@@ -391,7 +468,6 @@ function renderNote() {
   for (let note of noteousMain) {
     let noteContainer = document.createElement('div')
     noteContainer.classList.add('note-container')
-    noteContainer.setAttribute('onclick', `openNote(${note.id})`)
 
     //BORDER/PRIORITY
     if (note.priority == 'solid') {
@@ -416,6 +492,7 @@ function renderNote() {
     //NOTE TEXT
     let noteTextContainer = document.createElement('div')
     noteTextContainer.classList.add('note-text-container')
+    noteTextContainer.setAttribute('onclick', `openNote(${note.id})`)
     let textElement = document.createElement('p')
 
     let noteChar = note.text
@@ -572,7 +649,7 @@ function addNote() {
     let objNote = {
       id: Date.now(),
       text: noteInput.value,
-      priority: notePriority
+      priority: noteousSettings.priority
     }
 
     noteousMain.unshift(objNote)
@@ -611,7 +688,10 @@ function openNote(noteId) {
   editMode = true
   for (let note of noteousMain) {
     if (note.id === noteId) {
-      getNotePriority(note.priority)
+      notePriority('retrievePriority', note.priority)
+      notePriority('retrievePriorityBlurInput', note.priority)
+      noteousSettings.priority = note.priority
+      localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
     }
   }
   if (window.screen.width <= 600) {
@@ -654,9 +734,11 @@ function editNote(noteId) {
           if (noteInput.value == note.text) {
             noteButtonEdit.setAttribute('hidden', 'true')
             noteButtonCancelEdit.removeAttribute('hidden')
+            notePriority('retrievePriorityBlurInput', noteousSettings.priority)
           } else if (noteInput.value != note.text) {
             noteButtonEdit.removeAttribute('hidden')
             noteButtonCancelEdit.removeAttribute('hidden')
+            notePriority('retrievePriority', noteousSettings.priority)
           }
         }
       })
@@ -668,7 +750,7 @@ function editNote(noteId) {
             if (note.id === noteIdEdit) {
               note.text = noteInput.value
               note.editedAt = Date.now()
-              note.priority = notePriority
+              note.priority = noteousSettings.priority
               localStorage.setItem('noteous-main', JSON.stringify(noteousMain))
             }
           }
@@ -694,7 +776,8 @@ function exitEditMode() {
   noteInput.value = ''
   noteInput.removeAttribute('readonly')
   noteInput.removeEventListener('click', noteInputEdit, false)
-  notePriority = 'solid'
+  noteousSettings.priority = 'solid'
+  localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
   writeOptions.style.cssText = 'border-style: solid; opacity: 0;'
   noteInput.style.cssText = 'border-style: solid;'
 
