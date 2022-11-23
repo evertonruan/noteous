@@ -409,9 +409,12 @@ a {
 
 /*----Read notes----*/
 
-.read-panel {
+#read-panel {
   margin-top: 10px;
   border-style: none;
+
+  opacity: 0;
+  transition: all 0.4s cubic-bezier(0.075, 0.82, 0.165, 1);
 }
 
 #read-options {
@@ -605,6 +608,7 @@ footer p span {
   color: var(--base-text);
 
   cursor: default;
+  user-select: none;
 }
 
 #about a {

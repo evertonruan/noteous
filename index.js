@@ -20,12 +20,13 @@ let noteButtonCancelEdit = document.querySelector('#write-button-cancel')
 
 //READ-SECTION
 let readSection = document.querySelector('#section-read')
+let readPanel = document.querySelector('#read-panel')
 let readOptionsSort = document.querySelector('#read-options-sort')
 let noteList = document.querySelector('#read-notes-list')
 
 // VARIÁVEIS IMPORTANTES /////////////////////////////////////
 
-let currentVersion = 1.4
+let currentVersion = 1.3
 let noteIdEdit //usada para confirmar qual nota está sendo editada
 let editMode = false
 
@@ -37,8 +38,8 @@ let noteousMain = JSON.parse(localStorage.getItem('noteous-main')) || []
 let noteousSettings = JSON.parse(localStorage.getItem('noteous-settings'))
 
 getSettings()
-renderNote()
-showWelcome()
+renderNote('render-all')
+showWelcome('load')
 
 /////////////////////////////////////////////////////////////
 
@@ -258,7 +259,6 @@ function setTheme(context) {
       setTheme('setThemeLight')
     }
   } else if (context == 'setThemeLight') {
-    console.log(context)
     noteousSettings.theme = themeParams = {
       themeLum: 'light',
       hue: '--hue: 30;',
@@ -337,14 +337,27 @@ function getSettings() {
 }
 
 //MOSTRAR BOAS VINDAS
-function showWelcome() {
-  let dateNow = new Date()
-  let welcomeText = document.createTextNode(
-    `Olá! Hoje é ${findWeek(new Date(dateNow).getDay())}, ${new Date(
-      dateNow
-    ).getDate()} de ${findMonth(new Date(dateNow).getMonth())}`
-  )
-  welcomeTextContainer.append(welcomeText)
+function showWelcome(context) {
+  //Alterar para infoPanel
+  if (context == 'change') {
+    if (noteousMain.length < 2) {
+      readOptionsSort.style.cssText = 'opacity: 0'
+    } else {
+      readOptionsSort.style.cssText = 'opacity: 1'
+    }
+  } else if (context == 'load') {
+    if (noteousMain.length < 2) {
+      readOptionsSort.style.cssText = 'opacity: 0'
+    }
+
+    let dateNow = new Date()
+    let welcomeText = document.createTextNode(
+      `Olá! Hoje é ${findWeek(new Date(dateNow).getDay())}, ${new Date(
+        dateNow
+      ).getDate()} de ${findMonth(new Date(dateNow).getMonth())}`
+    )
+    welcomeTextContainer.append(welcomeText)
+  }
 }
 
 //OPÇÕES DE NOTA
@@ -462,96 +475,213 @@ function sortNotes(context) {
 readOptionsSort.addEventListener('click', sortNotes)
 
 //RENDERIZAR NOTAS
-function renderNote() {
-  noteList.innerHTML = ''
+function renderNote(context, noteId, orbId) {
+  if (context == 'render-all') {
+    noteList.innerHTML = ''
 
-  for (let note of noteousMain) {
-    let noteContainer = document.createElement('div')
-    noteContainer.classList.add('note-container')
+    for (let note of noteousMain) {
+      let noteContainer = document.createElement('div')
+      noteContainer.id = note.id + '-note-container'
+      noteContainer.classList.add('note-container')
 
-    //BORDER/PRIORITY
-    if (note.priority == 'solid') {
-      noteContainer.style.cssText = 'border-style: none;'
-    } else if (note.priority == 'double') {
-      noteContainer.style.cssText = 'border-style: double;'
-    } else if (note.priority == 'dotted') {
-      noteContainer.style.cssText = 'border-style: dotted;'
-    }
+      //BORDER/PRIORITY
+      if (note.priority == 'solid') {
+        noteContainer.style.cssText = 'border-style: none;'
+      } else if (note.priority == 'double') {
+        noteContainer.style.cssText = 'border-style: double;'
+      } else if (note.priority == 'dotted') {
+        noteContainer.style.cssText = 'border-style: dotted;'
+      }
 
-    //ACTION BUTTONS
-    let actionButtonsContainer = document.createElement('div')
-    actionButtonsContainer.classList.add('action-buttons-container')
+      //ACTION BUTTONS
+      let actionButtonsContainer = document.createElement('div')
+      actionButtonsContainer.id = note.id + '-action-buttons-container'
+      actionButtonsContainer.classList.add('action-buttons-container')
 
-    //DELETE
-    let deleteActionButton = document.createElement('a')
-    deleteActionButton.classList.add('action-buttons', 'material-icons')
-    deleteActionButton.setAttribute('href', '#')
-    deleteActionButton.setAttribute('onclick', `deleteNote(${note.id})`)
-    deleteActionButton.appendChild(document.createTextNode('check_circle'))
+      //DELETE
+      let deleteActionButton = document.createElement('a')
+      deleteActionButton.classList.add('action-buttons', 'material-icons')
+      deleteActionButton.setAttribute('onclick', `deleteNote(${note.id})`)
+      deleteActionButton.appendChild(document.createTextNode('check_circle'))
 
-    //NOTE TEXT
-    let noteTextContainer = document.createElement('div')
-    noteTextContainer.classList.add('note-text-container')
-    noteTextContainer.setAttribute('onclick', `openNote(${note.id})`)
-    let textElement = document.createElement('p')
+      //NOTE TEXT
+      let noteTextContainer = document.createElement('div')
+      noteTextContainer.id = note.id + '-text-container'
+      noteTextContainer.classList.add('note-text-container')
+      noteTextContainer.setAttribute('onclick', `openNote(${note.id})`)
+      // --> adição de 'texto' ao id porque não pode haver ids iguais
 
-    let noteChar = note.text
-    if (noteChar.length < 300) {
-      //Se tamanho da nota for menor que 30, escrever nota inteira
-      textElement.appendChild(document.createTextNode(noteChar))
-    } else if (noteChar.length >= 300) {
-      //Se tamanho da nota for maior que 30, escrever apenas até o 30º caractere e acrescentar botão para ver nota inteira
-      let count = 0
-      for (let noteCharAt of noteChar) {
-        textElement.appendChild(document.createTextNode(noteCharAt))
-        count = count + 1
-        //"Ir escrevendo" cada caractere até chegar o 30º
-        if (count == 300) {
-          textElement.append(document.createTextNode(' ...'))
-          textElement.append(document.createElement('br'))
-          textElement.append(document.createTextNode('[VER MAIS]'))
+      let textElement = document.createElement('p')
+      textElement.id = note.id + '-text'
 
-          break
+      let noteChar = note.text
+      if (noteChar.length < 300) {
+        //Se tamanho da nota for menor que 30, escrever nota inteira
+        textElement.appendChild(document.createTextNode(noteChar))
+      } else if (noteChar.length >= 300) {
+        //Se tamanho da nota for maior que 30, escrever apenas até o 30º caractere e acrescentar botão para ver nota inteira
+        let count = 0
+        for (let noteCharAt of noteChar) {
+          textElement.appendChild(document.createTextNode(noteCharAt))
+          count = count + 1
+          //"Ir escrevendo" cada caractere até chegar o 30º
+          if (count == 300) {
+            textElement.append(document.createTextNode(' ...'))
+            textElement.append(document.createElement('br'))
+            textElement.append(document.createTextNode('[VER MAIS]'))
+
+            break
+          }
         }
       }
-    }
 
-    //DATE
-    let noteDateContainer = document.createElement('div')
-    noteDateContainer.classList.add('note-date-container')
-    let dateElement = document.createElement('p')
-    dateElement.appendChild(
-      document.createTextNode(
-        `Criado em: ${new Date(note.id).getDate()}/${findMonth(
-          new Date(note.id).getMonth()
-        )}/${new Date(note.id).getUTCFullYear()} às ${setTimeNumber(
-          new Date(note.id).getHours()
-        )}:${setTimeNumber(new Date(note.id).getMinutes())}`
-      )
-    )
-    if (note.editedAt != undefined) {
-      dateElement.appendChild(document.createElement('br'))
+      //DATE
+      let noteDateContainer = document.createElement('div')
+      noteDateContainer.id = note.id + '-note-date-container'
+      noteDateContainer.classList.add('note-date-container')
+
+      let dateElement = document.createElement('p')
+      dateElement.id = note.id + '-date-element'
       dateElement.appendChild(
         document.createTextNode(
-          `Última edição: ${new Date(note.editedAt).getDate()}/${findMonth(
-            new Date(note.editedAt).getMonth()
-          )}/${new Date(note.editedAt).getUTCFullYear()} às ${setTimeNumber(
-            new Date(note.editedAt).getHours()
-          )}:${setTimeNumber(new Date(note.editedAt).getMinutes())}`
+          `Criado em: ${new Date(note.id).getDate()}/${findMonth(
+            new Date(note.id).getMonth()
+          )}/${new Date(note.id).getUTCFullYear()} às ${setTimeNumber(
+            new Date(note.id).getHours()
+          )}:${setTimeNumber(new Date(note.id).getMinutes())}`
         )
       )
+      if (note.editedAt != undefined) {
+        dateElement.appendChild(document.createElement('br'))
+        dateElement.appendChild(
+          document.createTextNode(
+            `Última edição: ${new Date(note.editedAt).getDate()}/${findMonth(
+              new Date(note.editedAt).getMonth()
+            )}/${new Date(note.editedAt).getUTCFullYear()} às ${setTimeNumber(
+              new Date(note.editedAt).getHours()
+            )}:${setTimeNumber(new Date(note.editedAt).getMinutes())}`
+          )
+        )
+      }
+
+      //APPENDS
+      actionButtonsContainer.appendChild(deleteActionButton)
+      noteTextContainer.appendChild(textElement)
+      noteDateContainer.appendChild(dateElement)
+      noteTextContainer.appendChild(noteDateContainer)
+
+      noteContainer.appendChild(actionButtonsContainer)
+      noteContainer.appendChild(noteTextContainer)
+
+      noteList.appendChild(noteContainer)
+
+      showWelcome('change')
     }
 
-    //APPENDS
-    actionButtonsContainer.appendChild(deleteActionButton)
-    noteTextContainer.appendChild(textElement)
-    noteDateContainer.appendChild(dateElement)
-    noteTextContainer.appendChild(noteDateContainer)
+    setTimeout(() => {
+      //css inicia em 0. Após renderizar, altera para 1
+      readPanel.style.cssText = 'opacity: 1;'
+    }, 300)
+  } else if (context == 'add') {
+    console.log(noteId)
+    for (let note of noteousMain) {
+      if (note.id == noteId) {
+        let noteContainer = document.createElement('div')
+        noteContainer.id = note.id + '-note-container'
+        noteContainer.classList.add('note-container')
 
-    noteContainer.appendChild(actionButtonsContainer)
-    noteContainer.appendChild(noteTextContainer)
+        //BORDER/PRIORITY
+        if (note.priority == 'solid') {
+          noteContainer.style.cssText = 'border-style: none;'
+        } else if (note.priority == 'double') {
+          noteContainer.style.cssText = 'border-style: double;'
+        } else if (note.priority == 'dotted') {
+          noteContainer.style.cssText = 'border-style: dotted;'
+        }
 
-    noteList.appendChild(noteContainer)
+        //ACTION BUTTONS
+        let actionButtonsContainer = document.createElement('div')
+        actionButtonsContainer.id = note.id + '-action-buttons-container'
+        actionButtonsContainer.classList.add('action-buttons-container')
+
+        //DELETE
+        let deleteActionButton = document.createElement('a')
+        deleteActionButton.classList.add('action-buttons', 'material-icons')
+        deleteActionButton.setAttribute('onclick', `deleteNote(${note.id})`)
+        deleteActionButton.appendChild(document.createTextNode('check_circle'))
+
+        //NOTE TEXT
+        let noteTextContainer = document.createElement('div')
+        noteTextContainer.id = note.id + '-text-container'
+        noteTextContainer.classList.add('note-text-container')
+        noteTextContainer.setAttribute('onclick', `openNote(${note.id})`)
+        // --> adição de 'texto' ao id porque não pode haver ids iguais
+
+        let textElement = document.createElement('p')
+        textElement.id = note.id + '-text'
+
+        let noteChar = note.text
+        if (noteChar.length < 300) {
+          //Se tamanho da nota for menor que 30, escrever nota inteira
+          textElement.appendChild(document.createTextNode(noteChar))
+        } else if (noteChar.length >= 300) {
+          //Se tamanho da nota for maior que 30, escrever apenas até o 30º caractere e acrescentar botão para ver nota inteira
+          let count = 0
+          for (let noteCharAt of noteChar) {
+            textElement.appendChild(document.createTextNode(noteCharAt))
+            count = count + 1
+            //"Ir escrevendo" cada caractere até chegar o 30º
+            if (count == 300) {
+              textElement.append(document.createTextNode(' ...'))
+              textElement.append(document.createElement('br'))
+              textElement.append(document.createTextNode('[VER MAIS]'))
+
+              break
+            }
+          }
+        }
+
+        //DATE
+        let noteDateContainer = document.createElement('div')
+        noteDateContainer.id = note.id + '-note-date-container'
+        noteDateContainer.classList.add('note-date-container')
+
+        let dateElement = document.createElement('p')
+        dateElement.id = note.id + '-date-element'
+        dateElement.appendChild(
+          document.createTextNode(
+            `Criado em: ${new Date(note.id).getDate()}/${findMonth(
+              new Date(note.id).getMonth()
+            )}/${new Date(note.id).getUTCFullYear()} às ${setTimeNumber(
+              new Date(note.id).getHours()
+            )}:${setTimeNumber(new Date(note.id).getMinutes())}`
+          )
+        )
+        if (note.editedAt != undefined) {
+          dateElement.appendChild(document.createElement('br'))
+          dateElement.appendChild(
+            document.createTextNode(
+              `Última edição: ${new Date(note.editedAt).getDate()}/${findMonth(
+                new Date(note.editedAt).getMonth()
+              )}/${new Date(note.editedAt).getUTCFullYear()} às ${setTimeNumber(
+                new Date(note.editedAt).getHours()
+              )}:${setTimeNumber(new Date(note.editedAt).getMinutes())}`
+            )
+          )
+        }
+
+        //APPENDS
+        actionButtonsContainer.appendChild(deleteActionButton)
+        noteTextContainer.appendChild(textElement)
+        noteDateContainer.appendChild(dateElement)
+        noteTextContainer.appendChild(noteDateContainer)
+
+        noteContainer.appendChild(actionButtonsContainer)
+        noteContainer.appendChild(noteTextContainer)
+
+        noteList.prepend(noteContainer)
+      }
+    }
   }
 }
 
@@ -656,7 +786,7 @@ function addNote() {
 
     localStorage.setItem('noteous-main', JSON.stringify(noteousMain))
 
-    renderNote()
+    renderNote('add', objNote.id)
     noteInput.value = ''
     noteInput.focus()
     noteButtonAdd.disabled = true
@@ -664,17 +794,42 @@ function addNote() {
 }
 
 //APAGAR NOTA
-
+let timeoutID
 function deleteNote(noteId) {
-  for (let note of noteousMain) {
-    if (note.id === noteId) {
-      //let indexPosition = noteousMain.indexOf(note)
-      noteousMain.splice(noteousMain.indexOf(note), 1)
-    }
-  }
+  timeoutID = setTimeout(() => {
+    let noteContainer = document.getElementById(noteId + '-note-container')
+    noteContainer.style.cssText = 'opacity: 0;'
 
-  localStorage.setItem('noteous-main', JSON.stringify(noteousMain))
-  renderNote()
+    setTimeout(() => {
+      noteContainer.remove()
+      for (let note of noteousMain) {
+        if (note.id === noteId) {
+          //note.orb = 'done'
+          noteousMain.splice(noteousMain.indexOf(note), 1)
+        }
+      }
+
+      localStorage.setItem('noteous-main', JSON.stringify(noteousMain))
+    }, 100)
+  }, 1500)
+
+  let noteTextContainer = document.getElementById(noteId + '-text-container')
+  let textElement = document.getElementById(noteId + '-text')
+  let actionButtonsContainer = document.getElementById(
+    noteId + '-action-buttons-container'
+  )
+  let noteDateContainer = document.getElementById(
+    noteId + '-note-date-container'
+  )
+
+  noteTextContainer.removeAttribute('onclick')
+  textElement.addEventListener('click', () => {
+    clearTimeout(timeoutID)
+    renderNote('render-all')
+  })
+  textElement.innerHTML = 'Nota concluída. Clique para Desfazer'
+  actionButtonsContainer.style.cssText = 'opacity: 0;'
+  noteDateContainer.style.cssText = 'opacity: 0;'
 }
 
 //função em variável para 'desbloquear' noteInput se tela é pequena
@@ -755,7 +910,7 @@ function editNote(noteId) {
             }
           }
 
-          renderNote()
+          renderNote('render-all')
 
           exitEditMode()
         }

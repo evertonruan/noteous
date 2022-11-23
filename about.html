@@ -111,7 +111,17 @@
 
   <div id="about-update-point-actual">
     <div class="about-update-point-container">
-      <p class="about-update-point-version">noteous cupcake 1.3</p>
+      <p class="about-update-point-version">noteous cupcake 1.4</p>
+      <p class="about-update-point-version-date">23/11/2022</p>
+    </div>
+    <p class="update-description"><span class="update-type">NOVO RECURSO</span><strong>Desfazer 'Concluir Nota'</strong>Quando você conclui(apaga) uma nota, terá um breve momento para desfazer isso.</p>
+    <p class="update-description"><span class="update-type">MELHORIA</span><strong>Novas Animações: </strong>Ao carregar notas pela primeira vez, elas são exibidas através de uma breve animação. Ao clicar em 'concluir nota' ela irá desaparecer através de uma breve animação.</p>
+    <p class="update-description"><span class="update-type">MELHORIA</span><strong>Exibição Inteligente: </strong>Antes, cada vez que você adicionasse, editasse ou excluísse apenas 1 nota, a lista inteira era recarregada. Isso agora não acontece: as notas são manipuladas de forma individual. <span class="update-advanced">Isso foi possível por se adicionar um ID em cada nota exibida (que é retirado do próprio ID da nota armazenada). Ao carregar o noteous pela primeira vez, todas as notas são renderizadas, apenas 1 única vez, utilizando o contexto "render-all". Depois, ao adicionar, editar ou excluir uma nota, apenas a nota em questão é manipulada, utilizando o contexto adequado por meio do ID dela.</span></p>
+    <p class="update-description"><span class="update-type">CORREÇÃO</span>Ao clicar/tocar em 'apagar nota' a página movia para o topo.<span class="update-advanced">Isso é um problema que existia desde o início. Era causado pelo 'link' à mesma página (#) carregado junto ao botão 'apagar nota'. Porém, a ação do botão é ativada ao tocar/clicar nele, de modo que não é necessário nenhum link. A solução para o problema foi simplesmente apagar o 'link'</span></p>
+  </div>
+  <div class="about-update-point">
+    <div class="about-update-point-container">
+      <p class="about-update-point-version">1.3</p>
       <p class="about-update-point-version-date">15/11/2022</p>
     </div>
     <p class="update-description"><span class="update-type">NOVO RECURSO</span><strong>Prioridade de notas: </strong>Suas notas agora são ainda mais incríveis: escolha entre 3 tipos de borda, que representam prioridades.</p>
