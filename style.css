@@ -85,6 +85,10 @@
     height: 2.5rem;
   }
 
+  #section-read #read-notes-list {
+    justify-content: center;
+  }
+
   #section-read #read-notes-list .note-container {
     flex-basis: 80%;
   }
@@ -243,21 +247,23 @@ a {
 
 /*-----SECTION-WRITE-----*/
 
-#welcome-panel {
+#info-panel {
   display: flex;
   align-items: center;
   justify-content: center;
 
   margin-bottom: 2rem;
+  user-select: none;
 
   transition: all cubic-bezier(0.075, 0.82, 0.165, 1) 0.5s;
 }
 
-#welcome-panel.edit-mode {
+#info-panel.edit-mode {
   margin: 0;
+  opacity: 0;
 }
 
-#welcome-text-container {
+.info-element {
   font-family: 'DM Serif Text', serif;
   color: var(--base-text);
   font-style: italic;
@@ -304,6 +310,8 @@ a {
   border-color: var(--base-text);
   border-width: 5px;
   box-shadow: 0px 3px 5px black;
+
+  user-select: none;
 
   transition: all 0.2s cubic-bezier(0.075, 0.82, 0.165, 1);
 }
@@ -414,6 +422,7 @@ a {
   border-style: none;
 
   opacity: 0;
+  transform: translateY(10px);
   transition: all 0.4s cubic-bezier(0.075, 0.82, 0.165, 1);
 }
 
@@ -435,7 +444,7 @@ a {
 
 #read-notes-list {
   display: flex;
-  justify-content: center;
+  justify-content: flex-end;
 }
 
 #section-read .note-container {
@@ -459,6 +468,10 @@ a {
 #section-read .note-container:hover {
   transform: scale(1.02);
   cursor: pointer;
+}
+
+#section-read .note-text-container {
+  transition: all 0.4s cubic-bezier(0.075, 0.82, 0.165, 1);
 }
 
 #section-read .action-buttons-container {
@@ -696,6 +709,31 @@ footer p span {
   margin-top: 1rem;
 }
 
+#about-update-logo-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
+
+  margin: 1rem 0;
+  padding: 1rem 0;
+
+  position: sticky;
+  top: -2px;
+
+  background-color: var(--base-color);
+}
+
+#advanced-switch {
+  text-align: center;
+  padding: 0.3rem;
+  border: 1px solid;
+  border-color: var(--base-text);
+  border-radius: 2rem;
+
+  cursor: pointer;
+}
+
 #about-update-gen-actual {
   display: flex;
   flex-direction: column;
@@ -722,29 +760,11 @@ footer p span {
   font-weight: bold;
 }
 
-#about-update-logo-container {
+#about-update-orblend {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: space-between;
-  gap: 2rem;
-
-  margin: 1rem 0;
-  padding: 1rem 0;
-
-  position: sticky;
-  top: -2px;
-
-  background-color: var(--base-color);
-}
-
-#advanced-switch {
-  text-align: center;
-  padding: 0.3rem;
-  border: 1px solid;
-  border-color: var(--base-text);
-  border-radius: 2rem;
-
-  cursor: pointer;
+  margin: 0.5rem 0;
 }
 
 #about-update {

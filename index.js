@@ -7,8 +7,7 @@ let themeButton = document.querySelector('#theme-container')
 let writeSection = document.querySelector('#section-write')
 let writePanel = document.querySelector('#write-panel')
 
-let welcomePanel = document.querySelector('#welcome-panel')
-let welcomeTextContainer = document.querySelector('#welcome-text-container')
+let infoPanel = document.querySelector('#info-panel')
 
 let writeOptions = document.querySelector('#write-options')
 
@@ -30,16 +29,19 @@ let currentVersion = 1.3
 let noteIdEdit //usada para confirmar qual nota está sendo editada
 let editMode = false
 
+import orblendEngine from './orblend-engine.js'
+
 ///////////////////////////////////////////////////////////////
 
 //INICIALIZAÇÃO //////////////////////////////////////////////
 
 let noteousMain = JSON.parse(localStorage.getItem('noteous-main')) || []
 let noteousSettings = JSON.parse(localStorage.getItem('noteous-settings'))
+console.log(localStorage)
 
 getSettings()
 renderNote('render-all')
-showWelcome('load')
+orblendEngine('load')
 
 /////////////////////////////////////////////////////////////
 
@@ -312,7 +314,8 @@ function getSettings() {
       noteousSettings = {
         noteousVersion: currentVersion,
         sort: 'recent',
-        priority: 'solid'
+        priority: 'solid',
+        input: ''
       }
       welcomeToNoteous('new-version')
       localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
@@ -323,40 +326,26 @@ function getSettings() {
       sortNotes('retrieveSort')
       //Aplica último tema
       setTheme('retrieveTheme')
+
+      //Verifica se há uma nota não salva
+      if (noteousSettings.input != '') {
+        if (confirm('Há uma nota não salva. Deseja recuperá-la?')) {
+          noteInput.value = noteousSettings.input
+        } else {
+          noteousSettings.input = ''
+        }
+      }
     }
   } else if (noteousSettings == null) {
     //NÃO HÁ CONFIGURAÇÕES --> PRIMEIRO ACESSO AO NOTEOUS
     noteousSettings = {
       noteousVersion: currentVersion,
       sort: 'recent',
-      priority: 'solid'
+      priority: 'solid',
+      input: ''
     }
     welcomeToNoteous('first-access')
     localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
-  }
-}
-
-//MOSTRAR BOAS VINDAS
-function showWelcome(context) {
-  //Alterar para infoPanel
-  if (context == 'change') {
-    if (noteousMain.length < 2) {
-      readOptionsSort.style.cssText = 'opacity: 0'
-    } else {
-      readOptionsSort.style.cssText = 'opacity: 1'
-    }
-  } else if (context == 'load') {
-    if (noteousMain.length < 2) {
-      readOptionsSort.style.cssText = 'opacity: 0'
-    }
-
-    let dateNow = new Date()
-    let welcomeText = document.createTextNode(
-      `Olá! Hoje é ${findWeek(new Date(dateNow).getDay())}, ${new Date(
-        dateNow
-      ).getDate()} de ${findMonth(new Date(dateNow).getMonth())}`
-    )
-    welcomeTextContainer.append(welcomeText)
   }
 }
 
@@ -384,11 +373,14 @@ function notePriority(context, priority) {
     }
   } else if (context == 'retrievePriorityBlurInput') {
     if (priority == 'solid') {
-      writeOptions.style.cssText = 'border-style: solid; opacity: 0'
+      writeOptions.style.cssText =
+        'border-style: solid; opacity: 0; transform: scale(60%);'
     } else if (priority == 'double') {
-      writeOptions.style.cssText = 'border-style: double;  opacity: 0'
+      writeOptions.style.cssText =
+        'border-style: double;  opacity: 0; transform: scale(60%);'
     } else if (priority == 'dotted') {
-      writeOptions.style.cssText = 'border-style: dotted;  opacity: 0'
+      writeOptions.style.cssText =
+        'border-style: dotted;  opacity: 0; transform: scale(60%);'
     }
   } else if (context == 'changePriority') {
     if (priority == 'solid') {
@@ -575,12 +567,12 @@ function renderNote(context, noteId, orbId) {
 
       noteList.appendChild(noteContainer)
 
-      showWelcome('change')
+      orblendEngine('change')
     }
 
     setTimeout(() => {
       //css inicia em 0. Após renderizar, altera para 1
-      readPanel.style.cssText = 'opacity: 1;'
+      readPanel.style.cssText = 'opacity: 1; transform: translateY(-10px);'
     }, 300)
   } else if (context == 'add') {
     console.log(noteId)
@@ -770,6 +762,22 @@ noteInput.addEventListener('input', function (event) {
   } else {
     noteButtonAdd.disabled = false
   }
+
+  //Recuperar nota não salva
+  noteousSettings.input = noteInput.value
+  localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
+
+  //Verifica quantas linhas há
+  let input = noteousSettings.input
+  newLines = input.match(/\n/g)
+  console.log(newLines)
+  if (newLines.length > 1) {
+    noteInput.classList.add('edit-mode')
+    writePanel.classList.add('edit-mode')
+  } else {
+    noteInput.classList.remove('edit-mode')
+    writePanel.classList.remove('edit-mode')
+  }
 })
 
 // ADICIONAR NOTA
@@ -798,7 +806,7 @@ let timeoutID
 function deleteNote(noteId) {
   timeoutID = setTimeout(() => {
     let noteContainer = document.getElementById(noteId + '-note-container')
-    noteContainer.style.cssText = 'opacity: 0;'
+    noteContainer.style.cssText = 'opacity: 0;  transform: scale(80%);'
 
     setTimeout(() => {
       noteContainer.remove()
@@ -877,8 +885,7 @@ function editNote(noteId) {
       readSection.classList.toggle('edit-mode') //coloca a seção de leitura das nota no modo de edição (que desabilita as ações das notas enquanto uma nota está sendo editada)
       writePanel.classList.toggle('edit-mode')
 
-      welcomeTextContainer.setAttribute('hidden', 'true')
-      welcomePanel.classList.toggle('edit-mode')
+      infoPanel.classList.toggle('edit-mode')
 
       noteButtonAdd.setAttribute('hidden', 'true')
 
@@ -931,13 +938,13 @@ function exitEditMode() {
   noteInput.value = ''
   noteInput.removeAttribute('readonly')
   noteInput.removeEventListener('click', noteInputEdit, false)
+
   noteousSettings.priority = 'solid'
   localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
   writeOptions.style.cssText = 'border-style: solid; opacity: 0;'
   noteInput.style.cssText = 'border-style: solid;'
 
-  welcomePanel.classList.toggle('edit-mode')
-  welcomeTextContainer.removeAttribute('hidden')
+  infoPanel.classList.toggle('edit-mode')
 
   noteButtonAdd.removeAttribute('hidden')
   noteButtonAdd.disabled = true
