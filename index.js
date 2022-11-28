@@ -29,15 +29,12 @@ let currentVersion = 1.3
 let noteIdEdit //usada para confirmar qual nota está sendo editada
 let editMode = false
 
-import orblendEngine from './orblend-engine.js'
-
 ///////////////////////////////////////////////////////////////
 
 //INICIALIZAÇÃO //////////////////////////////////////////////
 
 let noteousMain = JSON.parse(localStorage.getItem('noteous-main')) || []
 let noteousSettings = JSON.parse(localStorage.getItem('noteous-settings'))
-console.log(localStorage)
 
 getSettings()
 renderNote('render-all')
@@ -346,6 +343,46 @@ function getSettings() {
     }
     welcomeToNoteous('first-access')
     localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
+  }
+}
+
+//MOSTRAR BOAS VINDAS
+function orblendEngine(context) {
+  //Local Functions
+  const random = () => {
+    let math = Math.random()
+    if (math < 0.5) {
+      return false
+    } else {
+      return true
+    }
+  }
+
+  const dateElement = () => {
+    let dateNow = new Date()
+    let infoElementDate = document.createElement('p')
+    infoElementDate.classList.add('info-element')
+    let infoElementDateText = document.createTextNode(
+      `Olá! Hoje é ${findWeek(new Date(dateNow).getDay())}, ${new Date(
+        dateNow
+      ).getDate()} de ${findMonth(new Date(dateNow).getMonth())}`
+    )
+    infoElementDate.append(infoElementDateText)
+    infoPanel.append(infoElementDate)
+  }
+
+  if (context == 'change') {
+    if (noteousMain.length > 2) {
+      readOptionsSort.style.cssText = 'opacity: 1'
+    } else {
+      readOptionsSort.style.cssText = 'opacity: 0'
+      console.log(random())
+    }
+  } else if (context == 'load') {
+    if (noteousMain.length < 2) {
+      readOptionsSort.style.cssText = 'opacity: 0'
+    }
+    dateElement()
   }
 }
 
