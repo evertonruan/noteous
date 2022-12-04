@@ -60,7 +60,7 @@
       
       <h3>📋 INFORMAÇÕES SOBRE PRIVACIDADE E ARMAZENAMENTO</h2>
         <p class="about-app-point">
-            <p>• Este aplicativo coleta informações sobre seu acesso para personalizar sua experiência (por exemplo, salvar a cor do tema que você escolheu). Mas as informações permanecem apenas no próprio aplicativo.</p>
+            <p>• Este aplicativo coleta e analisa informações sobre seu acesso para personalizar sua experiência (por exemplo, salvar a cor do tema que você escolheu e as anotações que escrever). Mas todas as informações permanecem apenas no seu dispositivo.</p>
             <p>• É necessário estar conectado à internet para utilizar o noteous</p>
             <p>• Embora é preciso estar conectado à internet, <strong> suas notas são salvas localmente, no seu dispositivo </strong> (celular, tablet ou computador), utilizando uma tecnologia do navegador de internet, chamada Armazenamento Local</p>
             <p><strong>IMPORTANTE: Se você desinstalar ou limpar os dados de seu navegador, suas notas serão apagadas. Se usar o noteous em vários dispositivos, cada um terá notas separadas. Inclusive, se usar o noteous em vários navegadores, cada um terá notas separadas.</strong></p>
@@ -107,18 +107,52 @@
   <p id="gen-child-2">1ª Geração</p>
 </div>
 
+<span class="update-advanced">
+<div id="about-update-orblend">
+  <p>Versão Orblend Engine: <strong>1.0</strong></p>
+  <p>Funcionalidades disponíveis:</p>
+    <p>→ Exibe a Data do dia</p>
+    <p>→ Se você não tem notas, exibe uma mensagem e oculta as Opções de Visualização (readOptions)</p>
+    <p>→ "Backup Inteligente de Nota": as notas são automaticamente salvas. Se sair do noteous e esquecer de salvar uma nota, é possível recuperá-la</p>
+    <p>→ "Redimensionamento Inteligente do Campo de Entrada de Nota", dependendo de quanto conteúdo há.</p>
+
+</div>
+</span>
+
 <div id="about-update-list">
 
   <div id="about-update-point-actual">
     <div class="about-update-point-container">
-      <p class="about-update-point-version">noteous cupcake 1.3</p>
+      <p class="about-update-point-version">noteous cupcake 1.4</p>
+      <p class="about-update-point-version-date">04/12/2022</p>
+    </div>
+    <p class="update-description"><span class="update-type">NOVO RECURSO</span><strong>Orblend Engine: </strong>Essa é uma nova 'tecnologia' do noteous. Orblend Engine é uma 'inteligência artificial': analisa sua interação com o noteous (por exemplo, suas anotações e quando você acessa) para alterar elementos da interface e exibir resultados úteis, como informações e dicas.</p>
+    <p class="update-description"><span class="update-type">NOVO RECURSO</span><strong>Desfazer 'Concluir Nota': </strong>Quando você conclui (apaga) uma nota, terá um breve momento para desfazer isso.</p>
+    <p class="update-description"><span class="update-type">NOVO RECURSO</span><strong>Recuperar nota não salva: </strong>Se você estava escrevendo uma nota e saiu do noteous sem salvar, poderá recuperá-la e continuar de onde parou.</p>
+    <p class="update-description"><span class="update-type">NOVO RECURSO</span><strong>Painel de Informações: </strong>Esse painel utiliza a nova tecnologia Orblend Engine para exibir informações, dicas, atalhos e muito mais, aprimorando ainda mais a experiência. <span class="update-advanced">A 'mensagem de boas vindas' (data do dia) agora pertence ao novo Painel de Informações.</span></p>
+    <p class="update-description"><span class="update-type">MELHORIA</span><strong>Campo de entrada de texto com tamanho dinâmico: </strong>Quando você escrever uma nova nota, o campo de entrada de texto irá se expandir dependendo de quanto texto há.</p>
+    <p class="update-description"><span class="update-type">MELHORIA</span><strong>Novas Animações: </strong>Ao carregar notas pela primeira vez, elas são exibidas através de uma breve animação. Ao clicar em 'concluir nota' ela irá desaparecer através de uma breve animação. Ao focar/desfocar campo de nota, o botão de 'alterar prioridade' (borda da nota) exibe uma animação que foi revisada.</p>
+    <p class="update-description"><span class="update-type">MELHORIA</span>Aprimoramentos no código interno (ative as Informações técnicas para ver mais)<span class="update-advanced">
+      <br>
+      1️⃣<strong>Elementos da nota agora possuem ID. </strong>Antes, cada vez que você adicionasse, editasse ou excluísse apenas 1 nota, a lista inteira era recarregada. Isso agora não acontece: as notas são manipuladas de forma individual: Isso foi possível por se adicionar um ID em cada nota exibida (que é retirado do próprio ID da nota armazenada). Ao carregar o noteous, todas as notas são exibidas usando o contexto "render-all", que adiciona IDs aos elementos de cada nota.
+    <br>
+      2️⃣<strong>CORREÇÃO: Ao apagar uma nota, a página movia para o topo</strong>. Esse é um problema que existia desde o início. Ao renderizar as notas, o botão 'apagar nota' possuía um link à mesma página (#). Esse link foi removido. Além de não necessário, o link causava o problema que a página voltava ao topo ao apagar uma nota.
+    </span></p>
+  </div>
+  <div class="about-update-point">
+    <div class="about-update-point-container">
+      <p class="about-update-point-version">1.3</p>
       <p class="about-update-point-version-date">15/11/2022</p>
     </div>
     <p class="update-description"><span class="update-type">NOVO RECURSO</span><strong>Prioridade de notas: </strong>Suas notas agora são ainda mais incríveis: escolha entre 3 tipos de borda, que representam prioridades.</p>
-    <p class="update-description"><span class="update-type">MELHORIA</span>Ao editar uma nota o botão de 'Confirmar edição' só aparece quando for feita alguma alteração.</p>
-    <p class="update-description"><span class="update-type">CORREÇÃO</span>Ao clicar em uma nota é possível editá-la diretamente. Porém, em dispositivos móveis (largura de até 600px), isso causa uma confusão, pois o teclado virtual abre junto. Agora ao tocar em uma nota, ela apenas é aberta. O teclado só é chamado ao clicar no campo de texto.</p>
+
     <p class="update-description"><span class="update-type">MELHORIA</span>Tela de boas vindas revisada: ao entrar pela primeira vez, novas informações são exibidas e ao acessar o noteous após uma atualização são exibidas as novidades. <span class="update-advanced">Desde a versão 1.0 as frases de boas vindas no primeiro acesso eram: 'Enote agora é noteous. O que há de novo', isso foi descontinuado. As frases agora são: 'Bem-vindo ao noteous. Faça anotações, realize tarefas, seja mais produtivo'. <br> E, ao acessar o noteous após uma atualização, as frases usadas atualmente são: 'Bem-vindo de volta! Temos uma atualização. Confira as novidades desta versão'</span></p>
-    <p class="update-description"><span class="update-type">MELHORIA</span>Revisão, limpeza e organização do código interno. <span class="update-advanced">1️⃣ Alguns recursos que precisavam de 2 funções foram reorganizados para usar apenas 1 função. A ação é realizada dependendo do 'contexto' em que foi chamada. Por exemplo, o recurso de aplicar tema agora é feito por 1 única função, que escolhe qual tema será aplicado dependendo do 'contexto'.2️⃣ O código foi melhor organizado e repetições desnecessárias foram retiradas.</span></p>
+
+    <p class="update-description"><span class="update-type">AJUSTE</span>Ao editar uma nota o botão de 'Confirmar edição' só aparece quando for feita alguma alteração.</p>
+
+    <p class="update-description"><span class="update-type">AJUSTE</span>Ao clicar em uma nota é possível editá-la diretamente. Porém, em dispositivos móveis (largura de até 600px), isso causa uma confusão, pois o teclado virtual abre junto. Agora ao tocar em uma nota, ela apenas é aberta. O teclado só é chamado ao clicar no campo de texto.</p>
+
+    <p class="update-description"><span class="update-type">AJUSTE</span>Revisão, limpeza e organização do código interno. <span class="update-advanced">1️⃣ Alguns recursos que precisavam de 2 funções foram reorganizados para usar apenas 1 função. A ação é realizada dependendo do 'contexto' em que foi chamada. Por exemplo, o recurso de aplicar tema agora é feito por 1 única função, que escolhe qual tema será aplicado dependendo do 'contexto'.2️⃣ O código foi melhor organizado e repetições não necessárias foram removidas.</span></p>
     <p class="update-description"><span class="update-type">AJUSTE</span>Informações sobre privacidade atualizadas.</p>
   </div>
 
