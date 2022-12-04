@@ -63,7 +63,7 @@
 
   #index header,
   #about header {
-    margin: 1.5rem 1.5rem 3rem 1.5rem;
+    margin: 1rem 1.5rem;
   }
 
   #index main {
@@ -251,6 +251,7 @@ a {
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-direction: column;
 
   margin-bottom: 2rem;
   user-select: none;
@@ -264,12 +265,16 @@ a {
 }
 
 .info-element {
+  margin-left: 0.5rem;
+  margin-bottom: 0.5rem;
+
   font-family: 'DM Serif Text', serif;
-  color: var(--base-text);
   font-style: italic;
   font-weight: bold;
   font-size: 1.2rem;
   text-align: center;
+
+  color: var(--base-text);
 
   white-space: pre-wrap;
 
@@ -429,6 +434,7 @@ a {
 #read-options {
   display: flex;
   justify-content: end;
+  transition: all 0.4s cubic-bezier(0.075, 0.82, 0.165, 1);
 }
 
 #read-options-sort {
@@ -444,7 +450,7 @@ a {
 
 #read-notes-list {
   display: flex;
-  justify-content: flex-end;
+  justify-content: center;
 }
 
 #section-read .note-container {
@@ -763,7 +769,6 @@ footer p span {
 #about-update-orblend {
   display: flex;
   flex-direction: column;
-  align-items: center;
   margin: 0.5rem 0;
 }
 

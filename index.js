@@ -20,6 +20,7 @@ let noteButtonCancelEdit = document.querySelector('#write-button-cancel')
 //READ-SECTION
 let readSection = document.querySelector('#section-read')
 let readPanel = document.querySelector('#read-panel')
+let readOptions = document.querySelector('#read-options')
 let readOptionsSort = document.querySelector('#read-options-sort')
 let noteList = document.querySelector('#read-notes-list')
 
@@ -39,6 +40,7 @@ let noteousSettings = JSON.parse(localStorage.getItem('noteous-settings'))
 getSettings()
 renderNote('render-all')
 orblendEngine('load')
+orblendEngine('on-change-input')
 
 /////////////////////////////////////////////////////////////
 
@@ -323,15 +325,6 @@ function getSettings() {
       sortNotes('retrieveSort')
       //Aplica último tema
       setTheme('retrieveTheme')
-
-      //Verifica se há uma nota não salva
-      if (noteousSettings.input != '') {
-        if (confirm('Há uma nota não salva. Deseja recuperá-la?')) {
-          noteInput.value = noteousSettings.input
-        } else {
-          noteousSettings.input = ''
-        }
-      }
     }
   } else if (noteousSettings == null) {
     //NÃO HÁ CONFIGURAÇÕES --> PRIMEIRO ACESSO AO NOTEOUS
@@ -348,8 +341,9 @@ function getSettings() {
 
 //MOSTRAR BOAS VINDAS
 function orblendEngine(context) {
-  //Local Functions
-  const random = () => {
+  let subcontext
+
+  const getRandom = () => {
     let math = Math.random()
     if (math < 0.5) {
       return false
@@ -358,7 +352,7 @@ function orblendEngine(context) {
     }
   }
 
-  const dateElement = () => {
+  let dateElement = function makeDateElement() {
     let dateNow = new Date()
     let infoElementDate = document.createElement('p')
     infoElementDate.classList.add('info-element')
@@ -368,21 +362,93 @@ function orblendEngine(context) {
       ).getDate()} de ${findMonth(new Date(dateNow).getMonth())}`
     )
     infoElementDate.append(infoElementDateText)
-    infoPanel.append(infoElementDate)
+    return infoElementDate
+  }
+
+  let infoElement = function makeInfoElement(subcontext, random) {
+    console.log(subcontext)
+    console.log(random)
+    let infoText
+    if (subcontext == 'no-notes') {
+      infoText = 'Você ainda não tem anotações \n Adicione sua próxima tarefa!'
+    } else if (subcontext == 'has-notes') {
+      infoText = ''
+    }
+    let infoElementTip = document.createElement('p')
+    infoElementTip.classList.add('info-element')
+    let infoElementTipText = document.createTextNode(`${infoText}`)
+    infoElementTip.append(infoElementTipText)
+
+    if (infoText == '') {
+      infoElementTip.style.marginBottom = '0;'
+      infoPanel.style.cssText = 'margin-bottom: 0;'
+    } else {
+      infoPanel.style.cssText = ''
+    }
+
+    return infoElementTip
   }
 
   if (context == 'change') {
-    if (noteousMain.length > 2) {
-      readOptionsSort.style.cssText = 'opacity: 1'
+    if (noteousMain.length > 0) {
+      readOptionsSort.style.opacity = 1
+      subcontext = 'has-notes'
     } else {
-      readOptionsSort.style.cssText = 'opacity: 0'
-      console.log(random())
+      readOptionsSort.style.opacity = 0
+      subcontext = 'no-notes'
     }
+    infoPanel.innerHTML = ''
+    infoPanel.append(dateElement(), infoElement(subcontext, getRandom()))
   } else if (context == 'load') {
-    if (noteousMain.length < 2) {
+    //Backup Inteligente de Nota
+    //Verifica se há uma nota não salva
+    if (noteousSettings.input != '') {
+      if (confirm('Há uma nota não salva. Deseja recuperá-la?')) {
+        noteInput.value = noteousSettings.input
+      } else {
+        noteousSettings.input = ''
+      }
+    }
+    /////
+
+    if (noteousMain.length > 0) {
+      subcontext = 'has-notes'
+    } else {
+      subcontext = 'no-notes'
       readOptionsSort.style.cssText = 'opacity: 0'
     }
-    dateElement()
+    infoPanel.innerHTML = ''
+    infoPanel.append(dateElement(), infoElement(subcontext, getRandom()))
+  } else if (context == 'on-change-input') {
+    //Habilitar/Desabilitar Botão Adicionar Nota
+    if (noteInput.value === '') {
+      noteButtonAdd.disabled = true
+    } else {
+      noteButtonAdd.disabled = false
+    }
+
+    //Backup Inteligente de Nota
+    noteousSettings.input = noteInput.value
+    localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
+
+    //Redimensionamento Inteligente do Campo de Input
+    //Verifica quantas linhas há no Campo de Input
+    let input = noteousSettings.input
+    let newLines
+    if (input.match(/\n/g) == null) {
+      newLines = ['']
+    } else {
+      newLines = input.match(/\n/g)
+    }
+
+    //Aplica novo tamanho se tiver 2 linhas OU mais de 120 caracteres
+    if (newLines.length > 2 || noteInput.value.length > 120) {
+      noteInput.classList.add('edit-mode')
+      writePanel.classList.add('edit-mode')
+    } else {
+      noteInput.classList.remove('edit-mode')
+      writePanel.classList.remove('edit-mode')
+    }
   }
 }
 
@@ -393,7 +459,7 @@ localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
 notePriority('retrievePriority', noteousSettings.priority)
 
 function notePriority(context, priority) {
-  //context ==> recuperar prioridade, recuperar prioridade ao tirar foco do input(ao tirar foco define opacidade = 0 de Opções da Nota. Mas, é necessário também definir junto a borda, pois ao contrário um sobrescreve o outro), trocar prioridade
+  //context ==> (1) recuperarPrioridade, (2)recuperarPrioridadeAoDesfocarInput (ao tirar foco define opacidade = 0 de Opções da Nota. Mas, é necessário também definir junto a borda, pois ao contrário um sobrescreve o outro), (3) trocarPrioridade
   if (context == 'retrievePriority') {
     if (priority == 'solid') {
       writeOptions.style.cssText = 'border-style: solid;'
@@ -504,7 +570,7 @@ function sortNotes(context) {
 readOptionsSort.addEventListener('click', sortNotes)
 
 //RENDERIZAR NOTAS
-function renderNote(context, noteId, orbId) {
+function renderNote(context, noteId) {
   if (context == 'render-all') {
     noteList.innerHTML = ''
 
@@ -603,8 +669,6 @@ function renderNote(context, noteId, orbId) {
       noteContainer.appendChild(noteTextContainer)
 
       noteList.appendChild(noteContainer)
-
-      orblendEngine('change')
     }
 
     setTimeout(() => {
@@ -712,6 +776,7 @@ function renderNote(context, noteId, orbId) {
       }
     }
   }
+  orblendEngine('change')
 }
 
 function findMonth(number) {
@@ -791,30 +856,8 @@ function setTimeNumber(number) {
 
 noteButtonAdd.addEventListener('click', addNote)
 
-//Habilitar/desabilitar botão Adicionar
-noteButtonAdd.disabled = true
-noteInput.addEventListener('input', function (event) {
-  if (noteInput.value === '') {
-    noteButtonAdd.disabled = true
-  } else {
-    noteButtonAdd.disabled = false
-  }
-
-  //Recuperar nota não salva
-  noteousSettings.input = noteInput.value
-  localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
-
-  //Verifica quantas linhas há
-  let input = noteousSettings.input
-  newLines = input.match(/\n/g)
-  console.log(newLines)
-  if (newLines.length > 1) {
-    noteInput.classList.add('edit-mode')
-    writePanel.classList.add('edit-mode')
-  } else {
-    noteInput.classList.remove('edit-mode')
-    writePanel.classList.remove('edit-mode')
-  }
+noteInput.addEventListener('input', () => {
+  orblendEngine('on-change-input')
 })
 
 // ADICIONAR NOTA
@@ -855,6 +898,7 @@ function deleteNote(noteId) {
       }
 
       localStorage.setItem('noteous-main', JSON.stringify(noteousMain))
+      orblendEngine('change')
     }, 100)
   }, 1500)
 
@@ -922,7 +966,7 @@ function editNote(noteId) {
       readSection.classList.toggle('edit-mode') //coloca a seção de leitura das nota no modo de edição (que desabilita as ações das notas enquanto uma nota está sendo editada)
       writePanel.classList.toggle('edit-mode')
 
-      infoPanel.classList.toggle('edit-mode')
+      infoPanel.innerHTML = ''
 
       noteButtonAdd.setAttribute('hidden', 'true')
 
@@ -981,7 +1025,7 @@ function exitEditMode() {
   writeOptions.style.cssText = 'border-style: solid; opacity: 0;'
   noteInput.style.cssText = 'border-style: solid;'
 
-  infoPanel.classList.toggle('edit-mode')
+  orblendEngine('change')
 
   noteButtonAdd.removeAttribute('hidden')
   noteButtonAdd.disabled = true
