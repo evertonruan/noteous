@@ -442,12 +442,14 @@ function orblendEngine(context) {
     }
 
     //Aplica novo tamanho se tiver 2 linhas OU mais de 120 caracteres
-    if (newLines.length > 2 || noteInput.value.length > 120) {
-      noteInput.classList.add('edit-mode')
-      writePanel.classList.add('edit-mode')
-    } else {
-      noteInput.classList.remove('edit-mode')
-      writePanel.classList.remove('edit-mode')
+    if (editMode == false) {
+      if (newLines.length > 2 || noteInput.value.length > 120) {
+        noteInput.classList.add('edit-mode')
+        writePanel.classList.add('edit-mode')
+      } else {
+        noteInput.classList.remove('edit-mode')
+        writePanel.classList.remove('edit-mode')
+      }
     }
   }
 }
