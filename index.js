@@ -26,9 +26,16 @@ let noteList = document.querySelector('#read-notes-list')
 
 // VARIÁVEIS IMPORTANTES /////////////////////////////////////
 
-let currentVersion = 1.4
+let currentVersion = '1.4.1'
 let noteIdEdit //usada para confirmar qual nota está sendo editada
 let editMode = false
+
+//função em variável para 'desbloquear' noteInput se tela é pequena
+//usado em openNote() e exitEditMode()
+let noteInputEdit = function (event) {
+  noteInput.removeAttribute('readonly')
+  labelWrite.innerHTML = '📝 Edite aqui sua nota'
+}
 
 ///////////////////////////////////////////////////////////////
 
@@ -99,7 +106,7 @@ function welcomeToNoteous(context) {
 
     greetingDescriptionLi1.append(
       document.createTextNode(
-        'Temas: personalize sua experiência com o novo suporte a temas. Escolha entre claro e escuro'
+        'Temas: personalize sua experiência com o brilhante tema claro ou com o elegante tema escuro'
       )
     )
     greetingDescriptionLi2.append(
@@ -109,12 +116,12 @@ function welcomeToNoteous(context) {
     )
     greetingDescriptionLi3.append(
       document.createTextNode(
-        'Melhoria ao editar notas: agora você pode editar uma anotação simplesmente tocando ou clicando nela'
+        'noteous possui um design inovador que convida você a fazer anotações. Veja a data de hoje, escreva sua próxima tarefa ou registre algo para não esquecer.'
       )
     )
     greetingDescriptionLi4.append(
       document.createTextNode(
-        'IMPORTANTE: Se você já utilizava o Enote, poderá transferir manualmente suas notas para o noteous. Clique em Saiba Mais para obter instruções'
+        'IMPORTANTE: Se você já utilizava o Enote (o aplicativo anterior), poderá transferir manualmente suas notas para o noteous. Clique em Saiba Mais para obter instruções'
       )
     )
 
@@ -169,7 +176,7 @@ function welcomeToNoteous(context) {
 
     greetingTitle2 = document.createElement('p')
     greetingTitle2.classList.add('greeting-title2')
-    greetingTitle2.append(document.createTextNode('noteous 1.4'))
+    greetingTitle2.append(document.createTextNode('noteous 1.4.1'))
     greetingSectionTitle.append(greetingTitleIcon, greetingTitle2)
 
     ////////////////////
@@ -193,7 +200,7 @@ function welcomeToNoteous(context) {
 
     greetingDescriptionLi1.append(
       document.createTextNode(
-        `Orblend Engine → Essa é uma nova 'tecnologia' do noteous. Orblend Engine é uma 'inteligência artificial': analisa sua interação para melhorar sua experiência.`
+        `Orblend Engine → É uma nova 'tecnologia' do noteous que analisa sua interação para melhorar sua experiência.`
       )
     )
     greetingDescriptionLi2.append(
@@ -203,12 +210,12 @@ function welcomeToNoteous(context) {
     )
     greetingDescriptionLi3.append(
       document.createTextNode(
-        'Novo recurso → Recuperar nota não salva. Se você estava escrevendo uma nota e saiu sem salvar, poderá recuperá-la e continuar de onde parou'
+        'Novo recurso → Backup Inteligente de Nota. Se você estava escrevendo uma nota e saiu sem salvar, poderá recuperá-la e continuar de onde parou'
       )
     )
     greetingDescriptionLi4.append(
       document.createTextNode(
-        'Várias melhorias, como novas animações e correções de erros. Para ver todos os detalhes, acesse Saiba Mais > Histórico de Atualizações.'
+        'Na atualização principal (1.4), foram feitas melhorias incríveis. Nesta atualização (1.4.1) há correções de alguns erros. Para ver todos os detalhes, acesse Saiba Mais > Histórico de Atualizações.'
       )
     )
 
@@ -315,7 +322,8 @@ function getSettings() {
         noteousVersion: currentVersion,
         sort: 'recent',
         priority: 'solid',
-        input: ''
+        input: '',
+        noteId: 0
       }
       welcomeToNoteous('new-version')
       localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
@@ -337,7 +345,8 @@ function getSettings() {
       noteousVersion: currentVersion,
       sort: 'recent',
       priority: 'solid',
-      input: ''
+      input: '',
+      noteId: 0
     }
     welcomeToNoteous('first-access')
     localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
@@ -372,8 +381,6 @@ function orblendEngine(context) {
   }
 
   let infoElement = function makeInfoElement(subcontext, random) {
-    console.log(subcontext)
-    console.log(random)
     let infoText
     if (subcontext == 'no-notes') {
       infoText = 'Você ainda não tem anotações \n Adicione sua próxima tarefa!'
@@ -415,10 +422,21 @@ function orblendEngine(context) {
     //Backup Inteligente de Nota
     //Verifica se há uma nota não salva
     if (noteousSettings.input != '') {
-      if (confirm('Há uma nota não salva. Deseja recuperá-la?')) {
-        noteInput.value = noteousSettings.input
+      if (noteousSettings.noteId != 0) {
+        if (confirm('Você estava editando uma nota, deseja recuperá-la?')) {
+          openNote(noteousSettings.noteId)
+          noteInput.value = noteousSettings.input
+        } else {
+          noteousSettings.input = ''
+          noteousSettings.noteId = 0
+        }
       } else {
-        noteousSettings.input = ''
+        if (confirm('Há uma nota não salva. Deseja recuperá-la?')) {
+          noteInput.value = noteousSettings.input
+          noteInput.focus()
+        } else {
+          noteousSettings.input = ''
+        }
       }
     }
 
@@ -450,8 +468,17 @@ function orblendEngine(context) {
     }
 
     //Backup Inteligente de Nota
-    noteousSettings.input = noteInput.value
-    localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
+    if (editMode == false) {
+      noteousSettings.input = noteInput.value
+      localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
+      console.log(noteousSettings.input)
+    } else if (editMode == true) {
+      noteousSettings.input = noteInput.value
+      noteousSettings.noteId = noteIdEdit
+      localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
+      console.log(noteousSettings.input)
+      console.log(noteousSettings.noteId)
+    }
 
     //Redimensionamento Inteligente do Campo de Input
     //Verifica quantas linhas há no Campo de Input
@@ -468,7 +495,7 @@ function orblendEngine(context) {
       if (newLines.length > 2 || noteInput.value.length > 120) {
         noteInput.classList.add('edit-mode')
         writePanel.classList.add('edit-mode')
-      } else {
+      } else if (editMode == true) {
         noteInput.classList.remove('edit-mode')
         writePanel.classList.remove('edit-mode')
       }
@@ -943,12 +970,6 @@ function deleteNote(noteId) {
 
 //////////
 
-//função em variável para 'desbloquear' noteInput se tela é pequena
-let noteInputEdit = function (event) {
-  noteInput.removeAttribute('readonly')
-  labelWrite.innerHTML = '📝 Edite aqui sua nota'
-}
-
 //ABRIR NOTA
 function openNote(noteId) {
   editMode = true
@@ -1033,7 +1054,13 @@ function editNote(noteId) {
 }
 
 function exitEditMode() {
+  //Remove informações do Backup Inteligente de Nota
+  noteInput.value = ''
+  noteIdEdit = 0
+  orblendEngine('on-change-input')
+
   editMode = false
+
   writePanel.classList.toggle('edit-mode')
   readSection.classList.toggle('edit-mode')
 

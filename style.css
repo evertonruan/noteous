@@ -627,7 +627,6 @@ footer p span {
   color: var(--base-text);
 
   cursor: default;
-  user-select: none;
 }
 
 #about a {
