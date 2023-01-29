@@ -5,46 +5,68 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <link rel="preconnect" href="https://fonts.gstatic.com" />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Merriweather+Sans:wght@400;700&display=swap"
-      rel="stylesheet"
-    />
-
+    <!--MERRIWEATHER-->
+    <!--DM-SERIF-->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=DM+Serif+Text:ital@0;1&display=swap"
+      href="https://fonts.googleapis.com/css2?family=DM+Serif+Text:ital@1&family=Merriweather+Sans:wght@400;700&display=swap"
       rel="stylesheet"
     />
 
-        <!--MATERIAL ICONS-->
-        <link
-        href="https://fonts.googleapis.com/icon?family=Material+Icons"
-        rel="stylesheet"
-      />
+    <!--MATERIAL SYMBOLS-->
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
+    />
+
+    <!--MATERIAL ICONS-->
+    <link
+      href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet"
+    />
 
     <link rel="stylesheet" href="style.css" />
-
-    <title>noteous • Saiba Mais</title>
     <link rel="shortcut icon" href="./img/favicon.png" type="image/x-icon">
+
+    <title>noteous • Ajustes&Info</title>
   </head>
   <body id="about">
-    <header>
-      <div id="logo-container">
-        <a href="index.html"><h1 id="logo">noteous</h1></a>
-        <h2>Saiba Mais</h2>
-      </div>
-      
-      <nav>
-        <ul>
-          <li>
-            <a id="nav-update" href="index.html">← Voltar para notas</a>
-          </li>
-        </ul>
-      </nav>
+    <header id="presentation-panel">
+      <a id="nav-options" href="index.html"
+        ><span class="material-symbols-rounded">arrow_back</span></a
+      >
+      <a href="index.html"><h1 id="logo">Ajustes&Info</h1></a>
+      <div></div>
     </header>
   <main>
+    <section id="about-settings">
+      <h3>Ajustes</h3>
+      <div class="settings-point">
+        <h4>Tamanho de texto</h4>
+        <div class="options-container">
+          <div id="baserem-big" class="option-point">Grande</div>
+          <div id="baserem-normal" class="option-point">Padrão</div>
+          <div id="baserem-small" class="option-point">Pequeno</div>
+        </div>
+      </div>
+      <div class="settings-point">
+        <h4>Luminosidade</h4>
+        <div class="options-container">
+          <div id="luminosity-light" class="option-point">Claro</div>
+          <div id="luminosity-dark" class="option-point">Escuro</div>
+        </div>
+      </div>
+
+      <div class="settings-point">
+        <h4>Botão de atalho</h4>
+        <div class="options-container">
+          <div id="shortcut-luminosity" class="option-point">Luminosidade</div>
+          <div id="shortcut-baserem" class="option-point">Tamanho de texto</div>
+        </div>
+      </div>
+      
+    </section>
     <section id="about-app">
       <div id="about-author">
         <img id="about-author-image" src="./img/social-chain.png" alt="Autor e Projeto">
@@ -60,36 +82,11 @@
       
       <h3>📋 INFORMAÇÕES SOBRE PRIVACIDADE E ARMAZENAMENTO</h2>
         <p class="about-app-point">
-            <p>• Este aplicativo coleta e analisa informações sobre seu acesso para personalizar sua experiência (por exemplo, salvar a cor do tema que você escolheu e as anotações que escrever). Mas todas as informações permanecem apenas no seu dispositivo.</p>
-            <p>• É necessário estar conectado à internet para utilizar o noteous</p>
-            <p>• Embora é preciso estar conectado à internet, <strong> suas notas são salvas localmente, no seu dispositivo </strong> (celular, tablet ou computador), utilizando uma tecnologia do navegador de internet, chamada Armazenamento Local</p>
-            <p><strong>IMPORTANTE: Se você desinstalar ou limpar os dados de seu navegador, suas notas serão apagadas. Se usar o noteous em vários dispositivos, cada um terá notas separadas. Inclusive, se usar o noteous em vários navegadores, cada um terá notas separadas.</strong></p>
+          <p>• É necessário estar conectado à internet para utilizar o noteous</p>
+          <p>• Embora é preciso estar conectado, as informações permanecem apenas dentro do seu dispositivo (como celular ou computador) e não são compartilhadas com ninguém. É utilizada uma tecnologia do navegador de internet, chamada Armazenamento Local.</p>
+          <p>• Por enquanto, não é possível sincronizar anotações com outros dispositivos.</p>
+          <p><strong>IMPORTANTE: Se você desinstalar ou limpar os dados de seu navegador, suas notas serão apagadas. Se usar o noteous em vários dispositivos, cada um terá notas separadas. Inclusive, se usar o noteous em vários navegadores, cada um terá notas separadas.</strong></p>
           </ul>
-        </p>
-      </section>
-
-      <h3>✅ ATUALIZAÇÃO PARA O NOTEOUS</h3>
-        <p class="about-app-point">
-          Se você já utilizava o Enote, <strong>suas notas não são transferidas para o noteous</strong>. Porém, você pode copiar e colar elas manualmente. <br>
-          <p><strong>Siga estas instruções</strong></p>
-          <p>1º: Acesse o Enote e copie o código. <strong><a href="http://enoteapp.vercel.app"> Acessar Enote → </a></strong></p>
-
-          <p>2º: Cole o código no campo abaixo.</p>
-          
-          <p class="about-app-point">
-            <div id="enote-notes-container">
-              <textarea id="enote-notes"></textarea>
-              <button id="enote-notes-add" onclick="addEnoteNotes()">+ Adicionar notas</button>
-            </div>
-            <br>
-            <p>IMPORTANTE: 
-              Isso irá substituir qualquer nota adicionada no noteous
-              <br>
-              Suas notas terão a data de hoje, pois o suporte a datas se inicia nesta versão.
-              <br>
-              Este recurso de atualização do Enote para o noteous será descontinuado em breve.
-            </p>
-          </p>
         </p>
       </section>
 
@@ -109,12 +106,12 @@
 
 <span class="update-advanced">
 <div id="about-update-orblend">
-  <p>Versão Orblend Engine: <strong>1.0</strong></p>
+  <p>Versão Orblend Engine: <strong>1.1</strong></p>
   <p>Funcionalidades disponíveis:</p>
     <p>→ Exibe a Data do dia</p>
     <p>→ Se você não tem notas, exibe uma mensagem e oculta as Opções de Visualização (readOptions)</p>
-    <p>→ "Backup Inteligente de Nota": as notas são automaticamente salvas. Se sair do noteous e esquecer de salvar uma nota, é possível recuperá-la</p>
-    <p>→ "Redimensionamento Inteligente do Campo de Entrada de Nota", dependendo de quanto conteúdo há.</p>
+    <p>→ Backup Inteligente de Nota: as notas são automaticamente salvas para evitar perda de dados: se sair do noteous enquanto criava ou editava uma nota, é possível recuperá-la</p>
+    <p>→ Redimensionamento Inteligente do Campo de Entrada de Nota, dependendo de quanto conteúdo há.</p>
 
 </div>
 </span>
@@ -123,12 +120,36 @@
 
   <div id="about-update-point-actual">
     <div class="about-update-point-container">
-      <p class="about-update-point-version">noteous cupcake 1.4</p>
-      <p class="about-update-point-version-date">06/12/2022</p>
+      <p class="about-update-point-version">noteous cupcake 1.5</p>
+      <p class="about-update-point-version-date">01/02/2023</p>
     </div>
-    <p class="update-description"><span class="update-type">NOVO RECURSO</span><strong>Orblend Engine: </strong>Essa é uma nova 'tecnologia' do noteous. Orblend Engine é uma 'inteligência artificial': analisa sua interação com o noteous (por exemplo, suas anotações e quando você acessa) para alterar elementos da interface e exibir resultados úteis, como informações e dicas.</p>
+    <p class="update-description"><span class="update-type">NOVO</span><strong>Configuração de tamanho de texto: </strong>Deixe o noteous do seu tamanho com o novo recurso que permite ajustar o tamanho do texto.<span class="update-advanced">Com o lançamento deste recurso, foi descontinuado o ajuste automático de tamanho de fonte ao redimensionar a janela. Por exemplo, antes se a janela fosse de computador, o tamanho da fonte seria 'normal', mas se fosse de celular, seria levemente reduzido. Porém, agora esse ajuste é manual, de acordo com sua preferência.</span></p>
+    <span class="update-advanced"><p class="update-description"><span class="update-type">AJUSTE</span>Alguns nomes foram alterados para melhor compreensão. Por exemplo: theme → look, str → saturation. Além disso, houve uma padronização na chamada dos 'contextos'. Antes havia 2 formas, em camelCase e kebab-case. Agora o padrão é kebab-case. O camelCase é usado exclusivamente em variáveis e funções."</p></span>
+    <p class="update-description"><span class="update-type">AJUSTE</span>A informação de criação da nota agora é representada por '+'. Antes era "Criado em"</p>
+    <p class="update-description">O recurso 'Atualização para o noteous' foi descontinuado. Este recurso possibilitava a transferência das notas do aplicativo anterior, chamado Enote, para o novo aplicativo, noteous.</p>
+    
+    </div>
+
+  <div class="about-update-point">
+    <div class="about-update-point-container">
+      <p class="about-update-point-version">1.4.1</p>
+      <p class="about-update-point-version-date">15/01/2023</p>
+    </div>
+    <p class="update-description"><span class="update-type">MELHORIA</span>Expansão do Backup Inteligente de Nota para anotações sendo editadas. Se você estiver editando uma nota e sair do noteous, poderá voltar exatamente onde parou.
+    <span class="update-advanced">Atualização Orblend Engine 1.1</span></p>
+    <p class="update-description"><span class="update-type">CORREÇÃO</span>O recurso Backup Inteligente de Nota era exibido quando não havia nota para ser recuperada.</p>
+    <p class="update-description"><span class="update-type">CORREÇÃO</span>Ao recuperar uma nota, o campo de entrada de texto não recebia foco todas as vezes.</p>
+  </div>
+
+
+  <div class="about-update-point">
+    <div class="about-update-point-container">
+      <p class="about-update-point-version">1.4</p>
+      <p class="about-update-point-version-date">04/12/2022</p>
+    </div>
+    <p class="update-description"><span class="update-type">NOVO RECURSO</span><strong>Orblend Engine: </strong>Essa é uma nova 'tecnologia' do noteous que analisa sua interação (por exemplo, suas anotações e quando você acessa) para alterar elementos da interface e exibir resultados úteis, como informações e dicas.</p>
     <p class="update-description"><span class="update-type">NOVO RECURSO</span><strong>Desfazer 'Concluir Nota': </strong>Quando você conclui (apaga) uma nota, terá um breve momento para desfazer isso.</p>
-    <p class="update-description"><span class="update-type">NOVO RECURSO</span><strong>Recuperar nota não salva: </strong>Se você estava escrevendo uma nota e saiu do noteous sem salvar, poderá recuperar a nota e continuar de onde parou.</p>
+    <p class="update-description"><span class="update-type">NOVO RECURSO</span><strong>Backup Inteligente de Nota: </strong>Se você estava escrevendo uma nota e saiu do noteous sem salvar, poderá recuperá-la e continuar de onde parou.</p>
     <p class="update-description"><span class="update-type">NOVO RECURSO</span><strong>Painel de Informações: </strong>Esse painel utiliza a nova tecnologia Orblend Engine para exibir informações, dicas, atalhos e muito mais, aprimorando ainda mais a experiência. <span class="update-advanced">A 'mensagem de boas vindas' (data do dia) agora pertence ao novo Painel de Informações.</span></p>
     <p class="update-description"><span class="update-type">MELHORIA</span><strong>Campo de entrada de texto com tamanho dinâmico: </strong>Quando você escrever uma nova nota, o campo de entrada de texto irá se expandir dependendo de quanto texto há.</p>
     <p class="update-description"><span class="update-type">MELHORIA</span><strong>Novas Animações: </strong>Ao carregar notas pela primeira vez, elas são exibidas através de uma breve animação. Ao clicar em 'concluir nota' ela irá desaparecer através de uma breve animação. Ao focar/desfocar campo de nota, o botão de 'alterar prioridade' (borda da nota) exibe uma animação que foi revisada.</p>

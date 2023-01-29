@@ -5,48 +5,41 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
+    <link rel="stylesheet" href="style.css" />
+
     <!--MERRIWEATHER-->
-    <link rel="preconnect" href="https://fonts.gstatic.com" />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Merriweather+Sans:wght@400;700&display=swap"
-      rel="stylesheet"
-    />
-
     <!--DM-SERIF-->
-
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=DM+Serif+Text:ital@0;1&display=swap"
+      href="https://fonts.googleapis.com/css2?family=DM+Serif+Text:ital@1&family=Merriweather+Sans:wght@400;700&display=swap"
       rel="stylesheet"
     />
 
-    <link rel="stylesheet" href="style.css" />
+    <!--MATERIAL SYMBOLS-->
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
+    />
 
     <!--MATERIAL ICONS-->
     <link
       href="https://fonts.googleapis.com/icon?family=Material+Icons"
       rel="stylesheet"
     />
-    <title>noteous</title>
+
     <link rel="shortcut icon" href="./img/favicon.png" type="image/x-icon" />
+    <title>noteous</title>
   </head>
   <body id="index">
-    <header>
+    <header id="presentation-panel">
+      <a class="nav-point" href="about.html"
+        ><span class="material-symbols-rounded"> settings </span></a
+      >
       <a href="index.html"><h1 id="logo">noteous</h1></a>
-      <nav>
-        <ul>
-          <li>
-            <div id="theme-container">
-              <p>Tema</p>
-              <div id="theme-color"></div>
-            </div>
-          </li>
-          <li>
-            <a id="nav-update" href="about.html">Saiba Mais</a>
-          </li>
-        </ul>
-      </nav>
+      <div id="shortcut-button" class="nav-point">
+        <span id="shortcut-text" class="material-symbols-rounded"></span>
+      </div>
     </header>
     <main>
       <section id="section-write">
@@ -96,9 +89,10 @@
     </main>
 
     <footer>
-      <p><span>noteous</span> 1ª Geração • v1.4</p>
+      <p><span>noteous</span> 1ª Geração • 1.4.1</p>
     </footer>
 
+    <script type="text/javascript" src="orblendEngine.js"></script>
     <script type="text/javascript" src="index.js"></script>
   </body>
 </html>

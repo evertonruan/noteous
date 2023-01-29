@@ -1,7 +1,9 @@
 // ELEMENTOS /////////////////////////////////////
 let body = document.querySelector('body')
+let root = document.querySelector(':root')
 
-let themeButton = document.querySelector('#theme-container')
+let shortcutButton = document.querySelector('#shortcut-button')
+let shortcutText = document.querySelector('#shortcut-text')
 
 //WRITE-SECTION
 let writeSection = document.querySelector('#section-write')
@@ -26,9 +28,17 @@ let noteList = document.querySelector('#read-notes-list')
 
 // VARIÁVEIS IMPORTANTES /////////////////////////////////////
 
-let currentVersion = 1.3
+let currentVersion = '1.5'
 let noteIdEdit //usada para confirmar qual nota está sendo editada
 let editMode = false
+let cssRootGroup //Usada para agrupar todos os valores CSS adicionados a :root. Motivo: se forem colocados separadamente, um irá sobrescrever o outro.
+
+//função em variável para 'desbloquear' noteInput se tela é pequena
+//usado em openNote() e exitEditMode()
+let noteInputEdit = function (event) {
+  noteInput.removeAttribute('readonly')
+  labelWrite.innerHTML = '📝 Edite aqui sua nota'
+}
 
 ///////////////////////////////////////////////////////////////
 
@@ -46,7 +56,8 @@ orblendEngine('on-change-input')
 
 //welcomeToNoteous --> ao acessar 1ª vez ou nova versão
 function welcomeToNoteous(context) {
-  setTheme('setThemeLight')
+  noteousLook('set-luminosity-light')
+
   //context --> primeiro acesso ou nova versão
   if (context == 'first-access') {
     //Configuração da tela de Boas vindas (noteous 1.0)
@@ -99,7 +110,7 @@ function welcomeToNoteous(context) {
 
     greetingDescriptionLi1.append(
       document.createTextNode(
-        'Temas: personalize sua experiência com o novo suporte a temas. Escolha entre claro e escuro'
+        'Temas: personalize sua experiência com o brilhante tema claro ou com o elegante tema escuro'
       )
     )
     greetingDescriptionLi2.append(
@@ -109,12 +120,12 @@ function welcomeToNoteous(context) {
     )
     greetingDescriptionLi3.append(
       document.createTextNode(
-        'Melhoria ao editar notas: agora você pode editar uma anotação simplesmente tocando ou clicando nela'
+        'noteous possui um design inovador que convida você a fazer anotações. Veja a data de hoje, escreva sua próxima tarefa ou registre algo para não esquecer.'
       )
     )
     greetingDescriptionLi4.append(
       document.createTextNode(
-        'IMPORTANTE: Se você já utilizava o Enote, poderá transferir manualmente suas notas para o noteous. Clique em Saiba Mais para obter instruções'
+        'IMPORTANTE: Se você já utilizava o Enote (o aplicativo anterior), poderá transferir manualmente suas notas para o noteous. Clique em Saiba Mais para obter instruções'
       )
     )
 
@@ -169,7 +180,7 @@ function welcomeToNoteous(context) {
 
     greetingTitle2 = document.createElement('p')
     greetingTitle2.classList.add('greeting-title2')
-    greetingTitle2.append(document.createTextNode('noteous 1.3'))
+    greetingTitle2.append(document.createTextNode('noteous 1.4.1'))
     greetingSectionTitle.append(greetingTitleIcon, greetingTitle2)
 
     ////////////////////
@@ -193,22 +204,22 @@ function welcomeToNoteous(context) {
 
     greetingDescriptionLi1.append(
       document.createTextNode(
-        'Novo recurso: Prioridade de notas • Organize melhor suas tarefas com este recurso! Ao adicionar ou editar uma nota, toque/clique no círculo ° que aparecer no canto. Você poderá escolher entre 3 tipos de borda, que representam prioridades diferentes.'
+        `Orblend Engine → É uma nova 'tecnologia' do noteous que analisa sua interação para melhorar sua experiência.`
       )
     )
     greetingDescriptionLi2.append(
       document.createTextNode(
-        'Melhoria: ao editar uma nota, o botão de "Confirmar" só vai aparecer quando você fizer alguma alteração.'
+        'Novo recurso → Desfazer Concluir Nota. Quando você conclui (apaga) uma nota, terá um breve momento para desfazer isso.'
       )
     )
     greetingDescriptionLi3.append(
       document.createTextNode(
-        'Melhoria: Se você usa o noteous no celular, vai gostar disso: ao abrir uma nota o teclado não vai aparecer junto. Se quiser editar a nota é só tocar novamente e o teclado irá abrir.'
+        'Novo recurso → Backup Inteligente de Nota. Se você estava escrevendo uma nota e saiu sem salvar, poderá recuperá-la e continuar de onde parou'
       )
     )
     greetingDescriptionLi4.append(
       document.createTextNode(
-        'Você não vai notar, mas várias revisões foram feitas no código interno!'
+        'Na atualização principal (1.4), foram feitas melhorias incríveis. Nesta atualização (1.4.1) há correções de alguns erros. Para ver todos os detalhes, acesse Saiba Mais > Histórico de Atualizações.'
       )
     )
 
@@ -222,7 +233,7 @@ function welcomeToNoteous(context) {
     //Next Button
     btnNext = document.createElement('button')
     btnNext.classList.add('write-buttons')
-    btnNext.appendChild(document.createTextNode('Atualizar noteous'))
+    btnNext.appendChild(document.createTextNode('Acessar noteous'))
     btnNext.addEventListener('click', () => {
       document.location.reload()
     })
@@ -243,88 +254,90 @@ function welcomeToNoteous(context) {
 }
 
 // CONFIGURAÇÕES DE TEMA ////////////////////////////////////
-function setTheme(context) {
+
+function injectCSSOnRoot() {
+  root.style = `${noteousSettings.look.hue} ${noteousSettings.look.saturation}
+${noteousSettings.look.lumBack}
+${noteousSettings.look.lumMid}
+${noteousSettings.look.lumFront} ${noteousSettings.look.baseRem}`
+}
+
+function noteousLook(context) {
   //context => recuperar tema, trocar tema, aplicar tema claro, aplicar tema escuro
-  if (context == 'retrieveTheme') {
-    if (noteousSettings.theme.themeLum == 'light') {
-      setTheme('setThemeLight')
-      console.log(context)
-    } else if (noteousSettings.theme.themeLum == 'dark') {
-      setTheme('setThemeDark')
+  if (context == 'retrieve-look') {
+    if (noteousSettings.look.luminosity == 'light') {
+      noteousLook('set-luminosity-light')
+    } else if (noteousSettings.look.luminosity == 'dark') {
+      noteousLook('set-luminosity-dark')
     }
-  } else if (context == 'changeTheme') {
-    console.log(context)
-    if (noteousSettings.theme.themeLum == 'light') {
-      setTheme('setThemeDark')
-    } else if (noteousSettings.theme.themeLum == 'dark') {
-      setTheme('setThemeLight')
+  } else if (context == 'change-luminosity') {
+    if (noteousSettings.look.luminosity == 'light') {
+      noteousLook('set-luminosity-dark')
+    } else if (noteousSettings.look.luminosity == 'dark') {
+      noteousLook('set-luminosity-light')
     }
-  } else if (context == 'setThemeLight') {
-    noteousSettings.theme = themeParams = {
-      themeLum: 'light',
-      hue: '--hue: 30;',
-      str: '--str: 90%;',
-      lumBack: '--lum-back: 90%;',
-      lumMid: '--lum-mid: 60%;',
-      lumFront: '--lum-front: 10%;'
-    }
+  } else if (context == 'set-luminosity-light') {
+    shortcutText.innerHTML = 'light_mode'
+
+    noteousSettings.look.luminosity = 'light'
+    noteousSettings.look.hue = '--hue: 30;'
+    noteousSettings.look.saturation = '--saturation: 90%;'
+    noteousSettings.look.lumBack = '--lum-back: 90%;'
+    noteousSettings.look.lumMid = '--lum-mid: 60%;'
+    noteousSettings.look.lumFront = '--lum-front: 10%;'
 
     localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
     noteousSettings = JSON.parse(localStorage.getItem('noteous-settings'))
-    document.querySelector(
-      ':root'
-    ).style.cssText = `${noteousSettings.theme.hue} ${noteousSettings.theme.str}
-${noteousSettings.theme.lumBack}
-${noteousSettings.theme.lumMid}
-${noteousSettings.theme.lumFront}`
-  } else if (context == 'setThemeDark') {
-    noteousSettings.theme = themeParams = {
-      themeLum: 'dark',
-      hue: '--hue: 30;',
-      str: '--str: 40%;',
-      lumBack: '--lum-back: 10%;',
-      lumMid: '--lum-mid: 30%;',
-      lumFront: '--lum-front: 90%;'
-    }
+    injectCSSOnRoot('light_mode')
+  } else if (context == 'set-luminosity-dark') {
+    shortcutText.innerHTML = 'dark_mode'
+
+    noteousSettings.look.luminosity = 'dark'
+    noteousSettings.look.hue = '--hue: 30;'
+    noteousSettings.look.saturation = '--saturation: 40%;'
+    noteousSettings.look.lumBack = '--lum-back: 10%;'
+    noteousSettings.look.lumMid = '--lum-mid: 30%;'
+    noteousSettings.look.lumFront = '--lum-front: 90%;'
 
     localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
     noteousSettings = JSON.parse(localStorage.getItem('noteous-settings'))
-    document.querySelector(
-      ':root'
-    ).style.cssText = `${noteousSettings.theme.hue} ${noteousSettings.theme.str}
-${noteousSettings.theme.lumBack}
-${noteousSettings.theme.lumMid}
-${noteousSettings.theme.lumFront}`
+    injectCSSOnRoot('dark_mode')
   }
 }
 
-themeButton.addEventListener('click', () => {
-  setTheme('changeTheme')
+shortcutButton.addEventListener('click', () => {
+  noteousLook('change-luminosity')
 })
 
-//FUNÇÕES /////////////////////////////////////
+//////////
 
 //GETSETTINGS --> ao atualizar página, recupera dados salvos
 function getSettings() {
   //JÁ ACESSOU NOTEOUS --> recupera dados
   if (noteousSettings != null) {
+    //VERIFICA SE HÁ NOVA VERSÃO
     if (noteousSettings.noteousVersion != currentVersion) {
-      //VERIFICA SE HÁ NOVA VERSÃO
+      //SE HÁ NOVA VERSÃO
       noteousSettings = {
         noteousVersion: currentVersion,
         sort: 'recent',
         priority: 'solid',
-        input: ''
+        input: '',
+        noteId: 0,
+        look: { baseRem: '--base-rem: 100%', shortcut: 'luminosity' }
       }
       welcomeToNoteous('new-version')
       localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
     } else {
       //SE NÃO HÁ NOVA VERSÃO
-
       //Aplica última ordenação
-      sortNotes('retrieveSort')
+      sortNotes('retrieve-sort')
       //Aplica último tema
-      setTheme('retrieveTheme')
+      noteousLook('retrieve-look')
+      //Aplica borda como solid
+      noteousSettings.priority = 'solid'
+      localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
+      notePriority('retrieve-priority', noteousSettings.priority)
     }
   } else if (noteousSettings == null) {
     //NÃO HÁ CONFIGURAÇÕES --> PRIMEIRO ACESSO AO NOTEOUS
@@ -332,137 +345,18 @@ function getSettings() {
       noteousVersion: currentVersion,
       sort: 'recent',
       priority: 'solid',
-      input: ''
+      input: '',
+      noteId: 0,
+      look: { baseRem: '--base-rem: 100%', shortcut: 'luminosity' }
     }
     welcomeToNoteous('first-access')
     localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
   }
 }
 
-//MOSTRAR BOAS VINDAS
-function orblendEngine(context) {
-  let subcontext
-
-  const getRandom = () => {
-    let math = Math.random()
-    if (math < 0.5) {
-      return false
-    } else {
-      return true
-    }
-  }
-
-  let dateElement = function makeDateElement() {
-    let dateNow = new Date()
-    let infoElementDate = document.createElement('p')
-    infoElementDate.classList.add('info-element')
-    let infoElementDateText = document.createTextNode(
-      `Olá! Hoje é ${findWeek(new Date(dateNow).getDay())}, ${new Date(
-        dateNow
-      ).getDate()} de ${findMonth(new Date(dateNow).getMonth())}`
-    )
-    infoElementDate.append(infoElementDateText)
-    return infoElementDate
-  }
-
-  let infoElement = function makeInfoElement(subcontext, random) {
-    console.log(subcontext)
-    console.log(random)
-    let infoText
-    if (subcontext == 'no-notes') {
-      infoText = 'Você ainda não tem anotações \n Adicione sua próxima tarefa!'
-    } else if (subcontext == 'has-notes') {
-      infoText = ''
-    }
-    let infoElementTip = document.createElement('p')
-    infoElementTip.classList.add('info-element')
-    let infoElementTipText = document.createTextNode(`${infoText}`)
-    infoElementTip.append(infoElementTipText)
-
-    if (infoText == '') {
-      infoElementTip.style.marginBottom = '0;'
-      infoPanel.style.cssText = 'margin-bottom: 0;'
-    } else {
-      infoPanel.style.cssText = ''
-    }
-
-    return infoElementTip
-  }
-
-  if (context == 'change') {
-    if (noteousMain.length > 0) {
-      readOptionsSort.style.opacity = 1
-      subcontext = 'has-notes'
-    } else {
-      readOptionsSort.style.opacity = 0
-      subcontext = 'no-notes'
-    }
-    infoPanel.innerHTML = ''
-    infoPanel.append(dateElement(), infoElement(subcontext, getRandom()))
-  } else if (context == 'load') {
-    //Backup Inteligente de Nota
-    //Verifica se há uma nota não salva
-    if (noteousSettings.input != '') {
-      if (confirm('Há uma nota não salva. Deseja recuperá-la?')) {
-        noteInput.value = noteousSettings.input
-      } else {
-        noteousSettings.input = ''
-      }
-    }
-    /////
-
-    if (noteousMain.length > 0) {
-      subcontext = 'has-notes'
-    } else {
-      subcontext = 'no-notes'
-      readOptionsSort.style.cssText = 'opacity: 0'
-    }
-    infoPanel.innerHTML = ''
-    infoPanel.append(dateElement(), infoElement(subcontext, getRandom()))
-  } else if (context == 'on-change-input') {
-    //Habilitar/Desabilitar Botão Adicionar Nota
-    if (noteInput.value === '') {
-      noteButtonAdd.disabled = true
-    } else {
-      noteButtonAdd.disabled = false
-    }
-
-    //Backup Inteligente de Nota
-    noteousSettings.input = noteInput.value
-    localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
-
-    //Redimensionamento Inteligente do Campo de Input
-    //Verifica quantas linhas há no Campo de Input
-    let input = noteousSettings.input
-    let newLines
-    if (input.match(/\n/g) == null) {
-      newLines = ['']
-    } else {
-      newLines = input.match(/\n/g)
-    }
-
-    //Aplica novo tamanho se tiver 2 linhas OU mais de 120 caracteres
-    if (editMode == false) {
-      if (newLines.length > 2 || noteInput.value.length > 120) {
-        noteInput.classList.add('edit-mode')
-        writePanel.classList.add('edit-mode')
-      } else {
-        noteInput.classList.remove('edit-mode')
-        writePanel.classList.remove('edit-mode')
-      }
-    }
-  }
-}
-
-//OPÇÕES DE NOTA
-//Ao carregar, Define prioridade = solid, Salva nas configurações e Aplica
-noteousSettings.priority = 'solid'
-localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
-notePriority('retrievePriority', noteousSettings.priority)
-
 function notePriority(context, priority) {
-  //context ==> (1) recuperarPrioridade, (2)recuperarPrioridadeAoDesfocarInput (ao tirar foco define opacidade = 0 de Opções da Nota. Mas, é necessário também definir junto a borda, pois ao contrário um sobrescreve o outro), (3) trocarPrioridade
-  if (context == 'retrievePriority') {
+  //context ==> (1) recuperar-prioridade, (2)recuperar-prioridade-ao-desfocar-input (ao tirar foco define opacidade = 0 de Opções da Nota. Mas, é necessário também definir junto a borda, pois ao contrário um sobrescreve o outro), (3) trocar-prioridade
+  if (context == 'retrieve-priority') {
     if (priority == 'solid') {
       writeOptions.style.cssText = 'border-style: solid;'
       noteInput.style.cssText = 'border-style: solid;'
@@ -476,7 +370,7 @@ function notePriority(context, priority) {
       noteInput.style.cssText = 'border-style: dotted;'
       noteousSettings.priority = 'dotted'
     }
-  } else if (context == 'retrievePriorityBlurInput') {
+  } else if (context == 'retrieve-priority-blur-input') {
     if (priority == 'solid') {
       writeOptions.style.cssText =
         'border-style: solid; opacity: 0; transform: scale(60%);'
@@ -487,7 +381,7 @@ function notePriority(context, priority) {
       writeOptions.style.cssText =
         'border-style: dotted;  opacity: 0; transform: scale(60%);'
     }
-  } else if (context == 'changePriority') {
+  } else if (context == 'change-priority') {
     if (priority == 'solid') {
       writeOptions.style.cssText = 'border-style: double;'
       noteInput.style.cssText = 'border-style: double;'
@@ -509,24 +403,25 @@ function notePriority(context, priority) {
 
 noteInput.addEventListener('focus', () => {
   if (editMode == false) {
-    notePriority('retrievePriority', noteousSettings.priority)
+    notePriority('retrieve-priority', noteousSettings.priority)
   }
 })
 
 noteInput.addEventListener('blur', () => {
   if (editMode == false) {
-    notePriority('retrievePriorityBlurInput', noteousSettings.priority)
+    notePriority('retrieve-priority-blur-input', noteousSettings.priority)
   }
 })
 
 writeOptions.addEventListener('click', () => {
   noteInput.focus()
-  notePriority('changePriority', noteousSettings.priority)
+  notePriority('change-priority', noteousSettings.priority)
 })
 
-//BOTÃO ORDENAR NOTAS
+//////////
+
 function sortNotes(context) {
-  if (context == 'retrieveSort') {
+  if (context == 'retrieve-sort') {
     if (noteousSettings.sort == 'recent') {
       noteList.style.cssText = 'flex-wrap: wrap; flex-direction: row;'
 
@@ -568,10 +463,10 @@ function sortNotes(context) {
     }
   }
 }
-
 readOptionsSort.addEventListener('click', sortNotes)
 
-//RENDERIZAR NOTAS
+//////////
+
 function renderNote(context, noteId) {
   if (context == 'render-all') {
     noteList.innerHTML = ''
@@ -606,8 +501,8 @@ function renderNote(context, noteId) {
       noteTextContainer.id = note.id + '-text-container'
       noteTextContainer.classList.add('note-text-container')
       noteTextContainer.setAttribute('onclick', `openNote(${note.id})`)
-      // --> adição de 'texto' ao id porque não pode haver ids iguais
 
+      // --> adição de 'texto' ao id porque não pode haver ids iguais
       let textElement = document.createElement('p')
       textElement.id = note.id + '-text'
 
@@ -641,7 +536,7 @@ function renderNote(context, noteId) {
       dateElement.id = note.id + '-date-element'
       dateElement.appendChild(
         document.createTextNode(
-          `Criado em: ${new Date(note.id).getDate()}/${findMonth(
+          `+ ${new Date(note.id).getDate()}/${findMonth(
             new Date(note.id).getMonth()
           )}/${new Date(note.id).getUTCFullYear()} às ${setTimeNumber(
             new Date(note.id).getHours()
@@ -678,7 +573,6 @@ function renderNote(context, noteId) {
       readPanel.style.cssText = 'opacity: 1; transform: translateY(-10px);'
     }, 300)
   } else if (context == 'add') {
-    console.log(noteId)
     for (let note of noteousMain) {
       if (note.id == noteId) {
         let noteContainer = document.createElement('div')
@@ -854,15 +748,7 @@ function setTimeNumber(number) {
   }
 }
 
-//ADICIONAR NOTA
-
-noteButtonAdd.addEventListener('click', addNote)
-
-noteInput.addEventListener('input', () => {
-  orblendEngine('on-change-input')
-})
-
-// ADICIONAR NOTA
+//////////
 
 function addNote() {
   if (noteInput.value || '') {
@@ -879,9 +765,17 @@ function addNote() {
     renderNote('add', objNote.id)
     noteInput.value = ''
     noteInput.focus()
-    noteButtonAdd.disabled = true
+    orblendEngine('on-change-input')
   }
 }
+
+noteButtonAdd.addEventListener('click', addNote)
+
+noteInput.addEventListener('input', () => {
+  orblendEngine('on-change-input')
+})
+
+//////////
 
 //APAGAR NOTA
 let timeoutID
@@ -923,19 +817,15 @@ function deleteNote(noteId) {
   noteDateContainer.style.cssText = 'opacity: 0;'
 }
 
-//função em variável para 'desbloquear' noteInput se tela é pequena
-let noteInputEdit = function (event) {
-  noteInput.removeAttribute('readonly')
-  labelWrite.innerHTML = '📝 Edite aqui sua nota'
-}
+//////////
 
 //ABRIR NOTA
 function openNote(noteId) {
   editMode = true
   for (let note of noteousMain) {
     if (note.id === noteId) {
-      notePriority('retrievePriority', note.priority)
-      notePriority('retrievePriorityBlurInput', note.priority)
+      notePriority('retrieve-priority', note.priority)
+      notePriority('retrieve-priority-blur-input', note.priority)
       noteousSettings.priority = note.priority
       localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
     }
@@ -956,7 +846,7 @@ function openNote(noteId) {
   }
 }
 
-//EDITAR NOTA
+//////////
 
 function editNote(noteId) {
   for (let note of noteousMain) {
@@ -979,11 +869,14 @@ function editNote(noteId) {
           if (noteInput.value == note.text) {
             noteButtonEdit.setAttribute('hidden', 'true')
             noteButtonCancelEdit.removeAttribute('hidden')
-            notePriority('retrievePriorityBlurInput', noteousSettings.priority)
+            notePriority(
+              'retrieve-priority-blur-input',
+              noteousSettings.priority
+            )
           } else if (noteInput.value != note.text) {
             noteButtonEdit.removeAttribute('hidden')
             noteButtonCancelEdit.removeAttribute('hidden')
-            notePriority('retrievePriority', noteousSettings.priority)
+            notePriority('retrieve-priority', noteousSettings.priority)
           }
         }
       })
@@ -1013,7 +906,13 @@ function editNote(noteId) {
 }
 
 function exitEditMode() {
+  //Remove informações do Backup Inteligente de Nota
+  noteInput.value = ''
+  noteIdEdit = 0
+  orblendEngine('on-change-input')
+
   editMode = false
+
   writePanel.classList.toggle('edit-mode')
   readSection.classList.toggle('edit-mode')
 
