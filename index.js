@@ -262,9 +262,72 @@ ${noteousSettings.look.lumMid}
 ${noteousSettings.look.lumFront} ${noteousSettings.look.baseRem}`
 }
 
+function shortcutButtonConfig(context, subcontext) {
+  if (context == 'set-text') {
+    shortcutText.innerHTML = subcontext
+  } else if (context == 'change-text') {
+    if (noteousSettings.look.shortcut == 'luminosity') {
+      noteousLook('change-luminosity')
+    } else if (noteousSettings.look.shortcut == 'baseRem') {
+      noteousLook('change-base-rem')
+    }
+  }
+}
+
 function noteousLook(context) {
   //context => recuperar tema, trocar tema, aplicar tema claro, aplicar tema escuro
-  if (context == 'retrieve-look') {
+  if (context == 'change-base-rem') {
+    if (noteousSettings.look.baseRem == '--base-rem: 106.25%') {
+      shortcutButtonConfig('set-text', 'view_headline')
+      noteousSettings.look.baseRem = '--base-rem: 100%'
+      localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
+      injectCSSOnRoot()
+    } else if (noteousSettings.look.baseRem == '--base-rem: 100%') {
+      shortcutButtonConfig('set-text', 'format_align_justify')
+      noteousSettings.look.baseRem = '--base-rem: 93.75%'
+      localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
+      injectCSSOnRoot()
+    } else if (noteousSettings.look.baseRem == '--base-rem: 93.75%') {
+      shortcutButtonConfig('set-text', 'drag_handle')
+      noteousSettings.look.baseRem = '--base-rem: 106.25%'
+      localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
+      injectCSSOnRoot()
+    }
+  } else if (context == 'retrieve-look') {
+    //SHORTCUT BUTTON --> test luminosity
+    if (
+      noteousSettings.look.shortcut == 'luminosity' &&
+      noteousSettings.look.luminosity == 'light'
+    ) {
+      shortcutButtonConfig('set-text', 'light_mode')
+    } else if (
+      noteousSettings.look.shortcut == 'luminosity' &&
+      noteousSettings.look.luminosity == 'dark'
+    ) {
+      shortcutButtonConfig('set-text', 'dark_mode')
+    }
+    //SHORTCUT BUTTON --> test baseRem
+    if (
+      noteousSettings.look.shortcut == 'baseRem' &&
+      noteousSettings.look.baseRem == '--base-rem: 106.25%'
+    ) {
+      shortcutButtonConfig('set-text', 'drag_handle')
+      //injectCSSOnRoot()
+    } else if (
+      noteousSettings.look.shortcut == 'baseRem' &&
+      noteousSettings.look.baseRem == '--base-rem: 100%'
+    ) {
+      shortcutButtonConfig('set-text', 'view_headline')
+      //injectCSSOnRoot()
+    } else if (
+      noteousSettings.look.shortcut == 'baseRem' &&
+      noteousSettings.look.baseRem == '--base-rem: 93.75%'
+    ) {
+      shortcutButtonConfig('set-text', 'format_align_justify')
+      //injectCSSOnRoot()
+    }
+
+    //NOTEOUS LUMINOSITY
     if (noteousSettings.look.luminosity == 'light') {
       noteousLook('set-luminosity-light')
     } else if (noteousSettings.look.luminosity == 'dark') {
@@ -272,13 +335,13 @@ function noteousLook(context) {
     }
   } else if (context == 'change-luminosity') {
     if (noteousSettings.look.luminosity == 'light') {
+      shortcutButtonConfig('set-text', 'dark_mode')
       noteousLook('set-luminosity-dark')
     } else if (noteousSettings.look.luminosity == 'dark') {
+      shortcutButtonConfig('set-text', 'light_mode')
       noteousLook('set-luminosity-light')
     }
   } else if (context == 'set-luminosity-light') {
-    shortcutText.innerHTML = 'light_mode'
-
     noteousSettings.look.luminosity = 'light'
     noteousSettings.look.hue = '--hue: 30;'
     noteousSettings.look.saturation = '--saturation: 90%;'
@@ -288,10 +351,8 @@ function noteousLook(context) {
 
     localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
     noteousSettings = JSON.parse(localStorage.getItem('noteous-settings'))
-    injectCSSOnRoot('light_mode')
+    injectCSSOnRoot()
   } else if (context == 'set-luminosity-dark') {
-    shortcutText.innerHTML = 'dark_mode'
-
     noteousSettings.look.luminosity = 'dark'
     noteousSettings.look.hue = '--hue: 30;'
     noteousSettings.look.saturation = '--saturation: 40%;'
@@ -301,13 +362,9 @@ function noteousLook(context) {
 
     localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
     noteousSettings = JSON.parse(localStorage.getItem('noteous-settings'))
-    injectCSSOnRoot('dark_mode')
+    injectCSSOnRoot()
   }
 }
-
-shortcutButton.addEventListener('click', () => {
-  noteousLook('change-luminosity')
-})
 
 //////////
 
@@ -639,7 +696,7 @@ function renderNote(context, noteId) {
         dateElement.id = note.id + '-date-element'
         dateElement.appendChild(
           document.createTextNode(
-            `Criado em: ${new Date(note.id).getDate()}/${findMonth(
+            `+ ${new Date(note.id).getDate()}/${findMonth(
               new Date(note.id).getMonth()
             )}/${new Date(note.id).getUTCFullYear()} às ${setTimeNumber(
               new Date(note.id).getHours()
