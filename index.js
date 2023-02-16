@@ -176,7 +176,7 @@ function welcomeToNoteous(context) {
 
     greetingTitle2 = document.createElement('p')
     greetingTitle2.classList.add('greeting-title2')
-    greetingTitle2.append(document.createTextNode('noteous 1.4.1'))
+    greetingTitle2.append(document.createTextNode('noteous 1.4.2'))
     greetingSectionTitle.append(greetingTitleIcon, greetingTitle2)
 
     ////////////////////
@@ -215,7 +215,7 @@ function welcomeToNoteous(context) {
     )
     greetingDescriptionLi4.append(
       document.createTextNode(
-        'Na atualização principal (1.4), foram feitas melhorias incríveis. Nesta atualização (1.4.1) há correções de alguns erros. Para ver todos os detalhes, acesse Saiba Mais > Histórico de Atualizações.'
+        'Na atualização principal (1.4), foram feitas melhorias incríveis. Nesta atualização (1.4.2) há correções de alguns erros. Para ver todos os detalhes, acesse Saiba Mais > Histórico de Atualizações.'
       )
     )
 
