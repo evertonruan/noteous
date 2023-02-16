@@ -26,7 +26,7 @@ let noteList = document.querySelector('#read-notes-list')
 
 // VARIÁVEIS IMPORTANTES /////////////////////////////////////
 
-let currentVersion = '1.4.1'
+let currentVersion = 1.42
 let noteIdEdit //usada para confirmar qual nota está sendo editada
 let editMode = false
 
@@ -471,13 +471,10 @@ function orblendEngine(context) {
     if (editMode == false) {
       noteousSettings.input = noteInput.value
       localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
-      console.log(noteousSettings.input)
     } else if (editMode == true) {
       noteousSettings.input = noteInput.value
       noteousSettings.noteId = noteIdEdit
       localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
-      console.log(noteousSettings.input)
-      console.log(noteousSettings.noteId)
     }
 
     //Redimensionamento Inteligente do Campo de Input
@@ -485,9 +482,10 @@ function orblendEngine(context) {
     let input = noteousSettings.input
     let newLines
     if (input.match(/\n/g) == null) {
+      //se não houver novas linhas (/n) --> esvazia variável newLines que indica quantidade de linhas
       newLines = ['']
     } else {
-      newLines = input.match(/\n/g)
+      newLines = input.match(/\n/g) //se houver linhas, informa quantidade na variável newLines
     }
 
     //Aplica novo tamanho se tiver 2 linhas OU mais de 120 caracteres
@@ -495,7 +493,7 @@ function orblendEngine(context) {
       if (newLines.length > 2 || noteInput.value.length > 120) {
         noteInput.classList.add('edit-mode')
         writePanel.classList.add('edit-mode')
-      } else if (editMode == true) {
+      } else if (newLines.length < 2 || noteInput.value.length < 120) {
         noteInput.classList.remove('edit-mode')
         writePanel.classList.remove('edit-mode')
       }
@@ -524,13 +522,13 @@ function notePriority(context, priority) {
   } else if (context == 'retrievePriorityBlurInput') {
     if (priority == 'solid') {
       writeOptions.style.cssText =
-        'border-style: solid; opacity: 0; transform: scale(60%);'
+        'border-style: solid; opacity: 0; transform: scale(60%); pointer-events: none;'
     } else if (priority == 'double') {
       writeOptions.style.cssText =
-        'border-style: double;  opacity: 0; transform: scale(60%);'
+        'border-style: double;  opacity: 0; transform: scale(60%); pointer-events: none;'
     } else if (priority == 'dotted') {
       writeOptions.style.cssText =
-        'border-style: dotted;  opacity: 0; transform: scale(60%);'
+        'border-style: dotted;  opacity: 0; transform: scale(60%); pointer-events: none;'
     }
   } else if (context == 'changePriority') {
     if (priority == 'solid') {
@@ -1005,9 +1003,9 @@ function editNote(noteId) {
     if (note.id === noteId) {
       //Entra no Modo de edição
       editMode = true
-      noteInput.classList.toggle('edit-mode')
-      readSection.classList.toggle('edit-mode') //coloca a seção de leitura das nota no modo de edição (que desabilita as ações das notas enquanto uma nota está sendo editada)
-      writePanel.classList.toggle('edit-mode')
+      noteInput.classList.add('edit-mode')
+      readSection.classList.add('edit-mode') //coloca a seção de leitura das nota no modo de edição (que desabilita as ações das notas enquanto uma nota está sendo editada)
+      writePanel.classList.add('edit-mode')
 
       infoPanel.innerHTML = ''
 
@@ -1061,10 +1059,10 @@ function exitEditMode() {
 
   editMode = false
 
-  writePanel.classList.toggle('edit-mode')
-  readSection.classList.toggle('edit-mode')
+  writePanel.classList.remove('edit-mode')
+  readSection.classList.remove('edit-mode')
 
-  noteInput.classList.toggle('edit-mode')
+  noteInput.classList.remove('edit-mode')
   noteInput.value = ''
   noteInput.removeAttribute('readonly')
   noteInput.removeEventListener('click', noteInputEdit, false)
