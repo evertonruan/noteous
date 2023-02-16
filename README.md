@@ -2,5 +2,5 @@
 # noteous
 App de notas e lembretes com um design singular
 
-### :memo: Veja ele funcionando:
+### :memo: Comece a usar!
 https://noteous.vercel.app/
