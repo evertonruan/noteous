@@ -138,7 +138,7 @@ function orblendEngine(context) {
       if (newLines.length > 2 || noteInput.value.length > 120) {
         noteInput.classList.add('edit-mode')
         writePanel.classList.add('edit-mode')
-      } else if (editMode == true) {
+      } else if (newLines.length < 2 || noteInput.value.length < 120) {
         noteInput.classList.remove('edit-mode')
         writePanel.classList.remove('edit-mode')
       }

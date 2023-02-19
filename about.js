@@ -4,33 +4,18 @@ let root = document.querySelector(':root')
 let noteousSettings = JSON.parse(localStorage.getItem('noteous-settings'))
 let cssRootGroup //Usada para agrupar todos os valores CSS adicionados a :root. Motivo: se forem colocados separadamente, um irá sobrescrever o outro.
 
-// CONFIGURAÇÕES DE ATALHO ////////////////////////////////////
-
-let shortcutLuminosity = document.querySelector('#shortcut-luminosity')
-let shortcutBaseRem = document.querySelector('#shortcut-baserem')
-
-shortcutLuminosity.addEventListener('click', () => {
-  noteousSettings.look.shortcut = 'luminosity'
-  localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
-})
-
-shortcutBaseRem.addEventListener('click', () => {
-  noteousSettings.look.shortcut = 'baseRem'
-  localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
-})
-
-// CONFIGURAÇÕES DE TEMA ////////////////////////////////////
+//ELEMENTOS //////
+let baseRemOptionNormal = document.querySelector('#baserem-normal')
+let baseRemOptionBig = document.querySelector('#baserem-big')
+let baseRemOptionSmall = document.querySelector('#baserem-small')
 
 let optionLight = document.querySelector('#luminosity-light')
 let optionDark = document.querySelector('#luminosity-dark')
 
-optionLight.addEventListener('click', () => {
-  noteousLook('set-luminosity-light')
-})
-optionDark.addEventListener('click', () => {
-  noteousLook('set-luminosity-dark')
-})
-noteousLook('retrieve-look')
+let shortcutLuminosity = document.querySelector('#shortcut-luminosity')
+let shortcutBaseRem = document.querySelector('#shortcut-baserem')
+
+///////
 
 function injectCSSOnRoot() {
   root.style = `${noteousSettings.look.hue} ${noteousSettings.look.saturation}
@@ -38,6 +23,8 @@ ${noteousSettings.look.lumBack}
 ${noteousSettings.look.lumMid}
 ${noteousSettings.look.lumFront} ${noteousSettings.look.baseRem}`
 }
+
+///////
 
 function noteousLook(context) {
   //context => recuperar tema, trocar tema, aplicar tema claro, aplicar tema escuro
@@ -78,7 +65,97 @@ function noteousLook(context) {
   }
 }
 
-//MODO AVANÇADO
+///////
+
+//VERIFICADOR DE OPÇÃO ATIVA ///////
+function activeOptionVerifier() {
+  if (noteousSettings.look.baseRem == '--base-rem: 100%') {
+    baseRemOptionNormal.style.background = 'var(--base-buttons)'
+    baseRemOptionBig.style.background = ''
+    baseRemOptionSmall.style.background = ''
+  } else if (noteousSettings.look.baseRem == '--base-rem: 106.25%') {
+    baseRemOptionBig.style.background = 'var(--base-buttons)'
+    baseRemOptionNormal.style.background = ''
+    baseRemOptionSmall.style.background = ''
+  } else if (noteousSettings.look.baseRem == '--base-rem: 93.75%') {
+    baseRemOptionSmall.style.background = 'var(--base-buttons)'
+    baseRemOptionNormal.style.background = ''
+    baseRemOptionBig.style.background = ''
+  }
+
+  if (noteousSettings.look.luminosity == 'light') {
+    optionLight.style.background = 'var(--base-buttons)'
+    optionDark.style.background = ''
+  } else if (noteousSettings.look.luminosity == 'dark') {
+    optionDark.style.background = 'var(--base-buttons)'
+    optionLight.style.background = ''
+  }
+
+  if (noteousSettings.look.shortcut == 'luminosity') {
+    shortcutLuminosity.style.background = 'var(--base-buttons)'
+    shortcutBaseRem.style.background = ''
+  } else if (noteousSettings.look.shortcut == 'baseRem') {
+    shortcutBaseRem.style.background = 'var(--base-buttons)'
+    shortcutLuminosity.style.background = ''
+  }
+}
+activeOptionVerifier()
+
+///////
+
+//CONFIGURAÇÃO --> TAMANHO DE TEXTO ///////
+
+baseRemOptionNormal.addEventListener('click', () => {
+  noteousSettings.look.baseRem = '--base-rem: 100%'
+  localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
+  injectCSSOnRoot()
+  activeOptionVerifier()
+})
+
+baseRemOptionBig.addEventListener('click', () => {
+  noteousSettings.look.baseRem = '--base-rem: 106.25%'
+  localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
+  injectCSSOnRoot()
+  activeOptionVerifier()
+})
+
+baseRemOptionSmall.addEventListener('click', () => {
+  noteousSettings.look.baseRem = '--base-rem: 93.75%'
+  localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
+  injectCSSOnRoot()
+  activeOptionVerifier()
+})
+
+// CONFIGURAÇÃO --> TEMA //////
+
+optionLight.addEventListener('click', () => {
+  noteousLook('set-luminosity-light')
+  activeOptionVerifier()
+})
+optionDark.addEventListener('click', () => {
+  noteousLook('set-luminosity-dark')
+  activeOptionVerifier()
+})
+
+noteousLook('retrieve-look')
+
+// CONFIGURAÇÃO --> ATALHO //////
+
+shortcutLuminosity.addEventListener('click', () => {
+  noteousSettings.look.shortcut = 'luminosity'
+  localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
+  activeOptionVerifier()
+})
+
+shortcutBaseRem.addEventListener('click', () => {
+  noteousSettings.look.shortcut = 'baseRem'
+  localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
+  activeOptionVerifier()
+})
+
+//////
+
+//MODO AVANÇADO //////
 
 let advancedContainer = document.querySelector('#advanced-container')
 let advancedSwitch = document.querySelector('#advanced-switch')
@@ -103,27 +180,4 @@ advancedSwitch.addEventListener('click', () => {
       point.setAttribute('hidden', 'true')
     }
   }
-})
-
-//CONFIGURAÇÃO --> TAMANHO DE TEXTO
-let baseRemOptionNormal = document.querySelector('#baserem-normal')
-let baseRemOptionBig = document.querySelector('#baserem-big')
-let baseRemOptionSmall = document.querySelector('#baserem-small')
-
-baseRemOptionNormal.addEventListener('click', () => {
-  noteousSettings.look.baseRem = '--base-rem: 100%'
-  localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
-  injectCSSOnRoot()
-})
-
-baseRemOptionBig.addEventListener('click', () => {
-  noteousSettings.look.baseRem = '--base-rem: 106.25%'
-  localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
-  injectCSSOnRoot()
-})
-
-baseRemOptionSmall.addEventListener('click', () => {
-  noteousSettings.look.baseRem = '--base-rem: 93.75%'
-  localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
-  injectCSSOnRoot()
 })

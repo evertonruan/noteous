@@ -4,7 +4,9 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
+    
+    <link rel="manifest" href="/manifest.json">
+    
     <!--MERRIWEATHER-->
     <!--DM-SERIF-->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -82,6 +84,7 @@
       
       <h3>📋 INFORMAÇÕES SOBRE PRIVACIDADE E ARMAZENAMENTO</h2>
         <p class="about-app-point">
+          <p>Bem-vindo ao noteous preview! Você está acessando uma versão de testes. Por isso alguns recursos podem ser instáveis e não funcionar corretamente.</p>
           <p>• É necessário estar conectado à internet para utilizar o noteous</p>
           <p>• Embora é preciso estar conectado, as informações permanecem apenas dentro do seu dispositivo (como celular ou computador) e não são compartilhadas com ninguém. É utilizada uma tecnologia do navegador de internet, chamada Armazenamento Local.</p>
           <p>• Por enquanto, não é possível sincronizar anotações com outros dispositivos.</p>
@@ -121,13 +124,24 @@
   <div id="about-update-point-actual">
     <div class="about-update-point-container">
       <p class="about-update-point-version">noteous cupcake 1.5</p>
-      <p class="about-update-point-version-date">01/02/2023</p>
+      <p class="about-update-point-version-date">-</p>
     </div>
+    <p class="update-description"><span class="update-type">NOVO</span><strong>noteous agora é um PWA: </strong>Esse é um grande avanço para o noteous. Você pode instalar igual um aplicativo e usar mesmo sem internet!</p>
     <p class="update-description"><span class="update-type">NOVO</span><strong>Configuração de tamanho de texto: </strong>Deixe o noteous do seu tamanho com o novo recurso que permite ajustar o tamanho do texto.<span class="update-advanced">Com o lançamento deste recurso, foi descontinuado o ajuste automático de tamanho de fonte ao redimensionar a janela. Por exemplo, antes se a janela fosse de computador, o tamanho da fonte seria 'normal', mas se fosse de celular, seria levemente reduzido. Porém, agora esse ajuste é manual, de acordo com sua preferência.</span></p>
     <span class="update-advanced"><p class="update-description"><span class="update-type">AJUSTE</span>Alguns nomes foram alterados para melhor compreensão. Por exemplo: theme → look, str → saturation. Além disso, houve uma padronização na chamada dos 'contextos'. Antes havia 2 formas, em camelCase e kebab-case. Agora o padrão é kebab-case. O camelCase é usado exclusivamente em variáveis e funções."</p></span>
     <p class="update-description"><span class="update-type">AJUSTE</span>A informação de criação da nota agora é representada por '+'. Antes era "Criado em"</p>
     <p class="update-description">O recurso 'Atualização para o noteous' foi descontinuado. Este recurso possibilitava a transferência das notas do aplicativo anterior, chamado Enote, para o novo aplicativo, noteous.</p>
-    
+    </div>
+
+    <div class="about-update-point">
+      <div class="about-update-point-container">
+        <p class="about-update-point-version">noteous 1.4.2</p>
+        <p class="about-update-point-version-date">16/02/2023</p>
+      </div>
+      <p class="update-description"><span class="update-type">CORREÇÃO</span>O Redimensionamento Inteligente do Campo de Entrada de Nota não estava funcionando corretamente</p>
+      <p class="update-description"><span class="update-type">CORREÇÃO</span>O botão para alterar prioridade era clicável mesmo quando não exibido.</p>
+      <p class="update-description"><span class="update-type">AJUSTE</span>A variável currentVersion foi alterada de 'string' para 'double' novamente. Assim é possivel controlar melhor qual versão é mais recente.</p>
+      <p class="update-description"><span class="update-type">NOVO</span>Adicionado atalho para acessar o noteous preview</p>
     </div>
 
   <div class="about-update-point">

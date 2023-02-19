@@ -1,4 +1,19 @@
-// ELEMENTOS /////////////////////////////////////
+//SERVICE WORKER ///////
+
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker
+    .register('/sw.js')
+    .then(function (reg) {
+      // registration worked
+      console.log('Registration succeeded. Scope is ' + reg)
+    })
+    .catch(function (error) {
+      // registration failed
+      console.log('Registration failed with ' + error)
+    })
+}
+
+// ELEMENTOS ///////
 let body = document.querySelector('body')
 let root = document.querySelector(':root')
 
@@ -28,7 +43,7 @@ let noteList = document.querySelector('#read-notes-list')
 
 // VARIÁVEIS IMPORTANTES /////////////////////////////////////
 
-let currentVersion = '1.5'
+let currentVersion = 1.5
 let noteIdEdit //usada para confirmar qual nota está sendo editada
 let editMode = false
 let cssRootGroup //Usada para agrupar todos os valores CSS adicionados a :root. Motivo: se forem colocados separadamente, um irá sobrescrever o outro.
@@ -45,10 +60,11 @@ let noteInputEdit = function (event) {
 //INICIALIZAÇÃO //////////////////////////////////////////////
 
 let noteousMain = JSON.parse(localStorage.getItem('noteous-main')) || []
+let noteousOrbs = JSON.parse(localStorage.getItem('noteous-orbs'))
 let noteousSettings = JSON.parse(localStorage.getItem('noteous-settings'))
 
 getSettings()
-renderNote('render-all')
+renderNote('render-all', '')
 orblendEngine('load')
 orblendEngine('on-change-input')
 
@@ -383,6 +399,14 @@ function getSettings() {
         noteId: 0,
         look: { baseRem: '--base-rem: 100%', shortcut: 'luminosity' }
       }
+      console.log(noteousOrbs)
+      if (noteousOrbs == null) {
+        noteousOrbs = {
+          all: {},
+          done: {}
+        }
+        localStorage.setItem('noteous-orbs', JSON.stringify(noteousOrbs))
+      }
       welcomeToNoteous('new-version')
       localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
     } else {
@@ -406,8 +430,13 @@ function getSettings() {
       noteId: 0,
       look: { baseRem: '--base-rem: 100%', shortcut: 'luminosity' }
     }
+    noteousOrbs = {
+      all: {},
+      done: {}
+    }
     welcomeToNoteous('first-access')
     localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
+    localStorage.setItem('noteous-orbs', JSON.stringify(noteousOrbs))
   }
 }
 
@@ -430,13 +459,13 @@ function notePriority(context, priority) {
   } else if (context == 'retrieve-priority-blur-input') {
     if (priority == 'solid') {
       writeOptions.style.cssText =
-        'border-style: solid; opacity: 0; transform: scale(60%);'
+        'border-style: solid; opacity: 0; transform: scale(60%); pointer-events: none;'
     } else if (priority == 'double') {
       writeOptions.style.cssText =
-        'border-style: double;  opacity: 0; transform: scale(60%);'
+        'border-style: double;  opacity: 0; transform: scale(60%); pointer-events: none;'
     } else if (priority == 'dotted') {
       writeOptions.style.cssText =
-        'border-style: dotted;  opacity: 0; transform: scale(60%);'
+        'border-style: dotted;  opacity: 0; transform: scale(60%); pointer-events: none;'
     }
   } else if (context == 'change-priority') {
     if (priority == 'solid') {
@@ -466,7 +495,12 @@ noteInput.addEventListener('focus', () => {
 
 noteInput.addEventListener('blur', () => {
   if (editMode == false) {
-    notePriority('retrieve-priority-blur-input', noteousSettings.priority)
+    //Ao clicar no botão para trocar Prioridade, noteInput perde o foco --> botão de Prioridade desaparece.
+    //Esse teste verifica primeiro se o noteInput perde o foco. Se está sem foco --> desaparecer botão Prioridade
+    setTimeout(() => {
+      if (document.activeElement.id != 'write-input')
+        notePriority('retrieve-priority-blur-input', noteousSettings.priority)
+    }, 500)
   }
 })
 
@@ -524,11 +558,12 @@ readOptionsSort.addEventListener('click', sortNotes)
 
 //////////
 
-function renderNote(context, noteId) {
+function renderNote(context, noteId, orb) {
   if (context == 'render-all') {
     noteList.innerHTML = ''
 
     for (let note of noteousMain) {
+      //if (note.orb == orb) {
       let noteContainer = document.createElement('div')
       noteContainer.id = note.id + '-note-container'
       noteContainer.classList.add('note-container')
@@ -623,6 +658,7 @@ function renderNote(context, noteId) {
       noteContainer.appendChild(noteTextContainer)
 
       noteList.appendChild(noteContainer)
+      //}
     }
 
     setTimeout(() => {
@@ -845,8 +881,8 @@ function deleteNote(noteId) {
       noteContainer.remove()
       for (let note of noteousMain) {
         if (note.id === noteId) {
-          //note.orb = 'done'
-          noteousMain.splice(noteousMain.indexOf(note), 1)
+          note.orb = 'done'
+          //noteousMain.splice(noteousMain.indexOf(note), 1)
         }
       }
 
@@ -869,7 +905,7 @@ function deleteNote(noteId) {
     clearTimeout(timeoutID)
     renderNote('render-all')
   })
-  textElement.innerHTML = 'Nota concluída. Clique para Desfazer'
+  textElement.innerHTML = 'Movido para orb Concluídos. Clique para Desfazer'
   actionButtonsContainer.style.cssText = 'opacity: 0;'
   noteDateContainer.style.cssText = 'opacity: 0;'
 }
@@ -911,9 +947,9 @@ function editNote(noteId) {
     if (note.id === noteId) {
       //Entra no Modo de edição
       editMode = true
-      noteInput.classList.toggle('edit-mode')
-      readSection.classList.toggle('edit-mode') //coloca a seção de leitura das nota no modo de edição (que desabilita as ações das notas enquanto uma nota está sendo editada)
-      writePanel.classList.toggle('edit-mode')
+      noteInput.classList.add('edit-mode')
+      readSection.classList.add('edit-mode') //coloca a seção de leitura das nota no modo de edição (que desabilita as ações das notas enquanto uma nota está sendo editada)
+      writePanel.classList.add('edit-mode')
 
       infoPanel.innerHTML = ''
 
@@ -970,10 +1006,10 @@ function exitEditMode() {
 
   editMode = false
 
-  writePanel.classList.toggle('edit-mode')
-  readSection.classList.toggle('edit-mode')
+  writePanel.classList.remove('edit-mode')
+  readSection.classList.remove('edit-mode')
 
-  noteInput.classList.toggle('edit-mode')
+  noteInput.classList.remove('edit-mode')
   noteInput.value = ''
   noteInput.removeAttribute('readonly')
   noteInput.removeEventListener('click', noteInputEdit, false)

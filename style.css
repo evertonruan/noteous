@@ -258,7 +258,7 @@ a {
 }
 
 #write-panel.edit-mode {
-  height: 70vh;
+  height: 100%;
 }
 
 #write-label {
@@ -308,6 +308,7 @@ a {
 #write-input.edit-mode {
   width: 80%;
   flex: 1;
+  height: auto;
 }
 
 #write-input:focus {
