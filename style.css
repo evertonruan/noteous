@@ -3,6 +3,7 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
 }
 
 html {
@@ -85,7 +86,7 @@ html {
   }
 
   #section-read #read-notes-list .note-container {
-    flex-basis: 80%;
+    flex-basis: 90%;
   }
 
   .greeting-panel {
@@ -432,7 +433,7 @@ a {
   border-width: 6px;
   border-color: var(--base-text);
   border-radius: 1.2rem;
-  box-shadow: 2px 9px 5px 1px hsla(33, 10%, 18%, 20%);
+  box-shadow: 2px 9px 20px 0 hsla(33, 10%, 18%, 30%);
 
   list-style-type: none;
 

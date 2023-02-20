@@ -881,8 +881,7 @@ function deleteNote(noteId) {
       noteContainer.remove()
       for (let note of noteousMain) {
         if (note.id === noteId) {
-          note.orb = 'done'
-          //noteousMain.splice(noteousMain.indexOf(note), 1)
+          noteousMain.splice(noteousMain.indexOf(note), 1)
         }
       }
 
