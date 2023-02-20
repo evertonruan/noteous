@@ -156,9 +156,10 @@ html {
 
   margin: 3rem 4rem;
 
-  border: 2px solid var(--base-text);
+  border: 3px solid var(--base-text);
   border-radius: 3rem;
   background-color: var(--base-buttons);
+  box-shadow: 2px 9px 20px 0 hsla(33, 10%, 18%, 30%);
 
   user-select: none;
 }
@@ -426,7 +427,7 @@ a {
   display: flex;
   flex-direction: row;
   height: max-content;
-  margin: 1rem;
+  margin: 0.6rem;
 
   background-color: var(--base-note-container);
 
@@ -434,8 +435,6 @@ a {
   border-color: var(--base-text);
   border-radius: 1.2rem;
   box-shadow: 2px 9px 20px 0 hsla(33, 10%, 18%, 30%);
-
-  list-style-type: none;
 
   transition: all 0.4s cubic-bezier(0.075, 0.82, 0.165, 1);
 }
