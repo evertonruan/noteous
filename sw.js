@@ -1,7 +1,9 @@
+const cacheName = 'noteousCache'
+
 this.addEventListener('install', function (event) {
   event.waitUntil(
-    caches.open('v1').then(function (cache) {
-      return cache.addAll([
+    caches.open(cacheName).then(function (cache) {
+      cache.addAll([
         '/',
         '/index.html',
         'index.js',
@@ -19,56 +21,39 @@ this.addEventListener('install', function (event) {
       ])
     })
   )
+  return self.skipWaiting()
 })
 
-//recuperando solicitações com falha
-//this.addEventListener('fetch', function (event) {
-//  event.respondWith(caches.match('/index.html'))
-//})
-
-///
-
-this.addEventListener('fetch', function (event) {
-  event.respondWith(
-    caches.match(event.request).then(function (response) {
-      return response || fetch(event.request)
-    })
-  )
+self.addEventListener('activate', e => {
+  self.clients.claim()
 })
 
-this.addEventListener('fetch', function (event) {
-  event.respondWith(
-    caches.match(event.request).then(function (resp) {
-      return (
-        resp ||
-        fetch(event.request).then(function (response) {
-          return caches.open('v1').then(function (cache) {
-            cache.put(event.request, response.clone())
-            return response
-          })
-        })
-      )
-    })
-  )
+self.addEventListener('fetch', async e => {
+  const req = e.request
+  const url = new URL(req.url)
+
+  if (url.login === location.origin) {
+    e.respondWith(cacheFirst(req))
+  } else {
+    e.respondWith(networkAndCache(req))
+  }
 })
 
-this.addEventListener('fetch', function (event) {
-  event.respondWith(
-    caches
-      .match(event.request)
-      .then(function (resp) {
-        return (
-          resp ||
-          fetch(event.request).then(function (response) {
-            caches.open('v1').then(function (cache) {
-              cache.put(event.request, response.clone())
-            })
-            return response
-          })
-        )
-      })
-      .catch(function () {
-        return caches.match('/index.html')
-      })
-  )
-})
+async function cacheFirst(req) {
+  const cache = await caches.open(cacheName)
+  const cached = await cache.match(req)
+
+  return cached || fetch(req)
+}
+
+async function networkAndCache(req) {
+  const cache = await caches.open(cacheName)
+  try {
+    const refresh = await fetch(req)
+    await cache.put(req, refresh.clone())
+    return refresh
+  } catch (e) {
+    const cached = await cache.match(req)
+    return cached
+  }
+}
