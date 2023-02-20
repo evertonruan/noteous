@@ -1,0 +1,23 @@
+{
+  "short_name": "noteous",
+  "name": "noteous",
+  "icons": [
+    {
+      "src": "/img/logo-icon-144.png",
+      "type": "image/png",
+      "sizes": "144x144"
+    },
+    {
+      "src": "/img/logo-icon-512.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ],
+  "id": "/index.html",
+  "start_url": "/index.html",
+  "background_color": "#fce6cf",
+  "display": "standalone",
+  "scope": "/",
+  "theme_color": "#fce6cf",
+  "description": "Unique notetaking app"
+}
