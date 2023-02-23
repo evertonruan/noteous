@@ -84,7 +84,7 @@ function welcomeToNoteous(context) {
     greetingTitle1.append(document.createTextNode('Bem-vindo ao'))
 
     let greetingTitleIcon = document.createElement('img')
-    greetingTitleIcon.setAttribute('src', './img/logo-icon.png')
+    greetingTitleIcon.setAttribute('src', './img/logo-icon-96.png')
     greetingTitleIcon.classList.add('greeting-title-icon')
 
     greetingTitle2 = document.createElement('p')
