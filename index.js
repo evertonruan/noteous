@@ -26,7 +26,7 @@ let noteList = document.querySelector('#read-notes-list')
 
 // VARIÁVEIS IMPORTANTES /////////////////////////////////////
 
-let currentVersion = 1.42
+let currentVersion = 1.43
 let noteIdEdit //usada para confirmar qual nota está sendo editada
 let editMode = false
 
@@ -558,7 +558,12 @@ noteInput.addEventListener('focus', () => {
 
 noteInput.addEventListener('blur', () => {
   if (editMode == false) {
-    notePriority('retrievePriorityBlurInput', noteousSettings.priority)
+    //Ao clicar no botão para trocar Prioridade, noteInput perde o foco --> botão de Prioridade desaparece.
+    //Esse teste verifica primeiro se o noteInput perde o foco. Se está sem foco --> desaparecer botão Prioridade
+    setTimeout(() => {
+      if (document.activeElement.id != 'write-input')
+        notePriority('retrievePriorityBlurInput', noteousSettings.priority)
+    }, 500)
   }
 })
 
