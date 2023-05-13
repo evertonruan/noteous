@@ -26,7 +26,7 @@ let noteList = document.querySelector('#read-notes-list')
 
 // VARIÁVEIS IMPORTANTES /////////////////////////////////////
 
-let currentVersion = 1.43
+let currentVersion = 1.44
 let noteIdEdit //usada para confirmar qual nota está sendo editada
 let editMode = false
 
@@ -176,7 +176,7 @@ function welcomeToNoteous(context) {
 
     greetingTitle2 = document.createElement('p')
     greetingTitle2.classList.add('greeting-title2')
-    greetingTitle2.append(document.createTextNode('noteous 1.4.3'))
+    greetingTitle2.append(document.createTextNode('noteous 1.4.4'))
     greetingSectionTitle.append(greetingTitleIcon, greetingTitle2)
 
     ////////////////////
@@ -200,7 +200,7 @@ function welcomeToNoteous(context) {
 
     greetingDescriptionLi1.append(
       document.createTextNode(
-        `Orblend Engine → É uma nova 'tecnologia' do noteous que analisa sua interação para melhorar sua experiência.`
+        'Na atualização principal (1.4), foram feitas melhorias incríveis que você pode ver abaixo. Nesta atualização (1.4.4), há pequenos ajustes. Para ver todos os detalhes, acesse Saiba Mais > Histórico de Atualizações.'
       )
     )
     greetingDescriptionLi2.append(
@@ -215,7 +215,7 @@ function welcomeToNoteous(context) {
     )
     greetingDescriptionLi4.append(
       document.createTextNode(
-        'Na atualização principal (1.4), foram feitas melhorias incríveis. Nesta atualização (1.4.3) há correção de um erro. Para ver todos os detalhes, acesse Saiba Mais > Histórico de Atualizações.'
+        `Orblend Engine → É uma nova 'tecnologia' do noteous que analisa sua interação para melhorar sua experiência.`
       )
     )
 

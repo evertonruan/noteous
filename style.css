@@ -22,9 +22,21 @@
   #section-read {
     flex: 2;
   }
+  #read-notes-list {
+    max-height: 60vh;
+    overflow-y: auto;
+  }
+
+  #section-read #read-notes-list .note-container {
+    max-width: 40%;
+  }
 }
 
 @media (max-width: 1000px) {
+  #index {
+    overflow: hidden;
+  }
+
   html {
     font-size: 93.75%;
   }
@@ -44,6 +56,14 @@
   #section-read {
     flex: 2;
   }
+  #read-notes-list {
+    max-height: 60vh;
+    overflow-y: auto;
+  }
+
+  #section-read #read-notes-list .note-container {
+    max-width: none;
+  }
 }
 
 @media (max-width: 800px) {
@@ -54,10 +74,15 @@
   #index #section-read {
     flex: 4;
   }
+
+  #section-read #read-notes-list .note-container {
+    max-width: none;
+  }
 }
 
 @media (max-width: 600px) {
   html {
+    overflow: auto;
     font-size: 87.5%;
   }
 
@@ -85,12 +110,24 @@
     height: 2.5rem;
   }
 
+  #section-read {
+    flex-direction: column;
+    min-height: 100vh;
+  }
+
   #section-read #read-notes-list {
     justify-content: center;
+
+    max-height: max-content;
+    overflow-y: hidden;
+  }
+
+  #index #read-panel {
+    flex-direction: column;
   }
 
   #section-read #read-notes-list .note-container {
-    flex-basis: 80%;
+    max-width: 40vw;
   }
 
   .greeting-panel {
@@ -103,6 +140,13 @@
 
   #about #advanced-switch {
     padding: 0.3rem 3rem;
+  }
+}
+
+@media (max-width: 450px) {
+  #section-read #read-notes-list .note-container {
+    max-width: none;
+    flex-basis: 90%;
   }
 }
 
@@ -194,8 +238,10 @@ a {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
+  max-width: 100vw;
   background-color: var(--base-color);
   transition: all 0.8s cubic-bezier(0.075, 0.82, 0.165, 1);
+  -webkit-font-smoothing: antialiased;
 }
 
 #index #nav-update,
@@ -291,7 +337,7 @@ a {
 }
 
 #write-panel.edit-mode {
-  height: 70vh;
+  height: 100%;
 }
 
 #write-label {
@@ -322,7 +368,9 @@ a {
 }
 
 #write-input {
+  display: flex;
   height: 6rem;
+  max-height: 60vh;
   width: 65%;
   margin: 4px 10px 4px 10px;
   padding: 10px 20px 10px 10px;
@@ -341,6 +389,7 @@ a {
 #write-input.edit-mode {
   width: 80%;
   flex: 1;
+  height: auto;
 }
 
 #write-input:focus {
@@ -399,6 +448,8 @@ a {
 /*-----SECTION-READ-----*/
 
 #section-read {
+  display: flex;
+  flex-direction: column;
   margin-top: 2rem;
 }
 
@@ -423,6 +474,9 @@ a {
 /*----Read notes----*/
 
 #read-panel {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
   margin-top: 10px;
   border-style: none;
 
@@ -451,6 +505,7 @@ a {
 #read-notes-list {
   display: flex;
   justify-content: center;
+  padding-bottom: 1rem;
 }
 
 #section-read .note-container {
@@ -477,6 +532,9 @@ a {
 }
 
 #section-read .note-text-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
   transition: all 0.4s cubic-bezier(0.075, 0.82, 0.165, 1);
 }
 
@@ -507,6 +565,8 @@ a {
 }
 
 #section-read .note-text-container {
+  display: flex;
+  flex: 1;
   padding: 1rem 1rem 0.3rem 1rem;
 }
 
