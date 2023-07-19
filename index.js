@@ -57,7 +57,7 @@ function welcomeToNoteous(context) {
   //context --> primeiro acesso ou nova versão
   if (context == 'first-access') {
     //Configuração da tela de Boas vindas (noteous 1.0)
-
+    body.innerHTML = ''
     //Panel e Section
     //greetingPanel --> sectionMain + sectionTitle
     let greetingPanel = document.createElement('div')
@@ -119,17 +119,11 @@ function welcomeToNoteous(context) {
         'noteous possui um design inovador que convida você a fazer anotações. Veja a data de hoje, escreva sua próxima tarefa ou registre algo para não esquecer.'
       )
     )
-    greetingDescriptionLi4.append(
-      document.createTextNode(
-        'IMPORTANTE: Se você já utilizava o Enote (o aplicativo anterior), poderá transferir manualmente suas notas para o noteous. Clique em Saiba Mais para obter instruções'
-      )
-    )
 
     greetingDescriptionUl.append(
       greetingDescriptionLi1,
       greetingDescriptionLi2,
-      greetingDescriptionLi3,
-      greetingDescriptionLi4
+      greetingDescriptionLi3
     )
 
     //Next Button
