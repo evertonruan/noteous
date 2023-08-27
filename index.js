@@ -12,28 +12,28 @@ let infoPanel = document.querySelector('#info-panel')
 let writeOptions = document.querySelector('#write-options')
 
 let labelWrite = document.querySelector('#write-label')
-let noteInput = document.querySelector('#write-input')
-let noteButtonAdd = document.querySelector('#write-button-add')
-let noteButtonEdit = document.querySelector('#write-button-edit')
-let noteButtonCancelEdit = document.querySelector('#write-button-cancel')
+let writeInput = document.querySelector('#write-input')
+let writeButtonAdd = document.querySelector('#write-button-add')
+let writeButtonEdit = document.querySelector('#write-button-edit')
+let writeButtonCancelEdit = document.querySelector('#write-button-cancel')
 
 //READ-SECTION
 let readSection = document.querySelector('#section-read')
 let readPanel = document.querySelector('#read-panel')
 let readOptions = document.querySelector('#read-options')
 let readOptionsSort = document.querySelector('#read-options-sort')
-let noteList = document.querySelector('#read-notes-list')
+let readNotesList = document.querySelector('#read-notes')
 
 // VARIÁVEIS IMPORTANTES /////////////////////////////////////
 
-let currentVersion = 1.44
+let currentVersion = 1.45
 let noteIdEdit //usada para confirmar qual nota está sendo editada
 let editMode = false
 
-//função em variável para 'desbloquear' noteInput se tela é pequena
+//função em variável para 'desbloquear' writeInput se tela é pequena
 //usado em openNote() e exitEditMode()
-let noteInputEdit = function (event) {
-  noteInput.removeAttribute('readonly')
+let writeInputEdit = function (event) {
+  writeInput.removeAttribute('readonly')
   labelWrite.innerHTML = '📝 Edite aqui sua nota'
 }
 
@@ -57,7 +57,7 @@ function welcomeToNoteous(context) {
   //context --> primeiro acesso ou nova versão
   if (context == 'first-access') {
     //Configuração da tela de Boas vindas (noteous 1.0)
-    body.innerHTML = ''
+
     //Panel e Section
     //greetingPanel --> sectionMain + sectionTitle
     let greetingPanel = document.createElement('div')
@@ -170,7 +170,7 @@ function welcomeToNoteous(context) {
 
     greetingTitle2 = document.createElement('p')
     greetingTitle2.classList.add('greeting-title2')
-    greetingTitle2.append(document.createTextNode('noteous 1.4.4'))
+    greetingTitle2.append(document.createTextNode('noteous 1.4.5'))
     greetingSectionTitle.append(greetingTitleIcon, greetingTitle2)
 
     ////////////////////
@@ -194,7 +194,7 @@ function welcomeToNoteous(context) {
 
     greetingDescriptionLi1.append(
       document.createTextNode(
-        'Na atualização principal (1.4), foram feitas melhorias incríveis que você pode ver abaixo. Nesta atualização (1.4.4), há pequenos ajustes. Para ver todos os detalhes, acesse Saiba Mais > Histórico de Atualizações.'
+        'Na atualização principal (1.4), foram feitas melhorias incríveis que você pode ver abaixo. Nesta atualização (1.4.5), há pequenos ajustes. Para ver todos os detalhes, acesse Saiba Mais > Histórico de Atualizações.'
       )
     )
     greetingDescriptionLi2.append(
@@ -419,15 +419,15 @@ function orblendEngine(context) {
       if (noteousSettings.noteId != 0) {
         if (confirm('Você estava editando uma nota, deseja recuperá-la?')) {
           openNote(noteousSettings.noteId)
-          noteInput.value = noteousSettings.input
+          writeInput.value = noteousSettings.input
         } else {
           noteousSettings.input = ''
           noteousSettings.noteId = 0
         }
       } else {
         if (confirm('Há uma nota não salva. Deseja recuperá-la?')) {
-          noteInput.value = noteousSettings.input
-          noteInput.focus()
+          writeInput.value = noteousSettings.input
+          writeInput.focus()
         } else {
           noteousSettings.input = ''
         }
@@ -455,18 +455,18 @@ function orblendEngine(context) {
     infoPanel.append(dateElement(), infoElement(subcontext, getRandom()))
   } else if (context == 'on-change-input') {
     //Habilitar/Desabilitar Botão Adicionar Nota
-    if (noteInput.value === '') {
-      noteButtonAdd.disabled = true
+    if (writeInput.value === '') {
+      writeButtonAdd.disabled = true
     } else {
-      noteButtonAdd.disabled = false
+      writeButtonAdd.disabled = false
     }
 
     //Backup Inteligente de Nota
     if (editMode == false) {
-      noteousSettings.input = noteInput.value
+      noteousSettings.input = writeInput.value
       localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
     } else if (editMode == true) {
-      noteousSettings.input = noteInput.value
+      noteousSettings.input = writeInput.value
       noteousSettings.noteId = noteIdEdit
       localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
     }
@@ -484,11 +484,11 @@ function orblendEngine(context) {
 
     //Aplica novo tamanho se tiver 2 linhas OU mais de 120 caracteres
     if (editMode == false) {
-      if (newLines.length > 2 || noteInput.value.length > 120) {
-        noteInput.classList.add('edit-mode')
+      if (newLines.length > 2 || writeInput.value.length > 120) {
+        writeInput.classList.add('edit-mode')
         writePanel.classList.add('edit-mode')
-      } else if (newLines.length < 2 || noteInput.value.length < 120) {
-        noteInput.classList.remove('edit-mode')
+      } else if (newLines.length < 2 || writeInput.value.length < 120) {
+        writeInput.classList.remove('edit-mode')
         writePanel.classList.remove('edit-mode')
       }
     }
@@ -502,15 +502,15 @@ function notePriority(context, priority) {
   if (context == 'retrievePriority') {
     if (priority == 'solid') {
       writeOptions.style.cssText = 'border-style: solid;'
-      noteInput.style.cssText = 'border-style: solid;'
+      writeInput.style.cssText = 'border-style: solid;'
       noteousSettings.priority = 'solid'
     } else if (priority == 'double') {
       writeOptions.style.cssText = 'border-style: double;'
-      noteInput.style.cssText = 'border-style: double;'
+      writeInput.style.cssText = 'border-style: double;'
       noteousSettings.priority = 'double'
     } else if (priority == 'dotted') {
       writeOptions.style.cssText = 'border-style: dotted;'
-      noteInput.style.cssText = 'border-style: dotted;'
+      writeInput.style.cssText = 'border-style: dotted;'
       noteousSettings.priority = 'dotted'
     }
   } else if (context == 'retrievePriorityBlurInput') {
@@ -527,33 +527,33 @@ function notePriority(context, priority) {
   } else if (context == 'changePriority') {
     if (priority == 'solid') {
       writeOptions.style.cssText = 'border-style: double;'
-      noteInput.style.cssText = 'border-style: double;'
+      writeInput.style.cssText = 'border-style: double;'
       noteousSettings.priority = 'double'
       localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
     } else if (priority == 'double') {
       writeOptions.style.cssText = 'border-style: dotted;'
-      noteInput.style.cssText = 'border-style: dotted;'
+      writeInput.style.cssText = 'border-style: dotted;'
       noteousSettings.priority = 'dotted'
       localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
     } else if (priority == 'dotted') {
       writeOptions.style.cssText = 'border-style: solid;'
-      noteInput.style.cssText = 'border-style: solid;'
+      writeInput.style.cssText = 'border-style: solid;'
       noteousSettings.priority = 'solid'
       localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
     }
   }
 }
 
-noteInput.addEventListener('focus', () => {
+writeInput.addEventListener('focus', () => {
   if (editMode == false) {
     notePriority('retrievePriority', noteousSettings.priority)
   }
 })
 
-noteInput.addEventListener('blur', () => {
+writeInput.addEventListener('blur', () => {
   if (editMode == false) {
-    //Ao clicar no botão para trocar Prioridade, noteInput perde o foco --> botão de Prioridade desaparece.
-    //Esse teste verifica primeiro se o noteInput perde o foco. Se está sem foco --> desaparecer botão Prioridade
+    //Ao clicar no botão para trocar Prioridade, writeInput perde o foco --> botão de Prioridade desaparece.
+    //Esse teste verifica primeiro se o writeInput perde o foco. Se está sem foco --> desaparecer botão Prioridade
     setTimeout(() => {
       if (document.activeElement.id != 'write-input')
         notePriority('retrievePriorityBlurInput', noteousSettings.priority)
@@ -562,7 +562,7 @@ noteInput.addEventListener('blur', () => {
 })
 
 writeOptions.addEventListener('click', () => {
-  noteInput.focus()
+  writeInput.focus()
   notePriority('changePriority', noteousSettings.priority)
 })
 
@@ -571,14 +571,14 @@ writeOptions.addEventListener('click', () => {
 function sortNotes(context) {
   if (context == 'retrieveSort') {
     if (noteousSettings.sort == 'recent') {
-      noteList.style.cssText = 'flex-wrap: wrap; flex-direction: row;'
+      readNotesList.style.cssText = 'flex-wrap: wrap; flex-direction: row;'
 
       readOptionsSort.innerHTML = ''
       readOptionsSort.append(
         document.createTextNode('Ordenando por: Recente primeiro')
       )
     } else if (noteousSettings.sort == 'old') {
-      noteList.style.cssText =
+      readNotesList.style.cssText =
         'flex-wrap: wrap-reverse; flex-direction: row-reverse;'
 
       readOptionsSort.innerHTML = ''
@@ -588,7 +588,7 @@ function sortNotes(context) {
     }
   } else {
     if (noteousSettings.sort == 'recent') {
-      noteList.style.cssText =
+      readNotesList.style.cssText =
         'flex-wrap: wrap-reverse; flex-direction: row-reverse;'
 
       readOptionsSort.innerHTML = ''
@@ -599,7 +599,7 @@ function sortNotes(context) {
       renderNote()
       localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
     } else if (noteousSettings.sort == 'old') {
-      noteList.style.cssText = 'flex-wrap: wrap; flex-direction: row;'
+      readNotesList.style.cssText = 'flex-wrap: wrap; flex-direction: row;'
 
       readOptionsSort.innerHTML = ''
       readOptionsSort.append(
@@ -617,7 +617,7 @@ readOptionsSort.addEventListener('click', sortNotes)
 
 function renderNote(context, noteId) {
   if (context == 'render-all') {
-    noteList.innerHTML = ''
+    readNotesList.innerHTML = ''
 
     for (let note of noteousMain) {
       let noteContainer = document.createElement('div')
@@ -713,7 +713,7 @@ function renderNote(context, noteId) {
       noteContainer.appendChild(actionButtonsContainer)
       noteContainer.appendChild(noteTextContainer)
 
-      noteList.appendChild(noteContainer)
+      readNotesList.appendChild(noteContainer)
     }
 
     setTimeout(() => {
@@ -816,7 +816,7 @@ function renderNote(context, noteId) {
         noteContainer.appendChild(actionButtonsContainer)
         noteContainer.appendChild(noteTextContainer)
 
-        noteList.prepend(noteContainer)
+        readNotesList.prepend(noteContainer)
       }
     }
   }
@@ -899,10 +899,10 @@ function setTimeNumber(number) {
 //////////
 
 function addNote() {
-  if (noteInput.value || '') {
+  if (writeInput.value || '') {
     let objNote = {
       id: Date.now(),
-      text: noteInput.value,
+      text: writeInput.value,
       priority: noteousSettings.priority
     }
 
@@ -911,15 +911,15 @@ function addNote() {
     localStorage.setItem('noteous-main', JSON.stringify(noteousMain))
 
     renderNote('add', objNote.id)
-    noteInput.value = ''
-    noteInput.focus()
+    writeInput.value = ''
+    writeInput.focus()
     orblendEngine('on-change-input')
   }
 }
 
-noteButtonAdd.addEventListener('click', addNote)
+writeButtonAdd.addEventListener('click', addNote)
 
-noteInput.addEventListener('input', () => {
+writeInput.addEventListener('input', () => {
   orblendEngine('on-change-input')
 })
 
@@ -980,15 +980,15 @@ function openNote(noteId) {
   }
   if (window.screen.width <= 600) {
     //Se for dispositivo móvel, ao abrir uma nota o teclado não irá aparecer imediatamente (readonly), mas ao tocar no campo de input o teclado aparecerá (readonly remove)
-    noteInput.setAttribute('readonly', true)
-    noteInput.focus()
-    noteButtonCancelEdit.removeAttribute('hidden')
+    writeInput.setAttribute('readonly', true)
+    writeInput.focus()
+    writeButtonCancelEdit.removeAttribute('hidden')
     labelWrite.innerHTML = '📄 Veja aqui sua nota'
     editNote(noteId)
-    noteInput.addEventListener('click', noteInputEdit, false)
+    writeInput.addEventListener('click', writeInputEdit, false)
   } else if (window.screen.width >= 601) {
-    noteInput.focus()
-    noteButtonCancelEdit.removeAttribute('hidden')
+    writeInput.focus()
+    writeButtonCancelEdit.removeAttribute('hidden')
     labelWrite.innerHTML = '📝 Edite aqui sua nota'
     editNote(noteId)
   }
@@ -1002,36 +1002,36 @@ function editNote(noteId) {
     if (note.id === noteId) {
       //Entra no Modo de edição
       editMode = true
-      noteInput.classList.add('edit-mode')
+      writeInput.classList.add('edit-mode')
       readSection.classList.add('edit-mode') //coloca a seção de leitura das nota no modo de edição (que desabilita as ações das notas enquanto uma nota está sendo editada)
       writePanel.classList.add('edit-mode')
 
       infoPanel.innerHTML = ''
 
-      noteButtonAdd.setAttribute('hidden', 'true')
+      writeButtonAdd.setAttribute('hidden', 'true')
 
-      noteInput.value = note.text //coloca o texto da nota dentro do campo de input
+      writeInput.value = note.text //coloca o texto da nota dentro do campo de input
 
-      noteInput.addEventListener('input', () => {
+      writeInput.addEventListener('input', () => {
         if (editMode == true) {
-          if (noteInput.value == note.text) {
-            noteButtonEdit.setAttribute('hidden', 'true')
-            noteButtonCancelEdit.removeAttribute('hidden')
+          if (writeInput.value == note.text) {
+            writeButtonEdit.setAttribute('hidden', 'true')
+            writeButtonCancelEdit.removeAttribute('hidden')
             notePriority('retrievePriorityBlurInput', noteousSettings.priority)
-          } else if (noteInput.value != note.text) {
-            noteButtonEdit.removeAttribute('hidden')
-            noteButtonCancelEdit.removeAttribute('hidden')
+          } else if (writeInput.value != note.text) {
+            writeButtonEdit.removeAttribute('hidden')
+            writeButtonCancelEdit.removeAttribute('hidden')
             notePriority('retrievePriority', noteousSettings.priority)
           }
         }
       })
 
       //Se durante Modo de edição clicar em "Confirmar edição"
-      noteButtonEdit.addEventListener('click', () => {
-        if (noteInput.value != '' && noteInput.value != null) {
+      writeButtonEdit.addEventListener('click', () => {
+        if (writeInput.value != '' && writeInput.value != null) {
           for (let note of noteousMain) {
             if (note.id === noteIdEdit) {
-              note.text = noteInput.value
+              note.text = writeInput.value
               note.editedAt = Date.now()
               note.priority = noteousSettings.priority
               localStorage.setItem('noteous-main', JSON.stringify(noteousMain))
@@ -1045,14 +1045,14 @@ function editNote(noteId) {
       })
 
       //Se durante Modo de edição clicar em "Cancelar"
-      noteButtonCancelEdit.addEventListener('click', exitEditMode)
+      writeButtonCancelEdit.addEventListener('click', exitEditMode)
     }
   }
 }
 
 function exitEditMode() {
   //Remove informações do Backup Inteligente de Nota
-  noteInput.value = ''
+  writeInput.value = ''
   noteIdEdit = 0
   orblendEngine('on-change-input')
 
@@ -1061,21 +1061,21 @@ function exitEditMode() {
   writePanel.classList.remove('edit-mode')
   readSection.classList.remove('edit-mode')
 
-  noteInput.classList.remove('edit-mode')
-  noteInput.value = ''
-  noteInput.removeAttribute('readonly')
-  noteInput.removeEventListener('click', noteInputEdit, false)
+  writeInput.classList.remove('edit-mode')
+  writeInput.value = ''
+  writeInput.removeAttribute('readonly')
+  writeInput.removeEventListener('click', writeInputEdit, false)
 
   noteousSettings.priority = 'solid'
   localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
   writeOptions.style.cssText = 'border-style: solid; opacity: 0;'
-  noteInput.style.cssText = 'border-style: solid;'
+  writeInput.style.cssText = 'border-style: solid;'
 
   orblendEngine('change')
 
-  noteButtonAdd.removeAttribute('hidden')
-  noteButtonAdd.disabled = true
-  noteButtonEdit.setAttribute('hidden', 'true')
-  noteButtonCancelEdit.setAttribute('hidden', 'true')
+  writeButtonAdd.removeAttribute('hidden')
+  writeButtonAdd.disabled = true
+  writeButtonEdit.setAttribute('hidden', 'true')
+  writeButtonCancelEdit.setAttribute('hidden', 'true')
   labelWrite.innerHTML = 'Qual o próximo passo?'
 }

@@ -22,12 +22,12 @@
   #section-read {
     flex: 2;
   }
-  #read-notes-list {
+  #read-notes {
     max-height: 60vh;
     overflow-y: auto;
   }
 
-  #section-read #read-notes-list .note-container {
+  #section-read #read-notes .note-container {
     max-width: 40%;
   }
 }
@@ -56,12 +56,12 @@
   #section-read {
     flex: 2;
   }
-  #read-notes-list {
+  #read-notes {
     max-height: 60vh;
     overflow-y: auto;
   }
 
-  #section-read #read-notes-list .note-container {
+  #section-read #read-notes .note-container {
     max-width: none;
   }
 }
@@ -75,7 +75,7 @@
     flex: 4;
   }
 
-  #section-read #read-notes-list .note-container {
+  #section-read #read-notes .note-container {
     max-width: none;
   }
 }
@@ -115,7 +115,7 @@
     min-height: 100vh;
   }
 
-  #section-read #read-notes-list {
+  #section-read #read-notes {
     justify-content: center;
 
     max-height: max-content;
@@ -126,7 +126,7 @@
     flex-direction: column;
   }
 
-  #section-read #read-notes-list .note-container {
+  #section-read #read-notes .note-container {
     max-width: 40vw;
   }
 
@@ -144,7 +144,7 @@
 }
 
 @media (max-width: 450px) {
-  #section-read #read-notes-list .note-container {
+  #section-read #read-notes .note-container {
     max-width: none;
     flex-basis: 90%;
   }
@@ -196,7 +196,7 @@
   );
 }
 
-/*NAV (ALL PAGES)*/
+/*NAV (TODAS AS PÁGINAS)*/
 header {
   display: flex;
   flex-direction: row;
@@ -458,21 +458,6 @@ a {
   opacity: 0.4;
 }
 
-/*----Search----*/
-/*
-#read-search-container {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-#read-search-input {
-  font-size: 0.8rem;
-}
-*/
-
-/*----Read notes----*/
-
 #read-panel {
   display: flex;
   flex-direction: column;
@@ -502,7 +487,7 @@ a {
   cursor: pointer;
 }
 
-#read-notes-list {
+#read-notes {
   display: flex;
   justify-content: center;
   padding-bottom: 1rem;
