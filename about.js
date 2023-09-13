@@ -1,4 +1,8 @@
 let noteousSettings = JSON.parse(localStorage.getItem('noteous-settings'))
+let noteousMain = JSON.parse(localStorage.getItem('noteous-main')) || []
+let noteousNotes = document.querySelector('#noteous-notes')
+
+noteousNotes.innerHTML = JSON.stringify(noteousMain)
 
 function setTheme(context) {
   if (context == 'light') {
