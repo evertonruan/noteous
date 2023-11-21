@@ -120,10 +120,14 @@ html {
     position: sticky;
     top: 10px;
   }
-
+  
   #index #section-write.edit-mode {
     z-index: 2;
   }
+
+  #index #write-panel {
+ height: 100%; 
+}
 
   #section-write #write-panel.edit-mode {
     z-index: 3;
