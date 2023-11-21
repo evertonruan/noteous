@@ -191,6 +191,10 @@ html {
 }
 
 @media (max-width: 450px) {
+  #index #write-panel {
+ height: 100%; 
+}
+  
   #section-read #read-notes-list .note-container {
     max-width: none;
     flex-basis: 90%;
