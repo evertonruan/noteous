@@ -5,48 +5,48 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <!--MERRIWEATHER-->
-    <link rel="preconnect" href="https://fonts.gstatic.com" />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Merriweather+Sans:wght@400;700&display=swap"
-      rel="stylesheet"
-    />
+    <link rel="manifest" href="manifest.json" />
 
-    <!--DM-SERIF-->
+    <link rel="apple-touch-icon" href="/img/logo-icon-192.png" />
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=DM+Serif+Text:ital@0;1&display=swap"
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,500;0,700;1,500&family=DM+Serif+Text:ital@1&display=swap"
       rel="stylesheet"
     />
 
-    <link rel="stylesheet" href="style.css" />
+    <!--MATERIAL SYMBOLS-->
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
+    />
 
     <!--MATERIAL ICONS-->
     <link
       href="https://fonts.googleapis.com/icon?family=Material+Icons"
       rel="stylesheet"
     />
-    <title>noteous</title>
+
+    <link rel="stylesheet" href="style.css" />
+    <meta name="theme-color" content="#fce6cf" />
     <link rel="shortcut icon" href="./img/favicon.png" type="image/x-icon" />
+
+    <title>noteous</title>
   </head>
   <body id="index">
-    <header>
+    <header id="presentation-panel">
+      <a class="nav-point" href="about.html"
+        ><span class="material-symbols-rounded"> settings </span></a
+      >
       <a href="index.html"><h1 id="logo">noteous</h1></a>
-      <nav>
-        <ul>
-          <li>
-            <div id="theme-container">
-              <p>Tema</p>
-              <div id="theme-color"></div>
-            </div>
-          </li>
-          <li>
-            <a id="nav-update" href="about.html">Saiba Mais</a>
-          </li>
-        </ul>
-      </nav>
+      <div
+        id="shortcut-button"
+        class="nav-point"
+        onclick="shortcutButtonConfig('change-text')"
+      >
+        <span id="shortcut-text" class="material-symbols-rounded"></span>
+      </div>
     </header>
     <main>
       <section id="section-write">
@@ -79,20 +79,65 @@
       </section>
 
       <section id="section-read">
-        <div id="read-options">
-          <p id="read-options-sort"></p>
-        </div>
+        <div id="orb-list"></div>
 
         <div id="read-panel">
-          <div id="read-notes"></div>
+          <div id="read-options">
+            <p id="read-options-orb-name"></p>
+            <p id="read-options-orb-color" class="material-symbols-rounded">
+              palette
+            </p>
+            <p id="read-options-sort"></p>
+          </div>
+          <div id="read-notes-list"></div>
         </div>
       </section>
+
+      <!-- Dialog: orb colors -->
+      <dialog id="orb-color-dialog">
+        <form method="dialog">
+          <div id="orb-color-container">
+            <div
+              id="orb-color-orange"
+              class="orb-color-point"
+              onclick="getSelectedOrbColor(this)"
+            ></div>
+            <div
+              id="orb-color-yellow"
+              class="orb-color-point"
+              onclick="getSelectedOrbColor(this)"
+            ></div>
+            <div
+              id="orb-color-red"
+              class="orb-color-point"
+              onclick="getSelectedOrbColor(this)"
+            ></div>
+
+            <div
+              id="orb-color-blue"
+              class="orb-color-point"
+              onclick="getSelectedOrbColor(this)"
+            ></div>
+            <div
+              id="orb-color-green"
+              class="orb-color-point"
+              onclick="getSelectedOrbColor(this)"
+            ></div>
+            <div
+              id="orb-color-magenta"
+              class="orb-color-point"
+              onclick="getSelectedOrbColor(this)"
+            ></div>
+          </div>
+        </form>
+      </dialog>
     </main>
 
     <footer>
-      <p><span>noteous</span> 1ª Geração • v1.4.5</p>
+      <p><span>noteous preview</span>1.5</p>
     </footer>
 
+    <script type="text/javascript" src="orblendEngine.js"></script>
     <script type="text/javascript" src="index.js"></script>
   </body>
 </html>
