@@ -52,13 +52,16 @@
           <label id="write-label" for="write-input"
             >Qual o próximo passo?</label
           >
-          <button id="write-options" tabindex="5"></button>
+          <button
+            id="write-options"
+            tabindex="5"
+            aria-label="Botão alterar prioridade da nota"
+          ></button>
           <textarea
             id="write-input"
             type="text"
             autofocus
             placeholder="✔ Sua próxima tarefa ou lembrete"
-            aria-placeholder="Escreva sua próxima tarefa ou lembrete"
             tabindex="4"
           ></textarea>
           <div id="write-buttons-container">
@@ -75,7 +78,7 @@
               id="write-button-edit"
               class="write-buttons"
               hidden="true"
-              aria-label="Editar nota"
+              aria-label="Aceitar edição da nota"
               tabindex="7"
             >
               <span class="material-icons"> check_circle </span>
@@ -84,7 +87,7 @@
               id="write-button-cancel"
               class="write-buttons"
               hidden="true"
-              aria-label="Botão alterar prioridade da nota"
+              aria-label="Cancelar edição da nota"
               tabindex="8"
             >
               <span class="material-icons"> block </span>

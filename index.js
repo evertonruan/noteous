@@ -731,6 +731,10 @@ function renderNote(context, noteId) {
         'onkeyup',
         `if (event.key === 'Enter') { openNote(${note.id}); }`
       )
+      noteTextContainer.setAttribute(
+        'onkeyup',
+        `if (event.key === 'Enter') { openNote(${note.id}); }`
+      )
 
       deleteActionButton.tabIndex = tabIndexCounter += 1
       deleteActionButton.setAttribute('aria-label', 'Concluir nota')
@@ -1042,9 +1046,9 @@ function openNote(noteId) {
     writeInput.setAttribute('readonly', true)
     writeInput.focus()
     writeButtonCancelEdit.removeAttribute('hidden')
-    labelWrite.innerHTML = '📄 Veja aqui sua nota'
+    labelWrite.innerHTML = 'Clique aqui para editar a nota'
     editNote(noteId)
-    writeInput.addEventListener('click', writeInputEdit, false)
+    labelWrite.addEventListener('click', writeInputEdit, false)
   } else if (window.screen.width >= 601) {
     writeInput.focus()
     writeButtonCancelEdit.removeAttribute('hidden')
