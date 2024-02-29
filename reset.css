@@ -1,0 +1,59 @@
+/* reset.css */
+
+/* Reset de todas as margens, preenchimentos e bordas */
+* {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  box-sizing: border-box;
+}
+
+/* Reset de fontes para evitar diferenças entre navegadores */
+body,
+button,
+input,
+select,
+textarea {
+  font-family: Arial, sans-serif;
+}
+
+/* Reset de estilos para listas */
+ul,
+ol {
+  list-style: none;
+}
+
+/* Reset de estilos para elementos de mídia incorporada */
+img,
+video {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Reset de elementos HTML5 */
+article,
+aside,
+details,
+figcaption,
+figure,
+footer,
+header,
+main,
+menu,
+nav,
+section,
+summary {
+  display: block;
+}
+
+/* Ajuste de margens em elementos 'h' para consistência */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin: 0;
+  font-size: 1em;
+  font-weight: normal;
+}

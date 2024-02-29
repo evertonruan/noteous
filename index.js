@@ -1,13 +1,7 @@
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('sw.js')
-}
-
-// ELEMENTOS ///////
+// ELEMENTOS /////////////////////////////////////
 let body = document.querySelector('body')
-let root = document.querySelector(':root')
 
-let shortcutButton = document.querySelector('#shortcut-button')
-let shortcutText = document.querySelector('#shortcut-text')
+let themeButton = document.querySelector('#theme-container')
 
 //WRITE-SECTION
 let writeSection = document.querySelector('#section-write')
@@ -18,36 +12,29 @@ let infoPanel = document.querySelector('#info-panel')
 let writeOptions = document.querySelector('#write-options')
 
 let labelWrite = document.querySelector('#write-label')
-let noteInput = document.querySelector('#write-input')
-let noteButtonAdd = document.querySelector('#write-button-add')
-let noteButtonEdit = document.querySelector('#write-button-edit')
-let noteButtonCancelEdit = document.querySelector('#write-button-cancel')
+let writeInput = document.querySelector('#write-input')
+let writeButtonAdd = document.querySelector('#write-button-add')
+let writeButtonEdit = document.querySelector('#write-button-edit')
+let writeButtonCancelEdit = document.querySelector('#write-button-cancel')
 
 //READ-SECTION
 let readSection = document.querySelector('#section-read')
 let readPanel = document.querySelector('#read-panel')
-let orbList = document.querySelector('#orb-list')
 let readOptions = document.querySelector('#read-options')
-let readOptionsOrbName = document.querySelector('#read-options-orb-name')
-let readOptionsOrbColor = document.querySelector('#read-options-orb-color')
-let orbColorDialog = document.querySelector('#orb-color-dialog')
 let readOptionsSort = document.querySelector('#read-options-sort')
-let noteList = document.querySelector('#read-notes-list')
+let readNotesList = document.querySelector('#read-notes')
 
 // VARIÁVEIS IMPORTANTES /////////////////////////////////////
 
-let currentVersion = 1.5
+let currentVersion = 1.45
 let noteIdEdit //usada para confirmar qual nota está sendo editada
 let editMode = false
-let changeOrbMode = false
-let selectedNoteId
-let cssRootGroup //Usada para agrupar todos os valores CSS adicionados a :root. Motivo: se forem colocados separadamente, um irá sobrescrever o outro.
-let readSectionWidth = readSection.clientWidth
+let tabIndexCounter = 10
 
-//função em variável para 'desbloquear' noteInput se tela é pequena
+//função em variável para 'desbloquear' writeInput se tela é pequena
 //usado em openNote() e exitEditMode()
-let noteInputEdit = function (event) {
-  noteInput.removeAttribute('readonly')
+let writeInputEdit = function (event) {
+  writeInput.removeAttribute('readonly')
   labelWrite.innerHTML = '📝 Edite aqui sua nota'
 }
 
@@ -56,13 +43,10 @@ let noteInputEdit = function (event) {
 //INICIALIZAÇÃO //////////////////////////////////////////////
 
 let noteousMain = JSON.parse(localStorage.getItem('noteous-main')) || []
-let noteousOrbs = JSON.parse(localStorage.getItem('noteous-orbs'))
 let noteousSettings = JSON.parse(localStorage.getItem('noteous-settings'))
 
 getSettings()
-renderOrb('render-all')
-renderNote('render-all', '')
-orbPointSelected('retrieve-selected-orb')
+renderNote('render-all')
 orblendEngine('load')
 orblendEngine('on-change-input')
 
@@ -70,8 +54,7 @@ orblendEngine('on-change-input')
 
 //welcomeToNoteous --> ao acessar 1ª vez ou nova versão
 function welcomeToNoteous(context) {
-  noteousLook('set-luminosity-light')
-
+  setTheme('setThemeLight')
   //context --> primeiro acesso ou nova versão
   if (context == 'first-access') {
     //Configuração da tela de Boas vindas (noteous 1.0)
@@ -93,7 +76,7 @@ function welcomeToNoteous(context) {
     greetingTitle1.append(document.createTextNode('Bem-vindo ao'))
 
     let greetingTitleIcon = document.createElement('img')
-    greetingTitleIcon.setAttribute('src', './img/logo-icon-96.png')
+    greetingTitleIcon.setAttribute('src', './img/logo-icon.png')
     greetingTitleIcon.classList.add('greeting-title-icon')
 
     greetingTitle2 = document.createElement('p')
@@ -137,17 +120,11 @@ function welcomeToNoteous(context) {
         'noteous possui um design inovador que convida você a fazer anotações. Veja a data de hoje, escreva sua próxima tarefa ou registre algo para não esquecer.'
       )
     )
-    greetingDescriptionLi4.append(
-      document.createTextNode(
-        'IMPORTANTE: Se você já utilizava o Enote (o aplicativo anterior), poderá transferir manualmente suas notas para o noteous. Clique em Saiba Mais para obter instruções'
-      )
-    )
 
     greetingDescriptionUl.append(
       greetingDescriptionLi1,
       greetingDescriptionLi2,
-      greetingDescriptionLi3,
-      greetingDescriptionLi4
+      greetingDescriptionLi3
     )
 
     //Next Button
@@ -189,12 +166,12 @@ function welcomeToNoteous(context) {
     greetingTitle1b.append(document.createTextNode('Temos uma atualização'))
 
     let greetingTitleIcon = document.createElement('img')
-    greetingTitleIcon.setAttribute('src', './img/logo-icon-96.png')
+    greetingTitleIcon.setAttribute('src', './img/logo-icon.png')
     greetingTitleIcon.classList.add('greeting-title-icon')
 
     greetingTitle2 = document.createElement('p')
     greetingTitle2.classList.add('greeting-title2')
-    greetingTitle2.append(document.createTextNode('noteous 1.4.1'))
+    greetingTitle2.append(document.createTextNode('noteous 1.4.5'))
     greetingSectionTitle.append(greetingTitleIcon, greetingTitle2)
 
     ////////////////////
@@ -218,7 +195,7 @@ function welcomeToNoteous(context) {
 
     greetingDescriptionLi1.append(
       document.createTextNode(
-        `Orblend Engine → É uma nova 'tecnologia' do noteous que analisa sua interação para melhorar sua experiência.`
+        'Na atualização principal (1.4), foram feitas melhorias incríveis que você pode ver abaixo. Nesta atualização (1.4.5), há pequenos ajustes. Para ver todos os detalhes, acesse Saiba Mais > Histórico de Atualizações.'
       )
     )
     greetingDescriptionLi2.append(
@@ -233,7 +210,7 @@ function welcomeToNoteous(context) {
     )
     greetingDescriptionLi4.append(
       document.createTextNode(
-        'Na atualização principal (1.4), foram feitas melhorias incríveis. Nesta atualização (1.4.1) há correções de alguns erros. Para ver todos os detalhes, acesse Saiba Mais > Histórico de Atualizações.'
+        `Orblend Engine → É uma nova 'tecnologia' do noteous que analisa sua interação para melhorar sua experiência.`
       )
     )
 
@@ -268,123 +245,64 @@ function welcomeToNoteous(context) {
 }
 
 // CONFIGURAÇÕES DE TEMA ////////////////////////////////////
-
-function injectCSSOnRoot() {
-  root.style = `${noteousSettings.look.hue} ${noteousSettings.look.saturation}
-${noteousSettings.look.lumBack}
-${noteousSettings.look.lumMid}
-${noteousSettings.look.orbSaturation}
-${noteousSettings.look.orbLuminosity}
-${noteousSettings.look.lumFront} ${noteousSettings.look.baseRem}`
-}
-
-function shortcutButtonConfig(context, subcontext) {
-  if (context == 'set-text') {
-    shortcutText.innerHTML = subcontext
-  } else if (context == 'change-text') {
-    if (noteousSettings.look.shortcut == 'luminosity') {
-      noteousLook('change-luminosity')
-    } else if (noteousSettings.look.shortcut == 'baseRem') {
-      noteousLook('change-base-rem')
-    }
-  }
-}
-
-function noteousLook(context) {
+function setTheme(context) {
   //context => recuperar tema, trocar tema, aplicar tema claro, aplicar tema escuro
-  if (context == 'change-base-rem') {
-    if (noteousSettings.look.baseRem == '--base-rem: 106.25%') {
-      shortcutButtonConfig('set-text', 'density_medium')
-      noteousSettings.look.baseRem = '--base-rem: 100%'
-      localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
-      injectCSSOnRoot()
-    } else if (noteousSettings.look.baseRem == '--base-rem: 100%') {
-      shortcutButtonConfig('set-text', 'format_align_justify')
-      noteousSettings.look.baseRem = '--base-rem: 93.75%'
-      localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
-      injectCSSOnRoot()
-    } else if (noteousSettings.look.baseRem == '--base-rem: 93.75%') {
-      shortcutButtonConfig('set-text', 'drag_handle')
-      noteousSettings.look.baseRem = '--base-rem: 106.25%'
-      localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
-      injectCSSOnRoot()
+  if (context == 'retrieveTheme') {
+    if (noteousSettings.theme.themeLum == 'light') {
+      setTheme('setThemeLight')
+      console.log(context)
+    } else if (noteousSettings.theme.themeLum == 'dark') {
+      setTheme('setThemeDark')
     }
-  } else if (context == 'retrieve-look') {
-    //SHORTCUT BUTTON --> test luminosity
-    if (
-      noteousSettings.look.shortcut == 'luminosity' &&
-      noteousSettings.look.luminosity == 'light'
-    ) {
-      shortcutButtonConfig('set-text', 'light_mode')
-    } else if (
-      noteousSettings.look.shortcut == 'luminosity' &&
-      noteousSettings.look.luminosity == 'dark'
-    ) {
-      shortcutButtonConfig('set-text', 'dark_mode')
+  } else if (context == 'changeTheme') {
+    console.log(context)
+    if (noteousSettings.theme.themeLum == 'light') {
+      setTheme('setThemeDark')
+    } else if (noteousSettings.theme.themeLum == 'dark') {
+      setTheme('setThemeLight')
     }
-    //SHORTCUT BUTTON --> test baseRem
-    if (
-      noteousSettings.look.shortcut == 'baseRem' &&
-      noteousSettings.look.baseRem == '--base-rem: 106.25%'
-    ) {
-      shortcutButtonConfig('set-text', 'drag_handle')
-      //injectCSSOnRoot()
-    } else if (
-      noteousSettings.look.shortcut == 'baseRem' &&
-      noteousSettings.look.baseRem == '--base-rem: 100%'
-    ) {
-      shortcutButtonConfig('set-text', 'view_headline')
-      //injectCSSOnRoot()
-    } else if (
-      noteousSettings.look.shortcut == 'baseRem' &&
-      noteousSettings.look.baseRem == '--base-rem: 93.75%'
-    ) {
-      shortcutButtonConfig('set-text', 'format_align_justify')
-      //injectCSSOnRoot()
+  } else if (context == 'setThemeLight') {
+    noteousSettings.theme = themeParams = {
+      themeLum: 'light',
+      hue: '--hue: 30;',
+      str: '--str: 90%;',
+      lumBack: '--lum-back: 90%;',
+      lumMid: '--lum-mid: 60%;',
+      lumFront: '--lum-front: 10%;'
     }
-
-    //NOTEOUS LUMINOSITY
-    if (noteousSettings.look.luminosity == 'light') {
-      noteousLook('set-luminosity-light')
-    } else if (noteousSettings.look.luminosity == 'dark') {
-      noteousLook('set-luminosity-dark')
-    }
-  } else if (context == 'change-luminosity') {
-    if (noteousSettings.look.luminosity == 'light') {
-      shortcutButtonConfig('set-text', 'dark_mode')
-      noteousLook('set-luminosity-dark')
-    } else if (noteousSettings.look.luminosity == 'dark') {
-      shortcutButtonConfig('set-text', 'light_mode')
-      noteousLook('set-luminosity-light')
-    }
-  } else if (context == 'set-luminosity-light') {
-    noteousSettings.look.luminosity = 'light'
-    noteousSettings.look.hue = '--hue: 30;'
-    noteousSettings.look.saturation = '--saturation: 90%;'
-    noteousSettings.look.lumBack = '--lum-back: 90%;'
-    noteousSettings.look.lumMid = '--lum-mid: 60%;'
-    noteousSettings.look.lumFront = '--lum-front: 10%;'
-    noteousSettings.look.orbSaturation = '--orb-saturation: 100%;'
-    noteousSettings.look.orbLuminosity = '--orb-luminosity: 50%;'
 
     localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
     noteousSettings = JSON.parse(localStorage.getItem('noteous-settings'))
-    injectCSSOnRoot()
-  } else if (context == 'set-luminosity-dark') {
-    noteousSettings.look.luminosity = 'dark'
-    noteousSettings.look.hue = '--hue: 30;'
-    noteousSettings.look.saturation = '--saturation: 40%;'
-    noteousSettings.look.lumBack = '--lum-back: 10%;'
-    noteousSettings.look.lumMid = '--lum-mid: 30%;'
-    noteousSettings.look.lumFront = '--lum-front: 90%;'
-    noteousSettings.look.orbSaturation = '--orb-saturation: 100%;'
-    noteousSettings.look.orbLuminosity = '--orb-luminosity: 60%;'
+    document.querySelector(
+      ':root'
+    ).style.cssText = `${noteousSettings.theme.hue} ${noteousSettings.theme.str}
+${noteousSettings.theme.lumBack}
+${noteousSettings.theme.lumMid}
+${noteousSettings.theme.lumFront}`
+  } else if (context == 'setThemeDark') {
+    noteousSettings.theme = themeParams = {
+      themeLum: 'dark',
+      hue: '--hue: 30;',
+      str: '--str: 40%;',
+      lumBack: '--lum-back: 10%;',
+      lumMid: '--lum-mid: 30%;',
+      lumFront: '--lum-front: 90%;'
+    }
 
     localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
     noteousSettings = JSON.parse(localStorage.getItem('noteous-settings'))
-    injectCSSOnRoot()
+    document.querySelector(
+      ':root'
+    ).style.cssText = `${noteousSettings.theme.hue} ${noteousSettings.theme.str}
+${noteousSettings.theme.lumBack}
+${noteousSettings.theme.lumMid}
+${noteousSettings.theme.lumFront}`
   }
 }
+
+themeButton.addEventListener('click', () => {
+  setTheme('changeTheme')
+})
 
 //////////
 
@@ -400,45 +318,21 @@ function getSettings() {
         sort: 'recent',
         priority: 'solid',
         input: '',
-        noteId: 0,
-        selectedOrb: 'all',
-        look: { baseRem: '--base-rem: 100%', shortcut: 'luminosity' }
+        noteId: 0
       }
-
-      //Se é nova versão, mas não tem noteousOrbs, então era versão anterior à 1.5 --> configurar noteousOrbs
-
-      if (noteousOrbs == null) {
-        noteousOrbs = [
-          {
-            orbId: 'all',
-            orbName: 'all',
-            orbLook: { hue: '0' },
-            notes: []
-          },
-          {
-            orbId: 'done',
-            orbName: 'done',
-            orbLook: { hue: '0' },
-            notes: []
-          }
-        ]
-        localStorage.setItem('noteous-orbs', JSON.stringify(noteousOrbs))
-      }
-
       welcomeToNoteous('new-version')
       localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
     } else {
       //SE NÃO HÁ NOVA VERSÃO
+
       //Aplica última ordenação
-      sortNotes('retrieve-sort')
-      //Exibe nome da última orb aberta
-      readOptionsHandler('retrieve-orb-name')
+      sortNotes('retrieveSort')
       //Aplica último tema
-      noteousLook('retrieve-look')
+      setTheme('retrieveTheme')
       //Aplica borda como solid
       noteousSettings.priority = 'solid'
       localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
-      notePriority('retrieve-priority', noteousSettings.priority)
+      notePriority('retrievePriority', noteousSettings.priority)
     }
   } else if (noteousSettings == null) {
     //NÃO HÁ CONFIGURAÇÕES --> PRIMEIRO ACESSO AO NOTEOUS
@@ -447,171 +341,289 @@ function getSettings() {
       sort: 'recent',
       priority: 'solid',
       input: '',
-      noteId: 0,
-      selectedOrb: 'all',
-      look: { baseRem: '--base-rem: 100%', shortcut: 'luminosity' }
+      noteId: 0
     }
-
-    noteousOrbs = [
-      {
-        orbId: 'all',
-        orbName: 'all',
-        orbLook: { hue: '0' },
-        notes: []
-      },
-      {
-        orbId: 'done',
-        orbName: 'done',
-        orbLook: { hue: '0' },
-        notes: []
-      }
-    ]
-
     welcomeToNoteous('first-access')
     localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
-    localStorage.setItem('noteous-orbs', JSON.stringify(noteousOrbs))
   }
 }
 
+//////////
+
+function orblendEngine(context) {
+  let subcontext
+
+  const getRandom = () => {
+    let math = Math.random()
+    if (math < 0.5) {
+      return false
+    } else {
+      return true
+    }
+  }
+
+  let dateElement = function makeDateElement() {
+    let dateNow = new Date()
+    let infoElementDate = document.createElement('p')
+    infoElementDate.classList.add('info-element')
+    let infoElementDateText = document.createTextNode(
+      `Olá! Hoje é ${findWeek(new Date(dateNow).getDay())}, ${new Date(
+        dateNow
+      ).getDate()} de ${findMonth(new Date(dateNow).getMonth())}`
+    )
+    infoElementDate.append(infoElementDateText)
+    return infoElementDate
+  }
+
+  let infoElement = function makeInfoElement(subcontext, random) {
+    let infoText
+    if (subcontext == 'no-notes') {
+      infoText = 'Você ainda não tem anotações \n Adicione sua próxima tarefa!'
+    } else if (subcontext == 'has-notes') {
+      infoText = ''
+    }
+    let infoElementTip = document.createElement('p')
+    infoElementTip.classList.add('info-element')
+    let infoElementTipText = document.createTextNode(`${infoText}`)
+    infoElementTip.append(infoElementTipText)
+
+    if (infoText == '') {
+      infoElementTip.style.marginBottom = '0;'
+      infoPanel.style.cssText = 'margin-bottom: 0;'
+    } else {
+      infoPanel.style.cssText = ''
+    }
+
+    return infoElementTip
+  }
+
+  if (context == 'change') {
+    //exibir/ocultar readOptions
+    if (noteousMain.length > 1) {
+      readOptionsSort.style.cssText = 'opacity: 1'
+    } else {
+      readOptionsSort.style.cssText = 'opacity: 0'
+    }
+
+    //Configurar informações
+    if (noteousMain.length > 0) {
+      subcontext = 'has-notes'
+    } else {
+      subcontext = 'no-notes'
+    }
+    infoPanel.innerHTML = ''
+    infoPanel.append(dateElement(), infoElement(subcontext, getRandom()))
+  } else if (context == 'load') {
+    //Backup Inteligente de Nota
+    //Verifica se há uma nota não salva
+    if (noteousSettings.input != '') {
+      if (noteousSettings.noteId != 0) {
+        if (confirm('Você estava editando uma nota, deseja recuperá-la?')) {
+          openNote(noteousSettings.noteId)
+          writeInput.value = noteousSettings.input
+        } else {
+          noteousSettings.input = ''
+          noteousSettings.noteId = 0
+        }
+      } else {
+        if (confirm('Há uma nota não salva. Deseja recuperá-la?')) {
+          writeInput.value = noteousSettings.input
+          writeInput.focus()
+        } else {
+          noteousSettings.input = ''
+        }
+      }
+    }
+
+    ////////////////////////////
+
+    //exibir/ocultar readOptions
+    if (noteousMain.length > 1) {
+      readOptionsSort.style.cssText = 'opacity: 1'
+    } else {
+      readOptionsSort.style.cssText = 'opacity: 0'
+    }
+
+    ////////////////////////////
+
+    //Configurar informações
+    if (noteousMain.length > 0) {
+      subcontext = 'has-notes'
+    } else {
+      subcontext = 'no-notes'
+    }
+    infoPanel.innerHTML = ''
+    infoPanel.append(dateElement(), infoElement(subcontext, getRandom()))
+  } else if (context == 'on-change-input') {
+    //Habilitar/Desabilitar Botão Adicionar Nota
+    if (writeInput.value === '') {
+      writeButtonAdd.disabled = true
+      writeButtonAdd.setAttribute('aria-hidden', 'true')
+    } else {
+      writeButtonAdd.disabled = false
+      writeButtonAdd.setAttribute('aria-hidden', 'false')
+    }
+
+    //Backup Inteligente de Nota
+    if (editMode == false) {
+      noteousSettings.input = writeInput.value
+      localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
+    } else if (editMode == true) {
+      noteousSettings.input = writeInput.value
+      noteousSettings.noteId = noteIdEdit
+      localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
+    }
+
+    //Redimensionamento Inteligente do Campo de Input
+    //Verifica quantas linhas há no Campo de Input
+    let input = noteousSettings.input
+    let newLines
+    if (input.match(/\n/g) == null) {
+      //se não houver novas linhas (/n) --> esvazia variável newLines que indica quantidade de linhas
+      newLines = ['']
+    } else {
+      newLines = input.match(/\n/g) //se houver linhas, informa quantidade na variável newLines
+    }
+
+    //Aplica novo tamanho se tiver 2 linhas OU mais de 120 caracteres
+    if (editMode == false) {
+      if (newLines.length > 2 || writeInput.value.length > 120) {
+        writeInput.classList.add('edit-mode')
+        writePanel.classList.add('edit-mode')
+      } else if (newLines.length < 2 || writeInput.value.length < 120) {
+        writeInput.classList.remove('edit-mode')
+        writePanel.classList.remove('edit-mode')
+      }
+    }
+  }
+}
+
+//////////
+
 function notePriority(context, priority) {
-  //context ==> (1) recuperar-prioridade, (2)recuperar-prioridade-ao-desfocar-input (ao tirar foco define opacidade = 0 de Opções da Nota. Mas, é necessário também definir junto a borda, pois ao contrário um sobrescreve o outro), (3) trocar-prioridade
-  if (context == 'retrieve-priority') {
+  //context ==> (1) recuperarPrioridade, (2)recuperarPrioridadeAoDesfocarInput (ao tirar foco define opacidade = 0 de Opções da Nota. Mas, é necessário também definir junto a borda, pois ao contrário um sobrescreve o outro), (3) trocarPrioridade
+  if (context == 'retrievePriority') {
     if (priority == 'solid') {
+      writeOptions.removeAttribute('hidden')
       writeOptions.style.cssText = 'border-style: solid;'
-      noteInput.style.cssText = 'border-style: solid;'
+      writeInput.style.cssText = 'border-style: solid;'
       noteousSettings.priority = 'solid'
     } else if (priority == 'double') {
+      writeOptions.removeAttribute('hidden')
       writeOptions.style.cssText = 'border-style: double;'
-      noteInput.style.cssText = 'border-style: double;'
+      writeInput.style.cssText = 'border-style: double;'
       noteousSettings.priority = 'double'
     } else if (priority == 'dotted') {
+      writeOptions.removeAttribute('hidden')
       writeOptions.style.cssText = 'border-style: dotted;'
-      noteInput.style.cssText = 'border-style: dotted;'
+      writeInput.style.cssText = 'border-style: dotted;'
       noteousSettings.priority = 'dotted'
     }
-  } else if (context == 'retrieve-priority-blur-input') {
+  } else if (context == 'retrievePriorityBlurInput') {
     if (priority == 'solid') {
       writeOptions.style.cssText =
         'border-style: solid; opacity: 0; transform: scale(60%); pointer-events: none;'
+      setTimeout(() => {
+        writeOptions.setAttribute('hidden', 'true')
+      }, 100)
     } else if (priority == 'double') {
       writeOptions.style.cssText =
         'border-style: double;  opacity: 0; transform: scale(60%); pointer-events: none;'
+      setTimeout(() => {
+        writeOptions.setAttribute('hidden', 'true')
+      }, 100)
     } else if (priority == 'dotted') {
       writeOptions.style.cssText =
         'border-style: dotted;  opacity: 0; transform: scale(60%); pointer-events: none;'
+      setTimeout(() => {
+        writeOptions.setAttribute('hidden', 'true')
+      }, 100)
     }
-  } else if (context == 'change-priority') {
+  } else if (context == 'changePriority') {
     if (priority == 'solid') {
       writeOptions.style.cssText = 'border-style: double;'
-      noteInput.style.cssText = 'border-style: double;'
+      writeInput.style.cssText = 'border-style: double;'
       noteousSettings.priority = 'double'
       localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
     } else if (priority == 'double') {
       writeOptions.style.cssText = 'border-style: dotted;'
-      noteInput.style.cssText = 'border-style: dotted;'
+      writeInput.style.cssText = 'border-style: dotted;'
       noteousSettings.priority = 'dotted'
       localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
     } else if (priority == 'dotted') {
       writeOptions.style.cssText = 'border-style: solid;'
-      noteInput.style.cssText = 'border-style: solid;'
+      writeInput.style.cssText = 'border-style: solid;'
       noteousSettings.priority = 'solid'
       localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
     }
   }
 }
 
-noteInput.addEventListener('focus', () => {
+writeInput.addEventListener('focus', () => {
   if (editMode == false) {
-    notePriority('retrieve-priority', noteousSettings.priority)
+    notePriority('retrievePriority', noteousSettings.priority)
   }
 })
 
-noteInput.addEventListener('blur', () => {
+writeInput.addEventListener('blur', () => {
   if (editMode == false) {
-    //Ao clicar no botão para trocar Prioridade, noteInput perde o foco --> botão de Prioridade desaparece.
-    //Esse teste verifica primeiro se o noteInput perde o foco. Se está sem foco --> desaparecer botão Prioridade
+    //Ao clicar no botão para trocar Prioridade, write-input perde o foco --> botão de Prioridade desaparece.
+    //Esse teste verifica primeiro se write-input perde o foco. Se está sem foco --> desaparecer botão Prioridade
+    //1.4.6 --> Ao adicionar tabindex e focalizar botão de prioridade ele desaparece (pois o foco sai de write-input). Agora o teste inclui se write-options também está focalizado. Se está, ele não desaparece.
     setTimeout(() => {
-      if (document.activeElement.id != 'write-input')
-        notePriority('retrieve-priority-blur-input', noteousSettings.priority)
+      if (
+        document.activeElement.id != 'write-input' &&
+        document.activeElement.id != 'write-options'
+      )
+        notePriority('retrievePriorityBlurInput', noteousSettings.priority)
     }, 500)
   }
 })
 
 writeOptions.addEventListener('click', () => {
-  noteInput.focus()
-  notePriority('change-priority', noteousSettings.priority)
+  writeInput.focus()
+  notePriority('changePriority', noteousSettings.priority)
 })
 
 //////////
 
-readOptionsOrbName.addEventListener('click', () => {
-  if (
-    noteousSettings.selectedOrb != 'all' &&
-    noteousSettings.selectedOrb != 'done'
-  ) {
-    let orbNamePrompt = prompt('Digite novo nome para orb')
-    if (orbNamePrompt != '' && orbNamePrompt != null) {
-      for (let orb of noteousOrbs) {
-        if (orb.orbId == noteousSettings.selectedOrb) {
-          orb.orbName = orbNamePrompt
-          localStorage.setItem('noteous-orbs', JSON.stringify(noteousOrbs))
-          readOptionsOrbName.innerText = orbNamePrompt
-          renderOrb('render-all')
-        }
-      }
-    }
-  }
-})
-
-readOptionsOrbColor.addEventListener('click', () => {
-  orbColorDialog.showModal()
-})
-
-function readOptionsHandler(context) {
-  if (context == 'retrieve-orb-name') {
-    for (let orb of noteousOrbs) {
-      if (orb.orbId == noteousSettings.selectedOrb) {
-        if (orb.orbName == 'all') {
-          readOptionsOrbName.innerText = 'Todas as notas'
-        } else if (orb.orbName == 'done') {
-          readOptionsOrbName.innerText = 'Concluídas'
-        } else {
-          readOptionsOrbName.innerText = orb.orbName
-        }
-      }
-    }
-  }
-}
-
 function sortNotes(context) {
-  if (context == 'retrieve-sort') {
+  if (context == 'retrieveSort') {
     if (noteousSettings.sort == 'recent') {
-      noteList.style.cssText = 'flex-wrap: wrap; flex-direction: row;'
+      readNotesList.style.cssText = 'flex-wrap: wrap; flex-direction: row;'
 
       readOptionsSort.innerHTML = ''
-      readOptionsSort.append(document.createTextNode('Ordem: Recente'))
+      readOptionsSort.append(
+        document.createTextNode('Ordenando por: Recente primeiro')
+      )
     } else if (noteousSettings.sort == 'old') {
-      noteList.style.cssText =
+      readNotesList.style.cssText =
         'flex-wrap: wrap-reverse; flex-direction: row-reverse;'
 
       readOptionsSort.innerHTML = ''
-      readOptionsSort.append(document.createTextNode('Ordem: Antigo'))
+      readOptionsSort.append(
+        document.createTextNode('Ordenando por: Antigo primeiro')
+      )
     }
   } else {
     if (noteousSettings.sort == 'recent') {
-      noteList.style.cssText =
+      readNotesList.style.cssText =
         'flex-wrap: wrap-reverse; flex-direction: row-reverse;'
 
       readOptionsSort.innerHTML = ''
-      readOptionsSort.append(document.createTextNode('Ordem: Antigo'))
+      readOptionsSort.append(
+        document.createTextNode('Ordenando por: Antigo primeiro')
+      )
       noteousSettings.sort = 'old'
       renderNote()
       localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
     } else if (noteousSettings.sort == 'old') {
-      noteList.style.cssText = 'flex-wrap: wrap; flex-direction: row;'
+      readNotesList.style.cssText = 'flex-wrap: wrap; flex-direction: row;'
 
       readOptionsSort.innerHTML = ''
-      readOptionsSort.append(document.createTextNode('Ordem: Recente'))
+      readOptionsSort.append(
+        document.createTextNode('Ordenando por: Recente primeiro')
+      )
       noteousSettings.sort = 'recent'
       renderNote()
       localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
@@ -622,571 +634,127 @@ readOptionsSort.addEventListener('click', sortNotes)
 
 //////////
 
-function orbPointSelected(context) {
-  if (context == 'retrieve-selected-orb') {
-    orblendEngine('change')
-    let allOrbs = document.querySelectorAll('.orb-point')
-    for (orb of allOrbs) {
-      if (noteousSettings.selectedOrb == 'all') {
-        if (orb.id == 'orb-point-all') {
-          orb.classList.add('orb-point-selected')
-        }
-      } else if (noteousSettings.selectedOrb == 'done') {
-        if (orb.id == 'orb-point-done') {
-          orb.classList.add('orb-point-selected')
-        }
-      } else if (
-        noteousSettings.selectedOrb != 'all' &&
-        noteousSettings.selectedOrb != 'done'
-      ) {
-        if (
-          orb.id != 'orb-point-add-button' &&
-          orb.id != 'orb-point-all' &&
-          orb.id != 'orb-point-done'
-        ) {
-          if (noteousSettings.selectedOrb == orb.id.match(/[0-9]/g).join('')) {
-            orb.classList.add('orb-point-selected')
-          }
-        }
-      }
-    }
-  } else if ((context = 'remove-selected-orb')) {
-    orblendEngine('change')
-    let allOrbs = document.querySelectorAll('.orb-point-selected')
-    for (orb of allOrbs) {
-      orb.classList.remove('orb-point-selected')
-    }
-  }
-}
-
-function getSelectedOrbColor(orbColor) {
-  orbColorDialog.close()
-
-  for (let orb of noteousOrbs) {
-    if (orb.orbId == noteousSettings.selectedOrb) {
-      if (orbColor.id == 'orb-color-orange') {
-        orb.orbLook.hue = 30
-      } else if (orbColor.id == 'orb-color-yellow') {
-        orb.orbLook.hue = 50
-      } else if (orbColor.id == 'orb-color-red') {
-        orb.orbLook.hue = 0
-      } else if (orbColor.id == 'orb-color-blue') {
-        orb.orbLook.hue = 235
-      } else if (orbColor.id == 'orb-color-green') {
-        orb.orbLook.hue = 120
-      } else if (orbColor.id == 'orb-color-magenta') {
-        orb.orbLook.hue = 300
-      }
-    }
-  }
-  localStorage.setItem('noteous-orbs', JSON.stringify(noteousOrbs))
-  renderOrb('render-all')
-}
-
-function renderOrb(context, subcontext) {
-  if (context == 'render-all') {
-    orbList.innerHTML = ''
-
-    let pseudoElementBefore = document.createElement('span')
-    let pseudoElementAfter = document.createElement('span')
-    orbList.append(pseudoElementBefore)
-
-    let orbAllPosition = noteousOrbs.length - 2
-    let orbDonePosition = noteousOrbs.length - 1
-
-    let orbPointAddButton = document.createElement('div')
-    orbPointAddButton.id = 'orb-point-add-button'
-
-    orbPointAddButton.classList.add('orb-point', 'material-symbols-rounded')
-    orbPointAddButton.style.color = 'var(--base-text)'
-    orbPointAddButton.style.borderColor = 'var(--base-text)'
-    orbPointAddButton.style.borderWidth = '2px'
-    orbPointAddButton.style.borderStyle = 'solid'
-    orbPointAddButton.innerText = 'add'
-    orbPointAddButton.addEventListener('click', () => {
-      let objOrb = {
-        orbId: Date.now(),
-        orbName: 'Meu orb',
-        orbLook: { hue: 20 },
-        notes: []
-      }
-
-      noteousOrbs.unshift(objOrb)
-      localStorage.setItem('noteous-orbs', JSON.stringify(noteousOrbs))
-
-      noteousSettings.selectedOrb = objOrb.orbId
-      localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
-
-      readOptionsOrbName.innerText = 'Meu orb'
-      renderOrb('render-all', 'new-orb')
-      renderNote('render-all')
-    })
-    orbList.append(orbPointAddButton)
-
-    //RENDERIZAR ORB 'ALL'
-    let orbPointAll = document.createElement('div')
-    orbPointAll.id = 'orb-point-all'
-
-    orbPointAll.classList.add('orb-point', 'material-symbols-rounded')
-    orbPointAll.style.color = 'var(--base-text)'
-    orbPointAll.style.borderColor = 'var(--base-text)'
-    orbPointAll.style.borderWidth = '2px'
-    orbPointAll.style.borderStyle = 'solid'
-    orbPointAll.innerText = 'filter_none'
-    orbPointAll.addEventListener('click', () => {
-      orbPointSelected('remove-selected-orb')
-      orbPointAll.classList.add('orb-point-selected')
-
-      readOptionsOrbName.innerText = 'Todas as notas'
-      noteousSettings.selectedOrb = 'all'
-      localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
-      orblendEngine('change')
-      renderNote('render-all')
-    })
-    orbList.append(orbPointAll)
-
-    //RENDERIZAR ORB 'DONE'
-    let orbPointDone = document.createElement('div')
-    orbPointDone.id = 'orb-point-done'
-    orbPointDone.classList.add('orb-point', 'material-symbols-rounded')
-    orbPointDone.style.color = 'var(--base-text)'
-    orbPointDone.style.borderColor = 'var(--base-text)'
-    orbPointDone.style.borderWidth = '2px'
-    orbPointDone.style.borderStyle = 'solid'
-
-    orbPointDone.innerText = 'done'
-
-    orbPointDone.addEventListener('click', () => {
-      orbPointSelected('remove-selected-orb')
-      orbPointDone.classList.add('orb-point-selected')
-
-      readOptionsOrbName.innerText = 'Concluídas'
-      noteousSettings.selectedOrb = 'done'
-      localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
-      orblendEngine('change')
-      renderNote('render-all')
-    })
-    orbList.append(orbPointDone)
-
-    //RENDERIZAR ORBS CRIADOS
-    for (let orb of noteousOrbs) {
-      if (orb.orbId != 'all' && orb.orbId != 'done') {
-        let orbPoint = document.createElement('div')
-        orbPoint.id = orb.orbId + '-orb-point'
-        orbPoint.classList.add('orb-point')
-        orbPoint.style.backgroundColor = `hsl(${orb.orbLook.hue}, var(--orb-saturation), var(--orb-luminosity))`
-        if (orb.orbName != 'Meu orb') {
-          orbPoint.innerText = orb.orbName[0].toUpperCase()
-        }
-
-        if (
-          subcontext == 'new-orb' &&
-          orb.orbId == noteousSettings.selectedOrb
-        ) {
-          orbPoint.classList.add('orb-point-selected')
-        }
-
-        orbPoint.addEventListener('click', () => {
-          if (changeOrbMode == false) {
-            orbPointSelected('remove-selected-orb')
-            orbPoint.classList.add('orb-point-selected')
-
-            noteousSettings.selectedOrb = orb.orbId
-            readOptionsOrbName.innerText = orb.orbName
-            localStorage.setItem(
-              'noteous-settings',
-              JSON.stringify(noteousSettings)
-            )
-            orblendEngine('change')
-            renderNote('render-all')
-          } else {
-            noteousSettings.selectedOrb = orb.orbId
-            localStorage.setItem(
-              'noteous-settings',
-              JSON.stringify(noteousSettings)
-            )
-
-            for (let orb of noteousOrbs) {
-              if (orb.notes.includes(selectedNoteId)) {
-                if (orb.orbId != 'all') {
-                  orb.notes.splice(orb.notes.indexOf(selectedNoteId), 1)
-                  localStorage.setItem(
-                    'noteous-orbs',
-                    JSON.stringify(noteousOrbs)
-                  )
-                  let noteContainer = document.getElementById(
-                    selectedNoteId + '-note-container'
-                  )
-                  let orbChangeMessageContainer = document.getElementById(
-                    'orb-change-message-container'
-                  )
-                  orbChangeMessageContainer.remove()
-
-                  if (readOptionsOrbName.innerText == 'Todas as notas') {
-                    console.log('todas as notas')
-                    noteousSettings.selectedOrb = 'all'
-                    localStorage.setItem(
-                      'noteous-settings',
-                      JSON.stringify(noteousSettings)
-                    )
-                    renderNote('render-all')
-                    renderOrb('render-all')
-                  } else {
-                    noteContainer.remove()
-                  }
-                }
-              }
-              if (orb.orbId == noteousSettings.selectedOrb) {
-                orb.notes.unshift(selectedNoteId)
-                localStorage.setItem(
-                  'noteous-orbs',
-                  JSON.stringify(noteousOrbs)
-                )
-              }
-            }
-            changeOrbMode = false
-            selectedNoteId = 0
-          }
-        })
-
-        orbList.append(orbPoint)
-      }
-    }
-    orbList.append(pseudoElementAfter)
-  }
-}
-
-function changeOrb(noteId) {
-  changeOrbMode = true
-  selectedNoteId = noteId
-
-  let orbChangeMessageContainer = document.createElement('div')
-  let orbChangeMessage = document.createTextNode('Mover nota para orb →  ')
-  orbChangeMessageContainer.id = 'orb-change-message-container'
-  orbChangeMessageContainer.append(orbChangeMessage)
-  orbList.append(orbChangeMessageContainer)
-}
-
 function renderNote(context, noteId) {
-  //console.log(context)
-  //console.log(noteId)
-  //console.log(orb)
   if (context == 'render-all') {
-    noteList.innerHTML = ''
-    if (noteousSettings.selectedOrb != 'done') {
-      for (let note of noteousMain) {
-        for (let orb of noteousOrbs) {
-          if (orb.orbId == noteousSettings.selectedOrb) {
-            if (orb.notes.includes(note.id)) {
-              //RENDERIZAR TODAS AS NOTAS DA ORB, EXCETO AS QUE ESTÃO EM DONE
-              for (let orb of noteousOrbs) {
-                if (orb.orbId == 'done') {
-                  if (orb.notes.includes(note.id) != true) {
-                    let noteContainer = document.createElement('div')
-                    noteContainer.id = note.id + '-note-container'
-                    noteContainer.classList.add('note-container')
+    readNotesList.innerHTML = ''
 
-                    //BORDER/PRIORITY
-                    if (note.priority == 'solid') {
-                      noteContainer.style.cssText = 'border-style: none;'
-                    } else if (note.priority == 'double') {
-                      noteContainer.style.cssText = 'border-style: double;'
-                    } else if (note.priority == 'dotted') {
-                      noteContainer.style.cssText = 'border-style: dotted;'
-                    }
+    for (let note of noteousMain) {
+      let noteContainer = document.createElement('div')
+      noteContainer.id = note.id + '-note-container'
+      noteContainer.classList.add('note-container')
 
-                    //ACTION BUTTONS
-                    let actionButtonsContainer = document.createElement('div')
-                    actionButtonsContainer.id =
-                      note.id + '-action-buttons-container'
-                    actionButtonsContainer.classList.add(
-                      'action-buttons-container'
-                    )
+      //BORDER/PRIORITY
+      if (note.priority == 'solid') {
+        noteContainer.style.cssText = 'border-style: none;'
+      } else if (note.priority == 'double') {
+        noteContainer.style.cssText = 'border-style: double;'
+      } else if (note.priority == 'dotted') {
+        noteContainer.style.cssText = 'border-style: dotted;'
+      }
 
-                    //DELETE
-                    let deleteActionButton = document.createElement('a')
-                    deleteActionButton.classList.add(
-                      'action-buttons',
-                      'material-symbols-rounded'
-                    )
-                    deleteActionButton.setAttribute(
-                      'onclick',
-                      `deleteNote(${note.id}, 'move-to-done')`
-                    )
-                    deleteActionButton.appendChild(
-                      document.createTextNode('check_circle')
-                    )
+      //ACTION BUTTONS
+      let actionButtonsContainer = document.createElement('div')
+      actionButtonsContainer.id = note.id + '-action-buttons-container'
+      actionButtonsContainer.classList.add('action-buttons-container')
 
-                    //CHANGEORB
-                    let changeOrbActionButton = document.createElement('a')
-                    changeOrbActionButton.classList.add(
-                      'action-buttons',
-                      'material-symbols-rounded'
-                    )
-                    changeOrbActionButton.setAttribute(
-                      'onclick',
-                      `changeOrb(${note.id})`
-                    )
-                    changeOrbActionButton.appendChild(
-                      document.createTextNode('chip_extraction')
-                    )
+      //DELETE
+      let deleteActionButton = document.createElement('button')
+      deleteActionButton.classList.add('action-buttons', 'material-icons')
+      deleteActionButton.setAttribute('onclick', `deleteNote(${note.id})`)
+      deleteActionButton.appendChild(document.createTextNode('check_circle'))
 
-                    //NOTE TEXT
-                    let noteTextContainer = document.createElement('div')
-                    noteTextContainer.id = note.id + '-text-container'
-                    noteTextContainer.classList.add('note-text-container')
-                    noteTextContainer.setAttribute(
-                      'onclick',
-                      `openNote(${note.id})`
-                    )
+      //NOTE TEXT
+      let noteTextContainer = document.createElement('div')
+      noteTextContainer.id = note.id + '-text-container'
+      noteTextContainer.classList.add('note-text-container')
+      noteTextContainer.setAttribute('onclick', `openNote(${note.id})`)
 
-                    // --> adição de 'texto' ao id porque não pode haver ids iguais
-                    let textElement = document.createElement('p')
-                    textElement.id = note.id + '-text'
+      // --> adição de 'texto' ao id porque não pode haver ids iguais
+      let textElement = document.createElement('p')
+      textElement.id = note.id + '-text'
 
-                    let noteChar = note.text
-                    if (noteChar.length < 300) {
-                      //Se tamanho da nota for menor que 30, escrever nota inteira
-                      textElement.appendChild(document.createTextNode(noteChar))
-                    } else if (noteChar.length >= 300) {
-                      //Se tamanho da nota for maior que 30, escrever apenas até o 30º caractere e acrescentar botão para ver nota inteira
-                      let count = 0
-                      for (let noteCharAt of noteChar) {
-                        textElement.appendChild(
-                          document.createTextNode(noteCharAt)
-                        )
-                        count = count + 1
-                        //"Ir escrevendo" cada caractere até chegar o 30º
-                        if (count == 300) {
-                          textElement.append(document.createTextNode(' ...'))
-                          textElement.append(document.createElement('br'))
-                          textElement.append(
-                            document.createTextNode('[VER MAIS]')
-                          )
+      let noteChar = note.text
+      if (noteChar.length < 300) {
+        //Se tamanho da nota for menor que 30, escrever nota inteira
+        textElement.appendChild(document.createTextNode(noteChar))
+      } else if (noteChar.length >= 300) {
+        //Se tamanho da nota for maior que 30, escrever apenas até o 30º caractere e acrescentar botão para ver nota inteira
+        let count = 0
+        for (let noteCharAt of noteChar) {
+          textElement.appendChild(document.createTextNode(noteCharAt))
+          count = count + 1
+          //"Ir escrevendo" cada caractere até chegar o 30º
+          if (count == 300) {
+            textElement.append(document.createTextNode(' ...'))
+            textElement.append(document.createElement('br'))
+            textElement.append(document.createTextNode('[VER MAIS]'))
 
-                          break
-                        }
-                      }
-                    }
-
-                    //DATE
-                    let noteDateContainer = document.createElement('div')
-                    noteDateContainer.id = note.id + '-note-date-container'
-                    noteDateContainer.classList.add('note-date-container')
-
-                    let dateElement = document.createElement('p')
-                    dateElement.id = note.id + '-date-element'
-                    dateElement.appendChild(
-                      document.createTextNode(
-                        `+ ${new Date(note.id).getDate()}/${findMonth(
-                          new Date(note.id).getMonth()
-                        )}/${new Date(
-                          note.id
-                        ).getUTCFullYear()} às ${setTimeNumber(
-                          new Date(note.id).getHours()
-                        )}:${setTimeNumber(new Date(note.id).getMinutes())}`
-                      )
-                    )
-                    if (note.editedAt != undefined) {
-                      dateElement.appendChild(document.createElement('br'))
-                      dateElement.appendChild(
-                        document.createTextNode(
-                          `Última edição: ${new Date(
-                            note.editedAt
-                          ).getDate()}/${findMonth(
-                            new Date(note.editedAt).getMonth()
-                          )}/${new Date(
-                            note.editedAt
-                          ).getUTCFullYear()} às ${setTimeNumber(
-                            new Date(note.editedAt).getHours()
-                          )}:${setTimeNumber(
-                            new Date(note.editedAt).getMinutes()
-                          )}`
-                        )
-                      )
-                    }
-
-                    //recuperar cor do orb, verificando onde a nota está
-                    //pintar nota de acordo com orb que pertence
-                    for (let orb of noteousOrbs) {
-                      if (orb.orbId != 'all' && orb.orbId != 'done') {
-                        if (orb.notes.includes(note.id)) {
-                          noteContainer.style.backgroundColor = `hsl(${orb.orbLook.hue}, var(--saturation), calc(15% + var(--lum-mid)))`
-                          actionButtonsContainer.style.backgroundColor = `hsl(${orb.orbLook.hue}, var(--saturation), var(--lum-mid))`
-                        }
-                      }
-                    }
-
-                    //APPENDS
-                    actionButtonsContainer.appendChild(deleteActionButton)
-                    actionButtonsContainer.appendChild(changeOrbActionButton)
-                    noteTextContainer.appendChild(textElement)
-                    noteDateContainer.appendChild(dateElement)
-                    noteTextContainer.appendChild(noteDateContainer)
-
-                    noteContainer.appendChild(actionButtonsContainer)
-                    noteContainer.appendChild(noteTextContainer)
-
-                    noteList.appendChild(noteContainer)
-                  }
-                }
-              }
-            }
+            break
           }
         }
       }
 
-      setTimeout(() => {
-        //css inicia em 0. Após renderizar, altera para 1
-        readPanel.style.cssText = 'opacity: 1; transform: translateY(-10px);'
-      }, 300)
-    } else if (noteousSettings.selectedOrb == 'done') {
-      for (let note of noteousMain) {
-        for (let orb of noteousOrbs) {
-          if (orb.orbId == noteousSettings.selectedOrb) {
-            if (orb.notes.includes(note.id)) {
-              let noteContainer = document.createElement('div')
-              noteContainer.id = note.id + '-note-container'
-              noteContainer.classList.add('note-container')
+      //DATE
+      let noteDateContainer = document.createElement('div')
+      noteDateContainer.id = note.id + '-note-date-container'
+      noteDateContainer.classList.add('note-date-container')
 
-              //BORDER/PRIORITY
-              if (note.priority == 'solid') {
-                noteContainer.style.cssText = 'border-style: none;'
-              } else if (note.priority == 'double') {
-                noteContainer.style.cssText = 'border-style: double;'
-              } else if (note.priority == 'dotted') {
-                noteContainer.style.cssText = 'border-style: dotted;'
-              }
-
-              //ACTION BUTTONS
-              let actionButtonsContainer = document.createElement('div')
-              actionButtonsContainer.id = note.id + '-action-buttons-container'
-              actionButtonsContainer.classList.add('action-buttons-container')
-
-              //DELETE
-              let deleteActionButton = document.createElement('a')
-              deleteActionButton.classList.add(
-                'action-buttons',
-                'material-symbols-rounded'
-              )
-              deleteActionButton.setAttribute(
-                'onclick',
-                `deleteNote(${note.id}, 'delete-permanently')`
-              )
-              deleteActionButton.appendChild(
-                document.createTextNode('delete_forever')
-              )
-
-              //RESTORE
-              let restoreActionButton = document.createElement('a')
-              restoreActionButton.classList.add(
-                'action-buttons',
-                'material-symbols-rounded'
-              )
-              restoreActionButton.setAttribute(
-                'onclick',
-                `restoreNote(${note.id})`
-              )
-              restoreActionButton.appendChild(
-                document.createTextNode('settings_backup_restore')
-              )
-
-              //NOTE TEXT
-              let noteTextContainer = document.createElement('div')
-              noteTextContainer.id = note.id + '-text-container'
-              noteTextContainer.classList.add('note-text-container')
-              noteTextContainer.setAttribute('onclick', `openNote(${note.id})`)
-
-              // --> adição de 'texto' ao id porque não pode haver ids iguais
-              let textElement = document.createElement('p')
-              textElement.id = note.id + '-text'
-
-              let noteChar = note.text
-              if (noteChar.length < 300) {
-                //Se tamanho da nota for menor que 30, escrever nota inteira
-                textElement.appendChild(document.createTextNode(noteChar))
-              } else if (noteChar.length >= 300) {
-                //Se tamanho da nota for maior que 30, escrever apenas até o 30º caractere e acrescentar botão para ver nota inteira
-                let count = 0
-                for (let noteCharAt of noteChar) {
-                  textElement.appendChild(document.createTextNode(noteCharAt))
-                  count = count + 1
-                  //"Ir escrevendo" cada caractere até chegar o 30º
-                  if (count == 300) {
-                    textElement.append(document.createTextNode(' ...'))
-                    textElement.append(document.createElement('br'))
-                    textElement.append(document.createTextNode('[VER MAIS]'))
-
-                    break
-                  }
-                }
-              }
-
-              //DATE
-              let noteDateContainer = document.createElement('div')
-              noteDateContainer.id = note.id + '-note-date-container'
-              noteDateContainer.classList.add('note-date-container')
-
-              let dateElement = document.createElement('p')
-              dateElement.id = note.id + '-date-element'
-              dateElement.appendChild(
-                document.createTextNode(
-                  `+ ${new Date(note.id).getDate()}/${findMonth(
-                    new Date(note.id).getMonth()
-                  )}/${new Date(note.id).getUTCFullYear()} às ${setTimeNumber(
-                    new Date(note.id).getHours()
-                  )}:${setTimeNumber(new Date(note.id).getMinutes())}`
-                )
-              )
-              if (note.editedAt != undefined) {
-                dateElement.appendChild(document.createElement('br'))
-                dateElement.appendChild(
-                  document.createTextNode(
-                    `Última edição: ${new Date(
-                      note.editedAt
-                    ).getDate()}/${findMonth(
-                      new Date(note.editedAt).getMonth()
-                    )}/${new Date(
-                      note.editedAt
-                    ).getUTCFullYear()} às ${setTimeNumber(
-                      new Date(note.editedAt).getHours()
-                    )}:${setTimeNumber(new Date(note.editedAt).getMinutes())}`
-                  )
-                )
-              }
-
-              //recuperar cor do orb, verificando onde a nota está
-              //pintar nota de acordo com orb que pertence
-              for (let orb of noteousOrbs) {
-                if (orb.orbId != 'all' && orb.orbId != 'done') {
-                  if (orb.notes.includes(note.id)) {
-                    noteContainer.style.backgroundColor = `hsl(${orb.orbLook.hue}, var(--saturation), calc(15% + var(--lum-mid)))`
-                    actionButtonsContainer.style.backgroundColor = `hsl(${orb.orbLook.hue}, var(--saturation), var(--lum-mid))`
-                  }
-                }
-              }
-
-              //APPENDS
-              actionButtonsContainer.appendChild(deleteActionButton)
-              actionButtonsContainer.appendChild(restoreActionButton)
-              noteTextContainer.appendChild(textElement)
-              noteDateContainer.appendChild(dateElement)
-              noteTextContainer.appendChild(noteDateContainer)
-
-              noteContainer.appendChild(actionButtonsContainer)
-              noteContainer.appendChild(noteTextContainer)
-
-              noteList.appendChild(noteContainer)
-            }
-          }
-        }
+      let dateElement = document.createElement('p')
+      dateElement.id = note.id + '-date-element'
+      dateElement.appendChild(
+        document.createTextNode(
+          `Criado em: ${new Date(note.id).getDate()}/${findMonth(
+            new Date(note.id).getMonth()
+          )}/${new Date(note.id).getUTCFullYear()} às ${setTimeNumber(
+            new Date(note.id).getHours()
+          )}:${setTimeNumber(new Date(note.id).getMinutes())}`
+        )
+      )
+      if (note.editedAt != undefined) {
+        dateElement.appendChild(document.createElement('br'))
+        dateElement.appendChild(
+          document.createTextNode(
+            `Última edição: ${new Date(note.editedAt).getDate()}/${findMonth(
+              new Date(note.editedAt).getMonth()
+            )}/${new Date(note.editedAt).getUTCFullYear()} às ${setTimeNumber(
+              new Date(note.editedAt).getHours()
+            )}:${setTimeNumber(new Date(note.editedAt).getMinutes())}`
+          )
+        )
       }
 
-      setTimeout(() => {
-        //css inicia em 0. Após renderizar, altera para 1
-        readPanel.style.cssText = 'opacity: 1; transform: translateY(-10px);'
-      }, 300)
+      //ACESSIBILIDADE
+
+      noteTextContainer.tabIndex = tabIndexCounter += 1
+      noteTextContainer.setAttribute('aria-label', 'Anotação')
+      noteTextContainer.setAttribute(
+        'onkeyup',
+        `if (event.key === 'Enter') { openNote(${note.id}); }`
+      )
+
+      deleteActionButton.tabIndex = tabIndexCounter += 1
+      deleteActionButton.setAttribute('aria-label', 'Concluir nota')
+      deleteActionButton.setAttribute(
+        'onkeyup',
+        `if (event.key === 'Enter') { deleteNote(${note.id}); }`
+      )
+
+      //APPENDS
+      actionButtonsContainer.appendChild(deleteActionButton)
+      noteTextContainer.appendChild(textElement)
+      noteDateContainer.appendChild(dateElement)
+      noteTextContainer.appendChild(noteDateContainer)
+
+      noteContainer.appendChild(actionButtonsContainer)
+      noteContainer.appendChild(noteTextContainer)
+
+      readNotesList.appendChild(noteContainer)
     }
+
+    setTimeout(() => {
+      //css inicia em 0. Após renderizar, altera para 1
+      readPanel.style.cssText = 'opacity: 1; transform: translateY(-10px);'
+    }, 300)
   } else if (context == 'add') {
     for (let note of noteousMain) {
       if (note.id == noteId) {
@@ -1210,29 +778,9 @@ function renderNote(context, noteId) {
 
         //DELETE
         let deleteActionButton = document.createElement('a')
-        deleteActionButton.classList.add(
-          'action-buttons',
-          'material-symbols-rounded'
-        )
-        deleteActionButton.setAttribute(
-          'onclick',
-          `deleteNote(${note.id}, 'move-to-done')`
-        )
+        deleteActionButton.classList.add('action-buttons', 'material-icons')
+        deleteActionButton.setAttribute('onclick', `deleteNote(${note.id})`)
         deleteActionButton.appendChild(document.createTextNode('check_circle'))
-
-        //CHANGEORB
-        let changeOrbActionButton = document.createElement('a')
-        changeOrbActionButton.classList.add(
-          'action-buttons',
-          'material-symbols-rounded'
-        )
-        changeOrbActionButton.setAttribute(
-          'onclick',
-          `renderOrb('change-orb',${note.id})`
-        )
-        changeOrbActionButton.appendChild(
-          document.createTextNode('chip_extraction')
-        )
 
         //NOTE TEXT
         let noteTextContainer = document.createElement('div')
@@ -1274,7 +822,7 @@ function renderNote(context, noteId) {
         dateElement.id = note.id + '-date-element'
         dateElement.appendChild(
           document.createTextNode(
-            `+ ${new Date(note.id).getDate()}/${findMonth(
+            `Criado em: ${new Date(note.id).getDate()}/${findMonth(
               new Date(note.id).getMonth()
             )}/${new Date(note.id).getUTCFullYear()} às ${setTimeNumber(
               new Date(note.id).getHours()
@@ -1294,16 +842,21 @@ function renderNote(context, noteId) {
           )
         }
 
-        //recuperar cor do orb, verificando onde a nota está
-        //pintar nota de acordo com orb que pertence
-        for (let orb of noteousOrbs) {
-          if (orb.orbId != 'all' && orb.orbId != 'done') {
-            if (orb.notes.includes(note.id)) {
-              noteContainer.style.backgroundColor = `hsl(${orb.orbLook.hue}, var(--saturation), calc(15% + var(--lum-mid)))`
-              actionButtonsContainer.style.backgroundColor = `hsl(${orb.orbLook.hue}, var(--saturation), var(--lum-mid))`
-            }
-          }
-        }
+        //ACESSIBILIDADE
+
+        noteTextContainer.tabIndex = tabIndexCounter += 1
+        noteTextContainer.setAttribute('aria-label', 'Anotação')
+        noteTextContainer.setAttribute(
+          'onkeyup',
+          `if (event.key === 'Enter') { openNote(${note.id}); }`
+        )
+
+        deleteActionButton.tabIndex = tabIndexCounter += 1
+        deleteActionButton.setAttribute('aria-label', 'Concluir nota')
+        deleteActionButton.setAttribute(
+          'onkeyup',
+          `if (event.key === 'Enter') { deleteNote(${note.id}); }`
+        )
 
         //APPENDS
         actionButtonsContainer.appendChild(deleteActionButton)
@@ -1314,7 +867,7 @@ function renderNote(context, noteId) {
         noteContainer.appendChild(actionButtonsContainer)
         noteContainer.appendChild(noteTextContainer)
 
-        noteList.prepend(noteContainer)
+        readNotesList.prepend(noteContainer)
       }
     }
   }
@@ -1397,39 +950,27 @@ function setTimeNumber(number) {
 //////////
 
 function addNote() {
-  if (noteInput.value || '') {
+  if (writeInput.value || '') {
     let objNote = {
       id: Date.now(),
-      text: noteInput.value,
+      text: writeInput.value,
       priority: noteousSettings.priority
-    }
-
-    for (let orb of noteousOrbs) {
-      if (orb.orbId == 'all') {
-        orb.notes.unshift(objNote.id)
-      }
-      if (orb.orbId == noteousSettings.selectedOrb) {
-        if (noteousSettings.selectedOrb != 'all') {
-          orb.notes.unshift(objNote.id)
-        }
-      }
     }
 
     noteousMain.unshift(objNote)
 
     localStorage.setItem('noteous-main', JSON.stringify(noteousMain))
-    localStorage.setItem('noteous-orbs', JSON.stringify(noteousOrbs))
 
     renderNote('add', objNote.id)
-    noteInput.value = ''
-    noteInput.focus()
+    writeInput.value = ''
+    writeInput.focus()
     orblendEngine('on-change-input')
   }
 }
 
-noteButtonAdd.addEventListener('click', addNote)
+writeButtonAdd.addEventListener('click', addNote)
 
-noteInput.addEventListener('input', () => {
+writeInput.addEventListener('input', () => {
   orblendEngine('on-change-input')
 })
 
@@ -1437,127 +978,24 @@ noteInput.addEventListener('input', () => {
 
 //APAGAR NOTA
 let timeoutID
-function deleteNote(noteId, context) {
-  if (context == 'move-to-done') {
-    console.log('movido para done')
-
-    timeoutID = setTimeout(() => {
-      let noteContainer = document.getElementById(noteId + '-note-container')
-      noteContainer.style.cssText = 'opacity: 0;  transform: scale(80%);'
-
-      setTimeout(() => {
-        noteContainer.remove()
-
-        // Vincular nota com orb done
-        for (let orb of noteousOrbs) {
-          if (orb.orbId == 'done') {
-            orb.notes.unshift(noteId)
-          }
-        }
-
-        localStorage.setItem('noteous-orbs', JSON.stringify(noteousOrbs))
-        renderNote('render-all')
-        orblendEngine('change')
-      }, 100)
-    }, 1500)
-
-    let noteTextContainer = document.getElementById(noteId + '-text-container')
-    let textElement = document.getElementById(noteId + '-text')
-    let actionButtonsContainer = document.getElementById(
-      noteId + '-action-buttons-container'
-    )
-    let noteDateContainer = document.getElementById(
-      noteId + '-note-date-container'
-    )
-
-    noteTextContainer.removeAttribute('onclick')
-    textElement.addEventListener('click', () => {
-      clearTimeout(timeoutID)
-      renderNote('render-all')
-    })
-    textElement.innerHTML = '✔ Concluída <br> <strong>DESFAZER</strong>'
-    actionButtonsContainer.style.cssText = 'opacity: 0;'
-    noteDateContainer.style.cssText = 'opacity: 0;'
-  } else if (context == 'delete-permanently') {
-    console.log('apagado')
-
-    timeoutID = setTimeout(() => {
-      let noteContainer = document.getElementById(noteId + '-note-container')
-      noteContainer.style.cssText = 'opacity: 0;  transform: scale(80%);'
-
-      setTimeout(() => {
-        noteContainer.remove()
-
-        // Apagar nota --> noteousMain
-        for (let note of noteousMain) {
-          if (note.id === noteId) {
-            noteousMain.splice(noteousMain.indexOf(note), 1)
-          }
-        }
-        localStorage.setItem('noteous-main', JSON.stringify(noteousMain))
-
-        // Apagar vínculo da nota --> noteousOrbs
-
-        for (let orb of noteousOrbs) {
-          if (orb.notes.includes(noteId)) {
-            orb.notes.splice(orb.notes.indexOf(noteId), 1)
-          }
-        }
-        localStorage.setItem('noteous-orbs', JSON.stringify(noteousOrbs))
-        renderNote('render-all')
-        orblendEngine('change')
-      }, 100)
-    }, 1500)
-
-    let noteTextContainer = document.getElementById(noteId + '-text-container')
-    let textElement = document.getElementById(noteId + '-text')
-    let actionButtonsContainer = document.getElementById(
-      noteId + '-action-buttons-container'
-    )
-    let noteDateContainer = document.getElementById(
-      noteId + '-note-date-container'
-    )
-
-    noteTextContainer.removeAttribute('onclick')
-    textElement.addEventListener('click', () => {
-      clearTimeout(timeoutID)
-      renderNote('render-all')
-    })
-    textElement.innerHTML = '✖ Apagada <br> <strong>DESFAZER<strong>'
-    actionButtonsContainer.style.cssText = 'opacity: 0;'
-    noteDateContainer.style.cssText = 'opacity: 0;'
-  }
-}
-
-//////////
-//RESTAURAR NOTA
-function restoreNote(noteId) {
+function deleteNote(noteId) {
   timeoutID = setTimeout(() => {
     let noteContainer = document.getElementById(noteId + '-note-container')
     noteContainer.style.cssText = 'opacity: 0;  transform: scale(80%);'
 
     setTimeout(() => {
-      //noteContainer.remove()
-      for (let orb of noteousOrbs) {
-        if (orb.orbId == 'done') {
-          orb.notes.splice(orb.notes.indexOf(noteId), 1)
-        }
-      }
-      localStorage.setItem('noteous-orbs', JSON.stringify(noteousOrbs))
-      renderNote('render-all')
-      /*
+      noteContainer.remove()
       for (let note of noteousMain) {
         if (note.id === noteId) {
+          //note.orb = 'done'
           noteousMain.splice(noteousMain.indexOf(note), 1)
         }
       }
-      
 
       localStorage.setItem('noteous-main', JSON.stringify(noteousMain))
-      */
       orblendEngine('change')
     }, 100)
-  }, 1500)
+  }, 2000)
 
   let noteTextContainer = document.getElementById(noteId + '-text-container')
   let textElement = document.getElementById(noteId + '-text')
@@ -1569,11 +1007,19 @@ function restoreNote(noteId) {
   )
 
   noteTextContainer.removeAttribute('onclick')
-  textElement.addEventListener('click', () => {
+  noteTextContainer.removeAttribute('onkeyup')
+  noteTextContainer.addEventListener('click', () => {
     clearTimeout(timeoutID)
     renderNote('render-all')
   })
-  textElement.innerHTML = '⇅ Restaurada <br> <strong>DESFAZER</strong>'
+  noteTextContainer.focus()
+  noteTextContainer.setAttribute(
+    'onkeydown',
+    `clearTimeout(timeoutID)
+    renderNote('render-all')`
+  )
+  textElement.innerHTML = '✔ Concluído <br> <strong>DESFAZER<strong>'
+
   actionButtonsContainer.style.cssText = 'opacity: 0;'
   noteDateContainer.style.cssText = 'opacity: 0;'
 }
@@ -1585,23 +1031,23 @@ function openNote(noteId) {
   editMode = true
   for (let note of noteousMain) {
     if (note.id === noteId) {
-      notePriority('retrieve-priority', note.priority)
-      notePriority('retrieve-priority-blur-input', note.priority)
+      notePriority('retrievePriority', note.priority)
+      notePriority('retrievePriorityBlurInput', note.priority)
       noteousSettings.priority = note.priority
       localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
     }
   }
   if (window.screen.width <= 600) {
     //Se for dispositivo móvel, ao abrir uma nota o teclado não irá aparecer imediatamente (readonly), mas ao tocar no campo de input o teclado aparecerá (readonly remove)
-    noteInput.setAttribute('readonly', true)
-    noteInput.focus()
-    noteButtonCancelEdit.removeAttribute('hidden')
+    writeInput.setAttribute('readonly', true)
+    writeInput.focus()
+    writeButtonCancelEdit.removeAttribute('hidden')
     labelWrite.innerHTML = '📄 Veja aqui sua nota'
     editNote(noteId)
-    noteInput.addEventListener('click', noteInputEdit, false)
+    writeInput.addEventListener('click', writeInputEdit, false)
   } else if (window.screen.width >= 601) {
-    noteInput.focus()
-    noteButtonCancelEdit.removeAttribute('hidden')
+    writeInput.focus()
+    writeButtonCancelEdit.removeAttribute('hidden')
     labelWrite.innerHTML = '📝 Edite aqui sua nota'
     editNote(noteId)
   }
@@ -1615,40 +1061,36 @@ function editNote(noteId) {
     if (note.id === noteId) {
       //Entra no Modo de edição
       editMode = true
-      noteInput.classList.add('edit-mode')
-      writeSection.classList.add('edit-mode')
+      writeInput.classList.add('edit-mode')
       readSection.classList.add('edit-mode') //coloca a seção de leitura das nota no modo de edição (que desabilita as ações das notas enquanto uma nota está sendo editada)
       writePanel.classList.add('edit-mode')
 
       infoPanel.innerHTML = ''
 
-      noteButtonAdd.setAttribute('hidden', 'true')
+      writeButtonAdd.setAttribute('hidden', 'true')
 
-      noteInput.value = note.text //coloca o texto da nota dentro do campo de input
+      writeInput.value = note.text //coloca o texto da nota dentro do campo de input
 
-      noteInput.addEventListener('input', () => {
+      writeInput.addEventListener('input', () => {
         if (editMode == true) {
-          if (noteInput.value == note.text) {
-            noteButtonEdit.setAttribute('hidden', 'true')
-            noteButtonCancelEdit.removeAttribute('hidden')
-            notePriority(
-              'retrieve-priority-blur-input',
-              noteousSettings.priority
-            )
-          } else if (noteInput.value != note.text) {
-            noteButtonEdit.removeAttribute('hidden')
-            noteButtonCancelEdit.removeAttribute('hidden')
-            notePriority('retrieve-priority', noteousSettings.priority)
+          if (writeInput.value == note.text) {
+            writeButtonEdit.setAttribute('hidden', 'true')
+            writeButtonCancelEdit.removeAttribute('hidden')
+            notePriority('retrievePriorityBlurInput', noteousSettings.priority)
+          } else if (writeInput.value != note.text) {
+            writeButtonEdit.removeAttribute('hidden')
+            writeButtonCancelEdit.removeAttribute('hidden')
+            notePriority('retrievePriority', noteousSettings.priority)
           }
         }
       })
 
       //Se durante Modo de edição clicar em "Confirmar edição"
-      noteButtonEdit.addEventListener('click', () => {
-        if (noteInput.value != '' && noteInput.value != null) {
+      writeButtonEdit.addEventListener('click', () => {
+        if (writeInput.value != '' && writeInput.value != null) {
           for (let note of noteousMain) {
             if (note.id === noteIdEdit) {
-              note.text = noteInput.value
+              note.text = writeInput.value
               note.editedAt = Date.now()
               note.priority = noteousSettings.priority
               localStorage.setItem('noteous-main', JSON.stringify(noteousMain))
@@ -1662,38 +1104,37 @@ function editNote(noteId) {
       })
 
       //Se durante Modo de edição clicar em "Cancelar"
-      noteButtonCancelEdit.addEventListener('click', exitEditMode)
+      writeButtonCancelEdit.addEventListener('click', exitEditMode)
     }
   }
 }
 
 function exitEditMode() {
   //Remove informações do Backup Inteligente de Nota
-  noteInput.value = ''
+  writeInput.value = ''
   noteIdEdit = 0
   orblendEngine('on-change-input')
 
   editMode = false
 
   writePanel.classList.remove('edit-mode')
-  writeSection.classList.remove('edit-mode')
   readSection.classList.remove('edit-mode')
 
-  noteInput.classList.remove('edit-mode')
-  noteInput.value = ''
-  noteInput.removeAttribute('readonly')
-  noteInput.removeEventListener('click', noteInputEdit, false)
+  writeInput.classList.remove('edit-mode')
+  writeInput.value = ''
+  writeInput.removeAttribute('readonly')
+  writeInput.removeEventListener('click', writeInputEdit, false)
 
   noteousSettings.priority = 'solid'
   localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
   writeOptions.style.cssText = 'border-style: solid; opacity: 0;'
-  noteInput.style.cssText = 'border-style: solid;'
+  writeInput.style.cssText = 'border-style: solid;'
 
   orblendEngine('change')
 
-  noteButtonAdd.removeAttribute('hidden')
-  noteButtonAdd.disabled = true
-  noteButtonEdit.setAttribute('hidden', 'true')
-  noteButtonCancelEdit.setAttribute('hidden', 'true')
+  writeButtonAdd.removeAttribute('hidden')
+  writeButtonAdd.disabled = true
+  writeButtonEdit.setAttribute('hidden', 'true')
+  writeButtonCancelEdit.setAttribute('hidden', 'true')
   labelWrite.innerHTML = 'Qual o próximo passo?'
 }

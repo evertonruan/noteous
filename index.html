@@ -5,72 +5,86 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <link rel="manifest" href="manifest.json" />
+    <!--MERRIWEATHER-->
+    <link rel="preconnect" href="https://fonts.gstatic.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Merriweather+Sans:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
 
-    <link rel="apple-touch-icon" href="/img/logo-icon-192.png" />
+    <!--DM-SERIF-->
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,500;0,700;1,500&family=DM+Serif+Text:ital@1&display=swap"
+      href="https://fonts.googleapis.com/css2?family=DM+Serif+Text:ital@0;1&display=swap"
       rel="stylesheet"
     />
 
-    <!--MATERIAL SYMBOLS-->
-    <link
-      rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
-    />
+    <link rel="stylesheet" href="reset.css" />
+    <link rel="stylesheet" href="style.css" />
 
     <!--MATERIAL ICONS-->
     <link
       href="https://fonts.googleapis.com/icon?family=Material+Icons"
       rel="stylesheet"
     />
-
-    <link rel="stylesheet" href="style.css" />
-    <meta name="theme-color" content="#fce6cf" />
-    <link rel="shortcut icon" href="./img/favicon.png" type="image/x-icon" />
-
     <title>noteous</title>
+    <link rel="shortcut icon" href="./img/favicon.png" type="image/x-icon" />
   </head>
   <body id="index">
-    <header id="presentation-panel">
-      <a class="nav-point" href="about.html"
-        ><span class="material-symbols-rounded"> settings </span></a
-      >
-      <a href="index.html"><h1 id="logo">noteous</h1></a>
-      <div
-        id="shortcut-button"
-        class="nav-point"
-        onclick="shortcutButtonConfig('change-text')"
-      >
-        <span id="shortcut-text" class="material-symbols-rounded"></span>
-      </div>
+    <header>
+      <nav>
+        <a href="index.html" tabindex="1"><h1 id="logo">noteous</h1></a>
+        <div id="nav-options">
+          <button id="theme-container" tabindex="2">
+            <p>Tema</p>
+            <div id="theme-color"></div>
+          </button>
+          <a id="nav-update" href="about.html" tabindex="3">Saiba Mais</a>
+        </div>
+      </nav>
     </header>
     <main>
       <section id="section-write">
         <div id="info-panel"></div>
         <div id="write-panel">
-          <label id="write-label">Qual o próximo passo?</label>
-          <span id="write-options"></span>
+          <label id="write-label" for="write-input"
+            >Qual o próximo passo?</label
+          >
+          <button id="write-options" tabindex="5"></button>
           <textarea
             id="write-input"
             type="text"
             autofocus
             placeholder="✔ Sua próxima tarefa ou lembrete"
+            aria-placeholder="Escreva sua próxima tarefa ou lembrete"
+            tabindex="4"
           ></textarea>
           <div id="write-buttons-container">
-            <button id="write-button-add" class="write-buttons">
+            <button
+              id="write-button-add"
+              class="write-buttons"
+              role="button"
+              aria-label="Adicionar nota"
+              tabindex="6"
+            >
               + adicionar nota
             </button>
-            <button id="write-button-edit" class="write-buttons" hidden="true">
+            <button
+              id="write-button-edit"
+              class="write-buttons"
+              hidden="true"
+              aria-label="Editar nota"
+              tabindex="7"
+            >
               <span class="material-icons"> check_circle </span>
             </button>
             <button
               id="write-button-cancel"
               class="write-buttons"
               hidden="true"
+              tabindex="8"
             >
               <span class="material-icons"> block </span>
             </button>
@@ -79,65 +93,20 @@
       </section>
 
       <section id="section-read">
-        <div id="orb-list"></div>
+        <div id="read-options">
+          <button id="read-options-sort" tabindex="9"></button>
+        </div>
 
         <div id="read-panel">
-          <div id="read-options">
-            <p id="read-options-orb-name"></p>
-            <p id="read-options-orb-color" class="material-symbols-rounded">
-              palette
-            </p>
-            <p id="read-options-sort"></p>
-          </div>
-          <div id="read-notes-list"></div>
+          <div id="read-notes"></div>
         </div>
       </section>
-
-      <!-- Dialog: orb colors -->
-      <dialog id="orb-color-dialog">
-        <form method="dialog">
-          <div id="orb-color-container">
-            <div
-              id="orb-color-orange"
-              class="orb-color-point"
-              onclick="getSelectedOrbColor(this)"
-            ></div>
-            <div
-              id="orb-color-yellow"
-              class="orb-color-point"
-              onclick="getSelectedOrbColor(this)"
-            ></div>
-            <div
-              id="orb-color-red"
-              class="orb-color-point"
-              onclick="getSelectedOrbColor(this)"
-            ></div>
-
-            <div
-              id="orb-color-blue"
-              class="orb-color-point"
-              onclick="getSelectedOrbColor(this)"
-            ></div>
-            <div
-              id="orb-color-green"
-              class="orb-color-point"
-              onclick="getSelectedOrbColor(this)"
-            ></div>
-            <div
-              id="orb-color-magenta"
-              class="orb-color-point"
-              onclick="getSelectedOrbColor(this)"
-            ></div>
-          </div>
-        </form>
-      </dialog>
     </main>
 
     <footer>
-      <p><span>noteous preview</span>1.5</p>
+      <p><span>noteous</span> 1ª Geração • v1.4.6</p>
     </footer>
 
-    <script type="text/javascript" src="orblendEngine.js"></script>
     <script type="text/javascript" src="index.js"></script>
   </body>
 </html>
