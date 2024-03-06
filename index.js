@@ -726,11 +726,7 @@ function renderNote(context, noteId) {
       //ACESSIBILIDADE
 
       noteTextContainer.tabIndex = tabIndexCounter += 1
-      noteTextContainer.setAttribute('aria-label', 'Anotação')
-      noteTextContainer.setAttribute(
-        'onkeyup',
-        `if (event.key === 'Enter') { openNote(${note.id}); }`
-      )
+      noteTextContainer.setAttribute('aria-label', `Anotação:${note.text}`)
       noteTextContainer.setAttribute(
         'onkeyup',
         `if (event.key === 'Enter') { openNote(${note.id}); }`
@@ -1046,9 +1042,9 @@ function openNote(noteId) {
     writeInput.setAttribute('readonly', true)
     writeInput.focus()
     writeButtonCancelEdit.removeAttribute('hidden')
-    labelWrite.innerHTML = 'Clique aqui para editar a nota'
+    labelWrite.innerHTML = '📄 Veja aqui sua nota'
     editNote(noteId)
-    labelWrite.addEventListener('click', writeInputEdit, false)
+    writeInput.addEventListener('click', writeInputEdit, false)
   } else if (window.screen.width >= 601) {
     writeInput.focus()
     writeButtonCancelEdit.removeAttribute('hidden')
@@ -1065,6 +1061,7 @@ function editNote(noteId) {
     if (note.id === noteId) {
       //Entra no Modo de edição
       editMode = true
+      writeOptions.classList.add('edit-mode')
       writeInput.classList.add('edit-mode')
       readSection.classList.add('edit-mode') //coloca a seção de leitura das nota no modo de edição (que desabilita as ações das notas enquanto uma nota está sendo editada)
       writePanel.classList.add('edit-mode')
@@ -1120,7 +1117,9 @@ function exitEditMode() {
   orblendEngine('on-change-input')
 
   editMode = false
+  writeInput.focus()
 
+  writeOptions.classList.remove('edit-mode')
   writePanel.classList.remove('edit-mode')
   readSection.classList.remove('edit-mode')
 
@@ -1131,7 +1130,7 @@ function exitEditMode() {
 
   noteousSettings.priority = 'solid'
   localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
-  writeOptions.style.cssText = 'border-style: solid; opacity: 0;'
+  writeOptions.style.cssText = 'border-style: solid;'
   writeInput.style.cssText = 'border-style: solid;'
 
   orblendEngine('change')

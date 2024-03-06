@@ -371,6 +371,11 @@ a {
   transition: all 0.2s cubic-bezier(0.075, 0.82, 0.165, 1);
 }
 
+#write-options.edit-mode {
+  transition: none;
+  top: 100px;
+}
+
 #write-input {
   display: flex;
   height: 6rem;
@@ -429,6 +434,11 @@ a {
 
   transition: all 0.2s cubic-bezier(0.075, 0.82, 0.165, 1);
   user-select: none;
+}
+
+.write-button-edit {
+  margin: 1rem 0.5rem;
+  padding: 0.8rem 1.8rem;
 }
 
 .write-buttons:active:enabled {

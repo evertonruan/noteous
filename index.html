@@ -35,13 +35,13 @@
   <body id="index">
     <header>
       <nav>
-        <a href="index.html" tabindex="1"><h1 id="logo">noteous</h1></a>
+        <a href="index.html"><h1 id="logo">noteous</h1></a>
         <div id="nav-options">
-          <button id="theme-container" tabindex="2">
+          <button id="theme-container">
             <p>Tema</p>
             <div id="theme-color"></div>
           </button>
-          <a id="nav-update" href="about.html" tabindex="3">Saiba Mais</a>
+          <a id="nav-update" href="about.html">Saiba Mais</a>
         </div>
       </nav>
     </header>
@@ -52,46 +52,47 @@
           <label id="write-label" for="write-input"
             >Qual o próximo passo?</label
           >
+          <div class="write-buttons-container">
+            <button
+              id="write-button-edit"
+              class="write-buttons write-button-edit"
+              hidden="true"
+              aria-label="Aceitar edição da nota"
+              tabindex="4"
+            >
+              <span class="material-icons"> check_circle </span>
+            </button>
+            <button
+              id="write-button-cancel"
+              class="write-buttons write-button-edit"
+              hidden="true"
+              aria-label="Cancelar edição da nota"
+              tabindex="5"
+            >
+              <span class="material-icons"> block </span>
+            </button>
+          </div>
+
           <button
             id="write-options"
-            tabindex="5"
+            tabindex="2"
             aria-label="Botão alterar prioridade da nota"
           ></button>
           <textarea
             id="write-input"
             type="text"
             autofocus
+            tabindex="1"
             placeholder="✔ Sua próxima tarefa ou lembrete"
-            role="button"
-            tabindex="4"
           ></textarea>
           <div id="write-buttons-container">
             <button
               id="write-button-add"
               class="write-buttons"
-              role="button"
               aria-label="Adicionar nota"
-              tabindex="6"
+              tabindex="3"
             >
               + adicionar nota
-            </button>
-            <button
-              id="write-button-edit"
-              class="write-buttons"
-              hidden="true"
-              aria-label="Aceitar edição da nota"
-              tabindex="7"
-            >
-              <span class="material-icons"> check_circle </span>
-            </button>
-            <button
-              id="write-button-cancel"
-              class="write-buttons"
-              hidden="true"
-              aria-label="Cancelar edição da nota"
-              tabindex="8"
-            >
-              <span class="material-icons"> block </span>
             </button>
           </div>
         </div>
@@ -99,7 +100,7 @@
 
       <section id="section-read">
         <div id="read-options">
-          <button id="read-options-sort" tabindex="9"></button>
+          <button id="read-options-sort" tabindex="6"></button>
         </div>
 
         <div id="read-panel">
