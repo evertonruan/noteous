@@ -1117,7 +1117,6 @@ function exitEditMode() {
   orblendEngine('on-change-input')
 
   editMode = false
-  writeInput.focus()
 
   writeOptions.classList.remove('edit-mode')
   writePanel.classList.remove('edit-mode')
@@ -1130,8 +1129,17 @@ function exitEditMode() {
 
   noteousSettings.priority = 'solid'
   localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
-  writeOptions.style.cssText = 'border-style: solid;'
-  writeInput.style.cssText = 'border-style: solid;'
+
+  //fazer teste: se tamanho de tela for mobile: input não recebe foco/se for desktop recebe foco
+  if (window.screen.width <= 600) {
+    writeOptions.style.cssText =
+      'border-style: solid; opacity: 0; transition: none;'
+    writeInput.style.cssText = 'border-style: solid;'
+  } else {
+    writeInput.focus()
+    writeOptions.style.cssText = 'border-style: solid;'
+    writeInput.style.cssText = 'border-style: solid;'
+  }
 
   orblendEngine('change')
 
