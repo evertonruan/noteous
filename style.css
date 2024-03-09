@@ -152,46 +152,37 @@
 
 /*COLORS*/
 :root {
-  --base-color: hsla(
-    var(--hue),
-    calc(0% + var(--str)),
-    calc(0% + var(--lum-back)),
-    1
-  );
-  --base-text: hsla(
-    var(--hue),
-    calc(0% + var(--str)),
-    calc(0% + var(--lum-front)),
-    1
-  );
+  --base-color: hsla(var(--hue), var(--saturation), var(--lum-back), 1);
+  --base-text: hsla(var(--hue), var(--saturation), var(--lum-front), 1);
   --base-buttons: hsla(
     var(--hue),
-    calc(0% + var(--str)),
+    var(--saturation),
     calc(10% + var(--lum-mid)),
     1
   );
-  --base-write-input: hsla(
+  --base-write-input-inside: hsla(
     var(--hue),
-    calc(0% + var(--str)),
-    calc(0% + var(--lum-mid)),
+    var(--saturation),
+    var(--lum-front-inverse),
     1
   );
-  --base-note-container: hsla(
+  --base-write-input-outside: hsla(
     var(--hue),
-    calc(0% + var(--str)),
-    calc(0% + var(--lum-mid)),
+    var(--saturation),
+    var(--lum-mid),
     1
   );
+  --base-note-container: hsla(var(--hue), var(--saturation), var(--lum-mid), 1);
   --base-note-action-container: hsla(
     var(--hue),
-    calc(0% + var(--str)),
+    var(--saturation),
     calc(-5% + var(--lum-mid)),
     1
   );
   --base-note-action-button: hsla(
     var(--hue),
-    calc(0% + var(--str)),
-    calc(0% + var(--lum-front)),
+    var(--saturation),
+    var(--lum-front),
     1
   );
 }
@@ -388,9 +379,11 @@ a {
 
   font-size: 1rem;
 
+  background-color: var(--base-write-input-inside);
+
   border-width: 4px;
   border-radius: 20px;
-  border-color: var(--base-write-input);
+  border-color: var(--base-write-input-outside);
 
   transition: all 0.5s cubic-bezier(0.075, 0.82, 0.165, 1);
 }
@@ -406,7 +399,12 @@ a {
   height: 7rem;
   outline: 0;
   border-width: 7px;
-  box-shadow: 0 0 30px var(--base-write-input);
+  box-shadow: 0 0 30px var(--base-write-input-outside);
+}
+
+#write-input::placeholder {
+  color: var(--base-text);
+  opacity: 60%;
 }
 
 #write-buttons-container {

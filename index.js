@@ -265,38 +265,42 @@ function setTheme(context) {
     noteousSettings.theme = themeParams = {
       themeLum: 'light',
       hue: '--hue: 30;',
-      str: '--str: 90%;',
+      saturation: '--saturation: 90%;',
       lumBack: '--lum-back: 90%;',
       lumMid: '--lum-mid: 60%;',
-      lumFront: '--lum-front: 10%;'
+      lumFront: '--lum-front: 10%;',
+      lumFrontInverse: '--lum-front-inverse: 93%;'
     }
 
     localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
     noteousSettings = JSON.parse(localStorage.getItem('noteous-settings'))
     document.querySelector(
       ':root'
-    ).style.cssText = `${noteousSettings.theme.hue} ${noteousSettings.theme.str}
+    ).style.cssText = `${noteousSettings.theme.hue} ${noteousSettings.theme.saturation}
 ${noteousSettings.theme.lumBack}
 ${noteousSettings.theme.lumMid}
-${noteousSettings.theme.lumFront}`
+${noteousSettings.theme.lumFront}
+${noteousSettings.theme.lumFrontInverse}`
   } else if (context == 'setThemeDark') {
     noteousSettings.theme = themeParams = {
       themeLum: 'dark',
       hue: '--hue: 30;',
-      str: '--str: 40%;',
-      lumBack: '--lum-back: 10%;',
+      saturation: '--saturation: 40%;',
+      lumBack: '--lum-back: 8%;',
       lumMid: '--lum-mid: 30%;',
-      lumFront: '--lum-front: 90%;'
+      lumFront: '--lum-front: 90%;',
+      lumFrontInverse: '--lum-front-inverse: 15%;'
     }
 
     localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
     noteousSettings = JSON.parse(localStorage.getItem('noteous-settings'))
     document.querySelector(
       ':root'
-    ).style.cssText = `${noteousSettings.theme.hue} ${noteousSettings.theme.str}
+    ).style.cssText = `${noteousSettings.theme.hue} ${noteousSettings.theme.saturation}
 ${noteousSettings.theme.lumBack}
 ${noteousSettings.theme.lumMid}
-${noteousSettings.theme.lumFront}`
+${noteousSettings.theme.lumFront}
+${noteousSettings.theme.lumFrontInverse}`
   }
 }
 
@@ -1127,10 +1131,8 @@ function exitEditMode() {
   writeInput.removeAttribute('readonly')
   writeInput.removeEventListener('click', writeInputEdit, false)
 
-  noteousSettings.priority = 'solid'
-  localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
-
-  //fazer teste: se tamanho de tela for mobile: input não recebe foco/se for desktop recebe foco
+  //se tela é mobile, write-input não recebe foco após sair do modo de edição. Motivo: ao estar no celular e sair do modo de edição, o teclado aparece por cima e oculta as notas, isso dificulta a usabilidade.
+  //Se tela é acima de mobile, write-input recebe foco após sair do modo de edição
   if (window.screen.width <= 600) {
     writeOptions.style.cssText =
       'border-style: solid; opacity: 0; transition: none;'
@@ -1140,6 +1142,9 @@ function exitEditMode() {
     writeOptions.style.cssText = 'border-style: solid;'
     writeInput.style.cssText = 'border-style: solid;'
   }
+
+  noteousSettings.priority = 'solid'
+  localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
 
   orblendEngine('change')
 
