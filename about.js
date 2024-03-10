@@ -6,38 +6,51 @@ function setTheme(context) {
     noteousSettings.theme = themeParams = {
       themeLum: 'light',
       hue: '--hue: 30;',
-      str: '--str: 90%;',
+      saturation: '--saturation: 90%;',
       lumBack: '--lum-back: 90%;',
       lumMid: '--lum-mid: 60%;',
-      lumFront: '--lum-front: 10%;'
+      lumFront: '--lum-front: 10%;',
+      lumFrontInverse: '--lum-front-inverse: 95%;',
+      accentSaturation: '--accent-saturation: 90%;',
+      accentLum: '--accent-lum: 60%;'
     }
 
     localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
     noteousSettings = JSON.parse(localStorage.getItem('noteous-settings'))
     document.querySelector(
       ':root'
-    ).style.cssText = `${noteousSettings.theme.hue} ${noteousSettings.theme.str}
-${noteousSettings.theme.lumBack}
-${noteousSettings.theme.lumMid}
-${noteousSettings.theme.lumFront}`
+    ).style.cssText = `${noteousSettings.theme.hue} ${noteousSettings.theme.saturation}
+    ${noteousSettings.theme.lumBack}
+    ${noteousSettings.theme.lumMid}
+    ${noteousSettings.theme.lumFront}
+    ${noteousSettings.theme.lumFrontInverse}
+    ${noteousSettings.theme.accentSaturation}
+    ${noteousSettings.theme.accentLum}
+    `
   } else if (context == 'dark') {
     noteousSettings.theme = themeParams = {
       themeLum: 'dark',
       hue: '--hue: 30;',
-      str: '--str: 40%;',
-      lumBack: '--lum-back: 10%;',
+      saturation: '--saturation: 40%;',
+      lumBack: '--lum-back: 8%;',
       lumMid: '--lum-mid: 30%;',
-      lumFront: '--lum-front: 90%;'
+      lumFront: '--lum-front: 90%;',
+      lumFrontInverse: '--lum-front-inverse: 15%;',
+      accentSaturation: '--accent-saturation: 90%;',
+      accentLum: '--accent-lum: 60%;'
     }
 
     localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
     noteousSettings = JSON.parse(localStorage.getItem('noteous-settings'))
     document.querySelector(
       ':root'
-    ).style.cssText = `${noteousSettings.theme.hue} ${noteousSettings.theme.str}
-${noteousSettings.theme.lumBack}
-${noteousSettings.theme.lumMid}
-${noteousSettings.theme.lumFront}`
+    ).style.cssText = `${noteousSettings.theme.hue} ${noteousSettings.theme.saturation}
+    ${noteousSettings.theme.lumBack}
+    ${noteousSettings.theme.lumMid}
+    ${noteousSettings.theme.lumFront}
+    ${noteousSettings.theme.lumFrontInverse}
+    ${noteousSettings.theme.accentSaturation}
+    ${noteousSettings.theme.accentLum}`
   }
 }
 

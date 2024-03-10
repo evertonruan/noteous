@@ -156,7 +156,7 @@
   --base-text: hsla(var(--hue), var(--saturation), var(--lum-front), 1);
   --base-buttons: hsla(
     var(--hue),
-    var(--saturation),
+    var(--accent-saturation),
     calc(10% + var(--lum-mid)),
     1
   );
@@ -168,8 +168,8 @@
   );
   --base-write-input-outside: hsla(
     var(--hue),
-    var(--saturation),
-    var(--lum-mid),
+    var(--accent-saturation),
+    var(--accent-lum),
     1
   );
   --base-note-container: hsla(var(--hue), var(--saturation), var(--lum-mid), 1);
@@ -379,6 +379,7 @@ a {
 
   font-size: 1rem;
 
+  color: var(--base-text);
   background-color: var(--base-write-input-inside);
 
   border-width: 4px;
@@ -545,7 +546,8 @@ a {
   background-color: var(--base-note-action-container);
 }
 
-.action-buttons {
+#index .action-buttons {
+  font-size: 2rem;
   background-color: transparent;
   color: var(--base-note-action-button);
   transition: all 0.3s cubic-bezier(0.075, 0.82, 0.165, 1);

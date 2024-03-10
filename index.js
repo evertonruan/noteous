@@ -269,7 +269,9 @@ function setTheme(context) {
       lumBack: '--lum-back: 90%;',
       lumMid: '--lum-mid: 60%;',
       lumFront: '--lum-front: 10%;',
-      lumFrontInverse: '--lum-front-inverse: 93%;'
+      lumFrontInverse: '--lum-front-inverse: 95%;',
+      accentSaturation: '--accent-saturation: 90%;',
+      accentLum: '--accent-lum: 60%;'
     }
 
     localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
@@ -280,7 +282,10 @@ function setTheme(context) {
 ${noteousSettings.theme.lumBack}
 ${noteousSettings.theme.lumMid}
 ${noteousSettings.theme.lumFront}
-${noteousSettings.theme.lumFrontInverse}`
+${noteousSettings.theme.lumFrontInverse}
+${noteousSettings.theme.accentSaturation}
+${noteousSettings.theme.accentLum}
+`
   } else if (context == 'setThemeDark') {
     noteousSettings.theme = themeParams = {
       themeLum: 'dark',
@@ -289,7 +294,9 @@ ${noteousSettings.theme.lumFrontInverse}`
       lumBack: '--lum-back: 8%;',
       lumMid: '--lum-mid: 30%;',
       lumFront: '--lum-front: 90%;',
-      lumFrontInverse: '--lum-front-inverse: 15%;'
+      lumFrontInverse: '--lum-front-inverse: 15%;',
+      accentSaturation: '--accent-saturation: 90%;',
+      accentLum: '--accent-lum: 60%;'
     }
 
     localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
@@ -300,7 +307,9 @@ ${noteousSettings.theme.lumFrontInverse}`
 ${noteousSettings.theme.lumBack}
 ${noteousSettings.theme.lumMid}
 ${noteousSettings.theme.lumFront}
-${noteousSettings.theme.lumFrontInverse}`
+${noteousSettings.theme.lumFrontInverse}
+${noteousSettings.theme.accentSaturation}
+${noteousSettings.theme.accentLum}`
   }
 }
 
