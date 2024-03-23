@@ -1,67 +1,142 @@
 let noteousSettings = JSON.parse(localStorage.getItem('noteous-settings'))
 let noteousMain = JSON.parse(localStorage.getItem('noteous-main')) || []
 
-function setTheme(context) {
-  if (context == 'light') {
-    noteousSettings.theme = themeParams = {
-      themeLum: 'light',
-      hue: '--hue: 30;',
-      saturation: '--saturation: 90%;',
-      lumBack: '--lum-back: 90%;',
-      lumMid: '--lum-mid: 60%;',
-      lumFront: '--lum-front: 10%;',
-      lumFrontInverse: '--lum-front-inverse: 95%;',
-      accentSaturation: '--accent-saturation: 90%;',
-      accentLum: '--accent-lum: 60%;'
+//ELEMENTOS //////
+let baseRemOptionNormal = document.querySelector('#baserem-normal')
+let baseRemOptionBig = document.querySelector('#baserem-big')
+let baseRemOptionSmall = document.querySelector('#baserem-small')
+
+let optionLight = document.querySelector('#luminosity-light')
+let optionDark = document.querySelector('#luminosity-dark')
+
+///////
+
+function injectCSSOnRoot() {
+  document.querySelector(
+    ':root'
+  ).style.cssText = `${noteousSettings.look.baseRem} ${noteousSettings.look.hue} ${noteousSettings.look.saturation}
+${noteousSettings.look.lumBack}
+${noteousSettings.look.lumMid}
+${noteousSettings.look.lumFront}
+${noteousSettings.look.lumFrontInverse}
+${noteousSettings.look.accentSaturation}
+${noteousSettings.look.accentLum}`
+}
+
+///////
+
+// CONFIGURAÇÕES DE TEMA ////////////////////////////////////
+function noteousTheme(context) {
+  //context => recuperar tema, trocar tema, aplicar tema claro, aplicar tema escuro
+  if (context == 'retrieve-theme') {
+    if (noteousSettings.look.themeLum == 'light') {
+      noteousTheme('set-theme-light')
+      console.log(context)
+    } else if (noteousSettings.look.themeLum == 'dark') {
+      noteousTheme('set-theme-dark')
     }
+  } else if (context == 'change-theme') {
+    console.log(context)
+    if (noteousSettings.look.themeLum == 'light') {
+      noteousTheme('set-theme-dark')
+    } else if (noteousSettings.look.themeLum == 'dark') {
+      noteousTheme('set-theme-light')
+    }
+  } else if (context == 'set-theme-light') {
+    noteousSettings.look.themeLum = 'light'
+    noteousSettings.look.hue = '--hue: 30;'
+    noteousSettings.look.saturation = '--saturation: 90%;'
+    noteousSettings.look.lumBack = '--lum-back: 90%;'
+    noteousSettings.look.lumMid = '--lum-mid: 60%;'
+    noteousSettings.look.lumFront = '--lum-front: 10%;'
+    noteousSettings.look.lumFrontInverse = '--lum-front-inverse: 95%;'
+    noteousSettings.look.accentSaturation = '--accent-saturation: 90%;'
+    noteousSettings.look.accentLum = '--accent-lum: 60%;'
 
     localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
     noteousSettings = JSON.parse(localStorage.getItem('noteous-settings'))
-    document.querySelector(
-      ':root'
-    ).style.cssText = `${noteousSettings.theme.hue} ${noteousSettings.theme.saturation}
-    ${noteousSettings.theme.lumBack}
-    ${noteousSettings.theme.lumMid}
-    ${noteousSettings.theme.lumFront}
-    ${noteousSettings.theme.lumFrontInverse}
-    ${noteousSettings.theme.accentSaturation}
-    ${noteousSettings.theme.accentLum}
-    `
-  } else if (context == 'dark') {
-    noteousSettings.theme = themeParams = {
-      themeLum: 'dark',
-      hue: '--hue: 30;',
-      saturation: '--saturation: 40%;',
-      lumBack: '--lum-back: 8%;',
-      lumMid: '--lum-mid: 30%;',
-      lumFront: '--lum-front: 90%;',
-      lumFrontInverse: '--lum-front-inverse: 15%;',
-      accentSaturation: '--accent-saturation: 90%;',
-      accentLum: '--accent-lum: 60%;'
-    }
+    injectCSSOnRoot()
+  } else if (context == 'set-theme-dark') {
+    noteousSettings.look.themeLum = 'dark'
+    noteousSettings.look.hue = '--hue: 30;'
+    noteousSettings.look.saturation = '--saturation: 40%;'
+    noteousSettings.look.lumBack = '--lum-back: 8%;'
+    noteousSettings.look.lumMid = '--lum-mid: 30%;'
+    noteousSettings.look.lumFront = '--lum-front: 90%;'
+    noteousSettings.look.lumFrontInverse = '--lum-front-inverse: 15%;'
+    noteousSettings.look.accentSaturation = '--accent-saturation: 90%;'
+    noteousSettings.look.accentLum = '--accent-lum: 60%;'
 
     localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
     noteousSettings = JSON.parse(localStorage.getItem('noteous-settings'))
-    document.querySelector(
-      ':root'
-    ).style.cssText = `${noteousSettings.theme.hue} ${noteousSettings.theme.saturation}
-    ${noteousSettings.theme.lumBack}
-    ${noteousSettings.theme.lumMid}
-    ${noteousSettings.theme.lumFront}
-    ${noteousSettings.theme.lumFrontInverse}
-    ${noteousSettings.theme.accentSaturation}
-    ${noteousSettings.theme.accentLum}`
+    injectCSSOnRoot()
+  }
+}
+noteousTheme('retrieve-theme')
+///////
+
+//VERIFICADOR DE OPÇÃO ATIVA ///////
+function activeOptionVerifier() {
+  if (noteousSettings.look.baseRem == '--base-rem: 100%;') {
+    baseRemOptionNormal.style.background = 'var(--base-buttons)'
+    baseRemOptionBig.style.background = ''
+    baseRemOptionSmall.style.background = ''
+  } else if (noteousSettings.look.baseRem == '--base-rem: 106.25%;') {
+    baseRemOptionBig.style.background = 'var(--base-buttons)'
+    baseRemOptionNormal.style.background = ''
+    baseRemOptionSmall.style.background = ''
+  } else if (noteousSettings.look.baseRem == '--base-rem: 93.75%;') {
+    baseRemOptionSmall.style.background = 'var(--base-buttons)'
+    baseRemOptionNormal.style.background = ''
+    baseRemOptionBig.style.background = ''
+  }
+
+  if (noteousSettings.look.luminosity == 'light') {
+    optionLight.style.background = 'var(--base-buttons)'
+    optionDark.style.background = ''
+  } else if (noteousSettings.look.luminosity == 'dark') {
+    optionDark.style.background = 'var(--base-buttons)'
+    optionLight.style.background = ''
   }
 }
 
-//inicializar tema: verifica qual foi o último tema salvo e aplica ele
-if (noteousSettings.theme == null) {
-  setTheme('light')
-} else if (noteousSettings.theme.themeLum == 'light') {
-  setTheme('light')
-} else if (noteousSettings.theme.themeLum == 'dark') {
-  setTheme('dark')
-}
+activeOptionVerifier()
+
+//////
+
+baseRemOptionNormal.addEventListener('click', () => {
+  noteousSettings.look.baseRem = '--base-rem: 100%;'
+  localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
+  injectCSSOnRoot()
+  activeOptionVerifier()
+})
+
+baseRemOptionBig.addEventListener('click', () => {
+  noteousSettings.look.baseRem = '--base-rem: 106.25%;'
+  localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
+  injectCSSOnRoot()
+  activeOptionVerifier()
+})
+
+baseRemOptionSmall.addEventListener('click', () => {
+  noteousSettings.look.baseRem = '--base-rem: 93.75%;'
+  localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
+  injectCSSOnRoot()
+  activeOptionVerifier()
+})
+
+// CONFIGURAÇÃO --> TEMA //////
+
+optionLight.addEventListener('click', () => {
+  noteousTheme('set-theme-light')
+  activeOptionVerifier()
+})
+optionDark.addEventListener('click', () => {
+  noteousTheme('set-theme-dark')
+  activeOptionVerifier()
+})
+
+noteousTheme('retrieve-theme')
 
 //MODO AVANÇADO
 
@@ -89,16 +164,3 @@ advancedSwitch.addEventListener('click', () => {
     }
   }
 })
-
-//COMPATIBILIDADE COM VERSÃO 0.9.2
-let enoteNotes = document.querySelector('#enote-notes')
-let enoteNotesButton = document.querySelector('#enote-notes-add')
-
-function addEnoteNotes() {
-  let noteousGetEnote = JSON.parse(enoteNotes.value)
-
-  localStorage.setItem('noteous-main', JSON.stringify(noteousGetEnote))
-
-  enoteNotes.value = 'Suas notas foram adicionadas ao noteous!'
-  enoteNotesButton.setAttribute('disabled', 'disabled')
-}

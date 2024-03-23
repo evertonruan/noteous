@@ -53,27 +53,32 @@ orblendEngine('on-change-input')
 /////////////////////////////////////////////////////////////
 
 //welcomeToNoteous --> ao acessar 1ª vez ou nova versão
-function welcomeToNoteous(context) {
-  setTheme('setThemeLight')
-  //context --> primeiro acesso ou nova versão
-  if (context == 'first-access') {
-    //Configuração da tela de Boas vindas (noteous 1.0)
+function welcomeToNoteous(context, subcontext) {
+  //1.0 -- 1.4.5
+  //Primeiro aplica tema claro, armazenando informações no LocalStorage
+  //Configurações da tela de boas vindas: criar elementos e simultaneamente adicionar informações. Primeiro acesso e nova versão separados, o que resulta em código duplicado
+  //noteousTheme('set-theme-light')
+  //1.5
+  // Nenhum tema é aplicado: usuário deve primeiro aceitar armazenamento
+  // Configuração da tela de boas vindas: primeiro renderiza interface, depois adiciona informações se for primeiro acesso ou nova versão, o que economiza código
 
-    //Panel e Section
-    //greetingPanel --> sectionMain + sectionTitle
+  //context --> render-welcome/render-policies
+  //subcontext --> primeiro acesso ou nova versão
+  if (context == 'render-welcome') {
+    //Section e Panel
+    //greetingSection --> sectionMain + sectionTitle
+    let greetingSection = document.createElement('div')
+    greetingSection.classList.add('greeting-section')
+
     let greetingPanel = document.createElement('div')
     greetingPanel.classList.add('greeting-panel')
 
-    let greetingSectionMain = document.createElement('div')
-    greetingSectionMain.classList.add('greeting-section-main')
-
-    let greetingSectionTitle = document.createElement('div')
-    greetingSectionTitle.classList.add('greeting-section-title')
+    let greetingTitleContainer = document.createElement('div')
+    greetingTitleContainer.classList.add('greeting-title-container')
 
     //Titles e Descriptions
     let greetingTitle1 = document.createElement('p')
     greetingTitle1.classList.add('greeting-title1')
-    greetingTitle1.append(document.createTextNode('Bem-vindo ao'))
 
     let greetingTitleIcon = document.createElement('img')
     greetingTitleIcon.setAttribute('src', './img/logo-icon.png')
@@ -81,243 +86,177 @@ function welcomeToNoteous(context) {
 
     greetingTitle2 = document.createElement('p')
     greetingTitle2.classList.add('greeting-title2')
-    greetingTitle2.append(document.createTextNode('noteous'))
-    greetingSectionTitle.append(greetingTitleIcon, greetingTitle2)
+    greetingTitleContainer.append(greetingTitleIcon, greetingTitle2)
 
     //greetingDescriptions
 
     let greetingDescriptionTitle = document.createElement('p')
     greetingDescriptionTitle.classList.add('greeting-description-title')
-    greetingDescriptionTitle.append(
-      document.createTextNode(
-        'Faça anotações, realize tarefas, seja mais produtivo'
-      )
+
+    let greetingDescriptionContainerAll = document.createElement('section')
+    let greetingDescriptionContainer1 = document.createElement('div')
+    let greetingDescriptionContainer2 = document.createElement('div')
+    let greetingDescriptionContainer3 = document.createElement('div')
+    let greetingDescriptionContainer4 = document.createElement('div')
+
+    greetingDescriptionContainerAll.classList.add(
+      'greeting-description-container-all'
     )
 
-    let greetingDescriptionUl = document.createElement('ul')
-    let greetingDescriptionLi1 = document.createElement('li')
-    let greetingDescriptionLi2 = document.createElement('li')
-    let greetingDescriptionLi3 = document.createElement('li')
-    let greetingDescriptionLi4 = document.createElement('li')
-
-    greetingDescriptionLi1.classList.add('greeting-description-point')
-    greetingDescriptionLi2.classList.add('greeting-description-point')
-    greetingDescriptionLi3.classList.add('greeting-description-point')
-    greetingDescriptionLi4.classList.add('greeting-description-point')
-
-    greetingDescriptionLi1.append(
-      document.createTextNode(
-        'Temas: personalize sua experiência com o brilhante tema claro ou com o elegante tema escuro'
-      )
+    greetingDescriptionContainer1.classList.add(
+      'greeting-description-container'
     )
-    greetingDescriptionLi2.append(
-      document.createTextNode(
-        'Organize suas tarefas por prioridade: quando adicionar uma nota é só tocar ou clicar no círculo ° para trocar entre diferentes bordas, que representam prioridades.'
-      )
+    greetingDescriptionContainer2.classList.add(
+      'greeting-description-container'
     )
-    greetingDescriptionLi3.append(
-      document.createTextNode(
-        'noteous possui um design inovador que convida você a fazer anotações. Veja a data de hoje, escreva sua próxima tarefa ou registre algo para não esquecer.'
-      )
+    greetingDescriptionContainer3.classList.add(
+      'greeting-description-container'
+    )
+    greetingDescriptionContainer4.classList.add(
+      'greeting-description-container'
     )
 
-    greetingDescriptionUl.append(
-      greetingDescriptionLi1,
-      greetingDescriptionLi2,
-      greetingDescriptionLi3
-    )
+    let greetingDescription1 = document.createElement('p')
+    let greetingDescription2 = document.createElement('p')
+    let greetingDescription3 = document.createElement('p')
+    let greetingDescription4 = document.createElement('p')
 
-    //Next Button
-    btnNext = document.createElement('button')
-    btnNext.classList.add('write-buttons')
-    btnNext.appendChild(document.createTextNode('Acessar noteous'))
-    btnNext.addEventListener('click', () => {
-      document.location.reload()
-    })
+    greetingDescription1.classList.add('greeting-description-point')
+    greetingDescription2.classList.add('greeting-description-point')
+    greetingDescription3.classList.add('greeting-description-point')
+    greetingDescription4.classList.add('greeting-description-point')
 
-    //Appends
-    greetingSectionMain.append(
-      greetingTitle1,
-      greetingSectionTitle,
-      greetingDescriptionTitle,
-      greetingDescriptionUl,
-      btnNext
-    )
-    greetingPanel.append(greetingSectionMain)
-    body.append(greetingPanel)
-  } else if (context == 'new-version') {
-    //Panel e Section
-    let greetingPanel = document.createElement('div')
-    greetingPanel.classList.add('greeting-panel')
-
-    let greetingSectionMain = document.createElement('div')
-    greetingSectionMain.classList.add('greeting-section-main')
-
-    let greetingSectionTitle = document.createElement('div')
-    greetingSectionTitle.classList.add('greeting-section-title')
-
-    //Titles e Descriptions
-    let greetingTitle1 = document.createElement('p')
-    greetingTitle1.classList.add('greeting-title1')
-    greetingTitle1.append(document.createTextNode('Bem-vindo de volta!'))
-
-    let greetingTitle1b = document.createElement('p')
-    greetingTitle1b.classList.add('greeting-title1')
-    greetingTitle1b.append(document.createTextNode('Temos uma atualização'))
-
-    let greetingTitleIcon = document.createElement('img')
-    greetingTitleIcon.setAttribute('src', './img/logo-icon.png')
-    greetingTitleIcon.classList.add('greeting-title-icon')
-
-    greetingTitle2 = document.createElement('p')
-    greetingTitle2.classList.add('greeting-title2')
-    greetingTitle2.append(document.createTextNode('noteous 1.4.5'))
-    greetingSectionTitle.append(greetingTitleIcon, greetingTitle2)
-
-    ////////////////////
-
-    let greetingDescriptionTitle = document.createElement('p')
-    greetingDescriptionTitle.classList.add('greeting-description-title')
-    greetingDescriptionTitle.append(
-      document.createTextNode('Confira as novidades desta versão')
-    )
-
-    let greetingDescriptionUl = document.createElement('ul')
-    let greetingDescriptionLi1 = document.createElement('li')
-    let greetingDescriptionLi2 = document.createElement('li')
-    let greetingDescriptionLi3 = document.createElement('li')
-    let greetingDescriptionLi4 = document.createElement('li')
-
-    greetingDescriptionLi1.classList.add('greeting-description-point')
-    greetingDescriptionLi2.classList.add('greeting-description-point')
-    greetingDescriptionLi3.classList.add('greeting-description-point')
-    greetingDescriptionLi4.classList.add('greeting-description-point')
-
-    greetingDescriptionLi1.append(
-      document.createTextNode(
-        'Na atualização principal (1.4), foram feitas melhorias incríveis que você pode ver abaixo. Nesta atualização (1.4.5), há pequenos ajustes. Para ver todos os detalhes, acesse Saiba Mais > Histórico de Atualizações.'
-      )
-    )
-    greetingDescriptionLi2.append(
-      document.createTextNode(
-        'Novo recurso → Desfazer Concluir Nota. Quando você conclui (apaga) uma nota, terá um breve momento para desfazer isso.'
-      )
-    )
-    greetingDescriptionLi3.append(
-      document.createTextNode(
-        'Novo recurso → Backup Inteligente de Nota. Se você estava escrevendo uma nota e saiu sem salvar, poderá recuperá-la e continuar de onde parou'
-      )
-    )
-    greetingDescriptionLi4.append(
-      document.createTextNode(
-        `Orblend Engine → É uma nova 'tecnologia' do noteous que analisa sua interação para melhorar sua experiência.`
-      )
-    )
-
-    greetingDescriptionUl.append(
-      greetingDescriptionLi1,
-      greetingDescriptionLi2,
-      greetingDescriptionLi3,
-      greetingDescriptionLi4
+    greetingDescriptionContainerAll.append(
+      greetingDescriptionContainer1,
+      greetingDescriptionContainer2,
+      greetingDescriptionContainer3,
+      greetingDescriptionContainer4
     )
 
     //Next Button
     btnNext = document.createElement('button')
-    btnNext.classList.add('write-buttons')
-    btnNext.appendChild(document.createTextNode('Acessar noteous'))
+    btnNext.classList.add('greeting-buttons')
+    btnNext.appendChild(document.createTextNode('Continuar →'))
     btnNext.addEventListener('click', () => {
-      document.location.reload()
+      welcomeToNoteous('render-policies')
     })
 
     //Appends
-    greetingSectionMain.append(
+    greetingPanel.append(
       greetingTitle1,
-      greetingTitle1b,
-      greetingSectionTitle,
+      greetingTitleContainer,
       greetingDescriptionTitle,
-      greetingDescriptionUl,
+      greetingDescriptionContainerAll,
       btnNext
     )
-    greetingPanel.append(greetingSectionMain)
-    body.innerHTML = ''
-    body.append(greetingPanel)
+    greetingSection.append(greetingPanel)
+    body.append(greetingSection)
+
+    ////////////////////////////////////////////////
+
+    if (subcontext == 'first-access') {
+      greetingTitle1.append(document.createTextNode('Bem-vindo ao'))
+      greetingTitle2.append(document.createTextNode('noteous'))
+      greetingDescriptionTitle.append(
+        document.createTextNode(
+          'Faça anotações, realize tarefas, seja mais produtivo'
+        )
+      )
+
+      greetingDescription1.append(
+        document.createTextNode(
+          'Temas: personalize sua experiência com o brilhante tema claro ou com o elegante tema escuro'
+        )
+      )
+
+      greetingDescription2.append(
+        document.createTextNode(
+          'Organize suas tarefas por prioridade: quando adicionar uma nota é só tocar ou clicar no círculo ° para trocar entre diferentes bordas, que representam prioridades.'
+        )
+      )
+
+      greetingDescription3.append(
+        document.createTextNode(
+          'noteous possui um design inovador que convida você a fazer anotações. Veja a data de hoje, escreva sua próxima tarefa ou registre algo para não esquecer.'
+        )
+      )
+
+      greetingDescriptionContainer1.append(greetingDescription1)
+      greetingDescriptionContainer2.append(greetingDescription2)
+      greetingDescriptionContainer3.append(greetingDescription3)
+      greetingDescriptionContainer4.append(greetingDescription4)
+    } else if (subcontext == 'new-version') {
+    }
+  } else if (context == 'render-policies') {
+    document.querySelector('.greeting-panel').innerHTML = ''
   }
 }
 
 // CONFIGURAÇÕES DE TEMA ////////////////////////////////////
-function setTheme(context) {
+function noteousTheme(context) {
   //context => recuperar tema, trocar tema, aplicar tema claro, aplicar tema escuro
-  if (context == 'retrieveTheme') {
-    if (noteousSettings.theme.themeLum == 'light') {
-      setTheme('setThemeLight')
+  if (context == 'retrieve-theme') {
+    if (noteousSettings.look.themeLum == 'light') {
+      noteousTheme('set-theme-light')
       console.log(context)
-    } else if (noteousSettings.theme.themeLum == 'dark') {
-      setTheme('setThemeDark')
+    } else if (noteousSettings.look.themeLum == 'dark') {
+      noteousTheme('set-theme-dark')
     }
-  } else if (context == 'changeTheme') {
+  } else if (context == 'change-theme') {
     console.log(context)
-    if (noteousSettings.theme.themeLum == 'light') {
-      setTheme('setThemeDark')
-    } else if (noteousSettings.theme.themeLum == 'dark') {
-      setTheme('setThemeLight')
+    if (noteousSettings.look.themeLum == 'light') {
+      noteousTheme('set-theme-dark')
+    } else if (noteousSettings.look.themeLum == 'dark') {
+      noteousTheme('set-theme-light')
     }
-  } else if (context == 'setThemeLight') {
-    noteousSettings.theme = themeParams = {
-      themeLum: 'light',
-      hue: '--hue: 30;',
-      saturation: '--saturation: 90%;',
-      lumBack: '--lum-back: 90%;',
-      lumMid: '--lum-mid: 60%;',
-      lumFront: '--lum-front: 10%;',
-      lumFrontInverse: '--lum-front-inverse: 95%;',
-      accentSaturation: '--accent-saturation: 90%;',
-      accentLum: '--accent-lum: 60%;'
-    }
+  } else if (context == 'set-theme-light') {
+    noteousSettings.look.themeLum = 'light'
+    noteousSettings.look.hue = '--hue: 30;'
+    noteousSettings.look.saturation = '--saturation: 90%;'
+    noteousSettings.look.lumBack = '--lum-back: 90%;'
+    noteousSettings.look.lumMid = '--lum-mid: 60%;'
+    noteousSettings.look.lumFront = '--lum-front: 10%;'
+    noteousSettings.look.lumFrontInverse = '--lum-front-inverse: 95%;'
+    noteousSettings.look.accentSaturation = '--accent-saturation: 90%;'
+    noteousSettings.look.accentLum = '--accent-lum: 60%;'
 
     localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
     noteousSettings = JSON.parse(localStorage.getItem('noteous-settings'))
-    document.querySelector(
-      ':root'
-    ).style.cssText = `${noteousSettings.theme.hue} ${noteousSettings.theme.saturation}
-${noteousSettings.theme.lumBack}
-${noteousSettings.theme.lumMid}
-${noteousSettings.theme.lumFront}
-${noteousSettings.theme.lumFrontInverse}
-${noteousSettings.theme.accentSaturation}
-${noteousSettings.theme.accentLum}
-`
-  } else if (context == 'setThemeDark') {
-    noteousSettings.theme = themeParams = {
-      themeLum: 'dark',
-      hue: '--hue: 30;',
-      saturation: '--saturation: 40%;',
-      lumBack: '--lum-back: 8%;',
-      lumMid: '--lum-mid: 30%;',
-      lumFront: '--lum-front: 90%;',
-      lumFrontInverse: '--lum-front-inverse: 15%;',
-      accentSaturation: '--accent-saturation: 90%;',
-      accentLum: '--accent-lum: 60%;'
-    }
+    injectCSSOnRoot()
+  } else if (context == 'set-theme-dark') {
+    noteousSettings.look.themeLum = 'dark'
+    noteousSettings.look.hue = '--hue: 30;'
+    noteousSettings.look.saturation = '--saturation: 40%;'
+    noteousSettings.look.lumBack = '--lum-back: 8%;'
+    noteousSettings.look.lumMid = '--lum-mid: 30%;'
+    noteousSettings.look.lumFront = '--lum-front: 90%;'
+    noteousSettings.look.lumFrontInverse = '--lum-front-inverse: 15%;'
+    noteousSettings.look.accentSaturation = '--accent-saturation: 90%;'
+    noteousSettings.look.accentLum = '--accent-lum: 60%;'
 
     localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
     noteousSettings = JSON.parse(localStorage.getItem('noteous-settings'))
-    document.querySelector(
-      ':root'
-    ).style.cssText = `${noteousSettings.theme.hue} ${noteousSettings.theme.saturation}
-${noteousSettings.theme.lumBack}
-${noteousSettings.theme.lumMid}
-${noteousSettings.theme.lumFront}
-${noteousSettings.theme.lumFrontInverse}
-${noteousSettings.theme.accentSaturation}
-${noteousSettings.theme.accentLum}`
+    injectCSSOnRoot()
   }
 }
 
 themeButton.addEventListener('click', () => {
-  setTheme('changeTheme')
+  noteousTheme('change-theme')
 })
 
 //////////
+
+function injectCSSOnRoot() {
+  document.querySelector(
+    ':root'
+  ).style.cssText = `${noteousSettings.look.hue} ${noteousSettings.look.saturation}
+${noteousSettings.look.lumBack}
+${noteousSettings.look.lumMid}
+${noteousSettings.look.lumFront}
+${noteousSettings.look.lumFrontInverse}
+${noteousSettings.look.accentSaturation}
+${noteousSettings.look.accentLum}`
+}
 
 //GETSETTINGS --> ao atualizar página, recupera dados salvos
 function getSettings() {
@@ -331,9 +270,11 @@ function getSettings() {
         sort: 'recent',
         priority: 'solid',
         input: '',
-        noteId: 0
+        noteId: 0,
+        look: {}
       }
-      welcomeToNoteous('new-version')
+      body.innerHTML = ''
+      welcomeToNoteous('render-welcome', 'new-version')
       localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
     } else {
       //SE NÃO HÁ NOVA VERSÃO
@@ -341,7 +282,7 @@ function getSettings() {
       //Aplica última ordenação
       sortNotes('retrieveSort')
       //Aplica último tema
-      setTheme('retrieveTheme')
+      noteousTheme('retrieve-theme')
       //Aplica borda como solid
       noteousSettings.priority = 'solid'
       localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
@@ -354,9 +295,11 @@ function getSettings() {
       sort: 'recent',
       priority: 'solid',
       input: '',
-      noteId: 0
+      noteId: 0,
+      look: {}
     }
-    welcomeToNoteous('first-access')
+    body.innerHTML = ''
+    welcomeToNoteous('render-welcome', 'first-access')
     localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
   }
 }

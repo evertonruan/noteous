@@ -4,11 +4,16 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html {
+  scroll-behavior: smooth;
 }
 
 @media (max-width: 2000px) {
-  .greeting-panel {
-    padding: 10% 25%;
+  #index {
+    overflow: hidden;
   }
 
   #about main {
@@ -39,10 +44,6 @@
 
   html {
     font-size: 93.75%;
-  }
-
-  .greeting-panel {
-    padding: 10% 20%;
   }
 
   #about main {
@@ -84,6 +85,10 @@
   html {
     overflow: auto;
     font-size: 87.5%;
+  }
+
+  .greeting-description-container-all {
+    flex-direction: column;
   }
 
   #index header,
@@ -130,10 +135,6 @@
     max-width: 40vw;
   }
 
-  .greeting-panel {
-    padding: 10% 5%;
-  }
-
   #about main {
     margin: 0 1rem;
   }
@@ -144,6 +145,10 @@
 }
 
 @media (max-width: 450px) {
+  .greeting-description-container-all {
+    flex-direction: column;
+  }
+
   #section-read #read-notes .note-container {
     max-width: none;
     flex-basis: 90%;
@@ -152,6 +157,7 @@
 
 /*COLORS*/
 :root {
+  font-size: var(--base-rem);
   --base-color: hsla(var(--hue), var(--saturation), var(--lum-back), 1);
   --base-text: hsla(var(--hue), var(--saturation), var(--lum-front), 1);
   --base-buttons: hsla(
@@ -611,36 +617,30 @@ footer p span {
 }
 
 /*GREETINGS DESIGN///////////////////////////*/
-.greeting-panel {
-  position: absolute;
-  height: 100%;
-  width: 100%;
-  /*padding: alterado em @media*/
-
-  color: var(--base-text);
-  background-color: var(--base-color);
-
-  cursor: default;
-  user-select: none;
+.greeting-section {
+  display: flex;
+  flex-grow: 1;
 }
 
-.greeting-section-main {
+.greeting-panel {
   display: flex;
+  flex: 1;
+
   flex-direction: column;
 
   align-items: center;
   justify-content: center;
 
-  padding-top: 1rem;
-  padding-bottom: 1rem;
-  padding-right: 1rem;
+  padding: 1rem;
+  padding-top: 3rem;
 
-  background-color: var(--base-color);
+  background-color: #fce6cf;
+
   filter: brightness(90%);
   border-radius: 15px;
 }
 
-.greeting-section-title {
+.greeting-title-container {
   display: flex;
 }
 
@@ -665,18 +665,47 @@ footer p span {
 }
 
 .greeting-description-title {
-  margin-left: 2rem;
-  margin-top: 2.5rem;
-  margin-bottom: 1rem;
+  margin: 2rem;
   font-weight: bold;
   font-size: 1.5rem;
   text-decoration: 2px underline;
 }
 
+.greeting-description-container-all {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+}
+
+.greeting-description-container {
+  background-color: #e8d3bc;
+  display: flex;
+  margin: 1rem;
+  padding: 1rem;
+
+  border-radius: 1rem;
+}
+
 .greeting-description-point {
-  margin-bottom: 1.5rem;
-  margin-left: 2rem;
+  margin: 1rem;
   font-size: 1rem;
+}
+
+.greeting-buttons {
+  background: #e4b686;
+  padding: 1.5rem 1.8rem;
+
+  border-style: none;
+  border-radius: 1.3rem;
+
+  font-family: 'DM Serif Text', serif;
+  font-style: italic;
+  font-size: 1.4rem;
+  font-weight: 700;
+
+  line-height: 0px;
+
+  transition: all 0.2s cubic-bezier(0.075, 0.82, 0.165, 1);
+  user-select: none;
 }
 
 /* PÁGINA SAIBA MAIS///////////////////////////*/
@@ -696,6 +725,22 @@ footer p span {
 
 #about h3 {
   font-size: 1.5rem;
+}
+
+.settings-point {
+  margin: 2rem 0;
+}
+
+.options-container {
+  display: flex;
+  margin: 0.5rem 0;
+  gap: 1rem;
+}
+
+.option-point {
+  padding: 0.3rem;
+  border: 1px solid var(--base-text);
+  border-radius: 2rem;
 }
 
 #about-app {
