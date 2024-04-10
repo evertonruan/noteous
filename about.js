@@ -20,7 +20,8 @@ ${noteousSettings.look.lumMid}
 ${noteousSettings.look.lumFront}
 ${noteousSettings.look.lumFrontInverse}
 ${noteousSettings.look.accentSaturation}
-${noteousSettings.look.accentLum}`
+${noteousSettings.look.accentLum}
+${noteousSettings.look.lumAccentContainer}`
 }
 
 ///////
@@ -52,6 +53,7 @@ function noteousTheme(context) {
     noteousSettings.look.lumFrontInverse = '--lum-front-inverse: 95%;'
     noteousSettings.look.accentSaturation = '--accent-saturation: 90%;'
     noteousSettings.look.accentLum = '--accent-lum: 60%;'
+    noteousSettings.look.lumAccentContainer = '--lum-accent-container: 50%;'
 
     localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
     noteousSettings = JSON.parse(localStorage.getItem('noteous-settings'))
@@ -66,6 +68,7 @@ function noteousTheme(context) {
     noteousSettings.look.lumFrontInverse = '--lum-front-inverse: 15%;'
     noteousSettings.look.accentSaturation = '--accent-saturation: 90%;'
     noteousSettings.look.accentLum = '--accent-lum: 60%;'
+    noteousSettings.look.lumAccentContainer = '--lum-accent-container: 50%;'
 
     localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
     noteousSettings = JSON.parse(localStorage.getItem('noteous-settings'))

@@ -45,10 +45,7 @@ let writeInputEdit = function (event) {
 let noteousMain = JSON.parse(localStorage.getItem('noteous-main')) || []
 let noteousSettings = JSON.parse(localStorage.getItem('noteous-settings'))
 
-getSettings()
-renderNote('render-all')
-orblendEngine('load')
-orblendEngine('on-change-input')
+loadNoteous('check-settings')
 
 /////////////////////////////////////////////////////////////
 
@@ -57,14 +54,16 @@ function welcomeToNoteous(context, subcontext) {
   //1.0 -- 1.4.5
   //Primeiro aplica tema claro, armazenando informações no LocalStorage
   //Configurações da tela de boas vindas: criar elementos e simultaneamente adicionar informações. Primeiro acesso e nova versão separados, o que resulta em código duplicado
-  //noteousTheme('set-theme-light')
+
   //1.5
   // Nenhum tema é aplicado: usuário deve primeiro aceitar armazenamento
   // Configuração da tela de boas vindas: primeiro renderiza interface, depois adiciona informações se for primeiro acesso ou nova versão, o que economiza código
 
-  //context --> render-welcome/render-policies
+  //context --> renderizar 'elementos de boas vindas'/renderizar tela de policies
   //subcontext --> primeiro acesso ou nova versão
   if (context == 'render-welcome') {
+    body.innerHTML = ''
+
     //Section e Panel
     //greetingSection --> sectionMain + sectionTitle
     let greetingSection = document.createElement('div')
@@ -126,13 +125,6 @@ function welcomeToNoteous(context, subcontext) {
     greetingDescription3.classList.add('greeting-description-point')
     greetingDescription4.classList.add('greeting-description-point')
 
-    greetingDescriptionContainerAll.append(
-      greetingDescriptionContainer1,
-      greetingDescriptionContainer2,
-      greetingDescriptionContainer3,
-      greetingDescriptionContainer4
-    )
-
     //Next Button
     btnNext = document.createElement('button')
     btnNext.classList.add('greeting-buttons')
@@ -181,14 +173,63 @@ function welcomeToNoteous(context, subcontext) {
         )
       )
 
+      greetingDescription4.append(
+        document.createTextNode(
+          'noteous está em constante melhoria. Quando tiver uma nova versão, chegará automaticamente para você.'
+        )
+      )
+
       greetingDescriptionContainer1.append(greetingDescription1)
       greetingDescriptionContainer2.append(greetingDescription2)
       greetingDescriptionContainer3.append(greetingDescription3)
       greetingDescriptionContainer4.append(greetingDescription4)
+
+      greetingDescriptionContainerAll.append(
+        greetingDescriptionContainer1,
+        greetingDescriptionContainer2,
+        greetingDescriptionContainer3,
+        greetingDescriptionContainer4
+      )
     } else if (subcontext == 'new-version') {
+      greetingTitle1.append(document.createTextNode('Bem-vindo ao'))
+      greetingTitle2.append(document.createTextNode('noteous'))
+      greetingDescriptionTitle.append(
+        document.createTextNode(
+          'O noteous foi atualizado: a versão 1.5 está incrível! Veja algumas novidades'
+        )
+      )
+
+      greetingDescription1.append(
+        document.createTextNode(
+          'O noteous está mais acessível: navegue apenas usando o teclado e ajuste o tamanho do texto. Além disso, o noteous é agora melhor compatível com leitores de tela.'
+        )
+      )
+
+      greetingDescription2.append(
+        document.createTextNode(
+          'Experiência aprimorada: os temas claro e escuro estão ainda mais bonitos. A edição de notas está ainda mais intuitiva. E outras pequenas melhorias tornam tudo muito mais incrível!'
+        )
+      )
+
+      greetingDescriptionContainerAll.append(
+        greetingDescriptionContainer1,
+        greetingDescriptionContainer2
+      )
+
+      greetingDescriptionContainer1.append(greetingDescription1)
+      greetingDescriptionContainer2.append(greetingDescription2)
     }
   } else if (context == 'render-policies') {
     document.querySelector('.greeting-panel').innerHTML = ''
+    //Next Button
+    btnAccept = document.createElement('button')
+    btnAccept.classList.add('greeting-buttons')
+    document.querySelector('.greeting-panel').append(btnAccept)
+    btnAccept.appendChild(document.createTextNode('Aceito ✔'))
+    btnAccept.addEventListener('click', () => {
+      loadNoteous('set-settings')
+      window.location.reload()
+    })
   }
 }
 
@@ -219,6 +260,7 @@ function noteousTheme(context) {
     noteousSettings.look.lumFrontInverse = '--lum-front-inverse: 95%;'
     noteousSettings.look.accentSaturation = '--accent-saturation: 90%;'
     noteousSettings.look.accentLum = '--accent-lum: 60%;'
+    noteousSettings.look.lumAccentContainer = '--lum-accent-container: 50%;'
 
     localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
     noteousSettings = JSON.parse(localStorage.getItem('noteous-settings'))
@@ -231,8 +273,9 @@ function noteousTheme(context) {
     noteousSettings.look.lumMid = '--lum-mid: 30%;'
     noteousSettings.look.lumFront = '--lum-front: 90%;'
     noteousSettings.look.lumFrontInverse = '--lum-front-inverse: 15%;'
-    noteousSettings.look.accentSaturation = '--accent-saturation: 90%;'
+    noteousSettings.look.accentSaturation = '--accent-saturation: 95%;'
     noteousSettings.look.accentLum = '--accent-lum: 60%;'
+    noteousSettings.look.lumAccentContainer = '--lum-accent-container: 32%;'
 
     localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
     noteousSettings = JSON.parse(localStorage.getItem('noteous-settings'))
@@ -249,58 +292,68 @@ themeButton.addEventListener('click', () => {
 function injectCSSOnRoot() {
   document.querySelector(
     ':root'
-  ).style.cssText = `${noteousSettings.look.hue} ${noteousSettings.look.saturation}
+  ).style.cssText = `${noteousSettings.look.baseRem} ${noteousSettings.look.hue} ${noteousSettings.look.saturation}
 ${noteousSettings.look.lumBack}
 ${noteousSettings.look.lumMid}
 ${noteousSettings.look.lumFront}
 ${noteousSettings.look.lumFrontInverse}
 ${noteousSettings.look.accentSaturation}
-${noteousSettings.look.accentLum}`
+${noteousSettings.look.accentLum}
+${noteousSettings.look.lumAccentContainer}`
 }
 
-//GETSETTINGS --> ao atualizar página, recupera dados salvos
-function getSettings() {
-  //JÁ ACESSOU NOTEOUS --> recupera dados
-  if (noteousSettings != null) {
-    //VERIFICA SE HÁ NOVA VERSÃO
-    if (noteousSettings.noteousVersion != currentVersion) {
-      //SE HÁ NOVA VERSÃO
-      noteousSettings = {
-        noteousVersion: currentVersion,
-        sort: 'recent',
-        priority: 'solid',
-        input: '',
-        noteId: 0,
-        look: {}
-      }
-      body.innerHTML = ''
-      welcomeToNoteous('render-welcome', 'new-version')
-      localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
-    } else {
-      //SE NÃO HÁ NOVA VERSÃO
+//loadNoteous --> ao carregar noteous, realiza verificações
+function loadNoteous(context) {
+  if (context == 'check-settings') {
+    //JÁ ACESSOU NOTEOUS --> recupera dados
+    if (noteousSettings != null) {
+      //VERIFICA SE HÁ NOVA VERSÃO
+      if (noteousSettings.noteousVersion != currentVersion) {
+        //SE HÁ NOVA VERSÃO
+        welcomeToNoteous('render-welcome', 'new-version')
+      } else {
+        //SE NÃO HÁ NOVA VERSÃO
+        renderNote('render-all')
+        orblendEngine('load')
+        orblendEngine('on-change-input')
 
-      //Aplica última ordenação
-      sortNotes('retrieveSort')
-      //Aplica último tema
-      noteousTheme('retrieve-theme')
-      //Aplica borda como solid
-      noteousSettings.priority = 'solid'
-      localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
-      notePriority('retrievePriority', noteousSettings.priority)
+        //Aplica última ordenação
+        sortNotes('retrieveSort')
+        //Aplica último tema
+        noteousTheme('retrieve-theme')
+        //Aplica borda como solid
+        noteousSettings.priority = 'solid'
+        localStorage.setItem(
+          'noteous-settings',
+          JSON.stringify(noteousSettings)
+        )
+        notePriority('retrievePriority', noteousSettings.priority)
+      }
+    } else if (noteousSettings == null) {
+      //NÃO HÁ CONFIGURAÇÕES --> PRIMEIRO ACESSO AO NOTEOUS
+      //1.5 --> não armazenar noteousSettings: aguardar usuário aceitar
+      welcomeToNoteous('render-welcome', 'first-access')
     }
-  } else if (noteousSettings == null) {
-    //NÃO HÁ CONFIGURAÇÕES --> PRIMEIRO ACESSO AO NOTEOUS
+  }
+
+  if (context == 'set-settings') {
+    //1.Limpar configurações (elimina propriedades de versões antigas, como :theme)
+    noteousSettings = {}
+    localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
+
+    //2.Aplicar novas configurações
     noteousSettings = {
       noteousVersion: currentVersion,
       sort: 'recent',
       priority: 'solid',
       input: '',
       noteId: 0,
-      look: {}
+      look: { baseRem: '--base-rem: 100%;' }
     }
-    body.innerHTML = ''
-    welcomeToNoteous('render-welcome', 'first-access')
     localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
+
+    //2.1. Aplicar configurações de tema
+    noteousTheme('set-theme-light')
   }
 }
 
@@ -525,7 +578,7 @@ writeInput.addEventListener('blur', () => {
   if (editMode == false) {
     //Ao clicar no botão para trocar Prioridade, write-input perde o foco --> botão de Prioridade desaparece.
     //Esse teste verifica primeiro se write-input perde o foco. Se está sem foco --> desaparecer botão Prioridade
-    //1.4.6 --> Ao adicionar tabindex e focalizar botão de prioridade ele desaparece (pois o foco sai de write-input). Agora o teste inclui se write-options também está focalizado. Se está, ele não desaparece.
+    //1.5 --> Ao adicionar tabindex e focalizar botão de prioridade ele desaparece (pois o foco sai de write-input). Agora o teste inclui se write-options também está focalizado. Se está, ele não desaparece.
     setTimeout(() => {
       if (
         document.activeElement.id != 'write-input' &&
