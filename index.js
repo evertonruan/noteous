@@ -236,17 +236,9 @@ function welcomeToNoteous(context, subcontext) {
     fetch('./policies.json')
       .then(policies => policies.json())
       .then(policies => {
-        let termsUse = policies.termsUse
-        console.log(termsUse)
+        let termsUse = policies
+        console.log(termsUse.termsUse)
       })
-    /*
-    fetch('./policies.json')
-      .then(response => response.json())
-      .then(policies => {
-        let termsUse = policies.termsUse
-        console.log(termsUse)
-      })
-*/
 
     //Next Button
     btnAccept = document.createElement('button')
