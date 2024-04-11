@@ -238,6 +238,7 @@ function welcomeToNoteous(context, subcontext) {
       .then(policies => {
         let noteousPolicies = policies
         console.log(noteousPolicies.termsUse)
+        console.log(noteousPolicies.privacyPolicy)
       })
 
     //Next Button
