@@ -224,7 +224,7 @@ function welcomeToNoteous(context, subcontext) {
     fetch('./Policies.json')
       .then(response => response.json())
       .then(jsonData => {
-        document.querySelector('.greeting-panel').innerHTML = jsonData
+        document.querySelector('.greeting-panel').innerHTML = jsonData.text
         console.log(jsonData) // Display the content in the console
       })
 
