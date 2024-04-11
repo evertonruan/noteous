@@ -236,8 +236,8 @@ function welcomeToNoteous(context, subcontext) {
     fetch('./policies.json')
       .then(policies => policies.json())
       .then(policies => {
-        let termsUse = policies
-        console.log(termsUse.termsUse)
+        let noteousPolicies = policies
+        console.log(noteousPolicies.termsUse)
       })
 
     //Next Button
