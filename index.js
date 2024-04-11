@@ -225,17 +225,19 @@ function welcomeToNoteous(context, subcontext) {
 
     let greetingPoliciesTitle = document.createElement('p')
     greetingPoliciesTitle.classList.add('greeting-description-title')
+    greetingPoliciesTitle.innerHTML('Aceite os Termos')
 
     let greetingPoliciesContainer = document.createElement('div')
     let greetingPoliciesText = document.createElement('p')
+    greetingPoliciesText.classList.add('greeting-policies-text')
     greetingPoliciesContainer.append(greetingPoliciesText)
     greetingPanel.append(greetingPoliciesTitle, greetingPoliciesContainer)
 
     fetch('./policies.json')
       .then(response => response.json())
       .then(policies => {
-        greetingPoliciesTitle.createTextNode('Aceite os Termos')
-        greetingPoliciesText.innerHTML = policies.termsUse
+        document.querySelector('greeting-policies-text').innerHTML =
+          policies.termsUse
       })
 
     //Next Button
