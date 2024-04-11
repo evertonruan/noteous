@@ -234,11 +234,6 @@ function welcomeToNoteous(context, subcontext) {
     greetingPanel.append(greetingPoliciesTitle, greetingPoliciesContainer)
 
     fetch('./policies.json')
-      .then(response => {
-        if (!response.ok) {
-          throw new Error(`HTTP error! Status: ${response.status}`)
-        }
-      })
       .then(response => response.json())
       .then(policies => {
         let termsUse = policies.termsUse
