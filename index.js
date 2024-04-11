@@ -234,7 +234,7 @@ function welcomeToNoteous(context, subcontext) {
     greetingPanel.append(greetingPoliciesTitle, greetingPoliciesContainer)
 
     fetch('./policies.json')
-      .then(response => response.json())
+      .then(policies => policies.json())
       .then(policies => {
         let termsUse = policies.termsUse
         console.log(termsUse)
