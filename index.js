@@ -236,7 +236,8 @@ function welcomeToNoteous(context, subcontext) {
     fetch('./policies.json')
       .then(response => response.json())
       .then(policies => {
-        document.querySelector('greeting-policies-text').innerHTML = policies
+        document.querySelector('greeting-policies-text').innerHTML =
+          policies.termsUse
       })
 
     //Next Button
