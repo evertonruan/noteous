@@ -237,10 +237,10 @@ function welcomeToNoteous(context, subcontext) {
       .then(policies => policies.json())
       .then(policies => {
         let noteousPolicies = policies
-        console.log(noteousPolicies.termsUse)
-        console.log(noteousPolicies.privacyPolicy)
       })
 
+    console.log(noteousPolicies.termsUse)
+    console.log(noteousPolicies.privacyPolicy)
     //Next Button
     btnAccept = document.createElement('button')
     btnAccept.classList.add('greeting-buttons')
