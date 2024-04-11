@@ -234,11 +234,23 @@ function welcomeToNoteous(context, subcontext) {
     greetingPanel.append(greetingPoliciesTitle, greetingPoliciesContainer)
 
     fetch('./policies.json')
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`)
+        }
+      })
+      .then(response => {
+        let termsUse = response.termsUse
+        console.log(termsUse)
+      })
+    /*
+    fetch('./policies.json')
       .then(response => response.json())
       .then(policies => {
         let termsUse = policies.termsUse
         console.log(termsUse)
       })
+*/
 
     //Next Button
     btnAccept = document.createElement('button')
