@@ -239,6 +239,7 @@ function welcomeToNoteous(context, subcontext) {
           throw new Error(`HTTP error! Status: ${response.status}`)
         }
       })
+      .then(response => response.json())
       .then(policies => {
         let termsUse = policies.termsUse
         console.log(termsUse)
