@@ -221,6 +221,13 @@ function welcomeToNoteous(context, subcontext) {
     }
   } else if (context == 'render-policies') {
     document.querySelector('.greeting-panel').innerHTML = ''
+    fetch('./Policies.json')
+      .then(response => response.json())
+      .then(jsonData => {
+        document.querySelector('.greeting-panel').innerHTML = jsonData
+        console.log(jsonData) // Display the content in the console
+      })
+
     //Next Button
     btnAccept = document.createElement('button')
     btnAccept.classList.add('greeting-buttons')
