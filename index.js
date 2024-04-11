@@ -220,12 +220,22 @@ function welcomeToNoteous(context, subcontext) {
       greetingDescriptionContainer2.append(greetingDescription2)
     }
   } else if (context == 'render-policies') {
-    document.querySelector('.greeting-panel').innerHTML = ''
-    fetch('./Policies.json')
+    let greetingPanel = document.querySelector('.greeting-panel')
+    greetingPanel.innerHTML = ''
+
+    let greetingPoliciesTitle = document.createElement('p')
+    greetingPoliciesTitle.classList.add('greeting-description-title')
+
+    let greetingPoliciesContainer = document.createElement('div')
+    let greetingPoliciesText = document.createElement('p')
+    greetingPoliciesContainer.append(greetingPoliciesText)
+    greetingPanel.append(greetingPoliciesTitle, greetingPoliciesContainer)
+
+    fetch('./policies.json')
       .then(response => response.json())
-      .then(jsonData => {
-        document.querySelector('.greeting-panel').innerHTML = jsonData.text
-        console.log(jsonData) // Display the content in the console
+      .then(policies => {
+        greetingPoliciesTitle.createTextNode('Aceite os Termos')
+        greetingPoliciesText.innerHTML = policies.termsUse
       })
 
     //Next Button
