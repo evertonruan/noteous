@@ -125,8 +125,9 @@
     <script>
       if (noteousSettings != null) {
         let script = document.createElement('script')
-        script.setAttribute('defer')
+        script.set('defer', 'true')
         script.src('/_vercel/insights/script.js')
+        document.getElementsByTagName('body')[0].appendChild(script)
       }
     </script>
     <!--<script defer src="/_vercel/insights/script.js"></script>-->
