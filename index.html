@@ -114,6 +114,7 @@
     </footer>
 
     <script type="text/javascript" src="index.js"></script>
+
     <script>
       window.va =
         window.va ||
@@ -121,6 +122,13 @@
           ;(window.vaq = window.vaq || []).push(arguments)
         }
     </script>
-    <script defer src="/_vercel/insights/script.js"></script>
+    <script>
+      if (noteousSettings != null) {
+        let script = document.createElement('script')
+        script.setAttribute('defer')
+        script.src('/_vercel/insights/script.js')
+      }
+    </script>
+    <!--<script defer src="/_vercel/insights/script.js"></script>-->
   </body>
 </html>
