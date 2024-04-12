@@ -123,6 +123,7 @@
         }
     </script>
     <script>
+      let noteousSettings = JSON.parse(localStorage.getItem('noteous-settings'))
       if (noteousSettings != null) {
         let script = document.createElement('script')
         script.setAttribute('defer', 'true')
