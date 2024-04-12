@@ -123,14 +123,12 @@
         }
     </script>
     <script>
-      console.log(noteousSettings)
       if (noteousSettings != null) {
         let script = document.createElement('script')
         script.setAttribute('defer', 'true')
         script.setAttribute('src', '/_vercel/insights/script.js')
-        document.getElementsByTagName('body')[0].appendChild(script)
+        document.getElementsByTagName('body').appendChild(script)
       }
     </script>
-    <!--<script defer src="/_vercel/insights/script.js"></script>-->
   </body>
 </html>
