@@ -123,7 +123,7 @@
         }
     </script>
     <script>
-      if (noteousSettings != null) {
+      if (noteousSettings != null || noteousSettings.noteousVersion >= 1.5) {
         let script = document.createElement('script')
         script.setAttribute('defer', 'true')
         script.setAttribute('src', '/_vercel/insights/script.js')
