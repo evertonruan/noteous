@@ -223,6 +223,23 @@ function welcomeToNoteous(context, subcontext) {
     let greetingPanel = document.querySelector('.greeting-panel')
     greetingPanel.innerHTML = ''
 
+    let greetingTitleContainer = document.createElement('div')
+    greetingTitleContainer.classList.add('greeting-title-container')
+
+    let greetingTitle1 = document.createElement('p')
+    greetingTitle1.classList.add('greeting-title1')
+
+    let greetingTitleIcon = document.createElement('img')
+    greetingTitleIcon.setAttribute('src', './img/logo-icon.png')
+    greetingTitleIcon.classList.add('greeting-title-icon')
+
+    greetingTitle2 = document.createElement('p')
+    greetingTitle2.classList.add('greeting-title2')
+    greetingTitleContainer.append(greetingTitleIcon, greetingTitle2)
+
+    greetingTitle1.append(document.createTextNode('Bem-vindo ao'))
+    greetingTitle2.append(document.createTextNode('noteous'))
+
     let greetingPoliciesTitle = document.createElement('p')
     greetingPoliciesTitle.classList.add('greeting-description-title')
     greetingPoliciesTitle.innerHTML =
@@ -236,7 +253,11 @@ function welcomeToNoteous(context, subcontext) {
     let greetingPoliciesPrivacyPolicy = document.createElement('p')
     greetingPoliciesPrivacyPolicy.classList.add('greeting-policies-text')
 
-    greetingPanel.append(greetingPoliciesTitle, greetingPoliciesContainer)
+    greetingPanel.append(
+      greetingTitleContainer,
+      greetingPoliciesTitle,
+      greetingPoliciesContainer
+    )
 
     fetch('./policies.json')
       .then(policies => policies.json())
