@@ -241,7 +241,7 @@ function welcomeToNoteous(context, subcontext) {
           console.log(char)
           greetingPoliciesText.append(char)
           if (char == '\n') {
-            break
+            greetingPoliciesText.append(document.createElement('br'))
           }
         }
         console.log(noteousPolicies.termsUse)
