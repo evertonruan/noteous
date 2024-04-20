@@ -230,10 +230,11 @@ function welcomeToNoteous(context, subcontext) {
 
     let greetingPoliciesContainer = document.createElement('div')
     greetingPoliciesContainer.classList.add('greeting-policies-container')
-    let greetingPoliciesText = document.createElement('p')
-    greetingPoliciesText.classList.add('greeting-policies-text')
 
-    greetingPoliciesContainer.append(greetingPoliciesText)
+    let greetingPoliciesTermsUse = document.createElement('p')
+    greetingPoliciesTermsUse.classList.add('greeting-policies-text')
+    let greetingPoliciesPrivacyPolicy = document.createElement('p')
+    greetingPoliciesPrivacyPolicy.classList.add('greeting-policies-text')
 
     greetingPanel.append(greetingPoliciesTitle, greetingPoliciesContainer)
 
@@ -247,9 +248,9 @@ function welcomeToNoteous(context, subcontext) {
         greetingPoliciesTitle2.append('Termos de Uso')
 
         for (char of noteousPolicies.termsUse) {
-          greetingPoliciesText.append(char)
+          greetingPoliciesTermsUse.append(char)
           if (char == '\n') {
-            greetingPoliciesText.append(
+            greetingPoliciesTermsUse.append(
               document.createElement('br'),
               document.createElement('br')
             )
@@ -261,14 +262,21 @@ function welcomeToNoteous(context, subcontext) {
         greetingPoliciesTitle3.append('Política de Privacidade')
 
         for (char of noteousPolicies.privacyPolicy) {
-          greetingPoliciesText.append(char)
+          greetingPoliciesPrivacyPolicy.append(char)
           if (char == '\n') {
-            greetingPoliciesText.append(
+            greetingPoliciesPrivacyPolicy.append(
               document.createElement('br'),
               document.createElement('br')
             )
           }
         }
+
+        greetingPoliciesContainer.append(
+          greetingPoliciesTitle2,
+          greetingPoliciesTermsUse,
+          greetingPoliciesTitle3,
+          greetingPoliciesPrivacyPolicy
+        )
       })
 
     //Next Button
