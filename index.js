@@ -237,7 +237,6 @@ function welcomeToNoteous(context, subcontext) {
       .then(policies => policies.json())
       .then(policies => {
         let noteousPolicies = policies
-        termsText
         greetingPoliciesText.append(
           document.createTextNode(noteousPolicies.termsUse[0]),
           document.createTextNode(noteousPolicies.termsUse[1]),
