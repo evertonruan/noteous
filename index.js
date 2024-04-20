@@ -239,17 +239,21 @@ function welcomeToNoteous(context, subcontext) {
       .then(policies => {
         let noteousPolicies = policies
         for (char of noteousPolicies.termsUse) {
-          console.log(char)
           greetingPoliciesText.append(char)
           if (char == '\n') {
-            greetingPoliciesText.append(document.createElement('br'))
+            greetingPoliciesText.append(
+              document.createElement('br'),
+              document.createElement('br')
+            )
           }
         }
         for (char of noteousPolicies.privacyPolicy) {
-          console.log(char)
           greetingPoliciesText.append(char)
           if (char == '\n') {
-            greetingPoliciesText.append(document.createElement('br'))
+            greetingPoliciesText.append(
+              document.createElement('br'),
+              document.createElement('br')
+            )
           }
         }
       })
