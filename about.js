@@ -182,6 +182,12 @@ buttonPolicies.addEventListener('click', () => {
           )
         }
       }
+      policiesContainerData.append(
+        policiesTitleTerms,
+        policiesDescriptionTerms,
+        policiesTitlePrivacy,
+        policiesDescriptionPrivacy
+      )
     })
 })
 
