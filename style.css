@@ -173,6 +173,10 @@ html {
     max-width: none;
     flex-basis: 90%;
   }
+
+  #about #about-dev-name {
+    font-size: 1.2rem;
+  }
 }
 
 /*COLORS*/
@@ -778,7 +782,7 @@ footer p span {
   color: var(--base-text);
 }
 
-#about h3 {
+#about h2 {
   font-size: 1.5rem;
 }
 
@@ -800,22 +804,16 @@ footer p span {
 
 .about-section {
   margin: 3rem 0;
-  padding: 2rem;
+  padding: 1rem;
   border: 1px solid;
   border-color: var(--base-text);
   border-radius: 2rem;
 }
 
-#about-app {
-  margin: 3rem 0;
-}
-
-#about-app-point li {
-  text-indent: 5rem;
-}
-
 #about-button-policies {
   margin-top: 2rem;
+  font-family: 'Merriweather Sans', sans-serif;
+  color: var(--base-text);
   background-color: var(--base-color);
 }
 
@@ -838,13 +836,15 @@ footer p span {
   margin: 0 0 4rem 0;
 }
 
-#about-section-dev h3 {
+#about-dev-name {
   font-family: 'DM Serif Text', serif;
   color: var(--base-text);
   font-style: italic;
+  font-weight: bold;
+  font-size: 1.5rem;
 }
 
-#about-section-dev p {
+#about-dev-description {
   font-size: 1.1rem;
 }
 
@@ -856,7 +856,7 @@ footer p span {
   height: 6rem;
   width: auto;
 
-  margin-bottom: 1rem;
+  margin-bottom: 0.3rem;
 }
 
 #about-section-dev-mail {
@@ -878,13 +878,15 @@ footer p span {
   flex-direction: column;
   align-items: center;
   gap: 1rem;
+  border-bottom: 1px dotted var(--base-text);
 
-  padding: 1rem 0;
+  margin: 0.8rem 0.5rem;
+  padding: 0.6rem 0;
 
   position: sticky;
   top: -2px;
 
-  background-color: var(--base-color);
+  backdrop-filter: blur(4px);
 }
 
 #advanced-switch {
@@ -933,10 +935,18 @@ footer p span {
   display: flex;
   flex-direction: column;
   margin: 3rem 0;
+
+  border: 1px solid;
+  border-color: var(--base-text);
+  border-radius: 2rem;
 }
 
 .about-update-point {
   margin-bottom: 2rem;
+}
+
+#about-update-list {
+  padding: 0 1rem;
 }
 
 .update-description {
