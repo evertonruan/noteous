@@ -697,6 +697,7 @@ footer p span {
 
 .greeting-description-title {
   margin: 2rem;
+  text-align: center;
   font-weight: bold;
   font-size: 1.5rem;
   text-decoration: 2px underline;
@@ -724,6 +725,7 @@ footer p span {
 .greeting-policies-container {
   display: flex;
   flex-direction: column;
+  align-items: center;
 }
 
 .greeting-policies-text {
