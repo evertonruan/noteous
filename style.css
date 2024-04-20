@@ -10,8 +10,8 @@ html {
 }
 
 @media (max-width: 2000px) {
-  #index {
-    overflow: hidden;
+  .greeting-section {
+    margin: 20%;
   }
 
   #about main {
