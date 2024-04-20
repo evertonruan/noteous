@@ -244,8 +244,13 @@ function welcomeToNoteous(context, subcontext) {
             greetingPoliciesText.append(document.createElement('br'))
           }
         }
-        console.log(noteousPolicies.termsUse)
-        console.log(noteousPolicies.privacyPolicy)
+        for (char of noteousPolicies.privacyPolicy) {
+          console.log(char)
+          greetingPoliciesText.append(char)
+          if (char == '\n') {
+            greetingPoliciesText.append(document.createElement('br'))
+          }
+        }
       })
 
     //Next Button
