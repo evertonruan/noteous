@@ -798,6 +798,14 @@ footer p span {
   border-radius: 2rem;
 }
 
+.about-section {
+  margin: 3rem 0;
+  padding: 2rem;
+  border: 1px solid;
+  border-color: var(--base-text);
+  border-radius: 2rem;
+}
+
 #about-app {
   margin: 3rem 0;
 }
@@ -810,54 +818,57 @@ footer p span {
   border-radius: 0.5rem;
 }
 
-#about-author {
+#about-section-dev {
   display: flex;
   align-items: center;
   text-align: center;
   flex-direction: column;
 
-  border: 1px solid;
-  border-color: var(--base-text);
-  border-radius: 3rem;
   padding: 1rem;
   margin: 0 0 4rem 0;
 }
 
-#about-author h3 {
+#about-section-dev h3 {
   font-family: 'DM Serif Text', serif;
   color: var(--base-text);
   font-style: italic;
 }
 
-#about-author p {
+#about-section-dev p {
   font-size: 1.1rem;
 }
 
-#about-author a {
+#about-section-dev a {
   text-decoration: underline;
 }
 
-#about-author-image {
+#about-section-dev-image {
   height: 6rem;
   width: auto;
 
-  margin: 1.1rem 0;
+  margin-bottom: 1rem;
 }
 
-#about-author-mail {
+#about-section-dev-mail {
   display: flex;
   align-items: center;
   gap: 0.4rem;
   margin-top: 1rem;
 }
 
+.logo-inline {
+  font-family: 'DM Serif Text', serif;
+  font-style: italic;
+  font-weight: bold;
+  font-size: 1.5rem;
+}
+
 #about-update-logo-container {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: space-between;
-  gap: 2rem;
+  gap: 1rem;
 
-  margin: 1rem 0;
   padding: 1rem 0;
 
   position: sticky;
@@ -908,14 +919,10 @@ footer p span {
   margin: 0.5rem 0;
 }
 
-#about-update {
+#about-section-update {
   display: flex;
   flex-direction: column;
   margin: 3rem 0;
-}
-
-#about-update-list {
-  margin: 2px;
 }
 
 .about-update-point {
@@ -929,8 +936,8 @@ footer p span {
 .update-type {
   border: 1px solid;
   border-color: var(--base-text);
-  border-radius: 5px;
-  padding: 0.08px 2px;
+  border-radius: 8px;
+  padding: 0.08px 3px;
   margin-right: 4px;
 }
 

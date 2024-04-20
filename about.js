@@ -9,6 +9,9 @@ let baseRemOptionSmall = document.querySelector('#baserem-small')
 let optionLight = document.querySelector('#luminosity-light')
 let optionDark = document.querySelector('#luminosity-dark')
 
+let buttonPolicies = document.querySelector('#about-button-policies')
+let policiesContainerData = document.querySelector('#policies-container-data')
+
 ///////
 
 function injectCSSOnRoot() {
@@ -140,6 +143,47 @@ optionDark.addEventListener('click', () => {
 })
 
 noteousTheme('retrieve-theme')
+
+//BOTÃO DE POLICIES
+buttonPolicies.addEventListener('click', () => {
+  fetch('./policies.json')
+    .then(policies => policies.json())
+    .then(policies => {
+      let noteousPolicies = policies
+
+      let policiesTitleTerms = document.createElement('p')
+      policiesTitleTerms.classList.add('greeting-description-title')
+      policiesTitleTerms.append('Termos de Uso')
+
+      let policiesDescriptionTerms = document.createElement('p')
+
+      for (char of noteousPolicies.termsUse) {
+        policiesDescriptionTerms.append(char)
+        if (char == '\n') {
+          policiesDescriptionTerms.append(
+            document.createElement('br'),
+            document.createElement('br')
+          )
+        }
+      }
+
+      let policiesTitlePrivacy = document.createElement('p')
+      policiesTitlePrivacy.classList.add('greeting-description-title')
+      policiesTitlePrivacy.append('Política de Privacidade')
+
+      let policiesDescriptionPrivacy = document.createElement('p')
+
+      for (char of noteousPolicies.privacyPolicy) {
+        policiesDescriptionPrivacy.append(char)
+        if (char == '\n') {
+          policiesDescriptionPrivacy.append(
+            document.createElement('br'),
+            document.createElement('br')
+          )
+        }
+      }
+    })
+})
 
 //MODO AVANÇADO
 
