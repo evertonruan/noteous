@@ -726,6 +726,18 @@ footer p span {
   flex-direction: column;
 }
 
+.greeting-policies-text {
+  font-size: 105%;
+  text-align: justify;
+  text-justify: inter-word;
+}
+
+.greeting-policies-description {
+  margin: 3rem 0;
+  font-size: 80%;
+  opacity: 80%;
+}
+
 .greeting-buttons {
   background: #e4b686;
   padding: 1.5rem 1.8rem;

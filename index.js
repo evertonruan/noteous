@@ -272,7 +272,7 @@ function welcomeToNoteous(context, subcontext) {
         }
 
         let greetingPoliciesTitle4 = document.createElement('p')
-        greetingPoliciesTitle4.classList.add('greeting-policies-text')
+        greetingPoliciesTitle4.classList.add('greeting-policies-description')
         greetingPoliciesTitle4.innerHTML =
           'Ao clicar no botão Aceito, você concorda com as condições dos Termos de Uso e Política de Privacidade. Se não aceitar estas condições, não poderá usar o aplicativo.'
 
