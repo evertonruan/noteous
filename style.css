@@ -723,6 +723,7 @@ footer p span {
 
 .greeting-policies-container {
   display: flex;
+  flex-direction: column;
 }
 
 .greeting-buttons {
