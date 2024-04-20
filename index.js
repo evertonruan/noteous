@@ -280,7 +280,8 @@ function welcomeToNoteous(context, subcontext) {
           greetingPoliciesTitle2,
           greetingPoliciesTermsUse,
           greetingPoliciesTitle3,
-          greetingPoliciesPrivacyPolicy
+          greetingPoliciesPrivacyPolicy,
+          greetingPoliciesTitle4
         )
       })
 
