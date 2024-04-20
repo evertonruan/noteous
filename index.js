@@ -238,7 +238,7 @@ function welcomeToNoteous(context, subcontext) {
       .then(policies => {
         let noteousPolicies = policies
         greetingPoliciesText.append(
-          document.createTextNode(noteousPolicies.termsUse),
+          document.createTextNode(noteousPolicies.termsUse[(0, 1)]),
           document.createTextNode(noteousPolicies.privacyPolicy)
         )
         console.log(noteousPolicies.termsUse)
