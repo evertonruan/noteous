@@ -114,7 +114,7 @@
   </div>
   </span>
   
-  <div>Confira também o <span style="font-family: 'DM Serif Text', serif; font-style: italic; font-weight: bold; font-size: 1.3rem;">noteous preview</span> para ver antecipadamente as novidades que estão sendo preparadas. <a href="https://noteouspreview.vercel.app/">Acesse aqui →</a></div>
+  <div id="about-update-preview">Confira também o <span class="logo-inline">noteous preview</span> para ver antecipadamente as novidades que estão sendo preparadas. <a href="https://noteouspreview.vercel.app/">Acesse aqui →</a></div>
   
   <div id="about-update-list">
     <div id="about-update-point-actual">
@@ -469,5 +469,36 @@
   </main>
 
     <script type="text/javascript" src="about.js"></script>
+
+    <script>
+      window.va =
+        window.va ||
+        function () {
+          ;(window.vaq = window.vaq || []).push(arguments)
+        }
+    </script>
+    <script>
+      if (noteousSettings.noteousVersion >= 1.5) {
+        let script = document.createElement('script')
+        script.setAttribute('defer', 'true')
+        script.setAttribute('src', '/_vercel/insights/script.js')
+        document.getElementsByTagName('body')[0].appendChild(script)
+      }
+    </script>
+    <script>
+      window.si =
+        window.si ||
+        function () {
+          ;(window.siq = window.siq || []).push(arguments)
+        }
+    </script>
+    <script>
+      if (noteousSettings.noteousVersion >= 1.5) {
+        let script2 = document.createElement('script')
+        script2.setAttribute('defer', 'true')
+        script2.setAttribute('src', '/_vercel/speed-insights/script.js')
+        document.getElementsByTagName('body')[0].appendChild(script2)
+      }
+    </script>
   </body>
 </html>

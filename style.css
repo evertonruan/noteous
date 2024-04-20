@@ -928,7 +928,11 @@ footer p span {
 #about-update-orblend {
   display: flex;
   flex-direction: column;
-  margin: 0.5rem 0;
+  margin: 0.8rem;
+}
+
+#about-update-preview {
+  margin: 1rem;
 }
 
 #about-section-update {
