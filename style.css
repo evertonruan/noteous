@@ -758,6 +758,10 @@ footer p span {
   user-select: none;
 }
 
+.greeting-buttons:hover {
+  transform: scale(1.05);
+}
+
 /* PÁGINA SAIBA MAIS///////////////////////////*/
 #about {
   display: flex;
