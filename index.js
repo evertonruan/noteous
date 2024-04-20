@@ -225,19 +225,27 @@ function welcomeToNoteous(context, subcontext) {
 
     let greetingPoliciesTitle = document.createElement('p')
     greetingPoliciesTitle.classList.add('greeting-description-title')
-    greetingPoliciesTitle.innerHTML = 'Aceite os Termos'
+    greetingPoliciesTitle.innerHTML =
+      'Para continuar, você precisa aceitar os termos a seguir'
 
     let greetingPoliciesContainer = document.createElement('div')
     greetingPoliciesContainer.classList.add('greeting-policies-container')
     let greetingPoliciesText = document.createElement('p')
     greetingPoliciesText.classList.add('greeting-policies-text')
+
     greetingPoliciesContainer.append(greetingPoliciesText)
+
     greetingPanel.append(greetingPoliciesTitle, greetingPoliciesContainer)
 
     fetch('./policies.json')
       .then(policies => policies.json())
       .then(policies => {
         let noteousPolicies = policies
+
+        let greetingPoliciesTitle2 = document.createElement('p')
+        greetingPoliciesTitle2.classList.add('greeting-description-title')
+        greetingPoliciesTitle2.append('Termos de Uso')
+
         for (char of noteousPolicies.termsUse) {
           greetingPoliciesText.append(char)
           if (char == '\n') {
@@ -247,6 +255,11 @@ function welcomeToNoteous(context, subcontext) {
             )
           }
         }
+
+        let greetingPoliciesTitle3 = document.createElement('p')
+        greetingPoliciesTitle3.classList.add('greeting-description-title')
+        greetingPoliciesTitle3.append('Política de Privacidade')
+
         for (char of noteousPolicies.privacyPolicy) {
           greetingPoliciesText.append(char)
           if (char == '\n') {

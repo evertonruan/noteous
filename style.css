@@ -10,6 +10,10 @@ html {
 }
 
 @media (max-width: 2000px) {
+  .greeting-policies-container {
+    margin: 0 25%;
+  }
+
   #about main {
     margin: 0 25%;
   }
@@ -76,6 +80,10 @@ html {
     font-size: 87.5%;
   }
 
+  .greeting-policies-container {
+    margin: 0 10%;
+  }
+
   #index .greeting-description-container-all {
     flex-direction: column;
   }
@@ -136,6 +144,10 @@ html {
 @media (max-width: 450px) {
   .greeting-description-container-all {
     flex-direction: column;
+  }
+
+  .greeting-policies-container {
+    margin: 0 5%;
   }
 
   #index #nav-options {
@@ -707,7 +719,6 @@ footer p span {
 
 .greeting-policies-container {
   display: flex;
-  margin: 0 10%;
 }
 
 .greeting-buttons {
