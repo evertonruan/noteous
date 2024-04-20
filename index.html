@@ -130,5 +130,20 @@
         document.getElementsByTagName('body')[0].appendChild(script)
       }
     </script>
+    <script>
+      window.si =
+        window.si ||
+        function () {
+          ;(window.siq = window.siq || []).push(arguments)
+        }
+    </script>
+    <script>
+      if (noteousSettings.noteousVersion >= 1.5) {
+        let script = document.createElement('script')
+        script.setAttribute('defer', 'true')
+        script.setAttribute('src', '/_vercel/speed-insights/script.js')
+        document.getElementsByTagName('body')[0].appendChild(script)
+      }
+    </script>
   </body>
 </html>
