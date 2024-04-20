@@ -11,6 +11,7 @@ let optionDark = document.querySelector('#luminosity-dark')
 
 let buttonPolicies = document.querySelector('#about-button-policies')
 let policiesContainerData = document.querySelector('#policies-container-data')
+let policiesSwitchVar = 0
 
 ///////
 
@@ -146,49 +147,56 @@ noteousTheme('retrieve-theme')
 
 //BOTÃO DE POLICIES
 buttonPolicies.addEventListener('click', () => {
-  fetch('./policies.json')
-    .then(policies => policies.json())
-    .then(policies => {
-      let noteousPolicies = policies
+  if (policiesSwitchVar == 0) {
+    policiesSwitchVar = 1
 
-      let policiesTitleTerms = document.createElement('p')
-      policiesTitleTerms.classList.add('greeting-description-title')
-      policiesTitleTerms.append('Termos de Uso')
+    fetch('./policies.json')
+      .then(policies => policies.json())
+      .then(policies => {
+        let noteousPolicies = policies
 
-      let policiesDescriptionTerms = document.createElement('p')
+        let policiesTitleTerms = document.createElement('p')
+        policiesTitleTerms.classList.add('greeting-description-title')
+        policiesTitleTerms.append('Termos de Uso')
 
-      for (char of noteousPolicies.termsUse) {
-        policiesDescriptionTerms.append(char)
-        if (char == '\n') {
-          policiesDescriptionTerms.append(
-            document.createElement('br'),
-            document.createElement('br')
-          )
+        let policiesDescriptionTerms = document.createElement('p')
+
+        for (char of noteousPolicies.termsUse) {
+          policiesDescriptionTerms.append(char)
+          if (char == '\n') {
+            policiesDescriptionTerms.append(
+              document.createElement('br'),
+              document.createElement('br')
+            )
+          }
         }
-      }
 
-      let policiesTitlePrivacy = document.createElement('p')
-      policiesTitlePrivacy.classList.add('greeting-description-title')
-      policiesTitlePrivacy.append('Política de Privacidade')
+        let policiesTitlePrivacy = document.createElement('p')
+        policiesTitlePrivacy.classList.add('greeting-description-title')
+        policiesTitlePrivacy.append('Política de Privacidade')
 
-      let policiesDescriptionPrivacy = document.createElement('p')
+        let policiesDescriptionPrivacy = document.createElement('p')
 
-      for (char of noteousPolicies.privacyPolicy) {
-        policiesDescriptionPrivacy.append(char)
-        if (char == '\n') {
-          policiesDescriptionPrivacy.append(
-            document.createElement('br'),
-            document.createElement('br')
-          )
+        for (char of noteousPolicies.privacyPolicy) {
+          policiesDescriptionPrivacy.append(char)
+          if (char == '\n') {
+            policiesDescriptionPrivacy.append(
+              document.createElement('br'),
+              document.createElement('br')
+            )
+          }
         }
-      }
-      policiesContainerData.append(
-        policiesTitleTerms,
-        policiesDescriptionTerms,
-        policiesTitlePrivacy,
-        policiesDescriptionPrivacy
-      )
-    })
+        policiesContainerData.append(
+          policiesTitleTerms,
+          policiesDescriptionTerms,
+          policiesTitlePrivacy,
+          policiesDescriptionPrivacy
+        )
+      })
+  } else if (policiesSwitchVar == 1) {
+    policiesSwitchVar = 0
+    policiesContainerData.innerHTML = ''
+  }
 })
 
 //MODO AVANÇADO

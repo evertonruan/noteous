@@ -793,7 +793,7 @@ footer p span {
 }
 
 .option-point {
-  padding: 0.3rem;
+  padding: 0.2rem 0.5rem;
   border: 1px solid var(--base-text);
   border-radius: 2rem;
 }
@@ -814,8 +814,17 @@ footer p span {
   text-indent: 5rem;
 }
 
-#about textarea {
-  border-radius: 0.5rem;
+#about-button-policies {
+  margin-top: 1rem;
+  background-color: var(--base-color);
+}
+
+#policies-container-info {
+  margin-top: 1rem;
+}
+
+#policies-container-info p {
+  margin-top: 0.5rem;
 }
 
 #about-section-dev {
