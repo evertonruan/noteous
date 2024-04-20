@@ -10,10 +10,6 @@ html {
 }
 
 @media (max-width: 2000px) {
-  .greeting-section {
-    margin: 20%;
-  }
-
   #about main {
     margin: 0 25%;
   }
@@ -36,10 +32,6 @@ html {
 }
 
 @media (max-width: 1000px) {
-  #index {
-    overflow: hidden;
-  }
-
   html {
     font-size: 93.75%;
   }
@@ -81,7 +73,6 @@ html {
 
 @media (max-width: 600px) {
   html {
-    overflow: auto;
     font-size: 87.5%;
   }
 
@@ -712,6 +703,11 @@ footer p span {
 .greeting-description-point {
   margin: 1rem;
   font-size: 1rem;
+}
+
+.greeting-policies-text {
+  display: flex;
+  width: 70%;
 }
 
 .greeting-buttons {
