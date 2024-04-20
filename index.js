@@ -237,12 +237,13 @@ function welcomeToNoteous(context, subcontext) {
       .then(policies => policies.json())
       .then(policies => {
         let noteousPolicies = policies
-        greetingPoliciesText.append(
-          document.createTextNode(noteousPolicies.termsUse[0]),
-          document.createElement('br'),
-          document.createTextNode(noteousPolicies.termsUse[1]),
-          document.createTextNode(noteousPolicies.privacyPolicy)
-        )
+        for (char of noteousPolicies.termsUse) {
+          console.log(char)
+          greetingPoliciesText.append(char)
+          if (char == '\n') {
+            break
+          }
+        }
         console.log(noteousPolicies.termsUse)
         console.log(noteousPolicies.privacyPolicy)
       })
