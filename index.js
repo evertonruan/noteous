@@ -254,6 +254,7 @@ function welcomeToNoteous(context, subcontext) {
     greetingPoliciesPrivacyPolicy.classList.add('greeting-policies-text')
 
     greetingPanel.append(
+      greetingTitle1,
       greetingTitleContainer,
       greetingPoliciesTitle,
       greetingPoliciesContainer
