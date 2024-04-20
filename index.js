@@ -228,6 +228,7 @@ function welcomeToNoteous(context, subcontext) {
     greetingPoliciesTitle.innerHTML = 'Aceite os Termos'
 
     let greetingPoliciesContainer = document.createElement('div')
+    greetingPoliciesContainer.classList.add('greeting-policies-container')
     let greetingPoliciesText = document.createElement('p')
     greetingPoliciesText.classList.add('greeting-policies-text')
     greetingPoliciesContainer.append(greetingPoliciesText)

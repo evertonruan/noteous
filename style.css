@@ -705,9 +705,9 @@ footer p span {
   font-size: 1rem;
 }
 
-.greeting-policies-text {
+.greeting-policies-container {
   display: flex;
-  width: 70%;
+  margin: 0 10%;
 }
 
 .greeting-buttons {
