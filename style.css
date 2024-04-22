@@ -63,7 +63,7 @@ html {
 
 @media (max-width: 800px) {
   #index .greeting-description-point {
-    font-size: 1.5rem;
+    font-size: 1.35rem;
   }
 
   .greeting-policies-container {

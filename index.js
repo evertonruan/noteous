@@ -168,9 +168,9 @@ function welcomeToNoteous(context, subcontext) {
 
       greetingDescription2.innerHTML = `<span class="greeting-description-intro">Organize por prioridade</span>Clique no círculo ⭕ para trocar entre diferentes bordas, que representam prioridades`
 
-      greetingDescription3.innerHTML = `<span class="greeting-description-intro">Design incrível</span>noteous possui um design inovador que convida você a fazer anotações. <br>📅 Veja a data de hoje <br>📋 Escreva sua próxima tarefa<br>💡 Registre algo para não esquecer `
+      greetingDescription3.innerHTML = `<span class="greeting-description-intro">Design incrível</span>noteous possui um design inovador que convida você a fazer anotações. <br><br>📅 Veja a data de hoje <br>📋 Escreva sua próxima tarefa<br>💡 Registre algo para não esquecer `
 
-      greetingDescription4.innerHTML = `<span class="greeting-description-intro">Sempre em dia</span>noteous está em constante melhoria. Quando tiver uma nova versão 🌐 chegará automaticamente para você ✅`
+      greetingDescription4.innerHTML = `<span class="greeting-description-intro">Sempre em dia</span>noteous está em constante melhoria. Quando tiver uma 🌐 nova versão, chegará automaticamente para você ✅`
 
       greetingDescription1Image.setAttribute('src', './img/greeting-1.png')
       greetingDescription2Image.setAttribute('src', './img/greeting-1.png')
