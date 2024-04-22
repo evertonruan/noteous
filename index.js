@@ -64,8 +64,7 @@ function welcomeToNoteous(context, subcontext) {
   if (context == 'render-welcome') {
     body.innerHTML = ''
 
-    //Section e Panel
-    //greetingSection --> sectionMain + sectionTitle
+    //Section, Panel, TitleContainer
     let greetingSection = document.createElement('div')
     greetingSection.classList.add('greeting-section')
 
@@ -75,7 +74,7 @@ function welcomeToNoteous(context, subcontext) {
     let greetingTitleContainer = document.createElement('div')
     greetingTitleContainer.classList.add('greeting-title-container')
 
-    //Titles e Descriptions
+    //Titles
     let greetingTitle1 = document.createElement('p')
     greetingTitle1.classList.add('greeting-title1')
 
@@ -114,6 +113,16 @@ function welcomeToNoteous(context, subcontext) {
     greetingDescriptionContainer4.classList.add(
       'greeting-description-container'
     )
+
+    let greetingDescription1Image = document.createElement('img')
+    let greetingDescription2Image = document.createElement('img')
+    let greetingDescription3Image = document.createElement('img')
+    let greetingDescription4Image = document.createElement('img')
+
+    greetingDescription1Image.classList.add('greeting-description-image')
+    greetingDescription2Image.classList.add('greeting-description-image')
+    greetingDescription3Image.classList.add('greeting-description-image')
+    greetingDescription4Image.classList.add('greeting-description-image')
 
     let greetingDescription1 = document.createElement('p')
     let greetingDescription2 = document.createElement('p')
@@ -155,34 +164,35 @@ function welcomeToNoteous(context, subcontext) {
         )
       )
 
-      greetingDescription1.append(
-        document.createTextNode(
-          'Temas: personalize sua experiência com o brilhante tema claro ou com o elegante tema escuro'
-        )
-      )
+      greetingDescription1.innerHTML = `<span class="greeting-description-intro">Temas</span>🎨 Personalize sua experiência com o brilhante tema claro ou com o elegante tema escuro`
 
-      greetingDescription2.append(
-        document.createTextNode(
-          'Organize suas tarefas por prioridade: quando adicionar uma nota é só tocar ou clicar no círculo ° para trocar entre diferentes bordas, que representam prioridades.'
-        )
-      )
+      greetingDescription2.innerHTML = `<span class="greeting-description-intro">Organize por prioridade</span>Clique no círculo ⭕ para trocar entre diferentes bordas, que representam prioridades`
 
-      greetingDescription3.append(
-        document.createTextNode(
-          'noteous possui um design inovador que convida você a fazer anotações. Veja a data de hoje, escreva sua próxima tarefa ou registre algo para não esquecer.'
-        )
-      )
+      greetingDescription3.innerHTML = `<span class="greeting-description-intro">Design incrível</span>noteous possui um design inovador que convida você a fazer anotações. <br>📅 Veja a data de hoje <br>📋 Escreva sua próxima tarefa<br>💡 Registre algo para não esquecer `
 
-      greetingDescription4.append(
-        document.createTextNode(
-          'noteous está em constante melhoria. Quando tiver uma nova versão, chegará automaticamente para você.'
-        )
-      )
+      greetingDescription4.innerHTML = `<span class="greeting-description-intro">Sempre em dia</span>noteous está em constante melhoria. Quando tiver uma nova versão 🌐 chegará automaticamente para você ✅`
 
-      greetingDescriptionContainer1.append(greetingDescription1)
-      greetingDescriptionContainer2.append(greetingDescription2)
-      greetingDescriptionContainer3.append(greetingDescription3)
-      greetingDescriptionContainer4.append(greetingDescription4)
+      greetingDescription1Image.setAttribute('src', './img/greeting-1.png')
+      greetingDescription2Image.setAttribute('src', './img/greeting-1.png')
+      greetingDescription3Image.setAttribute('src', './img/greeting-1.png')
+      greetingDescription4Image.setAttribute('src', './img/greeting-1.png')
+
+      greetingDescriptionContainer1.append(
+        greetingDescription1Image,
+        greetingDescription1
+      )
+      greetingDescriptionContainer2.append(
+        greetingDescription2Image,
+        greetingDescription2
+      )
+      greetingDescriptionContainer3.append(
+        greetingDescription3Image,
+        greetingDescription3
+      )
+      greetingDescriptionContainer4.append(
+        greetingDescription4Image,
+        greetingDescription4
+      )
 
       greetingDescriptionContainerAll.append(
         greetingDescriptionContainer1,

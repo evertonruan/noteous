@@ -36,8 +36,8 @@ html {
 }
 
 @media (max-width: 1000px) {
-  html {
-    font-size: 93.75%;
+  #index .greeting-description-container-all {
+    grid-template-columns: repeat(2, 1fr);
   }
 
   #about main {
@@ -62,6 +62,10 @@ html {
 }
 
 @media (max-width: 800px) {
+  #index .greeting-description-point {
+    font-size: 1.5rem;
+  }
+
   .greeting-policies-container {
     margin: 0 15%;
   }
@@ -80,16 +84,12 @@ html {
 }
 
 @media (max-width: 600px) {
-  html {
-    font-size: 87.5%;
+  #index .greeting-description-container-all {
+    grid-template-columns: repeat(1, 1fr);
   }
 
   .greeting-policies-container {
     margin: 0 10%;
-  }
-
-  #index .greeting-description-container-all {
-    flex-direction: column;
   }
 
   #index header,
@@ -146,10 +146,6 @@ html {
 }
 
 @media (max-width: 450px) {
-  .greeting-description-container-all {
-    flex-direction: column;
-  }
-
   .greeting-policies-container {
     margin: 0 5%;
   }
@@ -710,23 +706,40 @@ footer p span {
 
 .greeting-description-container-all {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  grid-template-columns: repeat(4, 1fr);
+  grid-auto-rows: minmax(auto, auto);
 }
 
 .greeting-description-container {
   background-color: #e8d3bc;
   display: flex;
+  flex-direction: column;
   margin: 1rem;
-  padding: 1rem;
-
   border-radius: 1rem;
 }
 
-.greeting-description-point {
-  margin: 1rem;
-  font-size: 1rem;
+.greeting-description-image {
+  border-top-left-radius: 1rem;
+  border-top-right-radius: 1rem;
 }
 
+.greeting-description-point {
+  display: flex;
+  flex-grow: 1;
+  flex-direction: column;
+  justify-content: space-evenly;
+  margin: 1rem;
+  font-size: 1.1rem;
+  text-align: center;
+}
+
+.greeting-description-intro {
+  font-weight: bold;
+  font-family: 'DM Serif Text', serif;
+  font-style: italic;
+  font-size: 1.6rem;
+  font-weight: 700;
+}
 .greeting-policies-container {
   display: flex;
   flex-direction: column;
