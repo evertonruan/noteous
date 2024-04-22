@@ -173,9 +173,9 @@ function welcomeToNoteous(context, subcontext) {
       greetingDescription4.innerHTML = `<span class="greeting-description-intro">Sempre em dia</span>noteous está em constante melhoria. Quando tiver uma 🌐 nova versão, chegará automaticamente para você ✅`
 
       greetingDescription1Image.setAttribute('src', './img/greeting-1.png')
-      greetingDescription2Image.setAttribute('src', './img/greeting-1.png')
+      greetingDescription2Image.setAttribute('src', './img/greeting-2.png')
       greetingDescription3Image.setAttribute('src', './img/greeting-1.png')
-      greetingDescription4Image.setAttribute('src', './img/greeting-1.png')
+      greetingDescription4Image.setAttribute('src', './img/greeting-4.png')
 
       greetingDescriptionContainer1.append(
         greetingDescription1Image,

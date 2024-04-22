@@ -666,7 +666,7 @@ footer p span {
   padding: 1rem;
   padding-top: 3rem;
 
-  background-color: #fce6cf;
+  background-color: hsl(32, 80%, 85%);
 
   filter: brightness(90%);
   border-radius: 15px;
@@ -711,7 +711,7 @@ footer p span {
 }
 
 .greeting-description-container {
-  background-color: #e8d3bc;
+  background-color: hsl(32, 70%, 80%);
   display: flex;
   flex-direction: column;
   margin: 1rem;
