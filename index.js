@@ -174,7 +174,7 @@ function welcomeToNoteous(context, subcontext) {
 
       greetingDescription1Image.setAttribute('src', './img/greeting-1.png')
       greetingDescription2Image.setAttribute('src', './img/greeting-2.png')
-      greetingDescription3Image.setAttribute('src', './img/greeting-1.png')
+      greetingDescription3Image.setAttribute('src', './img/greeting-3.png')
       greetingDescription4Image.setAttribute('src', './img/greeting-4.png')
 
       greetingDescriptionContainer1.append(
@@ -209,25 +209,42 @@ function welcomeToNoteous(context, subcontext) {
         )
       )
 
-      greetingDescription1.append(
-        document.createTextNode(
-          'O noteous está mais acessível: navegue apenas usando o teclado e ajuste o tamanho do texto. Além disso, o noteous é agora melhor compatível com leitores de tela.'
-        )
-      )
+      greetingDescription1.innerHTML = `<span class="greeting-description-intro">Melhoria na acessibilidade</span> <br>👓 Agora você pode ajustar o tamanho de texto que ficar mais confortável de ler <br>💻 Suporte para navegação pelo teclado (por exemplo, se estiver em um computador) <br>🔊 Melhor compatível com leitores de tela`
 
-      greetingDescription2.append(
-        document.createTextNode(
-          'Experiência aprimorada: os temas claro e escuro estão ainda mais bonitos. A edição de notas está ainda mais intuitiva. E outras pequenas melhorias tornam tudo muito mais incrível!'
-        )
+      greetingDescription2.innerHTML = `<span class="greeting-description-intro">Visual revisado</span> <br>🎨 Os temas claro e escuro estão agora ainda mais bonitos!`
+
+      greetingDescription3.innerHTML = `<span class="greeting-description-intro">Experiência aprimorada</span> <br>📝 A edição de notas está ainda mais intuitiva e fácil de usar. Outras pequenas melhorias tornam tudo muito mais incrível!`
+
+      greetingDescription4.innerHTML = `<span class="greeting-description-intro">Atualização automática</span> <br>noteous recebe atualizações automáticas 🌐 Assim, seu aplicativo sempre está em dia.`
+
+      greetingDescription1Image.setAttribute('src', './img/greeting-2.png')
+      greetingDescription2Image.setAttribute('src', './img/greeting-1.png')
+      greetingDescription3Image.setAttribute('src', './img/greeting-3-1.png')
+      greetingDescription4Image.setAttribute('src', './img/greeting-4.png')
+
+      greetingDescriptionContainer1.append(
+        greetingDescription1Image,
+        greetingDescription1
+      )
+      greetingDescriptionContainer2.append(
+        greetingDescription2Image,
+        greetingDescription2
+      )
+      greetingDescriptionContainer3.append(
+        greetingDescription3Image,
+        greetingDescription3
+      )
+      greetingDescriptionContainer4.append(
+        greetingDescription4Image,
+        greetingDescription4
       )
 
       greetingDescriptionContainerAll.append(
         greetingDescriptionContainer1,
-        greetingDescriptionContainer2
+        greetingDescriptionContainer2,
+        greetingDescriptionContainer3,
+        greetingDescriptionContainer4
       )
-
-      greetingDescriptionContainer1.append(greetingDescription1)
-      greetingDescriptionContainer2.append(greetingDescription2)
     }
   } else if (context == 'render-policies') {
     let greetingPanel = document.querySelector('.greeting-panel')
@@ -333,21 +350,21 @@ function welcomeToNoteous(context, subcontext) {
 function noteousTheme(context) {
   //context => recuperar tema, trocar tema, aplicar tema claro, aplicar tema escuro
   if (context == 'retrieve-theme') {
-    if (noteousSettings.look.themeLum == 'light') {
+    if (noteousSettings.look.luminosity == 'light') {
       noteousTheme('set-theme-light')
       console.log(context)
-    } else if (noteousSettings.look.themeLum == 'dark') {
+    } else if (noteousSettings.look.luminosity == 'dark') {
       noteousTheme('set-theme-dark')
     }
   } else if (context == 'change-theme') {
     console.log(context)
-    if (noteousSettings.look.themeLum == 'light') {
+    if (noteousSettings.look.luminosity == 'light') {
       noteousTheme('set-theme-dark')
-    } else if (noteousSettings.look.themeLum == 'dark') {
+    } else if (noteousSettings.look.luminosity == 'dark') {
       noteousTheme('set-theme-light')
     }
   } else if (context == 'set-theme-light') {
-    noteousSettings.look.themeLum = 'light'
+    noteousSettings.look.luminosity = 'light'
     noteousSettings.look.hue = '--hue: 30;'
     noteousSettings.look.saturation = '--saturation: 90%;'
     noteousSettings.look.lumBack = '--lum-back: 90%;'
@@ -356,13 +373,13 @@ function noteousTheme(context) {
     noteousSettings.look.lumFrontInverse = '--lum-front-inverse: 95%;'
     noteousSettings.look.accentSaturation = '--accent-saturation: 90%;'
     noteousSettings.look.accentLum = '--accent-lum: 60%;'
-    noteousSettings.look.lumAccentContainer = '--lum-accent-container: 50%;'
+    noteousSettings.look.lumAccentContainer = '--lum-accent-container: 65%;'
 
     localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
     noteousSettings = JSON.parse(localStorage.getItem('noteous-settings'))
     injectCSSOnRoot()
   } else if (context == 'set-theme-dark') {
-    noteousSettings.look.themeLum = 'dark'
+    noteousSettings.look.luminosity = 'dark'
     noteousSettings.look.hue = '--hue: 30;'
     noteousSettings.look.saturation = '--saturation: 40%;'
     noteousSettings.look.lumBack = '--lum-back: 8%;'

@@ -34,21 +34,21 @@ ${noteousSettings.look.lumAccentContainer}`
 function noteousTheme(context) {
   //context => recuperar tema, trocar tema, aplicar tema claro, aplicar tema escuro
   if (context == 'retrieve-theme') {
-    if (noteousSettings.look.themeLum == 'light') {
+    if (noteousSettings.look.luminosity == 'light') {
       noteousTheme('set-theme-light')
       console.log(context)
-    } else if (noteousSettings.look.themeLum == 'dark') {
+    } else if (noteousSettings.look.luminosity == 'dark') {
       noteousTheme('set-theme-dark')
     }
   } else if (context == 'change-theme') {
     console.log(context)
-    if (noteousSettings.look.themeLum == 'light') {
+    if (noteousSettings.look.luminosity == 'light') {
       noteousTheme('set-theme-dark')
-    } else if (noteousSettings.look.themeLum == 'dark') {
+    } else if (noteousSettings.look.luminosity == 'dark') {
       noteousTheme('set-theme-light')
     }
   } else if (context == 'set-theme-light') {
-    noteousSettings.look.themeLum = 'light'
+    noteousSettings.look.luminosity = 'light'
     noteousSettings.look.hue = '--hue: 30;'
     noteousSettings.look.saturation = '--saturation: 90%;'
     noteousSettings.look.lumBack = '--lum-back: 90%;'
@@ -63,7 +63,7 @@ function noteousTheme(context) {
     noteousSettings = JSON.parse(localStorage.getItem('noteous-settings'))
     injectCSSOnRoot()
   } else if (context == 'set-theme-dark') {
-    noteousSettings.look.themeLum = 'dark'
+    noteousSettings.look.luminosity = 'dark'
     noteousSettings.look.hue = '--hue: 30;'
     noteousSettings.look.saturation = '--saturation: 40%;'
     noteousSettings.look.lumBack = '--lum-back: 8%;'
