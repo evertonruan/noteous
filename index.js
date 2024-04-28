@@ -217,7 +217,7 @@ function welcomeToNoteous(context, subcontext) {
 
       greetingDescription4.innerHTML = `<span class="greeting-description-intro">Atualização automática</span> <br>noteous recebe atualizações automáticas 🌐 Assim, seu aplicativo sempre está em dia.`
 
-      greetingDescription1Image.setAttribute('src', './img/greeting-2.png')
+      greetingDescription1Image.setAttribute('src', './img/greeting-3.png')
       greetingDescription2Image.setAttribute('src', './img/greeting-1.png')
       greetingDescription3Image.setAttribute('src', './img/greeting-3-1.png')
       greetingDescription4Image.setAttribute('src', './img/greeting-4.png')
@@ -1104,6 +1104,7 @@ function deleteNote(noteId) {
   timeoutID = setTimeout(() => {
     let noteContainer = document.getElementById(noteId + '-note-container')
     noteContainer.style.cssText = 'opacity: 0;  transform: scale(80%);'
+    noteContainer.ariaLive = 'assertive'
 
     setTimeout(() => {
       noteContainer.remove()
@@ -1166,7 +1167,13 @@ function openNote(noteId) {
     writeButtonCancelEdit.removeAttribute('hidden')
     labelWrite.innerHTML = '📄 Veja aqui sua nota'
     editNote(noteId)
-    writeInput.addEventListener('click', writeInputEdit, false)
+    writeInput.addEventListener('pointerdown', event => {
+      if (event.pointerType == 'mouse') {
+        writeInputEdit()
+      } else if (event.pointerType == 'touch') {
+        writeInputEdit()
+      }
+    })
   } else if (window.screen.width >= 601) {
     writeInput.focus()
     writeButtonCancelEdit.removeAttribute('hidden')
