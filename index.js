@@ -1105,7 +1105,6 @@ function deleteNote(noteId) {
     let noteContainer = document.getElementById(noteId + '-note-container')
     noteContainer.style.cssText = 'opacity: 0;  transform: scale(80%);'
     //noteContainer.ariaLive = 'assertive'
-    //noteTextContainer.setAttribute('aria-label', `Anotação:${note.text}`)
 
     setTimeout(() => {
       noteContainer.remove()
@@ -1130,6 +1129,10 @@ function deleteNote(noteId) {
     noteId + '-note-date-container'
   )
 
+  noteTextContainer.setAttribute(
+    'aria-label',
+    `Concluído. Clique para Desfazer`
+  )
   noteTextContainer.removeAttribute('onclick')
   noteTextContainer.removeAttribute('onkeyup')
   noteTextContainer.addEventListener('click', () => {
