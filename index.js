@@ -1170,7 +1170,7 @@ function openNote(noteId) {
     //Se for dispositivo móvel, ao abrir uma nota o teclado não irá aparecer imediatamente (readonly), mas ao tocar no campo de input o teclado aparecerá (readonly remove)
     writeInput.setAttribute('readonly', true)
     writeInput.focus()
-    writeInput.setAttribute('readonly', false)
+    writeInput.removeAttribute('readonly')
     writeButtonCancelEdit.removeAttribute('hidden')
     labelWrite.innerHTML = '📄 Veja aqui sua nota'
     editNote(noteId)
