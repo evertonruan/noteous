@@ -1104,7 +1104,6 @@ function deleteNote(noteId) {
   timeoutID = setTimeout(() => {
     let noteContainer = document.getElementById(noteId + '-note-container')
     noteContainer.style.cssText = 'opacity: 0;  transform: scale(80%);'
-    //noteContainer.ariaLive = 'assertive'
 
     setTimeout(() => {
       noteContainer.remove()
@@ -1118,7 +1117,7 @@ function deleteNote(noteId) {
       localStorage.setItem('noteous-main', JSON.stringify(noteousMain))
       orblendEngine('change')
     }, 100)
-  }, 2000)
+  }, 10000)
 
   let noteTextContainer = document.getElementById(noteId + '-text-container')
   let textElement = document.getElementById(noteId + '-text')
@@ -1129,10 +1128,6 @@ function deleteNote(noteId) {
     noteId + '-note-date-container'
   )
 
-  noteTextContainer.setAttribute(
-    'aria-label',
-    `Concluído. Clique para Desfazer`
-  )
   noteTextContainer.removeAttribute('onclick')
   noteTextContainer.removeAttribute('onkeyup')
   noteTextContainer.addEventListener('click', () => {
@@ -1146,6 +1141,13 @@ function deleteNote(noteId) {
     renderNote('render-all')`
   )
   textElement.innerHTML = '✔ Concluído <br> <strong>DESFAZER<strong>'
+
+  textElement.setAttribute(
+    'aria-label',
+    `Nota concluída. Enter ou clique para desfazer`
+  )
+
+  noteTextContainer.ariaLive = 'assertive'
 
   actionButtonsContainer.style.cssText = 'opacity: 0;'
   noteDateContainer.style.cssText = 'opacity: 0;'
@@ -1168,6 +1170,7 @@ function openNote(noteId) {
     //Se for dispositivo móvel, ao abrir uma nota o teclado não irá aparecer imediatamente (readonly), mas ao tocar no campo de input o teclado aparecerá (readonly remove)
     writeInput.setAttribute('readonly', true)
     writeInput.focus()
+    writeInput.setAttribute('readonly', false)
     writeButtonCancelEdit.removeAttribute('hidden')
     labelWrite.innerHTML = '📄 Veja aqui sua nota'
     editNote(noteId)
