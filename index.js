@@ -848,7 +848,7 @@ function renderNote(context, noteId) {
       //ACESSIBILIDADE
 
       noteTextContainer.tabIndex = tabIndexCounter += 1
-      noteTextContainer.setAttribute('aria-label', `Anotação:${note.text}`)
+      noteTextContainer.setAttribute('aria-label', 'Anotação:' + note.text)
       noteTextContainer.setAttribute(
         'onkeyup',
         `if (event.key === 'Enter') { openNote(${note.id}); }`
