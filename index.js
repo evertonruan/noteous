@@ -1170,12 +1170,16 @@ function openNote(noteId) {
     //Se for dispositivo móvel, ao abrir uma nota o teclado não irá aparecer imediatamente (readonly), mas ao tocar no campo de input o teclado aparecerá (readonly remove)
     writeInput.setAttribute('readonly', true)
     writeInput.focus()
-    writeInput.removeAttribute('readonly')
     writeButtonCancelEdit.removeAttribute('hidden')
     labelWrite.innerHTML = '📄 Veja aqui sua nota'
     editNote(noteId)
+    let readonlyCheck = writeInput.getAttribute('readonly')
+    console.log(readonlyCheck)
     writeInput.addEventListener('pointerdown', event => {
-      if (event.pointerType == 'mouse' || event.pointerType == 'touch') {
+      if (
+        event.pointerType == 'mouse' ||
+        (event.pointerType == 'touch' && readonlyCheck == 'true')
+      ) {
         writeInputEdit()
       }
     })
