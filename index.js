@@ -35,6 +35,7 @@ let tabIndexCounter = 10
 //usado em openNote() e exitEditMode()
 let writeInputEdit = function (event) {
   writeInput.removeAttribute('readonly')
+  writeInput.focus()
   labelWrite.innerHTML = '📝 Edite aqui sua nota'
 }
 
@@ -1189,22 +1190,12 @@ function openNote(noteId) {
       writeInputInvisibleButton.style.left = writeInputProps.x + 'px'
       writeInputInvisibleButton.style.width = writeInputProps.width + 'px'
       writeInputInvisibleButton.style.height = writeInputProps.height + 'px'
-    }, 100)
+    }, 150)
 
     body.append(writeInputInvisibleButton)
     writeInputInvisibleButton.addEventListener('click', () => {
       writeInputInvisibleButton.remove()
       writeInputEdit()
-    })
-
-    let readonlyCheck = writeInput.getAttribute('readonly')
-    console.log(readonlyCheck)
-    writeInput.addEventListener('pointerdown', event => {
-      if (
-        event.pointerType == 'mouse' ||
-        (event.pointerType == 'touch' && readonlyCheck == 'true')
-      ) {
-      }
     })
   } else if (window.screen.width >= 601) {
     writeInput.focus()
