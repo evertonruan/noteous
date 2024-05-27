@@ -1181,6 +1181,7 @@ function openNote(noteId) {
     writeInputInvisibleButton.id = 'write-input-invisible-button'
     writeInputInvisibleButton.style.position = 'absolute'
     writeInputInvisibleButton.style.opacity = '0%'
+    writeInputInvisibleButton.ariaLabel = 'Toque para editar o texto'
 
     setTimeout(() => {
       let writeInputProps = writeInput.getBoundingClientRect()
