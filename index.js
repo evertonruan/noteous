@@ -1173,6 +1173,28 @@ function openNote(noteId) {
     writeButtonCancelEdit.removeAttribute('hidden')
     labelWrite.innerHTML = '📄 Veja aqui sua nota'
     editNote(noteId)
+
+    //Resolução de problema de acessibilidade: Quando o tamanho de tela é inferior a 600px, ao clicar em uma nota, a caixa de texto é desabilitada (readonly) para que o teclado não apareça e confunda a experiência (é o que faz esta função, openNote()). Porém, quando o recurso TalkBack (do Android) é utilizado, não é possível reconhecer o toque na caixa de texto (writeInput), pois ela está como readonly, e, por consequência, não é possível editar a nota. Talvez isso ocorra porque a acessibilidade do Android desative o "clique" em uma caixa de texto readonly.
+    //Solução: criar um elemento div invisível acima da caixa de texto e esse elemento recebe o evento de clique, liberando a caixa de texto para ser editável novamente.
+
+    let writeInputInvisibleDiv = document.createElement('div')
+    writeInputInvisibleDiv.id = 'write-input-invisible-div'
+    writeInputInvisibleDiv.style.position = 'absolute'
+
+    setTimeout(() => {
+      let writeInputProps = writeInput.getBoundingClientRect()
+      writeInputInvisibleDiv.style.top = writeInputProps.y + 'px'
+      writeInputInvisibleDiv.style.left = writeInputProps.x + 'px'
+      writeInputInvisibleDiv.style.width = writeInputProps.width + 'px'
+      writeInputInvisibleDiv.style.height = writeInputProps.height + 'px'
+    }, 100)
+
+    body.append(writeInputInvisibleDiv)
+    writeInputInvisibleDiv.addEventListener('click', () => {
+      writeInputInvisibleDiv.remove()
+      writeInputEdit()
+    })
+
     let readonlyCheck = writeInput.getAttribute('readonly')
     console.log(readonlyCheck)
     writeInput.addEventListener('pointerdown', event => {
@@ -1180,7 +1202,6 @@ function openNote(noteId) {
         event.pointerType == 'mouse' ||
         (event.pointerType == 'touch' && readonlyCheck == 'true')
       ) {
-        writeInputEdit()
       }
     })
   } else if (window.screen.width >= 601) {
@@ -1243,6 +1264,9 @@ function editNote(noteId) {
       })
 
       //Se durante Modo de edição clicar em "Cancelar"
+      writeButtonCancelEdit.addEventListener('click', () => {
+        document.querySelector('#write-input-invisible-div').remove()
+      })
       writeButtonCancelEdit.addEventListener('click', exitEditMode)
     }
   }
