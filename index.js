@@ -1118,7 +1118,7 @@ function deleteNote(noteId) {
       localStorage.setItem('noteous-main', JSON.stringify(noteousMain))
       orblendEngine('change')
     }, 100)
-  }, 10000)
+  }, 5000)
 
   let noteTextContainer = document.getElementById(noteId + '-text-container')
   let textElement = document.getElementById(noteId + '-text')
@@ -1175,8 +1175,8 @@ function openNote(noteId) {
     labelWrite.innerHTML = '📄 Veja aqui sua nota'
     editNote(noteId)
 
-    //Resolução de problema de acessibilidade: Quando o tamanho de tela é inferior a 600px, ao clicar em uma nota, a caixa de texto é desabilitada (readonly) para que o teclado não apareça e confunda a experiência (é o que faz esta função, openNote()). Porém, quando o recurso TalkBack (do Android) é utilizado, não é possível reconhecer o toque na caixa de texto (writeInput), pois ela está como readonly, e, por consequência, não é possível editar a nota. Talvez isso ocorra porque a acessibilidade do Android desative o "clique" em uma caixa de texto readonly.
-    //Solução: criar um elemento div invisível acima da caixa de texto e esse elemento recebe o evento de clique, liberando a caixa de texto para ser editável novamente.
+    //Acessibilidade e Experiência do usuário: Quando o tamanho de tela é inferior a 600px, ao clicar em uma nota, a função openNote() torna readonly a caixa de texto (writeInput) para que o teclado não apareça e confunda a experiência. Ao dar um toque, a caixa é liberada para edição. PROBLEMA: Quando o recurso TalkBack (do Android) é utilizado, não é possível reconhecer o toque na caixa de texto (writeInput). Talvez isso ocorra porque a acessibilidade do Android desative o "clique" em uma caixa de texto readonly.
+    //SOLUÇÃO: criar um elemento button invisível acima da caixa de texto e esse elemento recebe o evento de clique, liberando a caixa de texto para ser editável novamente.
 
     let writeInputInvisibleButton = document.createElement('button')
     writeInputInvisibleButton.id = 'write-input-invisible-button'
@@ -1184,6 +1184,7 @@ function openNote(noteId) {
     writeInputInvisibleButton.style.opacity = '0%'
     writeInputInvisibleButton.ariaLabel = 'Toque para editar o texto'
 
+    //Tempo necessário para a animação da caixa de texto terminar e o botão invísivel copiar seu tamanho e posição
     setTimeout(() => {
       let writeInputProps = writeInput.getBoundingClientRect()
       writeInputInvisibleButton.style.top = writeInputProps.y + 'px'

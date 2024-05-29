@@ -824,6 +824,13 @@ footer p span {
   padding: 0.2rem 0.5rem;
   border: 1px solid var(--base-text);
   border-radius: 2rem;
+
+  font-size: 1.1rem;
+  font-family: 'Merriweather Sans', sans-serif;
+  color: var(--base-text);
+  background-color: var(--base-color);
+
+  cursor: pointer;
 }
 
 .about-section {
