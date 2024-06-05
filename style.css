@@ -287,11 +287,11 @@ a {
   -webkit-font-smoothing: antialiased;
 }
 
-#nav-update {
+#nav-about {
   color: var(--base-text);
 }
 
-#nav-update:hover {
+#nav-about:hover {
   text-decoration: underline;
 }
 

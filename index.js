@@ -2,6 +2,7 @@
 let body = document.querySelector('body')
 
 let themeButton = document.querySelector('#theme-container')
+let navAboutButton = document.querySelector('#nav-about')
 
 //WRITE-SECTION
 let writeSection = document.querySelector('#section-write')
@@ -26,7 +27,7 @@ let readNotesList = document.querySelector('#read-notes')
 
 // VARIÁVEIS IMPORTANTES /////////////////////////////////////
 
-let currentVersion = 1.45
+let currentVersion = 1.46
 let noteIdEdit //usada para confirmar qual nota está sendo editada
 let editMode = false
 let tabIndexCounter = 10
@@ -80,7 +81,7 @@ function welcomeToNoteous(context, subcontext) {
     greetingTitle1.classList.add('greeting-title1')
 
     let greetingTitleIcon = document.createElement('img')
-    greetingTitleIcon.setAttribute('src', './img/logo-icon.png')
+    greetingTitleIcon.setAttribute('src', './img/favicon.png')
     greetingTitleIcon.classList.add('greeting-title-icon')
 
     greetingTitle2 = document.createElement('p')
@@ -258,7 +259,7 @@ function welcomeToNoteous(context, subcontext) {
     greetingTitle1.classList.add('greeting-title1')
 
     let greetingTitleIcon = document.createElement('img')
-    greetingTitleIcon.setAttribute('src', './img/logo-icon.png')
+    greetingTitleIcon.setAttribute('src', './img/favicon.png')
     greetingTitleIcon.classList.add('greeting-title-icon')
 
     greetingTitle2 = document.createElement('p')
@@ -622,6 +623,14 @@ function orblendEngine(context) {
 }
 
 //////////
+
+function navToAbout() {
+  navAboutButton.addEventListener('click', () => {
+    window.location.replace('./about.html')
+  })
+}
+
+navToAbout()
 
 function notePriority(context, priority) {
   //context ==> (1) recuperarPrioridade, (2)recuperarPrioridadeAoDesfocarInput (ao tirar foco define opacidade = 0 de Opções da Nota. Mas, é necessário também definir junto a borda, pois ao contrário um sobrescreve o outro), (3) trocarPrioridade

@@ -1,7 +1,14 @@
 let noteousSettings = JSON.parse(localStorage.getItem('noteous-settings'))
 let noteousMain = JSON.parse(localStorage.getItem('noteous-main')) || []
 
+if (noteousSettings == null) {
+  //Redireciona a página inicial se Termos não foram aceitos
+  window.location.replace('./index.html')
+}
+
 //ELEMENTOS //////
+let navMainButton = document.querySelector('#nav-main')
+
 let baseRemOptionNormal = document.querySelector('#baserem-normal')
 let baseRemOptionBig = document.querySelector('#baserem-big')
 let baseRemOptionSmall = document.querySelector('#baserem-small')
@@ -12,6 +19,12 @@ let optionDark = document.querySelector('#luminosity-dark')
 let buttonPolicies = document.querySelector('#about-button-policies')
 let policiesContainerData = document.querySelector('#policies-container-data')
 let policiesSwitchVar = 0
+
+///////
+
+navMainButton.addEventListener('click', () => {
+  window.location.replace('./index.html')
+})
 
 ///////
 
