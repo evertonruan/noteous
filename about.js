@@ -1,14 +1,10 @@
-let noteousSettings = JSON.parse(localStorage.getItem('noteous-settings'))
-let noteousMain = JSON.parse(localStorage.getItem('noteous-main')) || []
+let body = document.querySelector('body')
+let root = document.querySelector(':root')
 
-if (noteousSettings == null) {
-  //Redireciona a página inicial se Termos não foram aceitos
-  window.location.replace('./index.html')
-}
+let noteousSettings = JSON.parse(localStorage.getItem('noteous-settings'))
+let cssRootGroup //Usada para agrupar todos os valores CSS adicionados a :root. Motivo: se forem colocados separadamente, um irá sobrescrever o outro.
 
 //ELEMENTOS //////
-let navMainButton = document.querySelector('#nav-main')
-
 let baseRemOptionNormal = document.querySelector('#baserem-normal')
 let baseRemOptionBig = document.querySelector('#baserem-big')
 let baseRemOptionSmall = document.querySelector('#baserem-small')
@@ -16,96 +12,72 @@ let baseRemOptionSmall = document.querySelector('#baserem-small')
 let optionLight = document.querySelector('#luminosity-light')
 let optionDark = document.querySelector('#luminosity-dark')
 
-let buttonPolicies = document.querySelector('#about-button-policies')
-let policiesContainerData = document.querySelector('#policies-container-data')
-let policiesSwitchVar = 0
-
-///////
-
-navMainButton.addEventListener('click', () => {
-  window.location.replace('./index.html')
-})
+let shortcutLuminosity = document.querySelector('#shortcut-luminosity')
+let shortcutBaseRem = document.querySelector('#shortcut-baserem')
 
 ///////
 
 function injectCSSOnRoot() {
-  document.querySelector(
-    ':root'
-  ).style.cssText = `${noteousSettings.look.baseRem} ${noteousSettings.look.hue} ${noteousSettings.look.saturation}
+  root.style = `${noteousSettings.look.hue} ${noteousSettings.look.saturation}
 ${noteousSettings.look.lumBack}
 ${noteousSettings.look.lumMid}
-${noteousSettings.look.lumFront}
-${noteousSettings.look.lumFrontInverse}
-${noteousSettings.look.accentSaturation}
-${noteousSettings.look.accentLum}
-${noteousSettings.look.lumAccentContainer}`
+${noteousSettings.look.lumFront} ${noteousSettings.look.baseRem}`
 }
 
 ///////
 
-// CONFIGURAÇÕES DE TEMA ////////////////////////////////////
-function noteousTheme(context) {
+function noteousLook(context) {
   //context => recuperar tema, trocar tema, aplicar tema claro, aplicar tema escuro
-  if (context == 'retrieve-theme') {
+  if (context == 'retrieve-look') {
     if (noteousSettings.look.luminosity == 'light') {
-      noteousTheme('set-theme-light')
-      console.log(context)
+      noteousLook('set-luminosity-light')
     } else if (noteousSettings.look.luminosity == 'dark') {
-      noteousTheme('set-theme-dark')
+      noteousLook('set-luminosity-dark')
     }
-  } else if (context == 'change-theme') {
-    console.log(context)
+  } else if (context == 'change-luminosity') {
     if (noteousSettings.look.luminosity == 'light') {
-      noteousTheme('set-theme-dark')
+      noteousLook('set-luminosity-dark')
     } else if (noteousSettings.look.luminosity == 'dark') {
-      noteousTheme('set-theme-light')
+      noteousLook('set-luminosity-light')
     }
-  } else if (context == 'set-theme-light') {
+  } else if (context == 'set-luminosity-light') {
     noteousSettings.look.luminosity = 'light'
     noteousSettings.look.hue = '--hue: 30;'
     noteousSettings.look.saturation = '--saturation: 90%;'
     noteousSettings.look.lumBack = '--lum-back: 90%;'
     noteousSettings.look.lumMid = '--lum-mid: 60%;'
     noteousSettings.look.lumFront = '--lum-front: 10%;'
-    noteousSettings.look.lumFrontInverse = '--lum-front-inverse: 95%;'
-    noteousSettings.look.accentSaturation = '--accent-saturation: 90%;'
-    noteousSettings.look.accentLum = '--accent-lum: 60%;'
-    noteousSettings.look.lumAccentContainer = '--lum-accent-container: 50%;'
 
     localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
     noteousSettings = JSON.parse(localStorage.getItem('noteous-settings'))
     injectCSSOnRoot()
-  } else if (context == 'set-theme-dark') {
+  } else if (context == 'set-luminosity-dark') {
     noteousSettings.look.luminosity = 'dark'
     noteousSettings.look.hue = '--hue: 30;'
     noteousSettings.look.saturation = '--saturation: 40%;'
-    noteousSettings.look.lumBack = '--lum-back: 8%;'
+    noteousSettings.look.lumBack = '--lum-back: 10%;'
     noteousSettings.look.lumMid = '--lum-mid: 30%;'
     noteousSettings.look.lumFront = '--lum-front: 90%;'
-    noteousSettings.look.lumFrontInverse = '--lum-front-inverse: 15%;'
-    noteousSettings.look.accentSaturation = '--accent-saturation: 90%;'
-    noteousSettings.look.accentLum = '--accent-lum: 60%;'
-    noteousSettings.look.lumAccentContainer = '--lum-accent-container: 50%;'
 
     localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
     noteousSettings = JSON.parse(localStorage.getItem('noteous-settings'))
     injectCSSOnRoot()
   }
 }
-noteousTheme('retrieve-theme')
+
 ///////
 
 //VERIFICADOR DE OPÇÃO ATIVA ///////
 function activeOptionVerifier() {
-  if (noteousSettings.look.baseRem == '--base-rem: 100%;') {
+  if (noteousSettings.look.baseRem == '--base-rem: 100%') {
     baseRemOptionNormal.style.background = 'var(--base-buttons)'
     baseRemOptionBig.style.background = ''
     baseRemOptionSmall.style.background = ''
-  } else if (noteousSettings.look.baseRem == '--base-rem: 106.25%;') {
+  } else if (noteousSettings.look.baseRem == '--base-rem: 106.25%') {
     baseRemOptionBig.style.background = 'var(--base-buttons)'
     baseRemOptionNormal.style.background = ''
     baseRemOptionSmall.style.background = ''
-  } else if (noteousSettings.look.baseRem == '--base-rem: 93.75%;') {
+  } else if (noteousSettings.look.baseRem == '--base-rem: 93.75%') {
     baseRemOptionSmall.style.background = 'var(--base-buttons)'
     baseRemOptionNormal.style.background = ''
     baseRemOptionBig.style.background = ''
@@ -118,28 +90,37 @@ function activeOptionVerifier() {
     optionDark.style.background = 'var(--base-buttons)'
     optionLight.style.background = ''
   }
-}
 
+  if (noteousSettings.look.shortcut == 'luminosity') {
+    shortcutLuminosity.style.background = 'var(--base-buttons)'
+    shortcutBaseRem.style.background = ''
+  } else if (noteousSettings.look.shortcut == 'baseRem') {
+    shortcutBaseRem.style.background = 'var(--base-buttons)'
+    shortcutLuminosity.style.background = ''
+  }
+}
 activeOptionVerifier()
 
-//////
+///////
+
+//CONFIGURAÇÃO --> TAMANHO DE TEXTO ///////
 
 baseRemOptionNormal.addEventListener('click', () => {
-  noteousSettings.look.baseRem = '--base-rem: 100%;'
+  noteousSettings.look.baseRem = '--base-rem: 100%'
   localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
   injectCSSOnRoot()
   activeOptionVerifier()
 })
 
 baseRemOptionBig.addEventListener('click', () => {
-  noteousSettings.look.baseRem = '--base-rem: 106.25%;'
+  noteousSettings.look.baseRem = '--base-rem: 106.25%'
   localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
   injectCSSOnRoot()
   activeOptionVerifier()
 })
 
 baseRemOptionSmall.addEventListener('click', () => {
-  noteousSettings.look.baseRem = '--base-rem: 93.75%;'
+  noteousSettings.look.baseRem = '--base-rem: 93.75%'
   localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
   injectCSSOnRoot()
   activeOptionVerifier()
@@ -148,71 +129,33 @@ baseRemOptionSmall.addEventListener('click', () => {
 // CONFIGURAÇÃO --> TEMA //////
 
 optionLight.addEventListener('click', () => {
-  noteousTheme('set-theme-light')
+  noteousLook('set-luminosity-light')
   activeOptionVerifier()
 })
 optionDark.addEventListener('click', () => {
-  noteousTheme('set-theme-dark')
+  noteousLook('set-luminosity-dark')
   activeOptionVerifier()
 })
 
-noteousTheme('retrieve-theme')
+noteousLook('retrieve-look')
 
-//BOTÃO DE POLICIES
-buttonPolicies.addEventListener('click', () => {
-  if (policiesSwitchVar == 0) {
-    policiesSwitchVar = 1
+// CONFIGURAÇÃO --> ATALHO //////
 
-    fetch('./policies.json')
-      .then(policies => policies.json())
-      .then(policies => {
-        let noteousPolicies = policies
-
-        let policiesTitleTerms = document.createElement('p')
-        policiesTitleTerms.classList.add('greeting-description-title')
-        policiesTitleTerms.append('Termos de Uso')
-
-        let policiesDescriptionTerms = document.createElement('p')
-
-        for (char of noteousPolicies.termsUse) {
-          policiesDescriptionTerms.append(char)
-          if (char == '\n') {
-            policiesDescriptionTerms.append(
-              document.createElement('br'),
-              document.createElement('br')
-            )
-          }
-        }
-
-        let policiesTitlePrivacy = document.createElement('p')
-        policiesTitlePrivacy.classList.add('greeting-description-title')
-        policiesTitlePrivacy.append('Política de Privacidade')
-
-        let policiesDescriptionPrivacy = document.createElement('p')
-
-        for (char of noteousPolicies.privacyPolicy) {
-          policiesDescriptionPrivacy.append(char)
-          if (char == '\n') {
-            policiesDescriptionPrivacy.append(
-              document.createElement('br'),
-              document.createElement('br')
-            )
-          }
-        }
-        policiesContainerData.append(
-          policiesTitleTerms,
-          policiesDescriptionTerms,
-          policiesTitlePrivacy,
-          policiesDescriptionPrivacy
-        )
-      })
-  } else if (policiesSwitchVar == 1) {
-    policiesSwitchVar = 0
-    policiesContainerData.innerHTML = ''
-  }
+shortcutLuminosity.addEventListener('click', () => {
+  noteousSettings.look.shortcut = 'luminosity'
+  localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
+  activeOptionVerifier()
 })
 
-//MODO AVANÇADO
+shortcutBaseRem.addEventListener('click', () => {
+  noteousSettings.look.shortcut = 'baseRem'
+  localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
+  activeOptionVerifier()
+})
+
+//////
+
+//MODO AVANÇADO //////
 
 let advancedContainer = document.querySelector('#advanced-container')
 let advancedSwitch = document.querySelector('#advanced-switch')
