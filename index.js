@@ -1,6 +1,8 @@
-if (noteousSettings.noteousVersion >= 1.5 ) {
-  if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('sw.js')
+function serviceWorkerRegister() {
+  if (noteousSettings.noteousVersion >= 1.5 ) {
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('sw.js')
+    }
   }
 }
 
@@ -57,6 +59,7 @@ function navLink() {
 let noteousMain = JSON.parse(localStorage.getItem('noteous-main')) || []
 let noteousSettings = JSON.parse(localStorage.getItem('noteous-settings'))
 
+serviceWorkerRegister()
 loadNoteous('check-settings')
 
 /////////////////////////////////////////////////////////////
