@@ -1,6 +1,9 @@
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('sw.js')
+if (noteousSettings.noteousVersion >= 1.5 ) {
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('sw.js')
+  }
 }
+
 
 // ELEMENTOS /////////////////////////////////////
 let body = document.querySelector('body')
