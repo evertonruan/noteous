@@ -12,7 +12,7 @@ self.addEventListener("install", event => {
 const noteousResources = ['/', 'index.html', 'index.js', 'about.html', 'about.js', 'style.css', 'reset.css', 'policies.json', 'orblendEngine.js', 'cupcake-logo.png', 'social-chain.png']
 
 //ACTIVATION
-//Cache clean
+//Cache cleaning
 self.addEventListener('activate', e => {
   console.log("SW activated")
   e.waitUntil(
