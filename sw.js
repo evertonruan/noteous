@@ -29,7 +29,7 @@ self.addEventListener('activate', e => {
     caches.keys().then(keyList => {
       return Promise.all(
         keyList.map(key => {
-          if (key === cacheName) {
+          if (key === 'noteousCache') {
             return
           }
 
@@ -48,7 +48,7 @@ self.addEventListener('fetch', event => {
         const networkFetch = fetch(event.request).then(response => {
           // update the cache with a clone of the network response
           const responseClone = response.clone()
-          caches.open(event.request.url.searchParams.get('name')).then(cache => {
+          caches.open(url.searchParams.get('name')).then(cache => {
             cache.put(event.request, responseClone)
           })
           return response
