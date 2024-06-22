@@ -2,7 +2,7 @@
 self.addEventListener('install', event => {
   event.waitUntil(
     (async () => {
-      const cache = await caches.open(cacheName)
+      const cache = await caches.open('noteousCache')
       await cache.addAll(noteousResources)
     })()
   )
@@ -20,7 +20,6 @@ const noteousResources = [
   'orblendEngine.js',
   '/img/cupcake logo.png',
   '/img/social-chain.png']
-const cacheName = 'noteousCache'
 
 //ACTIVATION
 //Cache cleaning
