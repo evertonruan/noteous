@@ -45,12 +45,15 @@ self.addEventListener('activate', e => {
 self.addEventListener('fetch', event => {
   event.respondWith(
     caches.match(event.request).then(cachedResponse => {
-      console.log('event request' + event.request)
+      console.log('event request')
+      console.log(event.request)
         const networkFetch = fetch(event.request).then(response => {
           // update the cache with a clone of the network response
-          console.log('network fetch' + networkFetch)
+          console.log('network fetch')
+          console.log(networkFetch)
           const responseClone = response.clone()
-          console.log('response clone' + responseClone)
+          console.log('response clone')
+          console.log(responseClone)
 
           caches.open('noteousCache').then(cache => {
             cache.add(responseClone)
