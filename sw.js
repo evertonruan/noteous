@@ -1,18 +1,25 @@
 //INSTALLATION
-self.addEventListener("install", event => {
-  try {
-    event.waitUntil(
-      (async () => {
-        const cache = await caches.open(cacheName)
-        await cache.addAll(noteousResources)
-      })()
-    )
-  } catch (error) {
-    console.log(error)
-  }
+self.addEventListener('install', event => {
+  event.waitUntil(
+    (async () => {
+      const cache = await caches.open(cacheName)
+      await cache.addAll(noteousResources)
+    })()
+  )
 })
 
-const noteousResources = ['/', 'index.html', 'index.js', 'about.html', 'about.js', 'style.css', 'reset.css', 'policies.json', 'orblendEngine.js', '/img/cupcake-logo.png', '/img/social-chain.png']
+const noteousResources = [
+  '/',
+  'index.html',
+  'index.js',
+  'about.html',
+  'about.js',
+  'style.css',
+  'reset.css',
+  'policies.json',
+  'orblendEngine.js',
+  '/img/cupcake logo.png',
+  '/img/social-chain.png']
 const cacheName = 'noteousCache'
 
 //ACTIVATION
