@@ -5,10 +5,10 @@ const noteousResources = ['/', 'index.html', 'index.js', 'about.html', 'about.js
 
 self.addEventListener("install", event => {
    event.waitUntil(
-      caches.open("noteous-caches")
-      .then(cache => {
-         return cache.addAll(noteousResources);
-      })
+    (async () => {
+      const cache = await caches.open('noteousCache')
+      await cache.addAll(noteousResources)
+    })()
    )
 })
 
