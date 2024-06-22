@@ -1,10 +1,11 @@
-//noteous SW version = 240622-1
+//noteous SW version = 240622-2
 
 /*
 When the user accepts the terms, the Service Worker is installed and adds resources to the cache.
 Once they are cached, noteous will use only this local content and will no longer connect to the server to update content.
 To update any content: 1. Upload the resource; 2. Change the value in the Service Worker version.
-When there are changes in the sw.js file, it will force the Service Worker to update, subsequently updating all resources.
+When there are changes in the sw.js file, it will force the Service Worker to update, subsequently updating all resources
+(First, in page load, it will update the resources changed and activate (not install) SW new version. When tab is closed and reopened, then new SW version will be installed)
 */
 
 
