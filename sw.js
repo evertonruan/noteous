@@ -1,3 +1,13 @@
+//noteous SW version = 240622-0
+
+/*
+When the user accepts the terms, the Service Worker is installed and adds resources to the cache.
+Once they are cached, noteous will use only this local content and will no longer connect to the server to update content.
+To update any content: 1. Upload the resource; 2. Change the value in the Service Worker version.
+When there are changes in the sw.js file, it will force the Service Worker to update, subsequently updating all resources.
+*/
+
+
 //INSTALLATION
 self.addEventListener('install', event => {
   event.waitUntil(
@@ -44,7 +54,6 @@ self.addEventListener("fetch", event => {
   event.respondWith(
     caches.match(event.request)
     .then(cachedResponse => {
-      // It can update the cache to serve updated content on the next request
         return cachedResponse || fetch(event.request)
     }
   )
