@@ -1,4 +1,5 @@
 const noteousResources = ['/', 'index.html', 'index.js', 'about.html', 'about.js', 'style.css', 'reset.css', 'policies.json', 'orblendEngine.js', '/img/cupcake-logo.png', '/img/social-chain.png']
+const cacheName = 'noteousCache'
 
 //INSTALLATION
 
@@ -6,7 +7,7 @@ const noteousResources = ['/', 'index.html', 'index.js', 'about.html', 'about.js
 self.addEventListener("install", event => {
    event.waitUntil(
     (async () => {
-      const cache = await caches.open('noteousCache')
+      const cache = await caches.open(cacheName)
       await cache.addAll(noteousResources)
     })()
    )
