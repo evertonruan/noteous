@@ -40,33 +40,13 @@ self.addEventListener('activate', e => {
   )
 })
 
-//FETCHING
-//Connect to serve to see update, then go to cache
-self.addEventListener('fetch', event => {
+self.addEventListener("fetch", event => {
   event.respondWith(
-    caches.match(event.request).then(cachedResponse => {
-      console.log('event request')
-      console.log(event.request)
-        const networkFetch = fetch(event.request).then(response => {
-          // update the cache with a clone of the network response
-          console.log('network fetch')
-          console.log(networkFetch)
-          const responseClone = response.clone()
-          console.log('response clone')
-          console.log(responseClone)
-
-          caches.open('noteousCache').then(cache => {
-            console.log('clone')
-            console.log(responseClone.url)
-            cache.put(event.request,responseClone.url)
-          })
-          return response
-        }).catch(function (reason) {
-          console.error('ServiceWorker fetch failed: ', reason)
-        })
-        // prioritize cached response over network
-        return cachedResponse || networkFetch
-      }
-    )
+    caches.match(event.request)
+    .then(cachedResponse => {
+      // It can update the cache to serve updated content on the next request
+        return cachedResponse || fetch(event.request);
+    }
   )
-})
+ )
+});
