@@ -1,15 +1,13 @@
-//INSTALLATION
-self.addEventListener('install', event => {
-  console.log('SW install')
-  event.waitUntil(
-    (async () => {
-      const cache = await caches.open('noteousCache')
-      await cache.addAll(noteousResources)
-    })()
-  )
-})
+const noteousResources = ['/', 'index.html', 'index.js', 'about.html', 'about.js', 'style.css', 'reset.css', 'policies.json', 'orblendEngine.js', 'cupcake-logo.png', 'social-chain.png']
 
-let noteousResources = ['/', 'index.html', 'index.js', 'about.html', 'about.js', 'style.css', 'reset.css', 'policies.json', 'orblendEngine.js', 'cupcake-logo.png', 'social-chain.png']
+//INSTALLATION
+self.addEventListener("install", (event) => {
+   let noteousCache = async () => {
+      const cache = await caches.open("noteous-resources");
+      return cache.addAll(noteousResources);
+   };
+   event.waitUntil(noteousCache());
+});
 
 //ACTIVATION
 //Cache cleaning
