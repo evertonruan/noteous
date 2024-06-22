@@ -1,4 +1,4 @@
-const noteousResources = ['/', 'index.html', 'index.js', 'about.html', 'about.js', 'style.css', 'reset.css', 'policies.json', 'orblendEngine.js', '/img/cupcake-logo.png', '/img/social-chain.png']
+const noteousResources = ['/', '/img', 'index.html', 'index.js', 'about.html', 'about.js', 'style.css', 'reset.css', 'policies.json', 'orblendEngine.js', '/img/cupcake-logo.png', '/img/social-chain.png']
 
 //INSTALLATION
 self.addEventListener("install", (event) => {
