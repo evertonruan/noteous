@@ -5,7 +5,7 @@ self.addEventListener("install", event => {
     .then(cache => {
       console.log(cache)
       console.log(noteousResources)
-      return cache.addAll(noteousResources)
+      return cache.add(noteousResources)
     })
   )
   console.log("SW installed")
