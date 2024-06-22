@@ -48,9 +48,10 @@ self.addEventListener('fetch', event => {
         const networkFetch = fetch(event.request).then(response => {
           // update the cache with a clone of the network response
           const responseClone = response.clone()
+          console.log(responseClone)
 
           caches.open('noteousCache').then(cache => {
-            cache.put(event.request, responseClone)
+            cache.add(responseClone)
           })
           return response
         }).catch(function (reason) {
