@@ -58,7 +58,7 @@ self.addEventListener('fetch', event => {
           caches.open('noteousCache').then(cache => {
             console.log('clone')
             console.log(responseClone.url)
-            cache.put(responseClone.url)
+            cache.put(event.request,responseClone.url)
           })
           return response
         }).catch(function (reason) {
