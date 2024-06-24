@@ -44,7 +44,6 @@
       "sizes": "512x512"
     }
   ],
-  "id": "/index.html",
   "start_url": "/index.html",
   "background_color": "#f5993d",
   "display": "standalone",
