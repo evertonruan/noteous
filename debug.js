@@ -1,0 +1,12 @@
+let noteousMain = JSON.parse(localStorage.getItem('noteous-main')) || []
+let noteousSettings = JSON.parse(localStorage.getItem('noteous-settings'))
+
+let body = document.querySelector('body')
+
+for (let prop in noteousSettings) {
+    body.append(document.createTextNode(`${prop}: ${noteousSettings[prop]}`))
+    body.append(document.createElement('br'))
+}
+
+
+
