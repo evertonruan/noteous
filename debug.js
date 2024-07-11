@@ -8,24 +8,23 @@ for (let prop in noteousSettings) {
     body.append(document.createElement('br'))
 }
 
+let buttonUnregisterServiceWorker = document.createElement('button')
+buttonUnregisterServiceWorker.setAttribute('onclick','unRegisterServiceWorker()')
+
+function unRegisterServiceWorker() {
+    alert('ok')
+    /*
 if ('serviceWorker' in navigator) {
     navigator.serviceWorker.getRegistrations()
         .then(function(registrations) {
             for (let registration of registrations) {
-                console.log(registration.unregister());
-                console.log(registration)
-                console.log(registrations)
-
-                registration.unregister().then((boolean) => {
-                    // if boolean = true, unregister is successful
-                  })
-                .catch((error) => {
-                  // registration failed
-                  console.error(`Registration failed with ${error}`);
-                });
-                
+                registration.unregister();
             }
         });
 }
+    */
+}
+
+
 
 
