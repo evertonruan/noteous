@@ -10,10 +10,11 @@ for (let prop in noteousSettings) {
 
 let buttonUnregisterServiceWorker = document.createElement('button')
 buttonUnregisterServiceWorker.setAttribute('onclick','unRegisterServiceWorker()')
+buttonUnregisterServiceWorker.innerText = 'Remover Service Worker'
+body.append(buttonUnregisterServiceWorker)
 
 function unRegisterServiceWorker() {
     alert('ok')
-    /*
 if ('serviceWorker' in navigator) {
     navigator.serviceWorker.getRegistrations()
         .then(function(registrations) {
@@ -22,7 +23,7 @@ if ('serviceWorker' in navigator) {
             }
         });
 }
-    */
+
 }
 
 
