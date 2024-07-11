@@ -9,7 +9,13 @@ for (let prop in noteousSettings) {
 }
 
 if ('serviceWorker' in navigator) {
-    console.log(navigator.serviceWorker.getRegistrations())
+    navigator.serviceWorker.getRegistrations()
+        .then(function(registrations) {
+            for (let registration of registrations) {
+                console.log(registration.unregister());
+                
+            }
+        });
 }
 
 
