@@ -8,5 +8,13 @@ for (let prop in noteousSettings) {
     body.append(document.createElement('br'))
 }
 
+if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.getRegistrations()
+        .then(function(registrations) {
+            for (let registration of registrations) {
+                console.log(registration)
+            }
+        });
+}
 
 
