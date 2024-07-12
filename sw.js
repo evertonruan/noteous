@@ -1,55 +1,46 @@
-self.addEventListener('install', e => {
-  console.log('[Service Worker] Install')
-  e.waitUntil(
+//noteous SW version = 240711-1
+
+/*
+When the user accepts the terms, the Service Worker is installed and adds resources to the cache.
+Once they are cached, noteous will use only this local content and will no longer connect to the server to update content.
+To update any content: 1. Upload the resource; 2. Change the value in the Service Worker version.
+When there are changes in the sw.js file, it will force the Service Worker to update, subsequently updating all resources
+(First, in page load, it will update the resources changed and activate (not install) SW new version. When tab is closed and reopened, then new SW version will be installed)
+*/
+
+
+//INSTALLATION
+self.addEventListener('install', event => {
+  event.waitUntil(
     (async () => {
-      const cache = await caches.open(cacheName)
-      console.log('[Service Worker] Caching all: app shell and content')
-      await cache.addAll(contentToCache)
+      const cache = await caches.open('noteousCache')
+      await cache.addAll(noteousResources)
     })()
   )
 })
 
-const cacheName = 'noteousCache'
-const contentToCache = [
+const noteousResources = [
   '/',
   'index.html',
   'index.js',
-  'style.css',
-  'orblendEngine.js',
   'about.html',
   'about.js',
-  'manifest.json',
-  '/img/logo-icon-512.png',
-  '/img/cupcake logo.png',
-  '/img/preview.png',
-  '/img/favicon.png',
-  '/img/social-chain.png'
-]
+  'style.css',
+  'reset.css',
+  'policies.json',
+  'orblendEngine.js',
+  '/img/cupcake-logo.png',
+  '/img/social-chain.png']
 
-self.addEventListener('fetch', e => {
-  e.respondWith(
-    (async () => {
-      const r = await caches.match(e.request)
-      console.log(`[Service Worker] Fetching resource: ${e.request.url}`)
-      if (r) {
-        return r
-      }
-      const response = await fetch(e.request)
-      const cache = await caches.open(cacheName)
-      console.log(`[Service Worker] Caching new resource: ${e.request.url}`)
-      cache.put(e.request, response.clone())
-      return response
-    })()
-  )
-})
-
-//clears the cache
+//ACTIVATION
+//Cache cleaning
 self.addEventListener('activate', e => {
+  console.log("SW activated")
   e.waitUntil(
     caches.keys().then(keyList => {
       return Promise.all(
         keyList.map(key => {
-          if (key === cacheName) {
+          if (key === 'noteousCache') {
             return
           }
 
@@ -58,4 +49,14 @@ self.addEventListener('activate', e => {
       )
     })
   )
+})
+
+self.addEventListener("fetch", event => {
+  event.respondWith(
+    caches.match(event.request)
+    .then(cachedResponse => {
+        return cachedResponse || fetch(event.request)
+    }
+  )
+ )
 })
