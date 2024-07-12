@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link rel="manifest" href="manifest.json" />
+
+    <!--MERRIWEATHER-->
+    <!--DM-SERIF-->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Serif+Text:ital@1&family=Merriweather+Sans:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <!--MATERIAL SYMBOLS-->
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
+    />
+
+    <!--MATERIAL ICONS-->
+    <link
+      href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet"
+    />
+
+    <link rel="stylesheet" href="style.css" />
+    <meta name="theme-color" content="#fce6cf" />
+    <link rel="shortcut icon" href="./img/favicon.png" type="image/x-icon" />
+
+    <title>noteous</title>
+  </head>
+  <body id="index">
+    <header id="presentation-panel">
+      <a class="nav-point" href="about.html"
+        ><span class="material-symbols-rounded"> settings </span></a
+      >
+      <a href="index.html"><h1 id="logo">noteous</h1></a>
+      <div
+        id="shortcut-button"
+        class="nav-point"
+        onclick="shortcutButtonConfig('change-text')"
+      >
+        <span id="shortcut-text" class="material-symbols-rounded"></span>
+      </div>
+    </header>
+    <main>
+      <section id="section-write">
+        <div id="info-panel"></div>
+        <div id="write-panel">
+          <label id="write-label">Qual o próximo passo?</label>
+          <span id="write-options"></span>
+          <textarea
+            id="write-input"
+            type="text"
+            autofocus
+            placeholder="✔ Sua próxima tarefa ou lembrete"
+          ></textarea>
+          <div id="write-buttons-container">
+            <button id="write-button-add" class="write-buttons">
+              + adicionar nota
+            </button>
+            <button id="write-button-edit" class="write-buttons" hidden="true">
+              <span class="material-icons"> check_circle </span>
+            </button>
+            <button
+              id="write-button-cancel"
+              class="write-buttons"
+              hidden="true"
+            >
+              <span class="material-icons"> block </span>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <section id="section-read">
+        <div id="read-options">
+          <input
+            hidden="true"
+            type="search"
+            id="read-search-input"
+            placeholder="Pesquisar no noteous"
+          />
+          <p id="read-options-sort"></p>
+        </div>
+
+        <div id="read-panel">
+          <div id="read-notes-list"></div>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <p><span>noteous preview</span>1.5</p>
+    </footer>
+
+    <script type="text/javascript" src="orblendEngine.js"></script>
+    <script type="text/javascript" src="index.js"></script>
+  </body>
+</html>
