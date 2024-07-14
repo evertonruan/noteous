@@ -1,4 +1,4 @@
-//noteous SW version = 240714-1
+//noteous SW version = 240712-3
 
 /*
 When the user accepts the terms, the Service Worker is installed and adds resources to the cache.
@@ -37,16 +37,10 @@ const noteousResources = [
 self.addEventListener('activate', e => {
   console.log("SW activated")
   e.waitUntil(
-    caches.keys().then(keyList => {
-      return Promise.all(
-        keyList.map(key => {
-          if (key === 'noteousCache') {
-            return
-          }
-
-          return caches.delete(key)
-        })
-      )
+    caches.keys().then((cacheNames) => {
+      for (const name of cacheNames) {
+        caches.delete(name);
+      }
     })
   )
 })

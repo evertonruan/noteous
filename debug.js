@@ -53,34 +53,44 @@ function unRegisterServiceWorker() {
 
         caches.keys().then((cacheNames) => {
             for (const name of cacheNames) {
-                console.log(name)
               caches.delete(name);
             }
           });
 
-}
-        buttonUnregisterServiceWorker.innerText = '🔄️ Instalando Service Worker'
-        setTimeout(() => {
-            if ('serviceWorker' in navigator) {
-                navigator.serviceWorker.register('sw.js')
-              }
-            buttonUnregisterServiceWorker.innerText = '✅ Service Worker reinstalado'
-
-            body.append(document.createElement('br'))
-            let notice = document.createElement('p')
-            notice.innerHTML = `Agora, siga estes passos para verificar uma atualização: <br>
-            1 - Feche o noteous. Aguarde alguns instantes e abra-o novamente <br>
-            2 - Recarregue a página algumas vezes <br>
-            3 - Caso ainda não atualize, desinstale e instale novamente. Sua notas não serão afetadas se você fizer isso`
-            body.append(notice)
-            body.append(document.createTextNode(``))
-        }, 4000);
+          noteousSettings.debug = 'SW'
+          localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
+          window.location.reload()
+        }
     }, 1000);
-    
+}
+
+//Ao recarregar a página, verifica se o SW está sendo reinstalado
+if (noteousSettings.debug == 'SW') {
+    reinstallServiceWorker()
+}
 
 
+function reinstallServiceWorker() {
+    buttonUnregisterServiceWorker.removeAttribute('onclick')
+    buttonUnregisterServiceWorker.innerText = '🔄️ Instalando Service Worker'
+    setTimeout(() => {
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('sw.js')
+            }
+        buttonUnregisterServiceWorker.innerText = '✅ Service Worker reinstalado'
 
+        noteousSettings.debug = ''
+        localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
 
+        body.append(document.createElement('br'))
+        let notice = document.createElement('p')
+        notice.innerHTML = `Agora, siga estes passos para verificar uma atualização: <br>
+        1 - Feche o noteous. Aguarde alguns instantes e abra-o novamente <br>
+        2 - Recarregue a página algumas vezes <br>
+        3 - Caso ainda não atualize, desinstale e instale novamente. Sua notas não serão afetadas se você fizer isso`
+        body.append(notice)
+        body.append(document.createTextNode(``))
+    }, 4000);
 }
 
 
