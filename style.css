@@ -917,6 +917,7 @@ footer p span {
 
   position: sticky;
   top: -2px;
+  z-index: 1;
 
   backdrop-filter: blur(4px);
   background-color: var(--base-color-transparent);
@@ -936,12 +937,47 @@ footer p span {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin: 3rem 0;
+  margin: 2rem 0 1.5rem 0;
 }
 
-#about-update-gen-actual img {
-  height: 8rem;
+#cupcake-container {
+  display: flex;
+  max-height: 12rem;
+}
+
+#cupcake-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#cupcake-outline {
+  position: absolute;
+  height: 12rem;
   width: auto;
+  opacity: 80%;
+}
+
+@keyframes rotate {
+  0% {
+      transform: rotate(0deg);
+  }
+  100% {
+      transform: rotate(360deg);
+  }
+}
+
+#cupcake {
+  position: relative;
+  height: 12rem;
+  width: auto;
+  padding-left: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+#cupcake.clickable:active {
+  filter: contrast(90%);
+  transform: scale(0.98);
 }
 
 #gen-child-1 {

@@ -38,6 +38,22 @@ buttonUnregisterServiceWorker.setAttribute('onclick','unRegisterServiceWorker()'
 buttonUnregisterServiceWorker.innerText = 'Remover Service Worker'
 body.append(buttonUnregisterServiceWorker)
 
+// Obtém todos os caches disponíveis
+caches.keys().then((cacheNames) => {
+    cacheNames.forEach((cacheName) => {
+      caches.open(cacheName).then((cache) => {
+        cache.keys().then((cachedRequests) => {
+          console.log(`Recursos em cache no ${cacheName}:`);
+          cachedRequests.forEach((request) => {
+            console.log(request.url);
+          });
+        });
+      });
+    });
+  });
+  
+
+
 function unRegisterServiceWorker() {
     buttonUnregisterServiceWorker.removeAttribute('onclick')
     buttonUnregisterServiceWorker.innerText = '🔄️ Removendo Service Worker'

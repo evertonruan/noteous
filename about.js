@@ -19,6 +19,10 @@ let buttonPolicies = document.querySelector('#about-button-policies')
 let policiesContainerData = document.querySelector('#policies-container-data')
 let policiesSwitchVar = 0
 
+let cupcake = document.querySelector('#cupcake')
+let cupcakeOutline = document.querySelector('#cupcake-outline')
+let label = document.querySelector('#gen-child-2')
+
 ///////
 
 function navLink() {
@@ -235,5 +239,83 @@ advancedSwitch.addEventListener('click', () => {
     for (point of updateAdvanced) {
       point.setAttribute('hidden', 'true')
     }
+  }
+})
+
+let e = 100
+let p = 0
+
+let erefresh
+
+function prefresh(){
+  erefresh = setInterval(() => {
+    p++
+    label.textContent = p
+  }, 50);
+}
+
+cupcakeOutline.style.animation = 'rotate 100s linear infinite'
+
+cupcake.addEventListener('click', () => {
+  e -= 1
+
+  if (e == 99) {
+    cupcakeOutline.style.animation = 'rotate 50s linear infinite'
+  } else if (e == 97) {
+    prefresh()
+    cupcake.setAttribute('src', './img/cupcake/cupcake-2.png')
+  } else if (e == 90) {
+    cupcake.setAttribute('src', './img/cupcake/cupcake-3.png')
+    cupcake.classList.add('clickable')
+    cupcakeOutline.style.animation = 'rotate 30s linear infinite'
+  } else if (e == 80) {
+    cupcake.setAttribute('src', './img/cupcake/cupcake-4.png')
+  } else if (e == 70) {
+    cupcake.setAttribute('src', './img/cupcake/cupcake-5.png')
+    cupcakeOutline.style.animation = 'rotate 15s linear infinite'
+  } else if (e == 65) {
+    cupcake.setAttribute('src', './img/cupcake/cupcake-6.png')
+  } else if (e == 60) {
+    cupcake.setAttribute('src', './img/cupcake/cupcake-7.png')
+  } else if (e == 50) {
+    cupcake.setAttribute('src', './img/cupcake/cupcake-8.png')
+  } else if (e == 40) {
+    cupcake.setAttribute('src', './img/cupcake/cupcake-9.png')
+    cupcakeOutline.style.animation = 'rotate 10s linear infinite'
+  } else if (e == 35) {
+    cupcake.setAttribute('src', './img/cupcake/cupcake-10.png')
+  } else if (e == 30) {
+    cupcake.setAttribute('src', './img/cupcake/cupcake-11.png')
+  } else if (e == 25) {
+    cupcake.setAttribute('src', './img/cupcake/cupcake-12.png')
+  } else if (e == 20) {
+    cupcake.setAttribute('src', './img/cupcake/cupcake-13.png')
+  } else if (e == 15) {
+    cupcake.setAttribute('src', './img/cupcake/cupcake-14.png')
+  } else if (e == 10) {
+    cupcake.setAttribute('src', './img/cupcake/cupcake-15.png')
+  } else if (e == 5) {
+    cupcake.setAttribute('src', './img/cupcake/cupcake-16.png')
+    cupcakeOutline.style.animation = 'rotate 5s linear infinite'
+  } else if (e == 0) {
+    cupcake.setAttribute('src', './img/cupcake/cupcake-17.png')
+    cupcakeOutline.style.animation = 'rotate 3s linear infinite'
+    clearInterval(erefresh)
+    let s = function (event) {
+      let s
+      if (p <= 200) {
+        s = '⚡⚡⚡⚡⚡'
+      } else if (p > 201 && p <= 300) {
+        s = '⚡⚡⚡⚡'
+      } else if (p > 301 && p <= 400) {
+        s = '⚡⚡⚡'
+      } else if (p > 401 && p <= 500) {
+        s = '⚡⚡'
+      } else if (p >= 501) {
+        s = '⚡'
+      }
+      return s
+    }
+    label.textContent = `${p} ${s()}`
   }
 })
