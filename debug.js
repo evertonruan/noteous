@@ -57,7 +57,7 @@ function unRegisterServiceWorker() {
               caches.keys().then(keyList => {
                 return Promise.all(
                   keyList.map(key => {
-                    if (key === 'noteousCache') {
+                    if (key == 'noteousCache') {
                       return
                     }
           
