@@ -50,6 +50,19 @@ function unRegisterServiceWorker() {
                 registration.unregister();
             }
         });
+
+              caches.keys().then(keyList => {
+                return Promise.all(
+                  keyList.map(key => {
+                    if (key === 'noteousCache') {
+                      return
+                    }
+          
+                    return caches.delete(key)
+                  })
+                )
+              })
+
 }
         buttonUnregisterServiceWorker.innerText = '🔄️ Instalando Service Worker'
         setTimeout(() => {
@@ -57,7 +70,6 @@ function unRegisterServiceWorker() {
                 navigator.serviceWorker.register('sw.js')
               }
             buttonUnregisterServiceWorker.innerText = '✅ Service Worker reinstalado'
-            
 
             body.append(document.createElement('br'))
             let notice = document.createElement('p')
