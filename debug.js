@@ -51,22 +51,13 @@ function unRegisterServiceWorker() {
             }
         });
 
-        self.addEventListener('activate', e => {
-            console.log("SW activated")
-            e.waitUntil(
-              caches.keys().then(keyList => {
-                return Promise.all(
-                  keyList.map(key => {
-                    if (key == 'noteousCache') {
-                      return
-                    }
-          
-                    return caches.delete(key)
-                  })
-                )
-              })
-            )
-          })
+        caches.keys().then((cacheNames) => {
+            for (const name of cacheNames) {
+                console.log(name)
+              caches.delete(name);
+            }
+          });
+
 }
         buttonUnregisterServiceWorker.innerText = '🔄️ Instalando Service Worker'
         setTimeout(() => {
