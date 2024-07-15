@@ -294,7 +294,7 @@ function welcomeToNoteous(context, subcontext) {
     
     let greetingPoliciesNoticeLink = document.createElement('p')
     greetingPoliciesNoticeLink.classList.add('greeting-policies-text-link')
-    greetingPoliciesNoticeLink.innerHTML = `<strong>Se preferir, acesse a versão estável do noteous<strong> <br> <br>`
+    greetingPoliciesNoticeLink.innerHTML = `<strong>Se preferir, acesse a versão estável do noteous ↗ <strong> <br> <br>`
     greetingPoliciesNoticeLink.addEventListener('click', () => {
       window.location.replace('https://noteous.vercel.app')
     })
