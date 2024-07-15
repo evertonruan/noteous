@@ -1,4 +1,4 @@
-//noteous SW version = 240714-7
+//noteous SW version = 240714-8
 
 /*
 When the user accepts the terms, the Service Worker is installed and adds resources to the cache.
@@ -29,7 +29,24 @@ const noteousResources = [
   'reset.css',
   'policies.json',
   'orblendEngine.js',
+  '/img/cupcake/cupcake-outline.png',
   '/img/cupcake/cupcake.png',
+  '/img/cupcake/cupcake-2.png',
+  '/img/cupcake/cupcake-3.png',
+  '/img/cupcake/cupcake-4.png',
+  '/img/cupcake/cupcake-5.png',
+  '/img/cupcake/cupcake-6.png',
+  '/img/cupcake/cupcake-7.png',
+  '/img/cupcake/cupcake-8.png',
+  '/img/cupcake/cupcake-9.png',
+  '/img/cupcake/cupcake-10.png',
+  '/img/cupcake/cupcake-11.png',
+  '/img/cupcake/cupcake-12.png',
+  '/img/cupcake/cupcake-13.png',
+  '/img/cupcake/cupcake-14.png',
+  '/img/cupcake/cupcake-15.png',
+  '/img/cupcake/cupcake-16.png',
+  '/img/cupcake/cupcake-17.png',
   '/img/social-chain.png']
 
 //ACTIVATION
@@ -37,10 +54,15 @@ const noteousResources = [
 self.addEventListener('activate', e => {
   console.log("SW activated")
   e.waitUntil(
-    caches.keys().then((cacheNames) => {
-      for (const name of cacheNames) {
-        caches.delete(name);
-      }
+    caches.keys().then(keyList => {
+      return Promise.all(
+        keyList.map(key => {
+          if (key === 'noteousCache') {
+            return
+          }
+          return caches.delete(key)
+        })
+      )
     })
   )
 })
