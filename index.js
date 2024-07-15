@@ -171,7 +171,7 @@ function welcomeToNoteous(context, subcontext) {
 
     if (subcontext == 'first-access') {
       greetingTitle1.append(document.createTextNode('Bem-vindo ao'))
-      greetingTitle2.append(document.createTextNode('noteous'))
+      greetingTitle2.append(document.createTextNode('noteous preview'))
       greetingDescriptionTitle.append(
         document.createTextNode(
           'Faça anotações, realize tarefas, seja mais produtivo'
@@ -219,7 +219,7 @@ function welcomeToNoteous(context, subcontext) {
       greetingTitle2.append(document.createTextNode('noteous'))
       greetingDescriptionTitle.append(
         document.createTextNode(
-          'O noteous foi atualizado: a versão 1.5 está incrível! Veja algumas novidades'
+          'O noteous preview foi atualizado: a versão 1.5 está incrível! Veja algumas novidades'
         )
       )
 
@@ -279,15 +279,25 @@ function welcomeToNoteous(context, subcontext) {
     greetingTitleContainer.append(greetingTitleIcon, greetingTitle2)
 
     greetingTitle1.append(document.createTextNode('Bem-vindo ao'))
-    greetingTitle2.append(document.createTextNode('noteous'))
+    greetingTitle2.append(document.createTextNode('noteous preview'))
 
     let greetingPoliciesTitle = document.createElement('p')
     greetingPoliciesTitle.classList.add('greeting-description-title')
-    greetingPoliciesTitle.innerHTML =
-      'Para continuar, você precisa aceitar os termos a seguir'
+    greetingPoliciesTitle.innerHTML = 'Para continuar, você precisa aceitar os termos a seguir'
 
     let greetingPoliciesContainer = document.createElement('div')
     greetingPoliciesContainer.classList.add('greeting-policies-container')
+
+    let greetingPoliciesNotice = document.createElement('p')
+    greetingPoliciesNotice.classList.add('greeting-policies-text')
+    greetingPoliciesNotice.innerHTML = `<em> Importante: Você está acessando o noteous preview, que é um canal de testes do noteous. Ao continuar, você está ciente que este aplicativo pode apresentar erros e instabilidades.</em> <br>`
+    
+    let greetingPoliciesNoticeLink = document.createElement('p')
+    greetingPoliciesNoticeLink.classList.add('greeting-policies-text-link')
+    greetingPoliciesNoticeLink.innerHTML = `<strong>Se preferir, acesse a versão estável do noteous<strong> <br> <br>`
+    greetingPoliciesNoticeLink.addEventListener('click', () => {
+      window.location.replace('https://noteous.vercel.app')
+    })
 
     let greetingPoliciesTermsUse = document.createElement('p')
     greetingPoliciesTermsUse.classList.add('greeting-policies-text')
@@ -340,6 +350,8 @@ function welcomeToNoteous(context, subcontext) {
           'Ao clicar no botão Aceito, você concorda com as condições dos Termos de Uso e Política de Privacidade. Se não aceitar estas condições, não poderá usar o aplicativo.'
 
         greetingPoliciesContainer.append(
+          greetingPoliciesNotice,
+          greetingPoliciesNoticeLink,
           greetingPoliciesTitle2,
           greetingPoliciesTermsUse,
           greetingPoliciesTitle3,

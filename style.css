@@ -764,6 +764,14 @@ footer p span {
   text-justify: inter-word;
 }
 
+.greeting-policies-text-link {
+  font-size: 105%;
+  text-align: justify;
+  text-justify: inter-word;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
 .greeting-policies-description {
   margin: 3rem 0;
   font-size: 80%;
