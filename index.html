@@ -21,6 +21,7 @@
       rel="stylesheet"
     />
 
+    <link rel="stylesheet" href="reset.css" />
     <link rel="stylesheet" href="style.css" />
 
     <!--MATERIAL ICONS-->
@@ -28,51 +29,71 @@
       href="https://fonts.googleapis.com/icon?family=Material+Icons"
       rel="stylesheet"
     />
+    <meta name="theme-color" content="#f5993d" />
     <title>noteous</title>
     <link rel="shortcut icon" href="./img/favicon.png" type="image/x-icon" />
   </head>
   <body id="index">
     <header>
-      <a href="index.html"><h1 id="logo">noteous</h1></a>
       <nav>
-        <ul>
-          <li>
-            <div id="theme-container">
-              <p>Tema</p>
-              <div id="theme-color"></div>
-            </div>
-          </li>
-          <li>
-            <a id="nav-update" href="about.html">Saiba Mais</a>
-          </li>
-        </ul>
+        <a href="index.html"><h1 id="logo">noteous</h1></a>
+        <div id="nav-options">
+          <button id="theme-container">
+            <p>Tema</p>
+            <div id="theme-color"></div>
+          </button>
+          <a id="nav-link" onclick="navLink()" tabindex="7">Ajustes&Info</a>
+        </div>
       </nav>
     </header>
     <main>
       <section id="section-write">
         <div id="info-panel"></div>
         <div id="write-panel">
-          <label id="write-label">Qual o próximo passo?</label>
-          <span id="write-options"></span>
-          <textarea
-            id="write-input"
-            type="text"
-            autofocus
-            placeholder="✔ Sua próxima tarefa ou lembrete"
-          ></textarea>
-          <div id="write-buttons-container">
-            <button id="write-button-add" class="write-buttons">
-              + adicionar nota
-            </button>
-            <button id="write-button-edit" class="write-buttons" hidden="true">
+          <label id="write-label" for="write-input"
+            >Qual o próximo passo?</label
+          >
+          <div class="write-buttons-container">
+            <button
+              id="write-button-edit"
+              class="write-buttons write-button-edit"
+              hidden="true"
+              aria-label="Aceitar edição da nota"
+              tabindex="4"
+            >
               <span class="material-icons"> check_circle </span>
             </button>
             <button
               id="write-button-cancel"
-              class="write-buttons"
+              class="write-buttons write-button-edit"
               hidden="true"
+              aria-label="Cancelar edição da nota"
+              tabindex="5"
             >
-              <span class="material-icons"> block </span>
+              <span class="material-icons"> close </span>
+            </button>
+          </div>
+
+          <button
+            id="write-options"
+            tabindex="2"
+            aria-label="Botão alterar prioridade da nota"
+          ></button>
+          <textarea
+            id="write-input"
+            type="text"
+            autofocus
+            tabindex="1"
+            placeholder="✔ Sua próxima tarefa ou lembrete"
+          ></textarea>
+          <div id="write-buttons-container">
+            <button
+              id="write-button-add"
+              class="write-buttons"
+              aria-label="Adicionar nota"
+              tabindex="3"
+            >
+              + adicionar nota
             </button>
           </div>
         </div>
@@ -80,7 +101,7 @@
 
       <section id="section-read">
         <div id="read-options">
-          <p id="read-options-sort"></p>
+          <button id="read-options-sort" tabindex="6"></button>
         </div>
 
         <div id="read-panel">
@@ -90,9 +111,40 @@
     </main>
 
     <footer>
-      <p><span>noteous</span> 1ª Geração • v1.4.5</p>
+      <p><span>noteous</span>v1.5</p>
     </footer>
 
     <script type="text/javascript" src="index.js"></script>
+
+    <script>
+      window.va =
+        window.va ||
+        function () {
+          ;(window.vaq = window.vaq || []).push(arguments)
+        }
+    </script>
+    <script>
+      if (noteousSettings != null && noteousSettings.noteousVersion >= 1.5) {
+        let script = document.createElement('script')
+        script.setAttribute('defer', 'true')
+        script.setAttribute('src', '/_vercel/insights/script.js')
+        document.getElementsByTagName('body')[0].appendChild(script)
+      }
+    </script>
+    <script>
+      window.si =
+        window.si ||
+        function () {
+          ;(window.siq = window.siq || []).push(arguments)
+        }
+    </script>
+    <script>
+      if (noteousSettings != null && noteousSettings.noteousVersion >= 1.5) {
+        let script2 = document.createElement('script')
+        script2.setAttribute('defer', 'true')
+        script2.setAttribute('src', '/_vercel/speed-insights/script.js')
+        document.getElementsByTagName('body')[0].appendChild(script2)
+      }
+    </script>
   </body>
 </html>
