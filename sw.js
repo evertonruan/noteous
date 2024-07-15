@@ -13,11 +13,16 @@ When there are changes in the sw.js file, it will force the Service Worker to up
 self.addEventListener('install', event => {
   event.waitUntil(
     (async () => {
-      const cache = await caches.open('noteousCache')
-      await cache.addAll(noteousResources)
+      try {
+        const cache = await caches.open('noteousCache');
+        await cache.addAll(noteousResources);
+        console.log('Recursos adicionados ao cache com sucesso!');
+      } catch (error) {
+        console.error('Erro ao adicionar recursos ao cache:', error);
+      }
     })()
-  )
-})
+  );
+});
 
 const noteousResources = [
   '/',

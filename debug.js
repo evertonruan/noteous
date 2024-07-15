@@ -2,36 +2,42 @@ let noteousMain = JSON.parse(localStorage.getItem('noteous-main')) || []
 let noteousSettings = JSON.parse(localStorage.getItem('noteous-settings'))
 
 let body = document.querySelector('body')
+let br = function (event) {body.append(document.createElement('br'))}
 
-body.append(document.createTextNode(`Bem-vindo à página de diagnóstico do noteous`))
+body.append(document.createTextNode(`Bem-vindo à página de diagnóstico do noteous preview`))
 
-body.append(document.createElement('br'))
-body.append(document.createElement('br'))
+br()
+br()
+br()
 
-body.append(document.createElement('br'))
 
 body.append(document.createTextNode(`• CONFIGURAÇÕES ARMAZENADAS`))
 
-body.append(document.createElement('br'))
-body.append(document.createElement('br'))
+br()
+br()
 
 for (let prop in noteousSettings) {
     body.append(document.createTextNode(`${prop}: ${noteousSettings[prop]}`))
     body.append(document.createElement('br'))
 }
 
-body.append(document.createElement('br'))
-body.append(document.createElement('br'))
-body.append(document.createElement('br'))
+br()
+br()
+br()
 
 body.append(document.createTextNode(`• SOLUÇÃO DE PROBLEMAS`))
-body.append(document.createElement('br'))
-body.append(document.createElement('br'))
 
-body.append(document.createTextNode(`noteous não atualiza: um problema pode estar ocorrendo no mecanismo do Service Worker. Clique no botão abaixo para reinstalar. Suas notas não serão afetadas.`))
+br()
+br()
 
-body.append(document.createElement('br'))
-body.append(document.createElement('br'))
+body.append(document.createTextNode(`Versão atual: 15. Versão instalada ${noteousSettings.noteousVersion}`))
+
+br()
+
+body.append(document.createTextNode(`Se a versão atual for diferente da versão instalada, um problema pode estar ocorrendo no mecanismo do Service Worker. Clique no botão abaixo para reinstalar. Suas notas não serão afetadas.`))
+
+br()
+br()
 
 let buttonUnregisterServiceWorker = document.createElement('button')
 buttonUnregisterServiceWorker.setAttribute('onclick','unRegisterServiceWorker()')
@@ -66,18 +72,20 @@ function unRegisterServiceWorker() {
                 registration.unregister();
             }
         });
-
+      }
+      buttonUnregisterServiceWorker.innerText = '🔄️ Limpando o cache'
+      setTimeout(() => {
         caches.keys().then((cacheNames) => {
-            for (const name of cacheNames) {
-              caches.delete(name);
-            }
-          });
+          for (const name of cacheNames) {
+            caches.delete(name);
+          }
+        });
 
-          noteousSettings.debug = 'SW'
-          localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
-          window.location.reload()
-        }
-    }, 1000);
+        noteousSettings.debug = 'SW'
+        localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
+        window.location.reload()
+      }, 2000);
+    }, 2000);
 }
 
 //Ao recarregar a página, verifica se o SW está sendo reinstalado
