@@ -1,6 +1,6 @@
 {
-  "short_name": "noteous",
-  "name": "noteous",
+  "short_name": "noteous preview",
+  "name": "noteous preview",
   "icons": [
     {
       "src": "/img/logo-icon-maskable.svg",
@@ -46,9 +46,9 @@
   ],
   "id": "/index.html",
   "start_url": "/index.html",
-  "background_color": "#fce6cf",
+  "background_color": "#f5993d",
   "display": "standalone",
   "scope": "/",
-  "theme_color": "#fce6cf",
+  "theme_color": "#f5993d",
   "description": "Unique notetaking app"
 }

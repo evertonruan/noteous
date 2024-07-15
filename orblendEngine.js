@@ -68,15 +68,15 @@ function orblendEngine(context) {
       if (noteousSettings.noteId != 0) {
         if (confirm('Você estava editando uma nota, deseja recuperá-la?')) {
           openNote(noteousSettings.noteId)
-          noteInput.value = noteousSettings.input
+          writeInput.value = noteousSettings.input
         } else {
           noteousSettings.input = ''
           noteousSettings.noteId = 0
         }
       } else {
         if (confirm('Há uma nota não salva. Deseja recuperá-la?')) {
-          noteInput.value = noteousSettings.input
-          noteInput.focus()
+          writeInput.value = noteousSettings.input
+          writeInput.focus()
         } else {
           noteousSettings.input = ''
         }
@@ -104,23 +104,22 @@ function orblendEngine(context) {
     infoPanel.append(dateElement(), infoElement(subcontext, getRandom()))
   } else if (context == 'on-change-input') {
     //Habilitar/Desabilitar Botão Adicionar Nota
-    if (noteInput.value === '') {
-      noteButtonAdd.disabled = true
+    if (writeInput.value === '') {
+      writeButtonAdd.disabled = true
+      writeButtonAdd.setAttribute('aria-hidden', 'true')
     } else {
-      noteButtonAdd.disabled = false
+      writeButtonAdd.disabled = false
+      writeButtonAdd.setAttribute('aria-hidden', 'false')
     }
 
     //Backup Inteligente de Nota
     if (editMode == false) {
-      noteousSettings.input = noteInput.value
+      noteousSettings.input = writeInput.value
       localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
-      console.log(noteousSettings.input)
     } else if (editMode == true) {
-      noteousSettings.input = noteInput.value
+      noteousSettings.input = writeInput.value
       noteousSettings.noteId = noteIdEdit
       localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
-      console.log(noteousSettings.input)
-      console.log(noteousSettings.noteId)
     }
 
     //Redimensionamento Inteligente do Campo de Input
@@ -128,18 +127,19 @@ function orblendEngine(context) {
     let input = noteousSettings.input
     let newLines
     if (input.match(/\n/g) == null) {
+      //se não houver novas linhas (/n) --> esvazia variável newLines que indica quantidade de linhas
       newLines = ['']
     } else {
-      newLines = input.match(/\n/g)
+      newLines = input.match(/\n/g) //se houver linhas, informa quantidade na variável newLines
     }
 
     //Aplica novo tamanho se tiver 2 linhas OU mais de 120 caracteres
     if (editMode == false) {
-      if (newLines.length > 2 || noteInput.value.length > 120) {
-        noteInput.classList.add('edit-mode')
+      if (newLines.length > 2 || writeInput.value.length > 120) {
+        writeInput.classList.add('edit-mode')
         writePanel.classList.add('edit-mode')
-      } else if (newLines.length < 2 || noteInput.value.length < 120) {
-        noteInput.classList.remove('edit-mode')
+      } else if (newLines.length < 2 || writeInput.value.length < 120) {
+        writeInput.classList.remove('edit-mode')
         writePanel.classList.remove('edit-mode')
       }
     }

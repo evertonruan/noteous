@@ -5,74 +5,95 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <link rel="manifest" href="manifest.json" />
-
     <!--MERRIWEATHER-->
+    <link rel="preconnect" href="https://fonts.gstatic.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Merriweather+Sans:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+
     <!--DM-SERIF-->
+
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=DM+Serif+Text:ital@1&family=Merriweather+Sans:wght@400;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=DM+Serif+Text:ital@0;1&display=swap"
       rel="stylesheet"
     />
 
-    <!--MATERIAL SYMBOLS-->
-    <link
-      rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
-    />
+    <link rel="stylesheet" href="reset.css" />
+    <link rel="stylesheet" href="style.css" />
 
     <!--MATERIAL ICONS-->
     <link
       href="https://fonts.googleapis.com/icon?family=Material+Icons"
       rel="stylesheet"
     />
-
-    <link rel="stylesheet" href="style.css" />
-    <meta name="theme-color" content="#fce6cf" />
-    <link rel="shortcut icon" href="./img/favicon.png" type="image/x-icon" />
-
+    <meta name="theme-color" content="#f5993d" />
     <title>noteous</title>
+    <link rel="shortcut icon" href="./img/favicon.png" type="image/x-icon" />
   </head>
   <body id="index">
-    <header id="presentation-panel">
-      <a class="nav-point" href="about.html"
-        ><span class="material-symbols-rounded"> settings </span></a
-      >
-      <a href="index.html"><h1 id="logo">noteous</h1></a>
-      <div
-        id="shortcut-button"
-        class="nav-point"
-        onclick="shortcutButtonConfig('change-text')"
-      >
-        <span id="shortcut-text" class="material-symbols-rounded"></span>
-      </div>
+    <header>
+      <nav>
+        <a href="index.html"><h1 id="logo">noteous</h1></a>
+        <div id="nav-options">
+          <button id="theme-container">
+            <p>Tema</p>
+            <div id="theme-color"></div>
+          </button>
+          <a id="nav-link" onclick="navLink()" tabindex="7">Ajustes&Info</a>
+        </div>
+      </nav>
     </header>
     <main>
       <section id="section-write">
         <div id="info-panel"></div>
         <div id="write-panel">
-          <label id="write-label">Qual o próximo passo?</label>
-          <span id="write-options"></span>
-          <textarea
-            id="write-input"
-            type="text"
-            autofocus
-            placeholder="✔ Sua próxima tarefa ou lembrete"
-          ></textarea>
-          <div id="write-buttons-container">
-            <button id="write-button-add" class="write-buttons">
-              + adicionar nota
-            </button>
-            <button id="write-button-edit" class="write-buttons" hidden="true">
+          <label id="write-label" for="write-input"
+            >Qual o próximo passo?</label
+          >
+          <div class="write-buttons-container">
+            <button
+              id="write-button-edit"
+              class="write-buttons write-button-edit"
+              hidden="true"
+              aria-label="Aceitar edição da nota"
+              tabindex="4"
+            >
               <span class="material-icons"> check_circle </span>
             </button>
             <button
               id="write-button-cancel"
-              class="write-buttons"
+              class="write-buttons write-button-edit"
               hidden="true"
+              aria-label="Cancelar edição da nota"
+              tabindex="5"
             >
-              <span class="material-icons"> block </span>
+              <span class="material-icons"> close </span>
+            </button>
+          </div>
+
+          <button
+            id="write-options"
+            tabindex="2"
+            aria-label="Botão alterar prioridade da nota"
+          ></button>
+          <textarea
+            id="write-input"
+            type="text"
+            autofocus
+            tabindex="1"
+            placeholder="✔ Sua próxima tarefa ou lembrete"
+          ></textarea>
+          <div id="write-buttons-container">
+            <button
+              id="write-button-add"
+              class="write-buttons"
+              aria-label="Adicionar nota"
+              tabindex="3"
+            >
+              + adicionar nota
             </button>
           </div>
         </div>
@@ -80,26 +101,60 @@
 
       <section id="section-read">
         <div id="read-options">
-          <input
-            hidden="true"
-            type="search"
-            id="read-search-input"
-            placeholder="Pesquisar no noteous"
-          />
-          <p id="read-options-sort"></p>
+          <button id="read-options-sort" tabindex="6"></button>
         </div>
 
         <div id="read-panel">
-          <div id="read-notes-list"></div>
+          <div id="read-notes"></div>
         </div>
       </section>
     </main>
 
     <footer>
-      <p><span>noteous preview</span>1.5</p>
+      <p><span>noteous preview</span> 1.6</p>
     </footer>
 
     <script type="text/javascript" src="orblendEngine.js"></script>
     <script type="text/javascript" src="index.js"></script>
+
+    <script>
+      if (noteousSettings != null && noteousSettings.noteousVersion >= 1.5) {
+        let link = document.createElement('link')
+        link.setAttribute('rel', 'manifest')
+        link.setAttribute('href', 'manifest.json')
+        document.getElementsByTagName('head')[0].appendChild(link)
+      }
+    </script>
+
+    <script>
+      window.va =
+        window.va ||
+        function () {
+          ;(window.vaq = window.vaq || []).push(arguments)
+        }
+    </script>
+    <script>
+      if (noteousSettings != null && noteousSettings.noteousVersion >= 1.5) {
+        let script = document.createElement('script')
+        script.setAttribute('defer', 'true')
+        script.setAttribute('src', '/_vercel/insights/script.js')
+        document.getElementsByTagName('body')[0].appendChild(script)
+      }
+    </script>
+    <script>
+      window.si =
+        window.si ||
+        function () {
+          ;(window.siq = window.siq || []).push(arguments)
+        }
+    </script>
+    <script>
+      if (noteousSettings != null && noteousSettings.noteousVersion >= 1.5) {
+        let script2 = document.createElement('script')
+        script2.setAttribute('defer', 'true')
+        script2.setAttribute('src', '/_vercel/speed-insights/script.js')
+        document.getElementsByTagName('body')[0].appendChild(script2)
+      }
+    </script>
   </body>
 </html>
