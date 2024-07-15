@@ -129,21 +129,19 @@
         <p class="about-update-point-version-date">14/07/2024</p>
       </div>
       <p class="update-description"><span class="update-type">ATUALIZAÇÃO GERAL</span></p>
-      <p class="update-description"><span class="update-type">NOVO</span> Correção de problema no Service Worker</p>
-        <p class="update-description"><span class="update-type">NOVO</span> Melhor compatibilidade com leitores de tela, com uso de ARIA [Accessible Rich Internet Applications]</p>
-        <p class="update-description"><span class="update-type">NOVO</span> tabindex: Agora é possível percorrer e utilizar o noteous apenas pelo teclado</p>
-        <p class="update-description"><span class="update-type">NOVO</span> Ajuste de tamanho de fonte: selecione entre tamanho pequeno, médio e grande de fonte para tornar o noteous mais confortável de usar. <span class="update-advanced">Antes, o ajuste era automático, baseado no tamanho de tela. Ou seja, em mobile, o tamanho de fonte sempre seria menor que em desktop.</span></p>
-        <p class="update-description"><span class="update-type">NOVO</span> Adicionados Termos de Uso e Política de Privacidade.</p>
-        <p class="update-description"><span class="update-type">MELHORIA</span>Design do noteous atualizado: campo de entrada de texto e placeholder agora combinam melhor com o tema escolhido.<span class="update-advanced">A maneira como o tema é aplicado mudou: em vez de um objeto com as propriedades do tema ser adicionado ao armazenamento, as propriedades são adicionadas separadamente. Além disso, há maior quantidade de propriedades de cor. Propriedade 'str' alterada para 'saturation' para identificação mais rápida</span></p>
+      <p class="update-description"><span class="update-type">NOVO</span> Melhor compatibilidade com leitores de tela, com uso de ARIA [Accessible Rich Internet Applications]</p>
+      <p class="update-description"><span class="update-type">NOVO</span> tabindex: Agora é possível utilizar o noteous apenas pelo teclado</p>
+      <p class="update-description"><span class="update-type">NOVO</span> Adicionados Termos de Uso e Política de Privacidade.</p>
+      <p class="update-description"><span class="update-type">MELHORIA</span> Design do noteous atualizado: campo de entrada de texto e placeholder agora combinam melhor com o tema escolhido.<span class="update-advanced">Foram criadas mais propriedades de cor.</span>
         <p class="update-description"><span class="update-type">MELHORIA</span> Página Saiba Mais agora é Ajustes&Info.</p>
         <p class="update-description"><span class="update-type">MELHORIA</span> Desenho noteous cupcake revisado.</p>
-        <p class="update-description"><span class="update-type">MELHORIA</span>Tela de boas vindas redesenhada. <span class="update-advanced">Antes, para cada tipo de boas vindas (primeiro acesso ou nova versão) havia código separado. Agora o código é compartilhado tanto quanto possível.</span></p>
+        <p class="update-description"><span class="update-type">MELHORIA</span> Tela de boas vindas redesenhada. <span class="update-advanced">Antes, para cada tipo de boas vindas (primeiro acesso ou nova versão) havia código separado. Agora o código é compartilhado tanto quanto possível.</span></p>
         <p class="update-description"><span class="update-type">MELHORIA</span> Revisão de tags: vários elementos estavam com tags que não representavam sua função. Agora, dentro do possível cada elemento recebe uma tag de acordo com sua função.</p>
         <p class="update-description"><span class="update-type">MELHORIA</span> Layout de edição atualizado: agora os botões ficam acima do campo de escrita de nota, e também são um pouco menores. Além disso, o botão cancelar/fechar recebe um novo símbolo.</p>
         <p class="update-description"><span class="update-type">MELHORIA</span> "for" em write-label: Ao clicar na label "Qual o próximo passo?" o campo de entrada de nota recebe foco</p>
+        <p class="update-description"><span class="update-type">CORREÇÃO</span> Revisão no mecanismo do Service Worker</p>
         <p class="update-description"><span class="update-type">AJUSTE</span> Ao sair do modo de edição, o campo de escrita de nota recebe novamente o foco (apenas se tela não for mobile)</p>
         <p class="update-description">Uso de reset.css</p>
-        <p class="update-description">Seção "Atualização para o noteous" removida.</p>
     </div>
     <div class="about-update-point">
       <div class="about-update-point-container">
@@ -158,14 +156,17 @@
       <p class="update-description">
           <span class="update-type">NOVO</span>
           <strong>Configuração de tamanho de texto: </strong>
-          Deixe o noteous do seu tamanho com o novo recurso que permite ajustar o tamanho do texto.<span class="update-advanced">Com o lançamento deste recurso, foi descontinuado o ajuste automático de tamanho de fonte ao redimensionar a janela. Por exemplo, antes se a janela fosse de computador, o tamanho da fonte seria 'normal', mas se fosse de celular, seria levemente reduzido. Porém, agora esse ajuste é manual, de acordo com sua preferência.</span>
+          Ajuste de tamanho de fonte: selecione entre tamanho pequeno, médio e grande de fonte para tornar o noteous mais confortável de usar. <span class="update-advanced">Antes, o ajuste era automático, baseado no tamanho de tela. Ou seja, em mobile, o tamanho de fonte sempre seria menor que em desktop.</span>
       </p>
-      <span class="update-advanced">
-          <p class="update-description">
-              <span class="update-type">AJUSTE</span>
-              Alguns nomes foram alterados para melhor compreensão. Por exemplo: theme → look, str → saturation. Além disso, houve uma padronização na chamada dos 'contextos'. Antes havia 2 formas, em camelCase e kebab-case. Agora o padrão é kebab-case. O camelCase é usado exclusivamente em variáveis e funções."
-          </p>
-      </span>
+      <p class="update-description">
+        <span class="update-type">AJUSTE</span>
+        <strong>Algumas melhorias de código</strong>
+            <span class="update-advanced">
+              1 - A maneira como o tema é aplicado mudou: em vez de um objeto com as propriedades do tema ser adicionado ao armazenamento, as propriedades são adicionadas separadamente
+              <br> 2 - Alguns nomes foram alterados para melhor compreensão. Por exemplo: theme → look, str → saturation
+              <br> 3 - Padronização na chamada dos 'contextos'. Antes havia 2 formas, em camelCase e kebab-case. Agora o padrão é kebab-case. O camelCase é usado exclusivamente em variáveis e funções
+            </span>
+      </p>
       <p class="update-description">
           <span class="update-type">AJUSTE</span>
           A informação de criação da nota agora é representada por '+'. Antes era "Criado em"
