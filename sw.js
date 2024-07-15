@@ -35,7 +35,7 @@ const noteousResources = [
   'policies.json',
   'orblendEngine.js',
   '/img/cupcake/cupcake-outline.png',
-  '/img/cupcake/cupcaked.png',
+  '/img/cupcake/cupcake.png',
   '/img/cupcake/cupcake-2.png',
   '/img/cupcake/cupcake-3.png',
   '/img/cupcake/cupcake-4.png',
