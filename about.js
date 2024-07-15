@@ -298,6 +298,7 @@ cupcake.addEventListener('click', () => {
     cupcake.setAttribute('src', './img/cupcake/cupcake-16.png')
     cupcakeOutline.style.animation = 'rotate 5s linear infinite'
   } else if (e == 0) {
+    cupcake.classList.remove('clickable')
     cupcake.setAttribute('src', './img/cupcake/cupcake-17.png')
     cupcakeOutline.style.animation = 'rotate 3s linear infinite'
     clearInterval(erefresh)
