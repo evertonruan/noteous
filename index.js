@@ -699,7 +699,7 @@ function renderNote(context, noteId) {
       dateElement.id = note.id + '-date-element'
       dateElement.appendChild(
         document.createTextNode(
-          `Criado em: ${new Date(note.id).getDate()}/${findMonth(
+          `+ ${new Date(note.id).getDate()}/${findMonth(
             new Date(note.id).getMonth()
           )}/${new Date(note.id).getUTCFullYear()} às ${setTimeNumber(
             new Date(note.id).getHours()
