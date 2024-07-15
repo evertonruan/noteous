@@ -29,7 +29,7 @@ const noteousResources = [
   'reset.css',
   'policies.json',
   'orblendEngine.js',
-  '/img/cupcake/cupcake.png',
+  '/img/cupcake/',
   '/img/social-chain.png']
 
 //ACTIVATION
