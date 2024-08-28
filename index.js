@@ -422,6 +422,8 @@ ${noteousSettings.look.lumAccentContainer}`
 
 //loadNoteous --> ao carregar noteous, realiza verificações
 function loadNoteous(context) {
+  console.log(window.location.hostname)
+  console.log(document.referrer)
   if (context == 'check-settings') {
     //JÁ ACESSOU NOTEOUS --> recupera dados
     if (noteousSettings != null) {
