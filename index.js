@@ -423,7 +423,6 @@ ${noteousSettings.look.lumAccentContainer}`
 //loadNoteous --> ao carregar noteous, realiza verificações
 function loadNoteous(context) {
   console.log(window.location.hostname)
-  console.log(document.referrer)
   if (context == 'check-settings') {
     //JÁ ACESSOU NOTEOUS --> recupera dados
     if (noteousSettings != null) {
@@ -454,7 +453,7 @@ function loadNoteous(context) {
       //1.5 --> não armazenar noteousSettings: aguardar usuário aceitar
       let domain = window.location.hostname
       if (domain == "noteousalpha.vercel.app") {
-        window.location.assign('http://noteous.app')
+        window.location.replace('http://noteous.app')
       }
       welcomeToNoteous('render-welcome', 'first-access')
     }
