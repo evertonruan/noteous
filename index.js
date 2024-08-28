@@ -451,7 +451,7 @@ function loadNoteous(context) {
       //NÃO HÁ CONFIGURAÇÕES --> PRIMEIRO ACESSO AO NOTEOUS
       //1.5 --> não armazenar noteousSettings: aguardar usuário aceitar
       let domain = window.location.hostname
-      if (domain == "noteous.vercel.app") {
+      if (domain == 'noteousalpha.vercel.app') {
         window.location.replace('noteous.app')
       }
       welcomeToNoteous('render-welcome', 'first-access')
