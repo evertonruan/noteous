@@ -1,4 +1,4 @@
-//noteous SW version = 240828-6
+//noteous SW version = 240828-7
 
 /*
 When the user accepts the terms, the Service Worker is installed and adds resources to the cache.
