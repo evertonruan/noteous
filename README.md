@@ -3,4 +3,4 @@
 App de notas e lembretes com um design singular
 
 ### :memo: Comece a usar!
-https://noteous.vercel.app/
+https://noteous.app
