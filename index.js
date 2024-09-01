@@ -423,7 +423,6 @@ ${noteousSettings.look.lumAccentContainer}`
 //loadNoteous --> ao carregar noteous, realiza verificações
 function loadNoteous(context) {
   console.log(window.location.hostname)
-  console.log(document.referrer)
   if (context == 'check-settings') {
     //JÁ ACESSOU NOTEOUS --> recupera dados
     if (noteousSettings != null) {
@@ -452,6 +451,12 @@ function loadNoteous(context) {
     } else if (noteousSettings == null) {
       //NÃO HÁ CONFIGURAÇÕES --> PRIMEIRO ACESSO AO NOTEOUS
       //1.5 --> não armazenar noteousSettings: aguardar usuário aceitar
+      let domain = window.location.hostname
+      if (domain == "noteous.vercel.app") {
+        window.location.replace('https://noteous.app')
+      } else if (domain == 'noteouspreview.vercel.app'){
+        window.location.replace('https://preview.noteous.app')
+      }
       welcomeToNoteous('render-welcome', 'first-access')
     }
   }
