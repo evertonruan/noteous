@@ -276,9 +276,9 @@ function welcomeToNoteous(context, subcontext) {
     greetingPoliciesTitle.classList.add('greeting-description-title')
     if (noteousSettings.noteousVersion < 1.51) {
       greetingPoliciesTitle.innerHTML =
-      'Para continuar, você precisa aceitar os termos a seguir'
-    } else if (noteousSettings.noteousVersion >= 1.51) {
       'Os termos foram atualizados. Para continuar, você precisa aceitar os termos a seguir'
+    } else if (noteousSettings.noteousVersion >= 1.51) {
+      'Para continuar, você precisa aceitar os termos a seguir'
     }
     
 
