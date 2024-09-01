@@ -274,8 +274,13 @@ function welcomeToNoteous(context, subcontext) {
 
     let greetingPoliciesTitle = document.createElement('p')
     greetingPoliciesTitle.classList.add('greeting-description-title')
-    greetingPoliciesTitle.innerHTML =
+    if (noteousSettings.noteousVersion < 1.51) {
+      greetingPoliciesTitle.innerHTML =
       'Para continuar, você precisa aceitar os termos a seguir'
+    } else if (noteousSettings.noteousVersion >= 1.51) {
+      'Os termos foram atualizados. Para continuar, você precisa aceitar os termos a seguir'
+    }
+    
 
     let greetingPoliciesContainer = document.createElement('div')
     greetingPoliciesContainer.classList.add('greeting-policies-container')
