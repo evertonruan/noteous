@@ -34,7 +34,7 @@ let readNotesList = document.querySelector('#read-notes')
 
 // VARIÁVEIS IMPORTANTES /////////////////////////////////////
 
-let currentVersion = 1.6
+let currentVersion = 1.61
 let noteIdEdit //usada para confirmar qual nota está sendo editada
 let editMode = false
 let tabIndexCounter = 10
@@ -283,7 +283,12 @@ function welcomeToNoteous(context, subcontext) {
 
     let greetingPoliciesTitle = document.createElement('p')
     greetingPoliciesTitle.classList.add('greeting-description-title')
-    greetingPoliciesTitle.innerHTML = 'Para continuar, você precisa aceitar os termos a seguir'
+    if (noteousSettings.noteousVersion < 1.61) {
+      greetingPoliciesTitle.innerHTML =
+      'Os termos foram atualizados. Para continuar, você precisa aceitar os termos a seguir'
+    } else {
+      greetingPoliciesTitle.innerHTML = 'Para continuar, você precisa aceitar os termos a seguir'
+    }
 
     let greetingPoliciesContainer = document.createElement('div')
     greetingPoliciesContainer.classList.add('greeting-policies-container')
