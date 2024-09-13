@@ -699,10 +699,10 @@ footer p span {
 }
 
 .greeting-title2 {
-  font-size: 3.5rem;
+  font-size: clamp(2rem,10vw,3.5rem);
   font-family: 'DM Serif Text', serif;
   padding-top: 0.25rem;
-  padding-left: 0.2rem;
+  padding-left: 0.6rem;
   font-style: italic;
   font-weight: bold;
   line-height: 2rem;
@@ -807,7 +807,7 @@ footer p span {
   font-family: 'Merriweather Sans', sans-serif;
   background-color: var(--base-color);
   color: var(--base-text);
-
+  user-select: none;
   cursor: default;
 }
 
