@@ -34,6 +34,28 @@ body.append(document.createTextNode(`Versão atual: 1.62. Versão instalada ${no
 
 br()
 
+if ('serviceWorker' in navigator) {
+
+  navigator.serviceWorker.getRegistration().then(function(registration) {
+  if (registration) {
+    body.append(document.createTextNode(`Se a versão atual for diferente da versão instalada, um problema pode estar ocorrendo no mecanismo do Service Worker. Clique no botão abaixo para reinstalar. Suas notas não serão afetadas.`))
+
+  br()
+  br()  
+
+  let buttonUnregisterServiceWorker = document.createElement('button')
+  buttonUnregisterServiceWorker.setAttribute('onclick','unRegisterServiceWorker()')
+  buttonUnregisterServiceWorker.innerText = 'Remover Service Worker'
+  body.append(buttonUnregisterServiceWorker)
+
+    }
+  }).catch(function(error) {
+    br()
+    body.append(document.createTextNode('❌ Não há diagnósticos disponíveis'))
+  })
+
+}
+
 // Obtém todos os caches disponíveis
 caches.keys().then((cacheNames) => {
   cacheNames.forEach((cacheName) => {
@@ -104,26 +126,4 @@ function reinstallServiceWorker() {
       body.append(notice)
       body.append(document.createTextNode(``))
   }, 4000);
-}
-
-if ('serviceWorker' in navigator) {
-
-  navigator.serviceWorker.getRegistration().then(function(registration) {
-  if (registration) {
-    body.append(document.createTextNode(`Se a versão atual for diferente da versão instalada, um problema pode estar ocorrendo no mecanismo do Service Worker. Clique no botão abaixo para reinstalar. Suas notas não serão afetadas.`))
-
-  br()
-  br()  
-
-  let buttonUnregisterServiceWorker = document.createElement('button')
-  buttonUnregisterServiceWorker.setAttribute('onclick','unRegisterServiceWorker()')
-  buttonUnregisterServiceWorker.innerText = 'Remover Service Worker'
-  body.append(buttonUnregisterServiceWorker)
-
-    }
-  }).catch(function(error) {
-    br()
-    body.append(document.createTextNode('❌ Não há diagnósticos disponíveis'))
-  })
-
 }
