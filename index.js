@@ -216,7 +216,7 @@ function welcomeToNoteous(context, subcontext) {
       )
     } else if (subcontext == 'new-version') {
       greetingTitle1.append(document.createTextNode('Bem-vindo ao'))
-      greetingTitle2.append(document.createTextNode('noteous'))
+      greetingTitle2.append(document.createTextNode('noteous preview'))
       greetingDescriptionTitle.append(
         document.createTextNode(
           'O noteous preview foi atualizado: a versão 1.6 está incrível! Veja algumas novidades'
