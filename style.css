@@ -155,6 +155,10 @@ html {
     font-size: 80%;
   }
 
+  #index #logo {
+    font-size: 2rem;
+  }
+
   #index #theme-container {
     transform: scale(0.8);
     gap: 0.3rem;
@@ -363,7 +367,7 @@ a {
   font-family: 'DM Serif Text', serif;
   font-style: italic;
   font-weight: bold;
-  font-size: 1.2rem;
+  font-size: clamp(1rem, 5vw, 1.2rem);
   text-align: center;
 
   color: var(--base-text);
@@ -843,6 +847,9 @@ footer p span {
 }
 
 .about-section {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
   margin: 3rem 0;
   padding: 1rem;
   border: 1px solid;
@@ -910,7 +917,8 @@ footer p span {
   font-family: 'DM Serif Text', serif;
   font-style: italic;
   font-weight: bold;
-  font-size: 1.5rem;
+  font-size: 1.4rem;
+  line-height: 0;
 }
 
 #about-update-logo-container {

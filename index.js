@@ -1057,13 +1057,16 @@ function openNote(noteId) {
     //SOLUÇÃO: capturar posição do writeInput e da posição do mouse e verificar se o clique está dentro dessa área. Se estiver, desbloquear o input para edição.
 
     document.addEventListener('click', function(event) {
-      const clickX = event.pageX;
-      const clickY = event.pageY - 100;
-
-      if (clickX > writeInput.offsetLeft && clickX < writeInput.offsetWidth
-        && clickY > writeInput.offsetTop && clickY < writeInput.offsetHeight + 200
-      ) {
-        writeInputEdit()
+      if (editMode == true) {
+        const clickX = event.pageX;
+        const clickY = event.pageY - 100;
+  
+        if (clickX > writeInput.offsetLeft && clickX < writeInput.offsetWidth
+          && clickY > writeInput.offsetTop && clickY < writeInput.offsetHeight + 200
+        ) {
+          document.removeEventListener('click',this)
+          writeInputEdit()
+        }
       }
     })
    
@@ -1127,9 +1130,6 @@ function editNote(noteId) {
       })
 
       //Se durante Modo de edição clicar em "Cancelar"
-      writeButtonCancelEdit.addEventListener('click', () => {
-        document.querySelector('#write-input-invisible-button').remove()
-      })
       writeButtonCancelEdit.addEventListener('click', exitEditMode)
     }
   }
