@@ -1056,13 +1056,17 @@ function openNote(noteId) {
     //Acessibilidade e Experiência do usuário: Quando o tamanho de tela é inferior a 600px, ao clicar em uma nota, a função openNote() torna readonly a caixa de texto (writeInput) para que o teclado não apareça e confunda a experiência. Ao dar um toque, a caixa é liberada para edição. PROBLEMA: Quando o recurso TalkBack (do Android) é utilizado, não é possível reconhecer o toque na caixa de texto (writeInput). Talvez isso ocorra porque a acessibilidade do Android desative o "clique" em uma caixa de texto readonly.
     //SOLUÇÃO: capturar posição do writeInput e da posição do mouse e verificar se o clique está dentro dessa área. Se estiver, desbloquear o input para edição.
 
-    document.addEventListener('click', function(event) {
+    window.addEventListener('click', function(event) {
       if (editMode == true) {
-        const clickX = event.pageX;
-        const clickY = event.pageY - 100;
+        let clickX = event.clientX;
+        let clickY = event.clientY;
+
+        let writeInputPosition = writeInput.getBoundingClientRect()
+        
+        console.log(`Click-y: ${clickY} Input-top: ${writeInputPosition.bottom}`);
   
-        if (clickX > writeInput.offsetLeft && clickX < writeInput.offsetWidth
-          && clickY > writeInput.offsetTop && clickY < writeInput.offsetHeight + 200
+        if (clickX > writeInputPosition.left && clickX < writeInputPosition.right
+          && clickY > writeInputPosition.top && clickY < writeInputPosition.bottom
         ) {
           document.removeEventListener('click',this)
           writeInputEdit()
