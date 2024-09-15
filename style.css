@@ -150,13 +150,13 @@ html {
     margin: 0 5%;
   }
 
+  #index #logo {
+    font-size: 2rem;
+  }
+
   #index #nav-options {
     gap: 0.3rem;
     font-size: 80%;
-  }
-
-  #index #logo {
-    font-size: 2rem;
   }
 
   #index #theme-container {
