@@ -26,7 +26,7 @@ let readNotesList = document.querySelector('#read-notes')
 
 // VARIÁVEIS IMPORTANTES /////////////////////////////////////
 
-let currentVersion = 1.51
+let currentVersion = 1.52
 let noteIdEdit //usada para confirmar qual nota está sendo editada
 let editMode = false
 let tabIndexCounter = 10
@@ -455,6 +455,14 @@ function loadNoteous(context) {
     } else if (noteousSettings == null) {
       //NÃO HÁ CONFIGURAÇÕES --> PRIMEIRO ACESSO AO NOTEOUS
       //1.5 --> não armazenar noteousSettings: aguardar usuário aceitar
+
+      let domain = window.location.hostname
+      if (domain == "noteous.vercel.app") {
+        window.location.replace('https://noteous.app')
+      } else if (domain == 'noteouspreview.vercel.app'){
+        window.location.replace('https://preview.noteous.app')
+      }
+
       welcomeToNoteous('render-welcome', 'first-access')
     }
   }
@@ -1185,28 +1193,23 @@ function openNote(noteId) {
     editNote(noteId)
 
     //Acessibilidade e Experiência do usuário: Quando o tamanho de tela é inferior a 600px, ao clicar em uma nota, a função openNote() torna readonly a caixa de texto (writeInput) para que o teclado não apareça e confunda a experiência. Ao dar um toque, a caixa é liberada para edição. PROBLEMA: Quando o recurso TalkBack (do Android) é utilizado, não é possível reconhecer o toque na caixa de texto (writeInput). Talvez isso ocorra porque a acessibilidade do Android desative o "clique" em uma caixa de texto readonly.
-    //SOLUÇÃO: criar um elemento button invisível acima da caixa de texto e esse elemento recebe o evento de clique, liberando a caixa de texto para ser editável novamente.
+    //SOLUÇÃO: capturar posição do writeInput e da posição do mouse e verificar se o clique está dentro dessa área. Se estiver, desbloquear o input para edição.
 
-    let writeInputInvisibleButton = document.createElement('button')
-    writeInputInvisibleButton.id = 'write-input-invisible-button'
-    writeInputInvisibleButton.style.position = 'absolute'
-    writeInputInvisibleButton.style.opacity = '0%'
-    writeInputInvisibleButton.ariaLabel = 'Toque para editar o texto'
+    window.addEventListener('click', function(event) {
+      if (editMode == true) {
+        let clickX = event.clientX;
+        let clickY = event.clientY;
 
-    //Tempo necessário para a animação da caixa de texto terminar e o botão invísivel copiar seu tamanho e posição
-    setTimeout(() => {
-      let writeInputProps = writeInput.getBoundingClientRect()
-      writeInputInvisibleButton.style.top = writeInputProps.y + 'px'
-      writeInputInvisibleButton.style.left = writeInputProps.x + 'px'
-      writeInputInvisibleButton.style.width = writeInputProps.width + 'px'
-      writeInputInvisibleButton.style.height = writeInputProps.height + 'px'
-    }, 150)
-
-    body.append(writeInputInvisibleButton)
-    writeInputInvisibleButton.addEventListener('click', () => {
-      writeInputInvisibleButton.remove()
-      writeInputEdit()
+        let writeInputPosition = writeInput.getBoundingClientRect()
+  
+        if (clickX > writeInputPosition.left && clickX < writeInputPosition.right
+          && clickY > writeInputPosition.top && clickY < writeInputPosition.bottom
+        ) {
+          writeInputEdit()
+        }
+      }
     })
+
   } else if (window.screen.width >= 601) {
     writeInput.focus()
     writeButtonCancelEdit.removeAttribute('hidden')
@@ -1267,9 +1270,6 @@ function editNote(noteId) {
       })
 
       //Se durante Modo de edição clicar em "Cancelar"
-      writeButtonCancelEdit.addEventListener('click', () => {
-        document.querySelector('#write-input-invisible-button').remove()
-      })
       writeButtonCancelEdit.addEventListener('click', exitEditMode)
     }
   }
