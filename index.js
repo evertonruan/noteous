@@ -1062,13 +1062,10 @@ function openNote(noteId) {
         let clickY = event.clientY;
 
         let writeInputPosition = writeInput.getBoundingClientRect()
-        
-        console.log(`Click-y: ${clickY} Input-top: ${writeInputPosition.bottom}`);
   
         if (clickX > writeInputPosition.left && clickX < writeInputPosition.right
           && clickY > writeInputPosition.top && clickY < writeInputPosition.bottom
         ) {
-          document.removeEventListener('click',this)
           writeInputEdit()
         }
       }
