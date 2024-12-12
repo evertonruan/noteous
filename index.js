@@ -647,7 +647,23 @@ function renderNote(context, noteId) {
   if (context == 'render-all') {
     readNotesList.innerHTML = ''
 
-    for (let note of noteousMain) {
+
+
+    let newNotes = noteousMain.sort((a, b) => {
+        if (b.editedAt && a.editedAt) {
+            return b.editedAt - a.editedAt;
+        } else if (b.editedAt) {
+            return 1; // "b" tem "editedAt" e vem antes
+        } else if (a.editedAt) {
+            return -1; // "a" tem "editedAt" e vem antes
+        } else {
+            return b.data - a.data; // Nenhum tem "editedAt", ordena por "data"
+        }
+      })
+
+    console.log(newNotes)
+
+    for (let note of newNotes) {
       let noteContainer = document.createElement('div')
       noteContainer.id = note.id + '-note-container'
       noteContainer.classList.add('note-container')
