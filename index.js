@@ -44,7 +44,7 @@ let tabIndexCounter = 10
 let writeInputEdit = function (event) {
   writeInput.removeAttribute('readonly')
   writeInput.focus()
-  labelWrite.innerHTML = '📝 Edite aqui sua nota'
+  labelWrite.innerHTML = '📝 Edite aqui sua nota!'
 }
 
 ////////
