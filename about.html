@@ -2,7 +2,6 @@
 <html lang="pt-br">
   <head>
     <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
     <meta name="theme-color" content="#f5993d" />
@@ -47,31 +46,31 @@
       <div class="settings-point">
         <h4>Tamanho de texto</h4>
         <div class="options-container">
-          <button id="baserem-big" class="option-point">Grande</button>
-          <button id="baserem-normal" class="option-point">Padrão</button>
-          <button id="baserem-small" class="option-point">Pequeno</button>
+          <button id="baserem-big" class="option-point" type="button">Grande</button>
+          <button id="baserem-normal" class="option-point" type="button">Padrão</button>
+          <button id="baserem-small" class="option-point" type="button">Pequeno</button>
         </div>
       </div>
       <div class="settings-point">
         <h4>Luminosidade</h4>
         <div class="options-container">
-          <button id="luminosity-light" class="option-point">Claro</button>
-          <button id="luminosity-dark" class="option-point">Escuro</button>
+          <button id="luminosity-light" class="option-point" type="button">Claro</button>
+          <button id="luminosity-dark" class="option-point" type="button">Escuro</button>
         </div>
       </div>
   </section>
 
   <section id="about-section-policies" class="about-section">
     <h2>📋 INFORMAÇÕES SOBRE PRIVACIDADE E ARMAZENAMENTO</h2>
-    <button id="about-button-policies" class="option-point">Termos de Uso e Política de Privacidade</button>
+    <button id="about-button-policies" class="option-point" type="button">Termos de Uso e Política de Privacidade</button>
     <div id="policies-container-data"></div>
     <div id="policies-container-info">
       <div id="about-update-preview">Você está utilizando o <span class="logo-inline">noteous preview</span>. Este é um canal de testes. Assim, podem ocorrer erros e instabilidades. <br> Se preferir, acesse a versão estável do <span class="logo-inline"><a href="https://noteous.app/">noteous</a></span> ↗ <br> (Importante: Suas notas permanecem aqui, não são transferidas)</div>
 
       <br>
 
-      <p>• Suas informações permanecem apenas dentro do seu dispositivo (como celular ou computador) e não são compartilhadas com ninguém. <br> <br>• Para salvar suas notas, é utilizada uma tecnologia do navegador de internet, chamada Armazenamento Local. Isso significa o seguinte:</p>
-      <p>◼ Se você desinstalar o navegador de internet, limpar os dados de navegação, ou fizer procedimentos semelhantes, suas notas serão apagadas <br>◼ Se usar o noteous em vários dispositivos, cada um terá notas separadas. <br>◼ Inclusive, se usar o noteous em vários navegadores, cada um terá notas separadas.</p>
+      <p style="font-size: 1.1rem;"><strong>⚠️ IMPORTANTE</strong>
+        <br> Suas anotações são salvas localmente no dispositivo. Ou seja: se você limpar os dados ou desinstalar o navegador, suas notas serão apagadas.</p>
     </div>
   </section>
 
@@ -88,7 +87,7 @@
 
   <div id="about-section-dev-mail"><span class="material-icons">
     email
-    </span> <a href="mailto:evertonruan.me@gmail.com">evertonruan.me@gmail.com</a></div>
+    </span> <a href="mailto:contato@evertonruan.com">contato@evertonruan.com</a></div>
 </section>
 
 <section id="about-section-update">
@@ -126,9 +125,22 @@
   </span>
   
   <div id="about-update-list">
+
     <div id="about-update-point-actual">
       <div class="about-update-point-container">
-        <p class="about-update-point-version">noteous cupcake 1.6.2</p>
+        <p class="about-update-point-version">noteous 1.6.3</p>
+        <p class="about-update-point-version-date">22/03/2025</p> 
+    </div>
+    <p class="update-description">
+      <span class="update-type">NOVO</span>E-mail de contato atualizado: para entrar em contato com o desenvolvedor, fique à vontade para enviar um e-mail para contato@evertonruan.com</p>
+    <p class="update-description">
+      <span class="update-type">MELHORIA</span>Correções e melhorias de experiência <span class="update-advanced">
+        <br> 1️⃣Ao adicionar uma nota, em um dispositivo com tela compacta, o Campo de Entrada de Texto não receberá mais foco automaticamente. Motivo: ao adicionar uma nota, o teclado virtual atrapalha o retorno visual de que a nota foi adicionada. <br> 2️⃣ Informação sobre como notas são armazenadas está mais clara <br> 3️⃣ Adicionado suporte a user-select e backdrop-filter em -webkit</span></p>
+    </div>
+
+    <div class="about-update-point">
+      <div class="about-update-point-container">
+        <p class="about-update-point-version">1.6.2</p>
         <p class="about-update-point-version-date">12/09/2024</p>
       </div>
       <p class="update-description"><span class="update-type">MELHORIA</span>Algumas melhorias de experiência <br> <span class="update-advanced">1️⃣ Textos na Página Ajustes&Info não são mais selecionáveis <br>2️⃣ H1 (logotipo do noteous) na página principal não é mais link. Também, quando a tela for compacta, o tamanho de fonte é reduzido. <br>3️⃣ O texto do Painel de Informações se ajusta para ficar menor de acordo com o espaço disponível. <br>4️⃣ Na tela de boas-vindas, o título "noteous preview" se adapta ao tamanho da viewport para ficar em apenas 1 linha. Antes, em telas compactas, o título fazia uma quebra de linha.</span></p>
