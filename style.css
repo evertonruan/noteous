@@ -248,6 +248,7 @@ header {
 
   margin: 2rem 4rem;
 
+  -webkit-user-select: none;
   user-select: none;
 }
 
@@ -350,6 +351,7 @@ a {
   flex-direction: column;
 
   margin-bottom: 2rem;
+  -webkit-user-select: none;
   user-select: none;
 
   transition: all cubic-bezier(0.075, 0.82, 0.165, 1) 0.5s;
@@ -396,6 +398,7 @@ a {
   font-size: 1.3rem;
   color: var(--base-text);
 
+  -webkit-user-select: none;
   user-select: none;
 }
 
@@ -412,6 +415,7 @@ a {
   border-width: 5px;
   box-shadow: 0px 3px 5px black;
 
+  -webkit-user-select: none;
   user-select: none;
 
   transition: all 0.2s cubic-bezier(0.075, 0.82, 0.165, 1);
@@ -486,6 +490,7 @@ a {
   line-height: 0px;
 
   transition: all 0.2s cubic-bezier(0.075, 0.82, 0.165, 1);
+  -webkit-user-select: none;
   user-select: none;
 }
 
@@ -551,6 +556,7 @@ a {
 
   margin: 0 1rem;
 
+  -webkit-user-select: none;
   user-select: none;
   cursor: pointer;
 }
@@ -607,6 +613,7 @@ a {
   transition: all 0.3s cubic-bezier(0.075, 0.82, 0.165, 1);
   padding: 0.5rem 0.3rem;
 
+  -webkit-user-select: none;
   user-select: none;
 }
 
@@ -644,6 +651,7 @@ footer {
   font-size: 0.8rem;
 
   cursor: default;
+  -webkit-user-select: none;
   user-select: none;
 }
 
@@ -765,17 +773,25 @@ footer p span {
 .greeting-policies-text {
   font-size: 105%;
   text-align: justify;
-  text-justify: inter-word;
 }
 
 .greeting-policies-description {
+  font-size: 85%;
+  opacity: 70%;
+}
+
+.greeting-policies-warning {
   margin: 3rem 0;
-  font-size: 80%;
-  opacity: 80%;
+  padding: 2rem;
+  font-size: 110%;
+
+  border: 1px solid black;
+  border-radius: 10px;
 }
 
 .greeting-buttons {
   background: #e4b686;
+  margin: 30px 0;
   padding: 1.5rem 1.8rem;
 
   border-style: none;
@@ -789,6 +805,7 @@ footer p span {
   line-height: 0px;
 
   transition: all 0.2s cubic-bezier(0.075, 0.82, 0.165, 1);
+  -webkit-user-select: none;
   user-select: none;
 }
 
@@ -803,6 +820,7 @@ footer p span {
   font-family: 'Merriweather Sans', sans-serif;
   background-color: var(--base-color);
   color: var(--base-text);
+  -webkit-user-select: none;
   user-select: none;
   cursor: default;
 }
@@ -907,6 +925,7 @@ footer p span {
   font-style: italic;
   font-weight: bold;
   font-size: 1.5rem;
+  line-height: 0.9;
 }
 
 #about-update-logo-container {
@@ -923,6 +942,7 @@ footer p span {
   top: -2px;
   z-index: 1;
 
+  -webkit-backdrop-filter: blur(4px);
   backdrop-filter: blur(4px);
   background-color: var(--base-color-transparent);
 }

@@ -261,6 +261,8 @@ cupcake.addEventListener('click', () => {
 
   if (e == 99) {
     cupcakeOutline.style.animation = 'rotate 50s linear infinite'
+  } else if (e == 98) {
+      cupcakeOutline.style.animation = 'rotate 40s linear infinite'
   } else if (e == 97) {
     prefresh()
     cupcake.setAttribute('src', './img/cupcake/cupcake-2.png')
@@ -288,6 +290,7 @@ cupcake.addEventListener('click', () => {
     cupcake.setAttribute('src', './img/cupcake/cupcake-11.png')
   } else if (e == 25) {
     cupcake.setAttribute('src', './img/cupcake/cupcake-12.png')
+    cupcakeOutline.style.animation = 'rotate 7s linear infinite'
   } else if (e == 20) {
     cupcake.setAttribute('src', './img/cupcake/cupcake-13.png')
   } else if (e == 15) {

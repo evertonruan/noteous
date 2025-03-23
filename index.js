@@ -26,7 +26,7 @@ let readNotesList = document.querySelector('#read-notes')
 
 // VARIÁVEIS IMPORTANTES /////////////////////////////////////
 
-let currentVersion = 1.52
+let currentVersion = 1.53
 let noteIdEdit //usada para confirmar qual nota está sendo editada
 let editMode = false
 let tabIndexCounter = 10
@@ -330,8 +330,13 @@ function welcomeToNoteous(context, subcontext) {
         }
 
         let greetingPoliciesTitle4 = document.createElement('p')
-        greetingPoliciesTitle4.classList.add('greeting-policies-description')
+        greetingPoliciesTitle4.classList.add('greeting-policies-warning')
         greetingPoliciesTitle4.innerHTML =
+          '⚠️ Conforme explicado na Política de Privacidade, suas anotações são salvas localmente no dispositivo. Ou seja: se você limpar os dados, suas notas serão  apagadas.'
+
+        let greetingPoliciesTitle5 = document.createElement('p')
+        greetingPoliciesTitle5.classList.add('greeting-policies-description')
+        greetingPoliciesTitle5.innerHTML =
           'Ao clicar no botão Aceito, você concorda com as condições dos Termos de Uso e Política de Privacidade. Se não aceitar estas condições, não poderá usar o aplicativo.'
 
         greetingPoliciesContainer.append(
@@ -339,7 +344,8 @@ function welcomeToNoteous(context, subcontext) {
           greetingPoliciesTermsUse,
           greetingPoliciesTitle3,
           greetingPoliciesPrivacyPolicy,
-          greetingPoliciesTitle4
+          greetingPoliciesTitle4,
+          greetingPoliciesTitle5
         )
       })
 
@@ -1103,7 +1109,9 @@ function addNote() {
 
     renderNote('add', objNote.id)
     writeInput.value = ''
-    writeInput.focus()
+    if (window.screen.width > 450) {
+      writeInput.focus()
+    }
     orblendEngine('on-change-input')
   }
 }
