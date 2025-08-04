@@ -19,6 +19,12 @@ let buttonPolicies = document.querySelector('#about-button-policies')
 let policiesContainerData = document.querySelector('#policies-container-data')
 let policiesSwitchVar = 0
 
+let copyContainer = document.querySelector('#copy-container')
+let copyCreateButton = document.querySelector('#copy-create')
+let copyOpenButton = document.querySelector('#copy-open')
+let copyDetailsContainer = document.querySelector('#copy-details-container')
+let copyDetailsSwitchVar = 0
+
 let cupcake = document.querySelector('#cupcake')
 let cupcakeOutline = document.querySelector('#cupcake-outline')
 let label = document.querySelector('#gen-child-2')
@@ -121,6 +127,18 @@ function activeOptionVerifier() {
     optionDark.style.background = 'var(--base-buttons)'
     optionLight.style.background = ''
   }
+
+  if (copyDetailsSwitchVar == 0) {
+    copyDetailsContainer.innerHTML = ''
+    copyCreateButton.style.background = ''
+    copyOpenButton.style.background = ''
+  } else if (copyDetailsSwitchVar == 1) {
+    copyCreateButton.style.background = 'var(--base-buttons)'
+    copyOpenButton.style.background = ''
+  } else if (copyDetailsSwitchVar == 2) {
+    copyOpenButton.style.background = 'var(--base-buttons)'
+    copyCreateButton.style.background = ''
+  }
 }
 
 activeOptionVerifier()
@@ -214,6 +232,416 @@ buttonPolicies.addEventListener('click', () => {
     policiesContainerData.innerHTML = ''
   }
 })
+
+//BOTÃO CRIAR CÓPIA
+copyCreateButton.addEventListener('click', () => {
+  if (copyDetailsSwitchVar == 0 || copyDetailsSwitchVar == 2) {
+    copyDetailsSwitchVar = 1
+    copyDetailsContainer.innerHTML = ''
+
+    // Descrição sobre a funcionalidade
+    let copyDescription = document.createElement('p')
+    copyDescription.textContent = 'Baixe uma cópia das suas notas. Você pode armazenar essa cópia para ter segurança adicional ou para enviar a outro dispositivo que você utiliza o noteous, como celular ou computador.'
+
+    // Informação sobre quantidade de notas
+    let notesInfo = document.createElement('p')
+    notesInfo.textContent = `Você tem ${noteousMain.length} nota${noteousMain.length !== 1 ? 's' : ''}`
+
+    // Botão para executar a criação da cópia
+    let copyDownloadButton = document.createElement('button')
+    copyDownloadButton.classList.add('option-point')
+    copyDownloadButton.textContent = 'Criar e baixar cópia'
+    copyDownloadButton.type = 'button'
+
+    // Event listener para o botão de download
+    copyDownloadButton.addEventListener('click', () => {
+      createNoteCopy()
+    })
+
+    // Adiciona todos os elementos ao container
+    copyDetailsContainer.append(copyDescription, notesInfo, copyDownloadButton)
+
+  } else if (copyDetailsSwitchVar == 1) {
+    copyDetailsSwitchVar = 0
+    copyDetailsContainer.innerHTML = ''
+    }
+
+  activeOptionVerifier()
+
+})
+
+//FUNÇÃO PARA CRIAR CÓPIA DAS NOTAS
+function createNoteCopy() {
+  const notesData = {
+    notes: noteousMain,
+    exportDate: new Date().toISOString(),
+    totalNotes: noteousMain.length,
+    appVersion: '1.6.3'
+  }
+
+  const dataStr = JSON.stringify(notesData, null, 2)
+  const dataBlob = new Blob([dataStr], { type: 'application/json' })
+  
+  const link = document.createElement('a')
+  link.href = URL.createObjectURL(dataBlob)
+  link.download = `noteouspack-notes-${new Date().toISOString().split('T')[0]}.json`
+  
+  document.body.appendChild(link)
+  link.click()
+  document.body.removeChild(link)
+  
+  URL.revokeObjectURL(link.href)
+}
+
+//BOTÃO ABRIR CÓPIA
+copyOpenButton.addEventListener('click', () => {
+  if (copyDetailsSwitchVar == 0 || copyDetailsSwitchVar == 1) {
+    copyDetailsSwitchVar = 2
+    copyDetailsContainer.innerHTML = ''
+
+    // Descrição sobre a funcionalidade
+    let copyDescription = document.createElement('p')
+    copyDescription.textContent = 'Abra uma cópia de notas criada anteriormente. Você pode visualizar as notas e também importá-las ao noteous, substituindo as notas atuais.'
+
+    // Input file para selecionar arquivo
+    let copyFileInput = document.createElement('input')
+    copyFileInput.type = 'file'
+    copyFileInput.accept = '.json'
+    copyFileInput.style.display = 'none'
+
+    // Botão para abrir seletor de arquivos
+    let copyOpenFileButton = document.createElement('button')
+    copyOpenFileButton.classList.add('option-point')
+    copyOpenFileButton.textContent = 'Buscar cópia'
+    copyOpenFileButton.type = 'button'
+
+    // Event listener para o botão de abrir arquivo
+    copyOpenFileButton.addEventListener('click', () => {
+      copyFileInput.click()
+    })
+
+    // Event listener para quando um arquivo é selecionado
+    copyFileInput.addEventListener('change', (event) => {
+      const file = event.target.files[0]
+      if (file) {
+        const reader = new FileReader()
+        reader.onload = (e) => {
+          try {
+            const notesData = JSON.parse(e.target.result)
+            showNotesModal(notesData)
+          } catch (error) {
+            alert('Erro ao ler o arquivo. Verifique se é um arquivo válido de cópia do noteous.')
+          }
+        }
+        reader.readAsText(file)
+      }
+    })
+
+    // Adiciona ao container
+    copyDetailsContainer.append(copyDescription, copyOpenFileButton, copyFileInput)
+
+  } else if (copyDetailsSwitchVar == 2) {
+    copyDetailsSwitchVar = 0
+    copyDetailsContainer.innerHTML = ''
+  }
+
+  activeOptionVerifier()
+
+})
+
+//FUNÇÃO PARA EXIBIR MODAL COM AS NOTAS DA CÓPIA
+function showNotesModal(notesData) {
+  // Cria o overlay do modal
+  const modalOverlay = document.createElement('div')
+  modalOverlay.style.cssText = `
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+  `
+
+  // Cria o modal
+  const modal = document.createElement('div')
+  modal.id = 'modal'
+  modal.style.cssText = `
+    background-color: var(--base-color);
+    border-radius: 1rem;
+    border: 1px solid var(--base-text);
+    padding: 1.5rem;
+    max-width: 90%;
+    max-height: 90%;
+    overflow-y: auto;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  `
+
+  // Título do modal
+  const modalTitle = document.createElement('h2')
+  modalTitle.textContent = 'Visualizar Cópia de Notas'
+  modalTitle.style.cssText = `
+    margin-bottom: 1rem;
+    color: var(--base-text);
+  `
+
+  // Informações do pacote
+  const packageInfo = document.createElement('div')
+  packageInfo.style.cssText = `
+    margin-bottom: 1.5rem;
+    padding: 1rem;
+  `
+
+  const exportDate = new Date(notesData.exportDate).toLocaleDateString('pt-BR')
+  const packageInfoText = document.createElement('p')
+  packageInfoText.innerHTML = `
+    <strong>Data do pacote de cópia:</strong> ${exportDate}<br>
+    <strong>Quantidade de notas:</strong> ${notesData.totalNotes}
+  `
+  packageInfoText.style.color = 'var(--base-text)'
+  packageInfo.appendChild(packageInfoText)
+
+  // Container das notas
+  const notesContainer = document.createElement('div')
+  notesContainer.style.cssText = `
+    margin-bottom: 1.5rem;
+    max-height: 400px;
+    overflow-y: auto;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    padding-bottom: 1rem;
+  `
+
+  // Renderiza as notas
+  if (notesData.notes && notesData.notes.length > 0) {
+    notesData.notes.forEach((note, index) => {
+      const noteElement = createNotePreview(note, index)
+      notesContainer.appendChild(noteElement)
+    })
+  } else {
+    const noNotesMessage = document.createElement('p')
+    noNotesMessage.textContent = 'Nenhuma nota encontrada neste arquivo.'
+    noNotesMessage.style.cssText = `
+      text-align: center;
+      color: var(--base-text);
+      padding: 2rem;
+    `
+    notesContainer.appendChild(noNotesMessage)
+  }
+
+  // Container dos botões
+  const buttonsContainer = document.createElement('div')
+  buttonsContainer.style.cssText = `
+    display: flex;
+    gap: 1rem;
+    justify-content: flex-end;
+  `
+
+  // Botão Fechar
+  const closeButton = document.createElement('button')
+  closeButton.textContent = 'Fechar'
+  closeButton.classList.add('option-point')
+  closeButton.addEventListener('click', () => {
+    document.body.removeChild(modalOverlay)
+  })
+
+  // Botão Importar
+  const importButton = document.createElement('button')
+  importButton.textContent = 'Importar cópia'
+  importButton.classList.add('option-point')
+  importButton.style.cssText = `
+    background-color: var(--base-write-input-outside);
+    color: var(--base-write-input-inside);
+  `
+  importButton.addEventListener('click', () => {
+    if (confirm('Tem certeza que deseja importar estas notas? Isso substituirá todas as suas notas atuais.')) {
+      importNotes(notesData.notes)
+      document.body.removeChild(modalOverlay)
+    }
+  })
+
+  // Monta o modal
+  buttonsContainer.append(closeButton, importButton)
+  modal.append(modalTitle, packageInfo, notesContainer, buttonsContainer)
+  modalOverlay.appendChild(modal)
+  
+  // Adiciona o modal ao body
+  document.body.appendChild(modalOverlay)
+
+  // Fecha o modal ao clicar no overlay
+  modalOverlay.addEventListener('click', (e) => {
+    if (e.target === modalOverlay) {
+      document.body.removeChild(modalOverlay)
+    }
+  })
+}
+
+//FUNÇÃO PARA CRIAR PREVIEW DE NOTA
+function createNotePreview(note, index) {
+  const noteContainer = document.createElement('div')
+  noteContainer.classList.add('note-container')
+  
+
+
+  // Responsividade baseada no CSS original
+  if (window.innerWidth <= 450) {
+    noteContainer.style.maxWidth = 'none'
+    noteContainer.style.flexBasis = '90%'
+  } else if (window.innerWidth <= 600) {
+    noteContainer.style.maxWidth = '40vw'
+  } else {
+    noteContainer.style.maxWidth = '40%'
+  }
+
+  //BORDER/PRIORITY
+  if (note.priority == 'solid') {
+    noteContainer.style.borderStyle = 'none'
+  } else if (note.priority == 'double') {
+    noteContainer.style.borderStyle = 'double'
+  } else if (note.priority == 'dotted') {
+    noteContainer.style.borderStyle = 'dotted'
+  }
+
+  //NOTE TEXT
+  let noteTextContainer = document.createElement('div')
+  noteTextContainer.classList.add('note-text-container')
+
+  let textElement = document.createElement('p')
+
+  let noteChar = note.text
+  if (noteChar.length < 300) {
+    //Se tamanho da nota for menor que 300, escrever nota inteira
+    textElement.appendChild(document.createTextNode(noteChar))
+  } else if (noteChar.length >= 300) {
+    //Se tamanho da nota for maior que 300, escrever apenas até o 300º caractere e acrescentar "..."
+    let count = 0
+    for (let noteCharAt of noteChar) {
+      textElement.appendChild(document.createTextNode(noteCharAt))
+      count = count + 1
+      //"Ir escrevendo" cada caractere até chegar o 300º
+      if (count == 300) {
+        textElement.append(document.createTextNode(' ...'))
+        textElement.append(document.createElement('br'))
+        textElement.append(document.createTextNode('[VER MAIS]'))
+        break
+      }
+    }
+  }
+
+  //DATE
+  let noteDateContainer = document.createElement('div')
+  noteDateContainer.classList.add('note-date-container')
+
+  let dateElement = document.createElement('p')
+  
+  dateElement.appendChild(
+    document.createTextNode(
+      `+ ${new Date(note.id).getDate()}/${findMonth(
+        new Date(note.id).getMonth()
+      )}/${new Date(note.id).getUTCFullYear()} às ${setTimeNumber(
+        new Date(note.id).getHours()
+      )}:${setTimeNumber(new Date(note.id).getMinutes())}`
+    )
+  )
+  if (note.editedAt != undefined) {
+    dateElement.appendChild(document.createElement('br'))
+    dateElement.appendChild(
+      document.createTextNode(
+        `Última edição: ${new Date(note.editedAt).getDate()}/${findMonth(
+          new Date(note.editedAt).getMonth()
+        )}/${new Date(note.editedAt).getUTCFullYear()} às ${setTimeNumber(
+          new Date(note.editedAt).getHours()
+        )}:${setTimeNumber(new Date(note.editedAt).getMinutes())}`
+      )
+    )
+  }
+
+  //APPENDS
+  noteTextContainer.appendChild(textElement)
+  noteDateContainer.appendChild(dateElement)
+  noteTextContainer.appendChild(noteDateContainer)
+
+  noteContainer.appendChild(noteTextContainer)
+
+  return noteContainer
+}
+
+//FUNÇÕES AUXILIARES PARA FORMATAÇÃO DE DATA
+function findMonth(number) {
+  if (number == 0) {
+    return 'Janeiro'
+  } else if (number == 1) {
+    return 'Fevereiro'
+  } else if (number == 2) {
+    return 'Março'
+  } else if (number == 3) {
+    return 'Abril'
+  } else if (number == 4) {
+    return 'Maio'
+  } else if (number == 5) {
+    return 'Junho'
+  } else if (number == 6) {
+    return 'Julho'
+  } else if (number == 7) {
+    return 'Agosto'
+  } else if (number == 8) {
+    return 'Setembro'
+  } else if (number == 9) {
+    return 'Outubro'
+  } else if (number == 10) {
+    return 'Novembro'
+  } else if (number == 11) {
+    return 'Dezembro'
+  }
+}
+
+function setTimeNumber(number) {
+  if (number == 0) {
+    return '00'
+  } else if (number == 1) {
+    return '01'
+  } else if (number == 2) {
+    return '02'
+  } else if (number == 3) {
+    return '03'
+  } else if (number == 4) {
+    return '04'
+  } else if (number == 5) {
+    return '05'
+  } else if (number == 6) {
+    return '06'
+  } else if (number == 7) {
+    return '07'
+  } else if (number == 8) {
+    return '08'
+  } else if (number == 9) {
+    return '09'
+  } else if (number >= 10) {
+    return number
+  }
+}
+
+//FUNÇÃO PARA IMPORTAR NOTAS
+function importNotes(notes) {
+  // Substitui as notas atuais pelas importadas
+  noteousMain = notes
+  localStorage.setItem('noteous-main', JSON.stringify(noteousMain))
+  
+  alert('Notas importadas com sucesso!')
+  
+  // Atualiza a exibição da quantidade de notas na interface
+  if (copyDetailsContainer) {
+    const notesInfo = copyDetailsContainer.querySelector('p:nth-child(2)')
+    if (notesInfo) {
+      const notesCount = noteousMain.length
+      notesInfo.textContent = `Você tem ${notesCount} nota${notesCount !== 1 ? 's' : ''}`
+    }
+  }
+}
 
 //MODO AVANÇADO
 

@@ -563,7 +563,8 @@ a {
   padding-bottom: 1rem;
 }
 
-#section-read .note-container {
+#section-read .note-container,
+#modal .note-container {
   display: flex;
   flex-direction: row;
   height: max-content;
@@ -586,7 +587,8 @@ a {
   cursor: pointer;
 }
 
-#section-read .note-text-container {
+#section-read .note-text-container,
+#modal .note-text-container {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -621,13 +623,15 @@ a {
   outline: 0;
 }
 
-#section-read .note-text-container {
+#section-read .note-text-container,
+#modal .note-text-container {
   display: flex;
   flex: 1;
   padding: 1rem 1rem 0.3rem 1rem;
 }
 
-#section-read .note-date-container p {
+#section-read .note-date-container p,
+#modal .note-date-container p {
   font-style: italic;
   margin-top: 1rem;
   font-size: 65%;
@@ -845,6 +849,7 @@ footer p span {
 }
 
 .option-point {
+  width: fit-content;
   padding: 0.2rem 0.5rem;
   border: 1px solid var(--base-text);
   border-radius: 2rem;
@@ -855,6 +860,13 @@ footer p span {
   background-color: var(--base-color);
 
   cursor: pointer;
+}
+
+#copy-details-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-top: 10px;
 }
 
 .about-section {
