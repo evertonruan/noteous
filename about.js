@@ -280,11 +280,11 @@ function createNoteCopy() {
   }
 
   const dataStr = JSON.stringify(notesData, null, 2)
-  const dataBlob = new Blob([dataStr], { type: 'application/json' })
+  const dataBlob = new Blob([dataStr], { type: 'application/octet-stream' })
   
   const link = document.createElement('a')
   link.href = URL.createObjectURL(dataBlob)
-  link.download = `noteouspack-notes-${new Date().toISOString().split('T')[0]}.json`
+  link.download = `Cópia de Notas - ${new Date().toISOString().split('T')[0]}.noteouspack`
   
   document.body.appendChild(link)
   link.click()
@@ -306,7 +306,7 @@ copyOpenButton.addEventListener('click', () => {
     // Input file para selecionar arquivo
     let copyFileInput = document.createElement('input')
     copyFileInput.type = 'file'
-    copyFileInput.accept = '.json'
+    copyFileInput.accept = '.json,.noteouspack,application/json,application/octet-stream'
     copyFileInput.style.display = 'none'
 
     // Botão para abrir seletor de arquivos

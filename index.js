@@ -219,22 +219,19 @@ function welcomeToNoteous(context, subcontext) {
       greetingTitle2.append(document.createTextNode('noteous preview'))
       greetingDescriptionTitle.append(
         document.createTextNode(
-          'O noteous preview foi atualizado: a versão 1.6 está incrível! Veja algumas novidades'
+          'O noteous preview foi atualizado: a versão 1.7 traz novos recursos!'
         )
       )
 
-      greetingDescription1.innerHTML = `<span class="greeting-description-intro">Melhoria na acessibilidade</span> <br>👓 Agora você pode ajustar o tamanho de texto que ficar mais confortável de ler <br>💻 Suporte para navegação pelo teclado (por exemplo, se estiver em um computador) <br>🔊 Melhor compatível com leitores de tela`
+      greetingDescription1.innerHTML = `<span class="greeting-description-intro">Cópias de notas</span> <br>Esse novo recurso abre novas possibilidades para o noteous! Agora, você pode Criar e Baixar uma cópia das suas notas para Abrir em outro celular ou computador que você usa o noteous`
 
-      greetingDescription2.innerHTML = `<span class="greeting-description-intro">Visual revisado</span> <br>🎨 Os temas claro e escuro estão agora ainda mais bonitos!`
+      greetingDescription2.innerHTML = `<span class="greeting-description-intro">Em breve: Listas de Prioridade</span> <br>Sua organização vai subir de nível. Cada prioridade que você salvar sua nota será exibida em uma lista separada para que você possa ver o que é mais importante mais rápido. <br><br> <em>Esse recurso será lançado para testes em breve no noteous preview</em>`
 
-      greetingDescription3.innerHTML = `<span class="greeting-description-intro">Experiência aprimorada</span> <br>📝 A edição de notas está ainda mais intuitiva e fácil de usar. Outras pequenas melhorias tornam tudo muito mais incrível!`
-
-      greetingDescription4.innerHTML = `<span class="greeting-description-intro">Atualização automática</span> <br>noteous recebe atualizações automáticas 🌐 Assim, seu aplicativo sempre está em dia.`
+      greetingDescription3.innerHTML = `<span class="greeting-description-intro">Atualização automática</span> <br>noteous recebe atualizações automáticas 🌐 Assim, seu aplicativo sempre está em dia.`
 
       greetingDescription1Image.setAttribute('src', './img/greeting-3.png')
-      greetingDescription2Image.setAttribute('src', './img/greeting-1.png')
-      greetingDescription3Image.setAttribute('src', './img/greeting-3-1.png')
-      greetingDescription4Image.setAttribute('src', './img/greeting-4.png')
+      greetingDescription2Image.setAttribute('src', './img/greeting-2.png')
+      greetingDescription3Image.setAttribute('src', './img/greeting-4.png')
 
       greetingDescriptionContainer1.append(
         greetingDescription1Image,
@@ -248,16 +245,11 @@ function welcomeToNoteous(context, subcontext) {
         greetingDescription3Image,
         greetingDescription3
       )
-      greetingDescriptionContainer4.append(
-        greetingDescription4Image,
-        greetingDescription4
-      )
 
       greetingDescriptionContainerAll.append(
         greetingDescriptionContainer1,
         greetingDescriptionContainer2,
-        greetingDescriptionContainer3,
-        greetingDescriptionContainer4
+        greetingDescriptionContainer3
       )
     }
   } else if (context == 'render-policies') {
