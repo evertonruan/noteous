@@ -178,17 +178,16 @@ function welcomeToNoteous(context, subcontext) {
         )
       )
 
-      greetingDescription1.innerHTML = `<span class="greeting-description-intro">Temas</span>🎨 Personalize sua experiência com o brilhante tema claro ou com o elegante tema escuro`
+      greetingDescription1.innerHTML = `<span class="greeting-description-intro">Teste os novos recursos</span>Acessando o noteous preview você pode testar agora novos recursos que chegarão no futuro ao noteous ✨`
 
-      greetingDescription2.innerHTML = `<span class="greeting-description-intro">Organize por prioridade</span>Clique no círculo ⭕ para trocar entre diferentes bordas, que representam prioridades`
+      greetingDescription2.innerHTML = `<span class="greeting-description-intro">Cópias de notas</span>Esse novo recurso abre novas possibilidades para o noteous! Agora, você pode Criar e Baixar uma cópia das suas notas para Abrir em outro celular ou computador que você usa o noteous`
 
-      greetingDescription3.innerHTML = `<span class="greeting-description-intro">Design incrível</span>noteous possui um design inovador que convida você a fazer anotações. <br><br>📅 Veja a data de hoje <br>📋 Escreva sua próxima tarefa<br>💡 Registre algo para não esquecer `
+      greetingDescription3.innerHTML = `<span class="greeting-description-intro">Em breve: Listas de Prioridade</span> <br>Sua organização vai subir de nível. Cada prioridade que você salvar sua nota será exibida em uma lista separada para que você possa ver o que é mais importante mais rápido. <br><br> <em>Esse recurso será lançado para testes em breve no noteous preview</em>`
 
-      greetingDescription4.innerHTML = `<span class="greeting-description-intro">Sempre em dia</span>noteous está em constante melhoria. Quando tiver uma 🌐 nova versão, chegará automaticamente para você ✅`
+      greetingDescription4.innerHTML = `<span class="greeting-description-intro">Sempre em dia</span>noteous preview está em constante melhoria. Quando tiver uma 🌐 nova versão, chegará automaticamente para você ✅`
 
-      greetingDescription1Image.setAttribute('src', './img/greeting-1.png')
-      greetingDescription2Image.setAttribute('src', './img/greeting-2.png')
-      greetingDescription3Image.setAttribute('src', './img/greeting-3.png')
+      greetingDescription2Image.setAttribute('src', './img/greeting-3.png')
+      greetingDescription3Image.setAttribute('src', './img/greeting-2.png')
       greetingDescription4Image.setAttribute('src', './img/greeting-4.png')
 
       greetingDescriptionContainer1.append(
