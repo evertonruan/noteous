@@ -559,8 +559,18 @@ a {
 
 #read-notes {
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  
+  height: auto;
   padding-bottom: 1rem;
+  overflow-x: hidden;
+}
+
+.read-notes-list-priority {
+  display: flex;
+  flex-direction: row;
+  gap: 0.5rem;
+  overflow-x: auto;
 }
 
 #section-read .note-container,
