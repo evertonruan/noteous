@@ -192,7 +192,7 @@ function welcomeToNoteous(context, subcontext) {
 
       greetingDescription1.innerHTML = `<span class="greeting-description-intro">Teste os novos recursos</span>Acessando o noteous preview você pode testar agora novos recursos que chegarão no futuro ao noteous ✨`
 
-      greetingDescription2.innerHTML = `<span class="greeting-description-intro">Cópias de notas</span>Esse novo recurso abre novas possibilidades para o noteous! Agora, você pode Criar e Baixar uma cópia das suas notas para Abrir em outro celular ou computador que você usa o noteous`
+      greetingDescription2.innerHTML = `<span class="greeting-description-intro">Cópias de notas</span>Esse novo recurso abre novas possibilidades para o noteous! Agora, você pode Criar e Baixar uma cópia das suas notas para Abrir em outro celular ou computador que você usa o noteous preview`
 
       greetingDescription3.innerHTML = `<span class="greeting-description-intro">Listas de Prioridade</span> <br>Sua organização subiu de nível. Cada prioridade que você salvar sua nota será exibida em uma lista separada para que você possa ver o que é mais importante mais rápido`
 
@@ -234,7 +234,7 @@ function welcomeToNoteous(context, subcontext) {
         )
       )
 
-      greetingDescription1.innerHTML = `<span class="greeting-description-intro">Cópias de notas</span> <br>Esse novo recurso abre novas possibilidades para o noteous! Agora, você pode Criar e Baixar uma cópia das suas notas para Abrir em outro celular ou computador que você usa o noteous`
+      greetingDescription1.innerHTML = `<span class="greeting-description-intro">Cópias de notas</span> <br>Esse novo recurso abre novas possibilidades para o noteous! Agora, você pode Criar e Baixar uma cópia das suas notas para Abrir em outro celular ou computador que você usa o noteous preview`
 
       greetingDescription2.innerHTML = `<span class="greeting-description-intro">Listas de Prioridade</span> <br>Sua organização subiu de nível. Cada prioridade que você salvar sua nota será exibida em uma lista separada para que você possa ver o que é mais importante mais rápido`
 
