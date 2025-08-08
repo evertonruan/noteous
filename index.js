@@ -30,7 +30,12 @@ let readSection = document.querySelector('#section-read')
 let readPanel = document.querySelector('#read-panel')
 let readOptions = document.querySelector('#read-options')
 let readOptionsSort = document.querySelector('#read-options-sort')
+
 let readNotesList = document.querySelector('#read-notes')
+let readNotesListSolid
+let readNotesListDouble
+let readNotesListDotted
+
 
 // VARIÁVEIS IMPORTANTES /////////////////////////////////////
 
@@ -595,16 +600,17 @@ writeOptions.addEventListener('click', () => {
 function sortNotes(context) {
   if (context == 'retrieveSort') {
     if (noteousSettings.sort == 'recent') {
-      readNotesList.style.cssText = 'flex-wrap: wrap; flex-direction: row;'
-
+      // Ordena as notas do mais recente para o mais antigo (ordem decrescente por ID)
+      noteousMain.sort((a, b) => b.id - a.id)
+      
       readOptionsSort.innerHTML = ''
       readOptionsSort.append(
         document.createTextNode('Ordenando por: Recente primeiro')
       )
     } else if (noteousSettings.sort == 'old') {
-      readNotesList.style.cssText =
-        'flex-wrap: wrap-reverse; flex-direction: row-reverse;'
-
+      // Ordena as notas do mais antigo para o mais recente (ordem crescente por ID)
+      noteousMain.sort((a, b) => a.id - b.id)
+      
       readOptionsSort.innerHTML = ''
       readOptionsSort.append(
         document.createTextNode('Ordenando por: Antigo primeiro')
@@ -612,25 +618,28 @@ function sortNotes(context) {
     }
   } else {
     if (noteousSettings.sort == 'recent') {
-      readNotesList.style.cssText =
-        'flex-wrap: wrap-reverse; flex-direction: row-reverse;'
-
       readOptionsSort.innerHTML = ''
       readOptionsSort.append(
         document.createTextNode('Ordenando por: Antigo primeiro')
       )
       noteousSettings.sort = 'old'
-      renderNote()
+      
+      // Ordena as notas do mais antigo para o mais recente (ordem crescente por ID)
+      noteousMain.sort((a, b) => a.id - b.id)
+      
+      renderNote('render-all')
       localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
     } else if (noteousSettings.sort == 'old') {
-      readNotesList.style.cssText = 'flex-wrap: wrap; flex-direction: row;'
-
       readOptionsSort.innerHTML = ''
       readOptionsSort.append(
         document.createTextNode('Ordenando por: Recente primeiro')
       )
       noteousSettings.sort = 'recent'
-      renderNote()
+      
+      // Ordena as notas do mais recente para o mais antigo (ordem decrescente por ID)
+      noteousMain.sort((a, b) => b.id - a.id)
+      
+      renderNote('render-all')
       localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
     }
   }
@@ -639,9 +648,18 @@ readOptionsSort.addEventListener('click', sortNotes)
 
 //////////
 
-function renderNote(context, noteId) {
+function renderNote(context, noteId, priority) {
   if (context == 'render-all') {
     readNotesList.innerHTML = ''
+    if (readNotesListSolid) {
+      readNotesListSolid.innerHTML = ''
+    }
+    if (readNotesListDouble) {
+      readNotesListDouble.innerHTML = ''
+    }
+    if (readNotesListDotted) {
+      readNotesListDotted.innerHTML = ''
+    }
 
     for (let note of noteousMain) {
       let noteContainer = document.createElement('div')
@@ -753,8 +771,46 @@ function renderNote(context, noteId) {
       noteContainer.appendChild(actionButtonsContainer)
       noteContainer.appendChild(noteTextContainer)
 
-      readNotesList.appendChild(noteContainer)
+      //noteous preview 1.7.1
+      //Visualização por Listas de Prioridade
+      //Após criar as notas, irá sorteá-las de acordo com a prioridade
+
+       if (note.priority == 'solid') {
+        
+        //Caso alguma tenha alguma nota com prioridade solid,
+        //Caso a lista de notas NÃO exista, primeiro cria a lista
+        //Depois, adiciona a nota à lista
+        
+        if (!readNotesListSolid) {
+          readNotesListSolid = document.createElement('div')
+          readNotesListSolid.id = 'read-notes-list-solid'
+          readNotesListSolid.classList.add('read-notes-list-priority')
+        }
+        readNotesListSolid.append(noteContainer)  
+
+      } else if (note.priority == 'double') {
+          if (!readNotesListDouble) {
+            readNotesListDouble = document.createElement('div')
+            readNotesListDouble.id = 'read-notes-list-double'
+            readNotesListDouble.classList.add('read-notes-list-priority')
+          }
+        readNotesListDouble.append(noteContainer)
+
+      } else if (note.priority == 'dotted') {
+        if (!readNotesListDotted) {
+          readNotesListDotted = document.createElement('div')
+          readNotesListDotted.id = 'read-notes-list-dotted'
+          readNotesListDotted.classList.add('read-notes-list-priority')
+        }
+        readNotesListDotted.append(noteContainer)
+      }
     }
+
+    readNotesList.append(
+      readNotesListSolid,
+      readNotesListDouble,
+      readNotesListDotted
+    )
 
     setTimeout(() => {
       //css inicia em 0. Após renderizar, altera para 1

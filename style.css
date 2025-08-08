@@ -568,6 +568,7 @@ a {
   display: flex;
   flex-direction: row;
   height: max-content;
+  min-width: max-content;
   margin: 1rem;
 
   background-color: var(--base-note-container);
