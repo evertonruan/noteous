@@ -31,15 +31,22 @@ let readPanel = document.querySelector('#read-panel')
 let readOptions = document.querySelector('#read-options')
 let readOptionsSort = document.querySelector('#read-options-sort')
 
-let readNotesList = document.querySelector('#read-notes')
-let readNotesListSolid
-let readNotesListDouble
-let readNotesListDotted
+let readNotesContainer = document.querySelector('#read-notes-container')
 
+//noteous preview 1.7.1: Cria listas de prioridade para depois adicioná-las ao readNotesContainer caso haja notas
+let readNotesListSolid = document.createElement('div')
+readNotesListSolid.id = 'read-notes-list-solid'
+readNotesListSolid.classList.add('read-notes-priority-container')
+let readNotesListDouble = document.createElement('div')
+readNotesListDouble.id = 'read-notes-list-double'
+readNotesListDouble.classList.add('read-notes-priority-container')
+let readNotesListDotted = document.createElement('div')
+readNotesListDotted.id = 'read-notes-list-dotted'
+readNotesListDotted.classList.add('read-notes-priority-container')
 
 // VARIÁVEIS IMPORTANTES /////////////////////////////////////
 
-let currentVersion = 1.70
+let currentVersion = 1.71
 let noteIdEdit //usada para confirmar qual nota está sendo editada
 let editMode = false
 let tabIndexCounter = 10
@@ -187,7 +194,7 @@ function welcomeToNoteous(context, subcontext) {
 
       greetingDescription2.innerHTML = `<span class="greeting-description-intro">Cópias de notas</span>Esse novo recurso abre novas possibilidades para o noteous! Agora, você pode Criar e Baixar uma cópia das suas notas para Abrir em outro celular ou computador que você usa o noteous`
 
-      greetingDescription3.innerHTML = `<span class="greeting-description-intro">Em breve: Listas de Prioridade</span> <br>Sua organização vai subir de nível. Cada prioridade que você salvar sua nota será exibida em uma lista separada para que você possa ver o que é mais importante mais rápido. <br><br> <em>Esse recurso será lançado para testes em breve no noteous preview</em>`
+      greetingDescription3.innerHTML = `<span class="greeting-description-intro">Listas de Prioridade</span> <br>Sua organização subiu de nível. Cada prioridade que você salvar sua nota será exibida em uma lista separada para que você possa ver o que é mais importante mais rápido`
 
       greetingDescription4.innerHTML = `<span class="greeting-description-intro">Sempre em dia</span>noteous preview está em constante melhoria. Quando tiver uma 🌐 nova versão, chegará automaticamente para você ✅`
 
@@ -229,7 +236,7 @@ function welcomeToNoteous(context, subcontext) {
 
       greetingDescription1.innerHTML = `<span class="greeting-description-intro">Cópias de notas</span> <br>Esse novo recurso abre novas possibilidades para o noteous! Agora, você pode Criar e Baixar uma cópia das suas notas para Abrir em outro celular ou computador que você usa o noteous`
 
-      greetingDescription2.innerHTML = `<span class="greeting-description-intro">Em breve: Listas de Prioridade</span> <br>Sua organização vai subir de nível. Cada prioridade que você salvar sua nota será exibida em uma lista separada para que você possa ver o que é mais importante mais rápido. <br><br> <em>Esse recurso será lançado para testes em breve no noteous preview</em>`
+      greetingDescription2.innerHTML = `<span class="greeting-description-intro">Listas de Prioridade</span> <br>Sua organização subiu de nível. Cada prioridade que você salvar sua nota será exibida em uma lista separada para que você possa ver o que é mais importante mais rápido`
 
       greetingDescription3.innerHTML = `<span class="greeting-description-intro">Atualização automática</span> <br>noteous recebe atualizações automáticas 🌐 Assim, seu aplicativo sempre está em dia.`
 
@@ -598,6 +605,10 @@ writeOptions.addEventListener('click', () => {
 //////////
 
 function sortNotes(context) {
+
+  // noteous em versões anteriores: Antes, apenas dava a 'sensação' de que as notas foram ordenadas, apenas usando flex-reverse.
+  // noteous preview 1.7.1: função sortNotes() revisada. Agora, faz uma inversão de verdade, ordenando o array de notas.
+
   if (context == 'retrieveSort') {
     if (noteousSettings.sort == 'recent') {
       // Ordena as notas do mais recente para o mais antigo (ordem decrescente por ID)
@@ -649,8 +660,11 @@ readOptionsSort.addEventListener('click', sortNotes)
 //////////
 
 function renderNote(context, noteId, priority) {
+
+  //ESSE CONTEXTO É USADO AO CARREGAR A PÁGINA, RENDERIZANDO TODAS AS NOTAS
+
   if (context == 'render-all') {
-    readNotesList.innerHTML = ''
+    readNotesContainer.innerHTML = ''
     if (readNotesListSolid) {
       readNotesListSolid.innerHTML = ''
     }
@@ -665,6 +679,33 @@ function renderNote(context, noteId, priority) {
       let noteContainer = document.createElement('div')
       noteContainer.id = note.id + '-note-container'
       noteContainer.classList.add('note-container')
+
+      //noteous preview 1.7.1
+      //Visualização por Listas de Prioridade
+      //Após criar as notas, irá sorteá-las de acordo com a prioridade
+
+      //Caso alguma tenha alguma nota com prioridade solid,
+      //Adiciona lista ao container de listas (readNotesContainer) caso seja a primeira nota
+      //Depois, adiciona a nota à lista
+
+      if (note.priority == 'solid') {
+        if (!readNotesContainer.querySelector('#read-notes-list-solid')) {
+          readNotesContainer.append(readNotesListSolid)
+        }
+        readNotesListSolid.append(noteContainer)  
+
+      } else if (note.priority == 'double') {
+        if (!readNotesContainer.querySelector('#read-notes-list-double')) {
+          readNotesContainer.append(readNotesListDouble)
+        }
+        readNotesListDouble.append(noteContainer)
+
+      } else if (note.priority == 'dotted') {
+        if (!readNotesContainer.querySelector('#read-notes-list-dotted')) {
+          readNotesContainer.append(readNotesListDotted)
+        }
+        readNotesListDotted.append(noteContainer)
+      }
 
       //BORDER/PRIORITY
       if (note.priority == 'solid') {
@@ -695,27 +736,29 @@ function renderNote(context, noteId, priority) {
       // --> adição de 'texto' ao id porque não pode haver ids iguais
       let textElement = document.createElement('p')
       textElement.id = note.id + '-text'
+      noteContainer.appendChild(textElement)
+
+      // noteous em versões anteriores: se nota tivesse menos de 300 caracteres, o conteúdo seria adicionado por inteiro. Se tivesse mais de 300 carateceres, iria testar cada caractere até chegar no 300º e exibir 'VER MAIS'. Isso levava em conta somente o texto dela, para previnir que ficasse muito longo, mas não levava em conta o espaço que o elemento ocupava.
+      // noteous preview 1.7.1: caracteres da nota são contados sempre. Agora, há 3 listas de prioridade e o espaço que uma nota ocupa é muito mais importante. Assim, ao renderizar uma nota, cada caractere dela é contado para que, se alcançar 200 caracteres ou alcançar 200px de altura, o que chegar primeiro, seja exibido 'VER MAIS'. Isso previne que notas muito longas ocupem espaço demais.
 
       let noteChar = note.text
-      if (noteChar.length < 300) {
-        //Se tamanho da nota for menor que 30, escrever nota inteira
-        textElement.appendChild(document.createTextNode(noteChar))
-      } else if (noteChar.length >= 300) {
-        //Se tamanho da nota for maior que 30, escrever apenas até o 30º caractere e acrescentar botão para ver nota inteira
-        let count = 0
-        for (let noteCharAt of noteChar) {
-          textElement.appendChild(document.createTextNode(noteCharAt))
-          count = count + 1
-          //"Ir escrevendo" cada caractere até chegar o 30º
-          if (count == 300) {
-            textElement.append(document.createTextNode(' ...'))
-            textElement.append(document.createElement('br'))
-            textElement.append(document.createTextNode('[VER MAIS]'))
+      let count = 0
+      for (let noteCharAt of noteChar) {
+        textElement.appendChild(document.createTextNode(noteCharAt))
+        count = count + 1
+        
+        console.log(noteContainer.offsetHeight)
+        //"Ir escrevendo" cada caractere até chegar o 30º
+        if (count == 200 || noteContainer.offsetHeight >= 200){
+          
+          textElement.append(document.createTextNode(' ...'))
+          textElement.append(document.createElement('br'))
+          textElement.append(document.createTextNode('[VER MAIS]'))
 
-            break
-          }
+          break
         }
       }
+      
 
       //DATE
       let noteDateContainer = document.createElement('div')
@@ -771,57 +814,49 @@ function renderNote(context, noteId, priority) {
       noteContainer.appendChild(actionButtonsContainer)
       noteContainer.appendChild(noteTextContainer)
 
-      //noteous preview 1.7.1
-      //Visualização por Listas de Prioridade
-      //Após criar as notas, irá sorteá-las de acordo com a prioridade
-
-       if (note.priority == 'solid') {
-        
-        //Caso alguma tenha alguma nota com prioridade solid,
-        //Caso a lista de notas NÃO exista, primeiro cria a lista
-        //Depois, adiciona a nota à lista
-        
-        if (!readNotesListSolid) {
-          readNotesListSolid = document.createElement('div')
-          readNotesListSolid.id = 'read-notes-list-solid'
-          readNotesListSolid.classList.add('read-notes-list-priority')
-        }
-        readNotesListSolid.append(noteContainer)  
-
-      } else if (note.priority == 'double') {
-          if (!readNotesListDouble) {
-            readNotesListDouble = document.createElement('div')
-            readNotesListDouble.id = 'read-notes-list-double'
-            readNotesListDouble.classList.add('read-notes-list-priority')
-          }
-        readNotesListDouble.append(noteContainer)
-
-      } else if (note.priority == 'dotted') {
-        if (!readNotesListDotted) {
-          readNotesListDotted = document.createElement('div')
-          readNotesListDotted.id = 'read-notes-list-dotted'
-          readNotesListDotted.classList.add('read-notes-list-priority')
-        }
-        readNotesListDotted.append(noteContainer)
-      }
     }
-
-    readNotesList.append(
-      readNotesListSolid,
-      readNotesListDouble,
-      readNotesListDotted
-    )
 
     setTimeout(() => {
       //css inicia em 0. Após renderizar, altera para 1
       readPanel.style.cssText = 'opacity: 1; transform: translateY(-10px);'
     }, 300)
-  } else if (context == 'add') {
+  }
+  
+  // ESSE CONTEXTO É USADO AO ADICIONAR NOTA, PARA RENDERIZÁ-LA
+  
+  else if (context == 'add') {
     for (let note of noteousMain) {
       if (note.id == noteId) {
         let noteContainer = document.createElement('div')
         noteContainer.id = note.id + '-note-container'
         noteContainer.classList.add('note-container')
+        
+        //noteous preview 1.7.1
+        //Visualização por Listas de Prioridade
+        //Após criar as notas, irá sorteá-las de acordo com a prioridade
+
+        //Caso alguma tenha alguma nota com prioridade solid,
+        //Adiciona lista ao container de listas (readNotesContainer) caso seja a primeira nota
+        //Depois, adiciona a nota à lista
+
+        if (note.priority == 'solid') {
+          if (!readNotesContainer.querySelector('#read-notes-list-solid')) {
+            readNotesContainer.append(readNotesListSolid)
+          }
+          readNotesListSolid.append(noteContainer)  
+
+        } else if (note.priority == 'double') {
+          if (!readNotesContainer.querySelector('#read-notes-list-double')) {
+            readNotesContainer.append(readNotesListDouble)
+          }
+          readNotesListDouble.append(noteContainer)
+
+        } else if (note.priority == 'dotted') {
+          if (!readNotesContainer.querySelector('#read-notes-list-dotted')) {
+            readNotesContainer.append(readNotesListDotted)
+          }
+          readNotesListDotted.append(noteContainer)
+        }
 
         //BORDER/PRIORITY
         if (note.priority == 'solid') {
@@ -848,29 +883,30 @@ function renderNote(context, noteId, priority) {
         noteTextContainer.id = note.id + '-text-container'
         noteTextContainer.classList.add('note-text-container')
         noteTextContainer.setAttribute('onclick', `openNote(${note.id})`)
+        
         // --> adição de 'texto' ao id porque não pode haver ids iguais
-
         let textElement = document.createElement('p')
         textElement.id = note.id + '-text'
+        noteContainer.appendChild(textElement)
+
+        // noteous em versões anteriores: se nota tivesse menos de 300 caracteres, o conteúdo seria adicionado por inteiro. Se tivesse mais de 300 carateceres, iria testar cada caractere até chegar no 300º e exibir 'VER MAIS'. Isso levava em conta somente o texto dela, para previnir que ficasse muito longo, mas não levava em conta o espaço que o elemento ocupava.
+        // noteous preview 1.7.1: caracteres da nota são contados sempre. Agora, há 3 listas de prioridade e o espaço que uma nota ocupa é muito mais importante. Assim, ao renderizar uma nota, cada caractere dela é contado para que, se alcançar 200 caracteres ou alcançar 200px de altura, o que chegar primeiro, seja exibido 'VER MAIS'. Isso previne que notas muito longas ocupem espaço demais.
 
         let noteChar = note.text
-        if (noteChar.length < 300) {
-          //Se tamanho da nota for menor que 30, escrever nota inteira
-          textElement.appendChild(document.createTextNode(noteChar))
-        } else if (noteChar.length >= 300) {
-          //Se tamanho da nota for maior que 30, escrever apenas até o 30º caractere e acrescentar botão para ver nota inteira
-          let count = 0
-          for (let noteCharAt of noteChar) {
-            textElement.appendChild(document.createTextNode(noteCharAt))
-            count = count + 1
-            //"Ir escrevendo" cada caractere até chegar o 30º
-            if (count == 300) {
-              textElement.append(document.createTextNode(' ...'))
-              textElement.append(document.createElement('br'))
-              textElement.append(document.createTextNode('[VER MAIS]'))
+        let count = 0
+        for (let noteCharAt of noteChar) {
+          textElement.appendChild(document.createTextNode(noteCharAt))
+          count = count + 1
+          
+          console.log(noteContainer.offsetHeight)
+          //"Ir escrevendo" cada caractere até chegar o 30º
+          if (count == 200 || noteContainer.offsetHeight >= 200){
+            
+            textElement.append(document.createTextNode(' ...'))
+            textElement.append(document.createElement('br'))
+            textElement.append(document.createTextNode('[VER MAIS]'))
 
-              break
-            }
+            break
           }
         }
 
@@ -928,7 +964,7 @@ function renderNote(context, noteId, priority) {
         noteContainer.appendChild(actionButtonsContainer)
         noteContainer.appendChild(noteTextContainer)
 
-        readNotesList.prepend(noteContainer)
+        readNotesContainer.prepend(noteContainer)
       }
     }
   }
