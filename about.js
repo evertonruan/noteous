@@ -239,9 +239,9 @@ copyCreateButton.addEventListener('click', () => {
     copyDetailsSwitchVar = 1
     copyDetailsContainer.innerHTML = ''
 
-    // Descrição sobre a funcionalidade
-    let copyDescription = document.createElement('p')
-    copyDescription.textContent = 'Baixe uma cópia das suas notas. Você pode armazenar essa cópia para ter segurança adicional ou para enviar a outro dispositivo que você utiliza o noteous, como celular ou computador.'
+  // Descrição sobre a funcionalidade
+  let copyDescription = document.createElement('p')
+  copyDescription.textContent = 'Compartilhe uma cópia das suas notas. Você pode enviar essa cópia para outro dispositivo que você utiliza o noteous, como celular ou computador.'
 
     // Informação sobre quantidade de notas
     let notesInfo = document.createElement('p')
@@ -253,10 +253,10 @@ copyCreateButton.addEventListener('click', () => {
     copyDownloadButton.textContent = 'Criar e compartilhar cópia'
     copyDownloadButton.type = 'button'
 
-    // Event listener para o botão de download
+    // Event listener para o botão de compartilhamento
     copyDownloadButton.addEventListener('click', (event) => {
       event.preventDefault()
-      
+
       // Cria os dados da cópia das notas
       const notesData = {
         notes: noteousMain,
@@ -265,58 +265,47 @@ copyCreateButton.addEventListener('click', () => {
         appVersion: '1.6.3'
       }
 
-      const dataStr = JSON.stringify(notesData, null, 2)
-      const dataBlob = new Blob([dataStr], { type: 'application/octet-stream' })
-      const fileName = `Cópia de Notas - ${new Date().toISOString().split('T')[0]}.noteouspack`
-      
-      // Tenta compartilhar o arquivo primeiro
-      if (navigator.share) {
-        const file = new File([dataBlob], fileName, { type: 'application/octet-stream' })
-        
-        navigator.share({
-          title: 'Cópia das Notas - Noteous',
-          text: `Sua cópia das notas do Noteous (${noteousMain.length} notas)`,
-          files: [file]
-        }).then(() => {
-          console.log('Arquivo compartilhado com sucesso!')
-          // Não faz download se o arquivo foi compartilhado com sucesso
-        }).catch((error) => {
-          console.log('Erro ao compartilhar arquivo:', error.message)
-          
-          // Fallback: tenta compartilhar apenas texto
-          navigator.share({
-            title: 'Cópia das Notas - Noteous',
-            text: `Sua cópia das notas do Noteous (${noteousMain.length} notas). Use o arquivo que será baixado automaticamente.`
-          }).then(() => {
-            console.log('Texto compartilhado como fallback')
-          }).catch((textError) => {
-            console.log('Compartilhamento cancelado ou não disponível:', textError.message)
-          }).finally(() => {
-            // Faz o download se não conseguiu compartilhar o arquivo
-            setTimeout(() => {
-              const link = document.createElement('a')
-              link.href = URL.createObjectURL(dataBlob)
-              link.download = fileName
-              
-              document.body.appendChild(link)
-              link.click()
-              document.body.removeChild(link)
-              
-              URL.revokeObjectURL(link.href)
-            }, 500)
-          })
-        })
+  const dataStr = JSON.stringify(notesData, null, 2)
+  const fileName = `Cópia de Notas - ${new Date().toISOString().split('T')[0]}.noteouspack`
+
+      // Garante contexto seguro (recomendação para APIs modernas)
+      const isSecure = window.isSecureContext || location.protocol === 'https:' || location.hostname === 'localhost'
+
+      if (!navigator.share) {
+        alert('Compartilhamento nativo não é suportado neste navegador. Abra no celular ou em um navegador moderno.')
+        return
+      }
+
+      if (!isSecure) {
+        alert('Para compartilhar o arquivo, abra o app em HTTPS ou em localhost (ambiente seguro).')
+        return
+      }
+
+      // Tenta compartilhar o arquivo diretamente, mantendo o gesto do usuário
+      const file = new File([dataStr], fileName, { type: 'application/json' })
+
+      const doShare = () => navigator.share({
+        title: 'Cópia das Notas - Noteous',
+        text: `Sua cópia das notas do Noteous (${noteousMain.length} notas)` ,
+        files: [file]
+      }).catch((err) => {
+        // Cancelado ou bloqueado pelo navegador
+        console.log('Compartilhamento cancelado/indisponível:', err?.message || err)
+      })
+
+      if (navigator.canShare) {
+        if (navigator.canShare({ files: [file] })) {
+          doShare()
+        } else {
+          alert('Este dispositivo/navegador não suporta compartilhar arquivos. Tente em um dispositivo móvel ou aplicativo instalado (PWA).')
+        }
       } else {
-        // Se não suporta Web Share API, apenas baixa o arquivo
-        const link = document.createElement('a')
-        link.href = URL.createObjectURL(dataBlob)
-        link.download = fileName
-        
-        document.body.appendChild(link)
-        link.click()
-        document.body.removeChild(link)
-        
-        URL.revokeObjectURL(link.href)
+        // Alguns navegadores suportam share com arquivos sem canShare
+        try {
+          doShare()
+        } catch (e) {
+          alert('Este dispositivo/navegador não suporta compartilhar arquivos. Tente em um dispositivo móvel ou aplicativo instalado (PWA).')
+        }
       }
     })
 
