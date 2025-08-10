@@ -239,9 +239,9 @@ copyCreateButton.addEventListener('click', () => {
     copyDetailsSwitchVar = 1
     copyDetailsContainer.innerHTML = ''
 
-  // Descrição sobre a funcionalidade
-  let copyDescription = document.createElement('p')
-  copyDescription.textContent = 'Compartilhe uma cópia das suas notas. Você pode enviar essa cópia para outro dispositivo que você utiliza o noteous, como celular ou computador.'
+    // Descrição sobre a funcionalidade
+    let copyDescription = document.createElement('p')
+    copyDescription.textContent = 'Baixe uma cópia das suas notas. Você pode armazenar essa cópia para ter segurança adicional ou para enviar a outro dispositivo que você utiliza o noteous, como celular ou computador.'
 
     // Informação sobre quantidade de notas
     let notesInfo = document.createElement('p')
@@ -250,63 +250,12 @@ copyCreateButton.addEventListener('click', () => {
     // Botão para executar a criação da cópia
     let copyDownloadButton = document.createElement('button')
     copyDownloadButton.classList.add('option-point')
-    copyDownloadButton.textContent = 'Criar e compartilhar cópia'
+    copyDownloadButton.textContent = 'Criar e baixar cópia'
     copyDownloadButton.type = 'button'
 
-    // Event listener para o botão de compartilhamento
-    copyDownloadButton.addEventListener('click', (event) => {
-      event.preventDefault()
-
-      // Cria os dados da cópia das notas
-      const notesData = {
-        notes: noteousMain,
-        exportDate: new Date().toISOString(),
-        totalNotes: noteousMain.length,
-        appVersion: '1.6.3'
-      }
-
-  const dataStr = JSON.stringify(notesData, null, 2)
-  const fileName = `Cópia de Notas - ${new Date().toISOString().split('T')[0]}.noteouspack`
-
-      // Garante contexto seguro (recomendação para APIs modernas)
-      const isSecure = window.isSecureContext || location.protocol === 'https:' || location.hostname === 'localhost'
-
-      if (!navigator.share) {
-        alert('Compartilhamento nativo não é suportado neste navegador. Abra no celular ou em um navegador moderno.')
-        return
-      }
-
-      if (!isSecure) {
-        alert('Para compartilhar o arquivo, abra o app em HTTPS ou em localhost (ambiente seguro).')
-        return
-      }
-
-      // Tenta compartilhar o arquivo diretamente, mantendo o gesto do usuário
-      const file = new File([dataStr], fileName, { type: 'application/json' })
-
-      const doShare = () => navigator.share({
-        title: 'Cópia das Notas - Noteous',
-        text: `Sua cópia das notas do Noteous (${noteousMain.length} notas)` ,
-        files: [file]
-      }).catch((err) => {
-        // Cancelado ou bloqueado pelo navegador
-        console.log('Compartilhamento cancelado/indisponível:', err?.message || err)
-      })
-
-      if (navigator.canShare) {
-        if (navigator.canShare({ files: [file] })) {
-          doShare()
-        } else {
-          alert('Este dispositivo/navegador não suporta compartilhar arquivos. Tente em um dispositivo móvel ou aplicativo instalado (PWA).')
-        }
-      } else {
-        // Alguns navegadores suportam share com arquivos sem canShare
-        try {
-          doShare()
-        } catch (e) {
-          alert('Este dispositivo/navegador não suporta compartilhar arquivos. Tente em um dispositivo móvel ou aplicativo instalado (PWA).')
-        }
-      }
+    // Event listener para o botão de download
+    copyDownloadButton.addEventListener('click', () => {
+      createNoteCopy()
     })
 
     // Adiciona todos os elementos ao container
@@ -320,6 +269,29 @@ copyCreateButton.addEventListener('click', () => {
   activeOptionVerifier()
 
 })
+
+//FUNÇÃO PARA CRIAR CÓPIA DAS NOTAS
+function createNoteCopy() {
+  const notesData = {
+    notes: noteousMain,
+    exportDate: new Date().toISOString(),
+    totalNotes: noteousMain.length,
+    appVersion: '1.6.3'
+  }
+
+  const dataStr = JSON.stringify(notesData, null, 2)
+  const dataBlob = new Blob([dataStr], { type: 'application/octet-stream' })
+  
+  const link = document.createElement('a')
+  link.href = URL.createObjectURL(dataBlob)
+  link.download = `Cópia de Notas - ${new Date().toISOString().split('T')[0]}.noteouspack`
+  
+  document.body.appendChild(link)
+  link.click()
+  document.body.removeChild(link)
+  
+  URL.revokeObjectURL(link.href)
+}
 
 //BOTÃO ABRIR CÓPIA
 copyOpenButton.addEventListener('click', () => {
