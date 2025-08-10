@@ -239,19 +239,19 @@ copyCreateButton.addEventListener('click', () => {
     copyDetailsSwitchVar = 1
     copyDetailsContainer.innerHTML = ''
 
-    // Descrição sobre a funcionalidade
-    let copyDescription = document.createElement('p')
-    copyDescription.textContent = 'Baixe uma cópia das suas notas. Você pode armazenar essa cópia para ter segurança adicional ou para enviar a outro dispositivo que você utiliza o noteous, como celular ou computador.'
+  // Descrição sobre a funcionalidade
+  let copyDescription = document.createElement('p')
+  copyDescription.textContent = 'Crie uma cópia das suas notas e compartilhe com outro dispositivo que você utiliza o noteous (celular ou computador). Em navegadores sem compartilhamento, será feito o download.'
 
     // Informação sobre quantidade de notas
     let notesInfo = document.createElement('p')
     notesInfo.textContent = `Você tem ${noteousMain.length} nota${noteousMain.length !== 1 ? 's' : ''}`
 
-    // Botão para executar a criação da cópia
-    let copyDownloadButton = document.createElement('button')
-    copyDownloadButton.classList.add('option-point')
-    copyDownloadButton.textContent = 'Criar e baixar cópia'
-    copyDownloadButton.type = 'button'
+  // Botão para executar a criação/compartilhamento da cópia
+  let copyDownloadButton = document.createElement('button')
+  copyDownloadButton.classList.add('option-point')
+  copyDownloadButton.textContent = 'Criar e compartilhar cópia'
+  copyDownloadButton.type = 'button'
 
     // Event listener para o botão de download
     copyDownloadButton.addEventListener('click', () => {
@@ -270,8 +270,8 @@ copyCreateButton.addEventListener('click', () => {
 
 })
 
-//FUNÇÃO PARA CRIAR CÓPIA DAS NOTAS
-function createNoteCopy() {
+//FUNÇÃO PARA CRIAR CÓPIA DAS NOTAS (compartilhar com fallback de download)
+async function createNoteCopy() {
   const notesData = {
     notes: noteousMain,
     exportDate: new Date().toISOString(),
@@ -281,15 +281,36 @@ function createNoteCopy() {
 
   const dataStr = JSON.stringify(notesData, null, 2)
   const dataBlob = new Blob([dataStr], { type: 'application/octet-stream' })
-  
+  const fileName = `Cópia de Notas - ${new Date().toISOString().split('T')[0]}.noteouspack`
+
+  // Tenta compartilhar o arquivo (Web Share API Level 2)
+  try {
+    const file = new File([dataBlob], fileName, { type: dataBlob.type })
+
+    if (navigator.canShare && navigator.canShare({ files: [file] }) && navigator.share) {
+      await navigator.share({
+        files: [file],
+        title: 'Cópia de Notas',
+        text: 'Pacote de notas exportado do noteous'
+      })
+      return // compartilhamento feito, não prossegue para download
+    }
+  } catch (err) {
+    // Se o usuário cancelar (AbortError/NotAllowedError), não faz nada; para outros erros, cai no fallback
+    if (err && (err.name === 'AbortError' || err.name === 'NotAllowedError')) {
+      return
+    }
+  }
+
+  // Fallback: realiza o download no navegador
   const link = document.createElement('a')
   link.href = URL.createObjectURL(dataBlob)
-  link.download = `Cópia de Notas - ${new Date().toISOString().split('T')[0]}.noteouspack`
-  
+  link.download = fileName
+
   document.body.appendChild(link)
   link.click()
   document.body.removeChild(link)
-  
+
   URL.revokeObjectURL(link.href)
 }
 
