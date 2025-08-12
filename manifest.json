@@ -61,7 +61,7 @@
       "url": "link",
       "files": [
         {
-          "name": "texts",
+          "name": "text",
           "accept": ["text/plain", ".txt"]
         }
       ]
