@@ -30,7 +30,7 @@ body.append(document.createTextNode(`• SOLUÇÃO DE PROBLEMAS`))
 br()
 br()
 
-body.append(document.createTextNode(`Versão atual: 1.62. Versão instalada ${noteousSettings.noteousVersion}`))
+body.append(document.createTextNode(`Versão atual: ${noteousVersion}. Versão instalada ${noteousSettings.noteousVersion}`))
 
 br()
 

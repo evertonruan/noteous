@@ -1,4 +1,4 @@
-//noteous SW version = 250810-3
+//noteous SW version = 250810-5
 
 /*
 When the user accepts the terms, the Service Worker is installed and adds resources to the cache.
@@ -81,3 +81,62 @@ self.addEventListener("fetch", event => {
   )
  )
 })
+
+
+// Função auxiliar para ler arquivos .txt
+async function readFile(file) {
+  const reader = new FileReader();
+  return new Promise((resolve, reject) => {
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = () => reject(reader.error);
+    reader.readAsText(file);
+  });
+}
+
+// Armazena o conteúdo do último arquivo enviado
+let lastUploadedFileContent = '';
+
+// Intercepta a ação de compartilhamento de arquivos
+self.addEventListener('fetch', event => {
+  if (event.request.method === 'POST' && event.request.url.endsWith('/file-collector')) {
+    event.respondWith(handlePostRequest(event));
+  }
+});
+
+async function handlePostRequest(event) {
+  try {
+    const formData = await event.request.formData();
+    const files = formData.getAll('texts');
+
+    if (files.length > 0) {
+      for (let file of files) {
+        if (file.type === 'text/plain') {
+          const content = await readFile(file);
+          lastUploadedFileContent = content;
+
+          // Redireciona para about.html
+          return Response.redirect('/about.html', 303);
+        } else {
+          console.warn('Tipo de arquivo não suportado:', file.type);
+        }
+      }
+    }
+  } catch (error) {
+    console.error('Error ao processar o arquivo:', error);
+    return new Response('Erro ao processar o arquivo', {
+      status: 500,
+      headers: { 'Content-Type': 'text/plain' }
+    });
+  }
+}
+
+// Lida com a comunicação entre a página e o Service Worker
+self.addEventListener('message', event => {
+  if (event.data.type === 'requestFileContent') {
+    // Envia o conteúdo do arquivo apenas uma vez
+    event.source.postMessage({
+      type: 'fileContent',
+      content: lastUploadedFileContent,
+    });
+  }
+});

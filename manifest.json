@@ -50,5 +50,21 @@
   "display": "standalone",
   "scope": "/",
   "theme_color": "#f5993d",
-  "description": "Sua próxima tarefa ou lembrete"
+  "description": "Sua próxima tarefa ou lembrete",
+  "share_target": {
+    "action": "/file-load",
+    "method": "POST",
+    "enctype": "multipart/form-data",
+    "params": {
+      "title": "name",
+      "text": "description",
+      "url": "link",
+      "files": [
+        {
+          "name": "texts",
+          "accept": ["text/plain", ".txt"]
+        }
+      ]
+    }
+  }
 }

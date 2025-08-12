@@ -10,6 +10,7 @@ function serviceWorkerRegister() {
 let body = document.querySelector('body')
 
 let themeButton = document.querySelector('#theme-container')
+let noteousVersionLabel = document.querySelector('#noteous-version-label')
 
 //WRITE-SECTION
 let writeSection = document.querySelector('#section-write')
@@ -46,7 +47,7 @@ readNotesListDotted.classList.add('read-notes-priority-container')
 
 // VARIÁVEIS IMPORTANTES /////////////////////////////////////
 
-let currentVersion = 1.71
+let currentVersion = noteousVersion
 let noteIdEdit //usada para confirmar qual nota está sendo editada
 let editMode = false
 let tabIndexCounter = 10
@@ -64,6 +65,10 @@ let writeInputEdit = function (event) {
 function navLink() {
   window.location.replace('./about.html')
 }
+
+////
+
+noteousVersionLabel.innerHTML = `<span>noteous preview</span> ${noteousVersion}`
 
 //INICIALIZAÇÃO //////////////////////////////////////////////
 

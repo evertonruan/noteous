@@ -247,19 +247,51 @@ copyCreateButton.addEventListener('click', () => {
     let notesInfo = document.createElement('p')
     notesInfo.textContent = `Você tem ${noteousMain.length} nota${noteousMain.length !== 1 ? 's' : ''}`
 
-    // Botão para executar a criação da cópia
-    let copyDownloadButton = document.createElement('button')
-    copyDownloadButton.classList.add('option-point')
-    copyDownloadButton.textContent = 'Criar e baixar cópia'
-    copyDownloadButton.type = 'button'
+    // Container para os botões
+    let buttonsContainer = document.createElement('div')
+    buttonsContainer.style.cssText = `
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    `
 
-    // Event listener para o botão de download
-    copyDownloadButton.addEventListener('click', () => {
-      createNoteCopy()
-    })
+    if (hasWebShareSupport()) {
+      // Se suporta compartilhamento, mostra dois botões
+      
+      // Botão de compartilhar
+      let copyShareButton = document.createElement('button')
+      copyShareButton.classList.add('option-point')
+      copyShareButton.textContent = 'Enviar cópia'
+      copyShareButton.type = 'button'
+      copyShareButton.addEventListener('click', () => {
+        createNoteCopyShare()
+      })
+
+      // Botão de download
+      let copyDownloadButton = document.createElement('button')
+      copyDownloadButton.classList.add('option-point')
+      copyDownloadButton.textContent = 'Baixar cópia'
+      copyDownloadButton.type = 'button'
+      copyDownloadButton.addEventListener('click', () => {
+        createNoteCopyDownload()
+      })
+
+      buttonsContainer.append(copyShareButton, copyDownloadButton)
+    } else {
+      // Se não suporta compartilhamento, mostra apenas download
+      let copyDownloadButton = document.createElement('button')
+      copyDownloadButton.classList.add('option-point')
+      copyDownloadButton.textContent = 'Criar e Baixar cópia'
+      copyDownloadButton.type = 'button'
+      copyDownloadButton.addEventListener('click', () => {
+        createNoteCopyDownload()
+      })
+
+      buttonsContainer.append(copyDownloadButton)
+    }
 
     // Adiciona todos os elementos ao container
-    copyDetailsContainer.append(copyDescription, notesInfo, copyDownloadButton)
+    copyDetailsContainer.append(copyDescription, notesInfo, buttonsContainer)
 
   } else if (copyDetailsSwitchVar == 1) {
     copyDetailsSwitchVar = 0
@@ -270,26 +302,103 @@ copyCreateButton.addEventListener('click', () => {
 
 })
 
-//FUNÇÃO PARA CRIAR CÓPIA DAS NOTAS
-function createNoteCopy() {
+//FUNÇÃO PARA VERIFICAR SUPORTE AO WEB SHARE API
+function hasWebShareSupport() {
+  // Verifica se navigator.share existe
+  if (!navigator.share) {
+    return false
+  }
+  
+  // Verifica se navigator.canShare existe e se suporta arquivos
+  if (!navigator.canShare) {
+    return false
+  }
+  
+  // Testa se pode compartilhar arquivos criando um arquivo temporário
+  try {
+    const testFile = new File(['test'], 'test.txt', { type: 'text/plain' })
+    return navigator.canShare({ files: [testFile] })
+  } catch (err) {
+    return false
+  }
+}
+
+//FUNÇÃO PARA FORMATAR DATA NO FORMATO DDMMAA-HHMMSS
+function formatDate(context, timestamp) {
+  if (context == 'create-copy') {
+    const date = new Date(timestamp)
+    
+    const day = String(date.getDate()).padStart(2, '0')
+    const month = String(date.getMonth() + 1).padStart(2, '0')
+    const year = String(date.getFullYear()).slice(-2)
+    
+    const hours = String(date.getHours()).padStart(2, '0')
+    const minutes = String(date.getMinutes()).padStart(2, '0')
+    const seconds = String(date.getSeconds()).padStart(2, '0')
+  
+    return `${day}${month}${year}-${hours}${minutes}${seconds}`
+  }
+  else if (context == 'open-copy') {
+    const date = new Date(timestamp)
+    const day = String(date.getDate()).padStart(2, '0')
+    const month = String(date.getMonth() + 1).padStart(2, '0')
+    const year = String(date.getFullYear()).slice(-2)
+    const hours = String(date.getHours()).padStart(2, '0')
+    const minutes = String(date.getMinutes()).padStart(2, '0')
+    const seconds = String(date.getSeconds()).padStart(2, '0')
+
+    console.log(`${date}${day}/${month}/${year} às ${hours}:${minutes}:${seconds}`)
+    return `${day}/${month}/${year} às ${hours}:${minutes}:${seconds}`
+  }
+}
+
+//FUNÇÃO PARA CRIAR CÓPIA DAS NOTAS (COMPARTILHAR)
+async function createNoteCopyShare() {
+  
   const notesData = {
     notes: noteousMain,
-    exportDate: new Date().toISOString(),
+    exportDate: Date.now(),
     totalNotes: noteousMain.length,
-    appVersion: '1.6.3'
+    noteousVersion: noteousVersion
   }
 
   const dataStr = JSON.stringify(notesData, null, 2)
-  const dataBlob = new Blob([dataStr], { type: 'application/octet-stream' })
+  const fileName = `noteous - Cópia de Notas - ${formatDate('create-copy', Date.now())}.txt`
+
+  try {
+    const file = new File([dataStr], fileName, { type: 'text/plain' })
+    await navigator.share({
+      files: [file],
+      title: 'Cópia de Notas do noteous'
+    })
+  } catch (err) {
+    // Se o compartilhamento falhar, faz o fallback para download
+    console.log('Erro no compartilhamento:', err)
+    createNoteCopyDownload()
+  }
+}
+
+//FUNÇÃO PARA CRIAR CÓPIA DAS NOTAS (DOWNLOAD)
+function createNoteCopyDownload() {
   
+  const notesData = {
+    notes: noteousMain,
+    exportDate: Date.now(),
+    totalNotes: noteousMain.length,
+    noteousVersion: noteousVersion
+  }
+
+  const dataStr = JSON.stringify(notesData, null, 2)
+  const fileName = `noteous - Cópia de Notas - ${formatDate('create-copy', Date.now())}.txt`
+
+  // Download do arquivo .txt
+  const dataBlob = new Blob([dataStr], { type: 'text/plain' })
   const link = document.createElement('a')
   link.href = URL.createObjectURL(dataBlob)
-  link.download = `Cópia de Notas - ${new Date().toISOString().split('T')[0]}.noteouspack`
-  
+  link.download = fileName
   document.body.appendChild(link)
   link.click()
   document.body.removeChild(link)
-  
   URL.revokeObjectURL(link.href)
 }
 
@@ -303,10 +412,10 @@ copyOpenButton.addEventListener('click', () => {
     let copyDescription = document.createElement('p')
     copyDescription.textContent = 'Abra uma cópia de notas criada anteriormente. Você pode visualizar as notas e também importá-las ao noteous, substituindo as notas atuais.'
 
-    // Input file para selecionar arquivo
+  // Input file para selecionar arquivo (somente .txt - novo método)
     let copyFileInput = document.createElement('input')
     copyFileInput.type = 'file'
-    copyFileInput.accept = '.json,.noteouspack,application/json,application/octet-stream'
+  copyFileInput.accept = '.txt,text/plain'
     copyFileInput.style.display = 'none'
 
     // Botão para abrir seletor de arquivos
@@ -324,13 +433,23 @@ copyOpenButton.addEventListener('click', () => {
     copyFileInput.addEventListener('change', (event) => {
       const file = event.target.files[0]
       if (file) {
+        // Verifica se é um arquivo .txt válido
+        const isTxt = file.type === 'text/plain' || (file.name || '').toLowerCase().endsWith('.txt')
+        if (!isTxt) {
+          alert('Selecione um arquivo .txt gerado pelo noteous.')
+          return
+        }
         const reader = new FileReader()
         reader.onload = (e) => {
           try {
             const notesData = JSON.parse(e.target.result)
+            // Valida estrutura básica esperada
+            if (!notesData || !Array.isArray(notesData.notes)) {
+              throw new Error('Estrutura inválida')
+            }
             showNotesModal(notesData)
           } catch (error) {
-            alert('Erro ao ler o arquivo. Verifique se é um arquivo válido de cópia do noteous.')
+            alert('Erro ao ler o arquivo. Verifique se é um arquivo .txt válido de cópia do noteous.')
           }
         }
         reader.readAsText(file)
@@ -395,10 +514,9 @@ function showNotesModal(notesData) {
     padding: 1rem;
   `
 
-  const exportDate = new Date(notesData.exportDate).toLocaleDateString('pt-BR')
   const packageInfoText = document.createElement('p')
   packageInfoText.innerHTML = `
-    <strong>Data do pacote de cópia:</strong> ${exportDate}<br>
+    <strong>Data do pacote de cópia:</strong> ${formatDate('open-copy', notesData.exportDate)}<br>
     <strong>Quantidade de notas:</strong> ${notesData.totalNotes}
   `
   packageInfoText.style.color = 'var(--base-text)'
@@ -465,8 +583,8 @@ function showNotesModal(notesData) {
   })
 
   // Monta o modal
+  modal.append(modalTitle, packageInfo, buttonsContainer, notesContainer)
   buttonsContainer.append(closeButton, importButton)
-  modal.append(modalTitle, packageInfo, notesContainer, buttonsContainer)
   modalOverlay.appendChild(modal)
   
   // Adiciona o modal ao body
@@ -632,15 +750,7 @@ function importNotes(notes) {
   localStorage.setItem('noteous-main', JSON.stringify(noteousMain))
   
   alert('Notas importadas com sucesso!')
-  
-  // Atualiza a exibição da quantidade de notas na interface
-  if (copyDetailsContainer) {
-    const notesInfo = copyDetailsContainer.querySelector('p:nth-child(2)')
-    if (notesInfo) {
-      const notesCount = noteousMain.length
-      notesInfo.textContent = `Você tem ${notesCount} nota${notesCount !== 1 ? 's' : ''}`
-    }
-  }
+  window.location.reload()
 }
 
 //MODO AVANÇADO

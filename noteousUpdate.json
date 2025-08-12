@@ -1,0 +1,24 @@
+{
+	"latest": {
+		"title": "Primeira versão pública",
+		"description": "Lançamento inicial do Noteous com funcionalidades básicas de anotações."
+	},
+	"history": [
+		{
+			"version": "1.7.3",
+            "updateDate": "12/08/2025",
+            "update-points": [
+                {
+                    "updateType": "NOVO",
+                    "updateDescription": "Importação de notas por outros aplicativo",
+                    "updateDescriptionAdvanced": ""
+                },
+                {
+                    "updateType": "MELHORIA",
+                    "updateDescription": "Informações sobre versão carregadas por JS (footer, update-list, diagnostics)",
+                    "updateDescriptionAdvanced": ""
+                }
+            ]
+		}
+	]
+}

@@ -665,7 +665,7 @@ footer {
   user-select: none;
 }
 
-footer p {
+#noteous-version-label {
   font-weight: bold;
   color: var(--base-text);
   padding: 0.1rem 0.5rem;
