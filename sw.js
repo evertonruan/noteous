@@ -98,7 +98,7 @@ let lastUploadedFileContent = '';
 
 // Intercepta a ação de compartilhamento de arquivos
 self.addEventListener('fetch', event => {
-  if (event.request.method === 'POST' && event.request.url.endsWith('/file-collector')) {
+  if (event.request.method === 'POST' && event.request.url.endsWith('/fileLoad')) {
     event.respondWith(handlePostRequest(event));
   }
 });

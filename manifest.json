@@ -52,7 +52,7 @@
   "theme_color": "#f5993d",
   "description": "Sua próxima tarefa ou lembrete",
   "share_target": {
-    "action": "/file-load",
+    "action": "/fileLoad",
     "method": "POST",
     "enctype": "multipart/form-data",
     "params": {
