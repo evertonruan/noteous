@@ -1,19 +1,60 @@
-if ('serviceWorker' in navigator) {
+// Suporte a Web Share Target: processa dados compartilhados via POST
+if (window.location.pathname === '/fileLoad') {
+    // Detecta se foi aberto via POST (compartilhamento)
+    if (window.location.search || window.location.hash) {
+        // Não é POST, segue fluxo normal
+    } else if (window.location.origin && window.location.pathname) {
+        // Tenta ler dados do formulário compartilhado
+        if (window.FormData) {
+            // Aguarda DOM pronto
+            window.addEventListener('DOMContentLoaded', async () => {
+                try {
+                    const form = document.querySelector('form');
+                    let formData;
+                    if (form) {
+                        formData = new FormData(form);
+                    } else if (window.navigator && window.navigator.clipboard) {
+                        // fallback: tenta ler do clipboard
+                        formData = null;
+                    }
+                    if (formData) {
+                        const title = formData.get('name');
+                        const text = formData.get('description');
+                        const url = formData.get('link');
+                        const file = formData.get('texts');
+                        let fileContent = '';
+                        if (file && file.text) {
+                            fileContent = await file.text();
+                        }
+                        // Exibe os dados compartilhados
+                        let result = '';
+                        if (title) result += `<h2>${title}</h2>`;
+                        if (text) result += `<pre>${text}</pre>`;
+                        if (url) result += `<a href="${url}" target="_blank">${url}</a><br>`;
+                        if (fileContent) result += `<pre>${fileContent}</pre>`;
+                        if (!result) result = '<p>Nenhum dado compartilhado recebido.</p>';
+                        document.body.innerHTML = `<div style="padding:2em;max-width:600px;margin:auto;">${result}</div>`;
+                    }
+                } catch (e) {
+                    document.body.innerHTML = '<p>Erro ao processar dados compartilhados.</p>';
+                }
+            });
+        }
+    }
+} else if ('serviceWorker' in navigator) {
+    // Fluxo antigo: importa arquivo via Service Worker
     navigator.serviceWorker.register('sw.js')
-
     // Solicita ao Service Worker o conteúdo do arquivo
     if (navigator.serviceWorker.controller) {
         navigator.serviceWorker.controller.postMessage({
             type: 'requestFileContent'
         });
     }
-
     navigator.serviceWorker.addEventListener('message', event => {
         navigator.serviceWorker.controller.postMessage({
             type: ''
         });
         navigator.serviceWorker.removeEventListener('message', event)
-
         if (event.data.content !== '') {
             let fileContent = event.data.content
             try {
