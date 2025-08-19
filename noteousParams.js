@@ -1,1 +1,1 @@
-let noteousVersion = "1.7.2.02"
+let noteousVersion = 1.7305
