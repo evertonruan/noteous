@@ -1,5 +1,6 @@
 //noteous SW version = 250821
 
+
 /*
 When the user accepts the terms, the Service Worker is installed and adds resources to the cache.
 Once they are cached, noteous will use only this local content and will no longer connect to the server to update content.
@@ -94,11 +95,18 @@ let lastUploadedFileContent = '';
 // Intercepta a ação de compartilhamento de arquivos
 self.addEventListener('fetch', event => {
   const url = new URL(event.request.url);
-  console.log(url)
-
+  // Lida com POST para /fileload
   if (event.request.method === 'POST' && url.pathname === '/fileload') {
     event.respondWith(handlePostRequest(event));
+    return;
   }
+  // Lida com cache para outros requests (GET etc)
+  event.respondWith(
+    caches.match(event.request)
+      .then(cachedResponse => {
+        return cachedResponse || fetch(event.request);
+      })
+  );
 });
 
 async function handlePostRequest(event) {
