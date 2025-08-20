@@ -21,7 +21,7 @@ if (window.location.pathname === '/fileLoad') {
                         const title = formData.get('name');
                         const text = formData.get('description');
                         const url = formData.get('link');
-                        const file = formData.get('texts');
+                        const file = formData.get('file');
                         let fileContent = '';
                         if (file && file.text) {
                             fileContent = await file.text();
