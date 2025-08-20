@@ -98,7 +98,7 @@ let lastUploadedFileContent = '';
 
 // Intercepta a ação de compartilhamento de arquivos
 self.addEventListener('fetch', event => {
-  if (event.request.method === 'POST' && event.request.url.endsWith('/fileLoad')) {
+  if (event.request.method === 'POST' && event.request.url.endsWith('/fileload')) {
     event.respondWith(handlePostRequest(event));
   }
 });
@@ -106,7 +106,7 @@ self.addEventListener('fetch', event => {
 async function handlePostRequest(event) {
   try {
     const formData = await event.request.formData();
-    const files = formData.getAll('file');
+    const files = formData.getAll('texts');
 
     if (files.length > 0) {
       for (let file of files) {
@@ -114,7 +114,7 @@ async function handlePostRequest(event) {
           const content = await readFile(file);
           lastUploadedFileContent = content;
 
-          // Redireciona para about.html
+          // Redireciona para index.html
           return Response.redirect('/index.html', 303);
         } else {
           console.warn('Tipo de arquivo não suportado:', file.type);
@@ -140,3 +140,4 @@ self.addEventListener('message', event => {
     });
   }
 });
+
