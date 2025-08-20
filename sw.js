@@ -95,8 +95,9 @@ let lastUploadedFileContent = '';
 // Intercepta a ação de compartilhamento de arquivos
 self.addEventListener('fetch', event => {
   const url = new URL(event.request.url);
-  // Lida com POST para /fileload
-  if (event.request.method === 'POST' && url.pathname === '/fileload') {
+  console.log('SW fetch event:', url.pathname);
+  // Lida com POST para /fileload ou /fileload/
+  if (event.request.method === 'POST' && (url.pathname === '/fileload' || url.pathname === '/fileload/')) {
     event.respondWith(handlePostRequest(event));
     return;
   }
