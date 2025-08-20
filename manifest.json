@@ -12,7 +12,7 @@
       "src": "/assets/icons/maskable-monochrome-icon.svg",
       "type": "image/svg+xml",
       "sizes": "any",
-      "purpose": "monochrome"
+      "purpose": "monochrome maskable"
     },
     {
       "src": "/assets/icons/low-res-icon.webp",

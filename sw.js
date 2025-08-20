@@ -106,7 +106,7 @@ self.addEventListener('fetch', event => {
 async function handlePostRequest(event) {
   try {
     const formData = await event.request.formData();
-    const files = formData.getAll('texts');
+    const files = formData.getAll('file');
 
     if (files.length > 0) {
       for (let file of files) {
@@ -115,7 +115,7 @@ async function handlePostRequest(event) {
           lastUploadedFileContent = content;
 
           // Redireciona para about.html
-          return Response.redirect('/about.html', 303);
+          return Response.redirect('/index.html', 303);
         } else {
           console.warn('Tipo de arquivo não suportado:', file.type);
         }
