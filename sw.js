@@ -118,7 +118,7 @@ async function handlePostRequest(event) {
           lastUploadedFileContent = content;
 
           // Redireciona para index.html
-          return Response.redirect('/index.html', 303);
+          return Response.redirect('/', 303);
         } else {
           console.warn('Tipo de arquivo não suportado:', file.type);
         }
