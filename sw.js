@@ -1,4 +1,4 @@
-//noteous SW version = 250820
+//noteous SW version = 250820-1
 
 /*
 When the user accepts the terms, the Service Worker is installed and adds resources to the cache.
@@ -34,24 +34,24 @@ const noteousResources = [
   'reset.css',
   'policies.json',
   'orblendEngine.js',
-  '/img/cupcake/cupcake-outline.png',
-  '/img/cupcake/cupcake.png',
-  '/img/cupcake/cupcake-2.png',
-  '/img/cupcake/cupcake-3.png',
-  '/img/cupcake/cupcake-4.png',
-  '/img/cupcake/cupcake-5.png',
-  '/img/cupcake/cupcake-6.png',
-  '/img/cupcake/cupcake-7.png',
-  '/img/cupcake/cupcake-8.png',
-  '/img/cupcake/cupcake-9.png',
-  '/img/cupcake/cupcake-10.png',
-  '/img/cupcake/cupcake-11.png',
-  '/img/cupcake/cupcake-12.png',
-  '/img/cupcake/cupcake-13.png',
-  '/img/cupcake/cupcake-14.png',
-  '/img/cupcake/cupcake-15.png',
-  '/img/cupcake/cupcake-16.png',
-  '/img/cupcake/cupcake-17.png',
+  '/img/cupcake/cupcake-outline.webp',
+  '/img/cupcake/cupcake.webp',
+  '/img/cupcake/cupcake-2.webp',
+  '/img/cupcake/cupcake-3.webp',
+  '/img/cupcake/cupcake-4.webp',
+  '/img/cupcake/cupcake-5.webp',
+  '/img/cupcake/cupcake-6.webp',
+  '/img/cupcake/cupcake-7.webp',
+  '/img/cupcake/cupcake-8.webp',
+  '/img/cupcake/cupcake-9.webp',
+  '/img/cupcake/cupcake-10.webp',
+  '/img/cupcake/cupcake-11.webp',
+  '/img/cupcake/cupcake-12.webp',
+  '/img/cupcake/cupcake-13.webp',
+  '/img/cupcake/cupcake-14.webp',
+  '/img/cupcake/cupcake-15.webp',
+  '/img/cupcake/cupcake-16.webp',
+  '/img/cupcake/cupcake-17.webp',
   '/img/social-chain.png']
 
 //ACTIVATION
