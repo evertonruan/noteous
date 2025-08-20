@@ -83,14 +83,9 @@ self.addEventListener("fetch", event => {
 })
 
 
-// Função auxiliar para ler arquivos .txt
+// Função auxiliar para ler arquivos .txt (usando file.text() no Service Worker)
 async function readFile(file) {
-  const reader = new FileReader();
-  return new Promise((resolve, reject) => {
-    reader.onload = () => resolve(reader.result);
-    reader.onerror = () => reject(reader.error);
-    reader.readAsText(file);
-  });
+  return await file.text();
 }
 
 // Armazena o conteúdo do último arquivo enviado
