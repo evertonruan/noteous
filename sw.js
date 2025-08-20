@@ -116,13 +116,26 @@ async function handlePostRequest(event) {
         if (file.type === 'text/plain') {
           const content = await readFile(file);
           lastUploadedFileContent = content;
-
           // Redireciona para index.html
           return Response.redirect('/', 303);
         } else {
           console.warn('Tipo de arquivo não suportado:', file.type);
+          return new Response('Tipo de arquivo não suportado', {
+            status: 415,
+            headers: { 'Content-Type': 'text/plain' }
+          });
         }
       }
+      // Se nenhum arquivo for processado, retorna erro genérico
+      return new Response('Nenhum arquivo processado', {
+        status: 400,
+        headers: { 'Content-Type': 'text/plain' }
+      });
+    } else {
+      return new Response('Nenhum arquivo enviado', {
+        status: 400,
+        headers: { 'Content-Type': 'text/plain' }
+      });
     }
   } catch (error) {
     console.error('Error ao processar o arquivo:', error);
