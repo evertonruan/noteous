@@ -1,6 +1,5 @@
 //noteous SW version = 250821
 
-
 /*
 When the user accepts the terms, the Service Worker is installed and adds resources to the cache.
 Once they are cached, noteous will use only this local content and will no longer connect to the server to update content.
@@ -74,9 +73,14 @@ self.addEventListener('activate', e => {
 })
 
 
-// Função auxiliar para ler arquivos .txt (usando file.text() no Service Worker)
+// Função auxiliar para ler arquivos .txt
 async function readFile(file) {
-  return await file.text();
+  const reader = new FileReader();
+  return new Promise((resolve, reject) => {
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = () => reject(reader.error);
+    reader.readAsText(file);
+  });
 }
 
 // Armazena o conteúdo do último arquivo enviado
@@ -85,9 +89,8 @@ let lastUploadedFileContent = '';
 // Intercepta a ação de compartilhamento de arquivos
 self.addEventListener('fetch', event => {
   const url = new URL(event.request.url);
-  console.log('SW fetch event:', url.pathname);
-  // Lida com POST para /fileload ou /fileload/
-  if (event.request.method === 'POST' && (url.pathname === '/fileload' || url.pathname === '/fileload/')) {
+  // Lida com POST para /fileload
+  if (event.request.method === 'POST' && url.pathname === '/fileload') {
     event.respondWith(handlePostRequest(event));
     return;
   }
@@ -110,26 +113,13 @@ async function handlePostRequest(event) {
         if (file.type === 'text/plain') {
           const content = await readFile(file);
           lastUploadedFileContent = content;
+
           // Redireciona para index.html
           return Response.redirect('/', 303);
         } else {
           console.warn('Tipo de arquivo não suportado:', file.type);
-          return new Response('Tipo de arquivo não suportado', {
-            status: 415,
-            headers: { 'Content-Type': 'text/plain' }
-          });
         }
       }
-      // Se nenhum arquivo for processado, retorna erro genérico
-      return new Response('Nenhum arquivo processado', {
-        status: 400,
-        headers: { 'Content-Type': 'text/plain' }
-      });
-    } else {
-      return new Response('Nenhum arquivo enviado', {
-        status: 400,
-        headers: { 'Content-Type': 'text/plain' }
-      });
     }
   } catch (error) {
     console.error('Error ao processar o arquivo:', error);
