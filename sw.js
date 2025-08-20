@@ -73,16 +73,6 @@ self.addEventListener('activate', e => {
   )
 })
 
-self.addEventListener("fetch", event => {
-  event.respondWith(
-    caches.match(event.request)
-    .then(cachedResponse => {
-        return cachedResponse || fetch(event.request)
-    }
-  )
- )
-})
-
 
 // Função auxiliar para ler arquivos .txt (usando file.text() no Service Worker)
 async function readFile(file) {
