@@ -3,45 +3,36 @@
   "name": "noteous preview",
   "icons": [
     {
-      "src": "/img/logo-icon-maskable.svg",
+      "src": "/assets/icons/maskable-icon.svg",
       "type": "image/svg+xml",
       "sizes": "any",
       "purpose": "maskable"
     },
     {
-      "src": "/img/logo-icon-48.png",
+      "src": "/assets/icons/maskable-monochrome-icon.svg",
+      "type": "image/svg+xml",
+      "sizes": "any",
+      "purpose": "monochrome"
+    },
+    {
+      "src": "/assets/icons/low-res-icon.webp",
+      "type": "image/webp",
+      "sizes": "48x48"
+    },
+    {
+      "src": "/assets/icons/low-res-icon.png",
       "type": "image/png",
       "sizes": "48x48"
     },
     {
-      "src": "/img/logo-icon-64.png",
-      "type": "image/png",
-      "sizes": "64x64"
-    },
-    {
-      "src": "/img/logo-icon-96.png",
-      "type": "image/png",
-      "sizes": "96x96"
-    },
-    {
-      "src": "/img/logo-icon-128.png",
-      "type": "image/png",
-      "sizes": "128x128"
-    },
-    {
-      "src": "/img/logo-icon-192.png",
+      "src": "/assets/icons/mid-res-icon.png",
       "type": "image/png",
       "sizes": "192x192"
     },
     {
-      "src": "/img/logo-icon-256.png",
+      "src": "/assets/icons/hi-res-icon.png",
       "type": "image/png",
       "sizes": "256x256"
-    },
-    {
-      "src": "/img/logo-icon-512.png",
-      "type": "image/png",
-      "sizes": "512x512"
     }
   ],
   "id": "/index.html",

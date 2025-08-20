@@ -803,44 +803,44 @@ cupcake.addEventListener('click', () => {
       cupcakeOutline.style.animation = 'rotate 40s linear infinite'
   } else if (e == 97) {
     prefresh()
-    cupcake.setAttribute('src', './img/cupcake/cupcake-2.png')
+    cupcake.setAttribute('src', './img/cupcake/cupcake-2.webp')
   } else if (e == 90) {
-    cupcake.setAttribute('src', './img/cupcake/cupcake-3.png')
+    cupcake.setAttribute('src', './img/cupcake/cupcake-3.webp')
     cupcake.classList.add('clickable')
     cupcakeOutline.style.animation = 'rotate 30s linear infinite'
   } else if (e == 80) {
-    cupcake.setAttribute('src', './img/cupcake/cupcake-4.png')
+    cupcake.setAttribute('src', './img/cupcake/cupcake-4.webp')
   } else if (e == 70) {
-    cupcake.setAttribute('src', './img/cupcake/cupcake-5.png')
+    cupcake.setAttribute('src', './img/cupcake/cupcake-5.webp')
     cupcakeOutline.style.animation = 'rotate 15s linear infinite'
   } else if (e == 65) {
-    cupcake.setAttribute('src', './img/cupcake/cupcake-6.png')
+    cupcake.setAttribute('src', './img/cupcake/cupcake-6.webp')
   } else if (e == 60) {
-    cupcake.setAttribute('src', './img/cupcake/cupcake-7.png')
+    cupcake.setAttribute('src', './img/cupcake/cupcake-7.webp')
   } else if (e == 50) {
-    cupcake.setAttribute('src', './img/cupcake/cupcake-8.png')
+    cupcake.setAttribute('src', './img/cupcake/cupcake-8.webp')
   } else if (e == 40) {
-    cupcake.setAttribute('src', './img/cupcake/cupcake-9.png')
+    cupcake.setAttribute('src', './img/cupcake/cupcake-9.webp')
     cupcakeOutline.style.animation = 'rotate 10s linear infinite'
   } else if (e == 35) {
-    cupcake.setAttribute('src', './img/cupcake/cupcake-10.png')
+    cupcake.setAttribute('src', './img/cupcake/cupcake-10.webp')
   } else if (e == 30) {
-    cupcake.setAttribute('src', './img/cupcake/cupcake-11.png')
+    cupcake.setAttribute('src', './img/cupcake/cupcake-11.webp')
   } else if (e == 25) {
-    cupcake.setAttribute('src', './img/cupcake/cupcake-12.png')
+    cupcake.setAttribute('src', './img/cupcake/cupcake-12.webp')
     cupcakeOutline.style.animation = 'rotate 7s linear infinite'
   } else if (e == 20) {
-    cupcake.setAttribute('src', './img/cupcake/cupcake-13.png')
+    cupcake.setAttribute('src', './img/cupcake/cupcake-13.webp')
   } else if (e == 15) {
-    cupcake.setAttribute('src', './img/cupcake/cupcake-14.png')
+    cupcake.setAttribute('src', './img/cupcake/cupcake-14.webp')
   } else if (e == 10) {
-    cupcake.setAttribute('src', './img/cupcake/cupcake-15.png')
+    cupcake.setAttribute('src', './img/cupcake/cupcake-15.webp')
   } else if (e == 5) {
-    cupcake.setAttribute('src', './img/cupcake/cupcake-16.png')
+    cupcake.setAttribute('src', './img/cupcake/cupcake-16.webp')
     cupcakeOutline.style.animation = 'rotate 5s linear infinite'
   } else if (e == 0) {
     cupcake.classList.remove('clickable')
-    cupcake.setAttribute('src', './img/cupcake/cupcake-17.png')
+    cupcake.setAttribute('src', './img/cupcake/cupcake-17.webp')
     cupcakeOutline.style.animation = 'rotate 3s linear infinite'
     clearInterval(erefresh)
     let s = function (event) {
