@@ -23,7 +23,7 @@ function serviceWorkerRegister() {
             try {
                 fileContent = JSON.parse(fileContent);
                 console.log(fileContent)
-                alert({fileContent})
+                alert(JSON.stringify(fileContent, null, 2))
                 //Problema no SW: Ao importar um arquivo 1 vez, nas próximas vezes que o aplicativo é iniciado, ele continua "importando" o mesmo arquivo. Solução: adicionar ID a todos os arquivos e comparar com o ID salvo. Se for o mesmo, isso significa que está entrando no aplicativo e "importando" o arquivo, o que será desconsiderado. Se for diferente, significa que é uma ação legítima
                 
                 if (noteousSettings.fileId != fileContent[0].exportDate) {
