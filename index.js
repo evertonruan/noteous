@@ -2,9 +2,6 @@ function serviceWorkerRegister() {
     if (noteousSettings != null && noteousSettings.noteousVersion >= 1.5 ) {
       if ('serviceWorker' in navigator) {
         navigator.serviceWorker.register('sw.js')
-
-        fileLoad()
-
       }
     }
 }
@@ -516,6 +513,7 @@ function loadNoteous(context) {
       priority: 'solid',
       input: '',
       noteId: 0,
+      fileId: 0,
       look: { baseRem: '--base-rem: 100%;' }
     }
     localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))

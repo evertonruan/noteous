@@ -1,4 +1,4 @@
-//noteous SW version = 250821-4
+//noteous SW version = 250821-19
 
 /*
 When the user accepts the terms, the Service Worker is installed and adds resources to the cache.
@@ -114,8 +114,8 @@ async function handlePostRequest(event) {
           const content = await readFile(file);
           lastUploadedFileContent = content;
 
-          // Redireciona para index.html
-          return Response.redirect('/', 303);
+          // Redireciona para about.html
+          return Response.redirect('/about.html', 303);
         } else {
           console.warn('Tipo de arquivo não suportado:', file.type);
         }
@@ -138,6 +138,7 @@ self.addEventListener('message', event => {
       type: 'fileContent',
       content: lastUploadedFileContent,
     });
+    lastUploadedFileContent = '';
   }
 });
 

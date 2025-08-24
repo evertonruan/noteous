@@ -4,6 +4,19 @@ let noteousMain = JSON.parse(localStorage.getItem('noteous-main')) || []
 if (noteousSettings == null || noteousSettings.noteousVersion < 1.5) {
   //Redireciona a página inicial se Termos não foram aceitos
   window.location.replace('./index.html')
+} else {
+  if ('serviceWorker' in navigator) {
+    ;(async () => {
+      try {
+        const fileLoaded = await fileLoad()
+        if (fileLoaded != null) {
+          showNotesModal(fileLoaded)
+        }
+      } catch (error) {
+        alert('Erro ao carregar arquivo:' + error)
+      }
+    })()
+  }
 }
 
 //ELEMENTOS //////
@@ -780,6 +793,8 @@ advancedSwitch.addEventListener('click', () => {
   }
 })
 
+////////////////////////////////////////
+
 let e = 100
 let p = 0
 
@@ -803,44 +818,44 @@ cupcake.addEventListener('click', () => {
       cupcakeOutline.style.animation = 'rotate 40s linear infinite'
   } else if (e == 97) {
     prefresh()
-    cupcake.setAttribute('src', './img/cupcake/cupcake-2.webp')
+    cupcake.setAttribute('src', './assets/images/cupcake/cupcake-2.webp')
   } else if (e == 90) {
-    cupcake.setAttribute('src', './img/cupcake/cupcake-3.webp')
+    cupcake.setAttribute('src', './assets/images/cupcake/cupcake-3.webp')
     cupcake.classList.add('clickable')
     cupcakeOutline.style.animation = 'rotate 30s linear infinite'
   } else if (e == 80) {
-    cupcake.setAttribute('src', './img/cupcake/cupcake-4.webp')
+    cupcake.setAttribute('src', './assets/images/cupcake/cupcake-4.webp')
   } else if (e == 70) {
-    cupcake.setAttribute('src', './img/cupcake/cupcake-5.webp')
+    cupcake.setAttribute('src', './assets/images/cupcake/cupcake-5.webp')
     cupcakeOutline.style.animation = 'rotate 15s linear infinite'
   } else if (e == 65) {
-    cupcake.setAttribute('src', './img/cupcake/cupcake-6.webp')
+    cupcake.setAttribute('src', './assets/images/cupcake/cupcake-6.webp')
   } else if (e == 60) {
-    cupcake.setAttribute('src', './img/cupcake/cupcake-7.webp')
+    cupcake.setAttribute('src', './assets/images/cupcake/cupcake-7.webp')
   } else if (e == 50) {
-    cupcake.setAttribute('src', './img/cupcake/cupcake-8.webp')
+    cupcake.setAttribute('src', './assets/images/cupcake/cupcake-8.webp')
   } else if (e == 40) {
-    cupcake.setAttribute('src', './img/cupcake/cupcake-9.webp')
+    cupcake.setAttribute('src', './assets/images/cupcake/cupcake-9.webp')
     cupcakeOutline.style.animation = 'rotate 10s linear infinite'
   } else if (e == 35) {
-    cupcake.setAttribute('src', './img/cupcake/cupcake-10.webp')
+    cupcake.setAttribute('src', './assets/images/cupcake/cupcake-10.webp')
   } else if (e == 30) {
-    cupcake.setAttribute('src', './img/cupcake/cupcake-11.webp')
+    cupcake.setAttribute('src', './assets/images/cupcake/cupcake-11.webp')
   } else if (e == 25) {
-    cupcake.setAttribute('src', './img/cupcake/cupcake-12.webp')
+    cupcake.setAttribute('src', './assets/images/cupcake/cupcake-12.webp')
     cupcakeOutline.style.animation = 'rotate 7s linear infinite'
   } else if (e == 20) {
-    cupcake.setAttribute('src', './img/cupcake/cupcake-13.webp')
+    cupcake.setAttribute('src', './assets/images/cupcake/cupcake-13.webp')
   } else if (e == 15) {
-    cupcake.setAttribute('src', './img/cupcake/cupcake-14.webp')
+    cupcake.setAttribute('src', './assets/images/cupcake/cupcake-14.webp')
   } else if (e == 10) {
-    cupcake.setAttribute('src', './img/cupcake/cupcake-15.webp')
+    cupcake.setAttribute('src', './assets/images/cupcake/cupcake-15.webp')
   } else if (e == 5) {
-    cupcake.setAttribute('src', './img/cupcake/cupcake-16.webp')
+    cupcake.setAttribute('src', './assets/images/cupcake/cupcake-16.webp')
     cupcakeOutline.style.animation = 'rotate 5s linear infinite'
   } else if (e == 0) {
     cupcake.classList.remove('clickable')
-    cupcake.setAttribute('src', './img/cupcake/cupcake-17.webp')
+    cupcake.setAttribute('src', './assets/images/cupcake/cupcake-17.webp')
     cupcakeOutline.style.animation = 'rotate 3s linear infinite'
     clearInterval(erefresh)
     let s = function (event) {
