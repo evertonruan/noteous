@@ -25,6 +25,7 @@ self.addEventListener('install', event => {
 
 const noteousResources = [
   '/',
+  'noteousParams.js',
   'index.html',
   'index.js',
   'about.html',
@@ -33,6 +34,7 @@ const noteousResources = [
   'reset.css',
   'policies.json',
   'orblendEngine.js',
+  '/assets/icons/favicon.png',
   '/assets/images/cupcake/cupcake-outline.webp',
   '/assets/images/cupcake/cupcake.webp',
   '/assets/images/cupcake/cupcake-2.webp',
@@ -51,7 +53,7 @@ const noteousResources = [
   '/assets/images/cupcake/cupcake-15.webp',
   '/assets/images/cupcake/cupcake-16.webp',
   '/assets/images/cupcake/cupcake-17.webp',
-  '/img/social-chain.png']
+  '/assets/images/social-link.webp']
 
 //ACTIVATION
 //Limpeza de cache
