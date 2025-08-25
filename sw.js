@@ -90,21 +90,23 @@ async function readFile(file) {
 // Armazena o conteúdo do último arquivo enviado
 let lastUploadedFileContent = '';
 
-// Intercepta a ação de compartilhamento de arquivos
 self.addEventListener('fetch', event => {
+  // Lida com cache para requests como GET
+  event.respondWith(
+    caches.match(event.request)
+    .then(cachedResponse => {
+      return cachedResponse || fetch(event.request);
+    })
+  );
+  
+  // Intercepta a ação de compartilhamento de arquivos
   const url = new URL(event.request.url);
   // Lida com POST para /fileload
   if (event.request.method === 'POST' && url.pathname === '/fileload') {
     event.respondWith(handlePostRequest(event));
     return;
   }
-  // Lida com cache para outros requests (GET etc)
-  event.respondWith(
-    caches.match(event.request)
-      .then(cachedResponse => {
-        return cachedResponse || fetch(event.request);
-      })
-  );
+
 });
 
 async function handlePostRequest(event) {
