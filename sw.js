@@ -1,4 +1,4 @@
-//noteous SW version = 250823
+//noteous SW version = 250824-6
 
 /*
 When the user accepts the terms, the Service Worker is installed and adds resources to the cache.
@@ -16,9 +16,8 @@ self.addEventListener('install', event => {
       try {
         const cache = await caches.open('noteousCache');
         await cache.addAll(noteousResources);
-        console.log('Recursos adicionados ao cache com sucesso!');
       } catch (error) {
-        console.error('Erro ao adicionar recursos ao cache:', error);
+        console.error('SW CACHE ERROR:', error);
       }
     })()
   );
@@ -55,10 +54,9 @@ const noteousResources = [
   '/img/social-chain.png']
 
 //ACTIVATION
-//Cache cleaning
-self.addEventListener('activate', e => {
-  console.log("SW activated")
-  e.waitUntil(
+//Limpeza de cache
+self.addEventListener('activate', event => {
+  event.waitUntil(
     caches.keys().then(keyList => {
       return Promise.all(
         keyList.map(key => {
@@ -138,6 +136,7 @@ self.addEventListener('message', event => {
       type: 'fileContent',
       content: lastUploadedFileContent,
     });
+    // Limpa o conteúdo do último arquivo enviado
     lastUploadedFileContent = '';
   }
 });

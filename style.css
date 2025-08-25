@@ -718,6 +718,7 @@ footer p span {
 .greeting-title-icon {
   height: 3rem;
   width: auto;
+  border-radius: 20%;
 }
 
 .greeting-title2 {

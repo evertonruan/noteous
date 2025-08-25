@@ -110,7 +110,7 @@ function welcomeToNoteous(context, subcontext) {
     greetingTitle1.classList.add('greeting-title1')
 
     let greetingTitleIcon = document.createElement('img')
-    greetingTitleIcon.setAttribute('src', './assets/icons/mid-res-icon.png')
+    greetingTitleIcon.setAttribute('src', './assets/icons/maskable-icon-preview-192.png')
     greetingTitleIcon.classList.add('greeting-title-icon')
 
     greetingTitle2 = document.createElement('p')
@@ -203,9 +203,9 @@ function welcomeToNoteous(context, subcontext) {
 
       greetingDescription4.innerHTML = `<span class="greeting-description-intro">Sempre em dia</span>noteous preview está em constante melhoria. Quando tiver uma 🌐 nova versão, chegará automaticamente para você ✅`
 
-      greetingDescription2Image.setAttribute('src', './img/greeting-3.png')
-      greetingDescription3Image.setAttribute('src', './img/greeting-2.png')
-      greetingDescription4Image.setAttribute('src', './img/greeting-4.png')
+      greetingDescription2Image.setAttribute('src', './assets/images/greeting-usage.webp')
+      greetingDescription3Image.setAttribute('src', './assets/images/greeting-priority-button.webp')
+      greetingDescription4Image.setAttribute('src', './assets/images/greeting-update.webp')
 
       greetingDescriptionContainer1.append(
         greetingDescription1Image,
@@ -245,9 +245,9 @@ function welcomeToNoteous(context, subcontext) {
 
       greetingDescription3.innerHTML = `<span class="greeting-description-intro">Atualização automática</span> <br>noteous recebe atualizações automáticas 🌐 Assim, seu aplicativo sempre está em dia.`
 
-      greetingDescription1Image.setAttribute('src', './img/greeting-3.png')
-      greetingDescription2Image.setAttribute('src', './img/greeting-2.png')
-      greetingDescription3Image.setAttribute('src', './img/greeting-4.png')
+      greetingDescription1Image.setAttribute('src', './assets/images/greeting-usage.webp')
+      greetingDescription2Image.setAttribute('src', './assets/images/greeting-priority-button.webp')
+      greetingDescription3Image.setAttribute('src', './assets/images/greeting-update.webp')
 
       greetingDescriptionContainer1.append(
         greetingDescription1Image,
@@ -279,7 +279,7 @@ function welcomeToNoteous(context, subcontext) {
     greetingTitle1.classList.add('greeting-title1')
 
     let greetingTitleIcon = document.createElement('img')
-    greetingTitleIcon.setAttribute('src', './assets/icons/mid-res-icon.png')
+    greetingTitleIcon.setAttribute('src', './assets/icons/maskable-icon-preview-192.png')
     greetingTitleIcon.classList.add('greeting-title-icon')
 
     greetingTitle2 = document.createElement('p')
