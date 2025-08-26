@@ -376,7 +376,7 @@ async function createNoteCopyShare() {
   }
 
   const dataStr = JSON.stringify(notesData, null, 2)
-  const fileName = `noteous - Cópia de Notas - ${formatDate('create-copy', Date.now())}.txt`
+  const fileName = `noteous - ${formatDate('create-copy', Date.now())} - Cópia de Notas.txt`
 
   try {
     const file = new File([dataStr], fileName, { type: 'text/plain' })
@@ -402,7 +402,7 @@ function createNoteCopyDownload() {
   }
 
   const dataStr = JSON.stringify(notesData, null, 2)
-  const fileName = `noteous - Cópia de Notas - ${formatDate('create-copy', Date.now())}.txt`
+  const fileName = `noteous - ${formatDate('create-copy', Date.now())} - Cópia de Notas.txt`
 
   // Download do arquivo .txt
   const dataBlob = new Blob([dataStr], { type: 'text/plain' })
