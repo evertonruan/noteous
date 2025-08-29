@@ -1,4 +1,4 @@
-//noteous SW version = 250825
+//noteous SW version = 290825
 
 /*
 When the user accepts the terms, the Service Worker is installed and adds resources to the cache.
@@ -99,11 +99,29 @@ self.addEventListener('fetch', event => {
     return;
   }
   
+  // Ignora requests para o manifest.json - deixa o navegador gerenciar
+  if (url.pathname === '/manifest.json' || url.pathname.endsWith('/manifest.json')) {
+    return;
+  }
+  
   // Lida com cache para requests como GET
   event.respondWith(
     caches.match(event.request)
     .then(cachedResponse => {
-      return cachedResponse || fetch(event.request);
+      if (cachedResponse) {
+        return cachedResponse;
+      }
+      
+      // Se não estiver no cache, tenta buscar da rede
+      return fetch(event.request).catch(error => {
+        console.log('Network request failed for:', event.request.url);
+        // Para requests de navegação, retorna a página inicial do cache
+        if (event.request.destination === 'document') {
+          return caches.match('/index.html');
+        }
+        // Para outros recursos, simplesmente falha silenciosamente
+        throw error;
+      });
     })
   );
 });
