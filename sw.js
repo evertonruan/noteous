@@ -91,20 +91,21 @@ async function readFile(file) {
 let lastUploadedFileContent = '';
 
 self.addEventListener('fetch', event => {
-  // Lida com cache para requests como GET
-  event.respondWith(
-    caches.match(event.request)
-    .then(cachedResponse => {
-      return cachedResponse || fetch(event.request);
-    })
-  );
-  
-  // Intercepta a ação de compartilhamento de arquivos
-  const url = new URL(event.request.url);
-  // Lida com POST para /fileload
-  if (event.request.method === 'POST' && url.pathname === '/fileload') {
-    event.respondWith(handlePostRequest(event));
-    return;
+ 
+  const { request } = event;
+  const url = new URL(request.url);
+
+  // Primeiro: tratar POST /fileload (deve haver apenas UM respondWith por evento)
+  if (request.method === 'POST' && url.pathname === '/fileload') {
+    event.respondWith(handlePostRequest(request));
+    return; // impedir qualquer outro respondWith
+  }
+
+  // Apenas para GET aplicamos estratégia de cache-first
+  if (request.method === 'GET') {
+    event.respondWith(
+      caches.match(request).then(cached => cached || fetch(request))
+    );
   }
 
 });
