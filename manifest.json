@@ -3,45 +3,34 @@
   "name": "noteous",
   "icons": [
     {
-      "src": "/img/logo-icon-maskable.svg",
-      "type": "image/svg+xml",
-      "sizes": "any",
+      "src": "/assets/icons/maskable-icon-noteous-512.png",
+      "type": "image/png",
+      "sizes": "512x512",
       "purpose": "maskable"
     },
     {
-      "src": "/img/logo-icon-48.png",
+      "src": "/assets/icons/maskable-icon-noteous-192.png",
       "type": "image/png",
-      "sizes": "48x48"
+      "sizes": "192x192",
+      "purpose": "maskable"
     },
     {
-      "src": "/img/logo-icon-64.png",
+      "src": "/assets/icons/any-icon-noteous-512.png",
       "type": "image/png",
-      "sizes": "64x64"
+      "sizes": "512x512",
+      "purpose": "any"
     },
     {
-      "src": "/img/logo-icon-96.png",
+      "src": "/assets/icons/any-icon-noteous-192.png",
       "type": "image/png",
-      "sizes": "96x96"
+      "sizes": "192x192",
+      "purpose": "any"
     },
     {
-      "src": "/img/logo-icon-128.png",
+      "src": "/assets/icons/maskable-monochrome-icon-noteous.png",
       "type": "image/png",
-      "sizes": "128x128"
-    },
-    {
-      "src": "/img/logo-icon-192.png",
-      "type": "image/png",
-      "sizes": "192x192"
-    },
-    {
-      "src": "/img/logo-icon-256.png",
-      "type": "image/png",
-      "sizes": "256x256"
-    },
-    {
-      "src": "/img/logo-icon-512.png",
-      "type": "image/png",
-      "sizes": "512x512"
+      "sizes": "512x512",
+      "purpose": "monochrome maskable"
     }
   ],
   "id": "/index.html",
@@ -50,5 +39,21 @@
   "display": "standalone",
   "scope": "/",
   "theme_color": "#f5993d",
-  "description": "Sua próxima tarefa ou lembrete"
+  "description": "Sua próxima tarefa ou lembrete!",
+  "share_target": {
+    "action": "/fileload",
+    "method": "POST",
+    "enctype": "multipart/form-data",
+    "params": {
+      "title": "name",
+      "text": "description",
+      "url": "link",
+      "files": [
+        {
+          "name": "texts",
+          "accept": ["text/plain", ".txt"]
+        }
+      ]
+    }
+  }
 }

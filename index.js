@@ -1,3 +1,11 @@
+function serviceWorkerRegister() {
+    if (noteousSettings != null && noteousSettings.noteousVersion >= 1.5 ) {
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('sw.js')
+      }
+    }
+}
+
 // ELEMENTOS /////////////////////////////////////
 let body = document.querySelector('body')
 
@@ -26,7 +34,7 @@ let readNotesList = document.querySelector('#read-notes')
 
 // VARIÁVEIS IMPORTANTES /////////////////////////////////////
 
-let currentVersion = 1.53
+let currentVersion = 1.60
 let noteIdEdit //usada para confirmar qual nota está sendo editada
 let editMode = false
 let tabIndexCounter = 10
@@ -210,13 +218,13 @@ function welcomeToNoteous(context, subcontext) {
       greetingTitle2.append(document.createTextNode('noteous'))
       greetingDescriptionTitle.append(
         document.createTextNode(
-          'O noteous foi atualizado: a versão 1.5 está incrível! Veja algumas novidades'
+          'O noteous foi atualizado! Veja algumas novidades'
         )
       )
 
-      greetingDescription1.innerHTML = `<span class="greeting-description-intro">Melhoria na acessibilidade</span> <br>👓 Agora você pode ajustar o tamanho de texto que ficar mais confortável de ler <br>💻 Suporte para navegação pelo teclado (por exemplo, se estiver em um computador) <br>🔊 Melhor compatível com leitores de tela`
+      greetingDescription1.innerHTML = `<span class="greeting-description-intro">Suporte offline</span> <br>⚡Está sem internet? Sem problema! noteous agora funciona normalmente mesmo se você não estiver conectado!`
 
-      greetingDescription2.innerHTML = `<span class="greeting-description-intro">Visual revisado</span> <br>🎨 Os temas claro e escuro estão agora ainda mais bonitos!`
+      greetingDescription2.innerHTML = `<span class="greeting-description-intro">Cópias de notas</span> <br>📑 Agora você pode baixar cópias de suas notas para salvar com segurança em outro local ou ainda enviar a outro aparelho que utilize o noteous, como celular ou computador`
 
       greetingDescription3.innerHTML = `<span class="greeting-description-intro">Experiência aprimorada</span> <br>📝 A edição de notas está ainda mais intuitiva e fácil de usar. Outras pequenas melhorias tornam tudo muito mais incrível!`
 
