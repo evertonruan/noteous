@@ -33,7 +33,6 @@ const noteousResources = [
   'style.css',
   'reset.css',
   'policies.json',
-  'orblendEngine.js',
   '/assets/icons/favicon.png',
   '/assets/images/cupcake/cupcake-outline.webp',
   '/assets/images/cupcake/cupcake.webp',
