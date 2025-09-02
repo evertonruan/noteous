@@ -58,6 +58,7 @@ function navLink() {
 let noteousMain = JSON.parse(localStorage.getItem('noteous-main')) || []
 let noteousSettings = JSON.parse(localStorage.getItem('noteous-settings'))
 
+serviceWorkerRegister()
 loadNoteous('check-settings')
 
 /////////////////////////////////////////////////////////////
