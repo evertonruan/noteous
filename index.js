@@ -1,5 +1,5 @@
 function serviceWorkerRegister() {
-    if (noteousSettings != null && noteousSettings.noteousVersion >= 1.60 ) {
+    if (noteousSettings != null && noteousSettings.noteousVersion >= 1.6 ) {
       if ('serviceWorker' in navigator) {
         navigator.serviceWorker.register('sw.js')
       }
@@ -34,7 +34,7 @@ let readNotesList = document.querySelector('#read-notes')
 
 // VARIÁVEIS IMPORTANTES /////////////////////////////////////
 
-let currentVersion = 1.60
+let currentVersion = 1.6
 let noteIdEdit //usada para confirmar qual nota está sendo editada
 let editMode = false
 let tabIndexCounter = 10
@@ -185,10 +185,10 @@ function welcomeToNoteous(context, subcontext) {
 
       greetingDescription4.innerHTML = `<span class="greeting-description-intro">Sempre em dia</span>noteous está em constante melhoria. Quando tiver uma 🌐 nova versão, chegará automaticamente para você ✅`
 
-      greetingDescription1Image.setAttribute('src', './img/greeting-theme.webp')
-      greetingDescription2Image.setAttribute('src', './img/greeting-priority-button.webp')
-      greetingDescription3Image.setAttribute('src', './img/greeting-usage.webp')
-      greetingDescription4Image.setAttribute('src', './img/greeting-update.webp')
+      greetingDescription1Image.setAttribute('src', './assets/images/greeting-theme.webp')
+      greetingDescription2Image.setAttribute('src', './assets/images/greeting-priority-button.webp')
+      greetingDescription3Image.setAttribute('src', './assets/images/greeting-usage.webp')
+      greetingDescription4Image.setAttribute('src', './assets/images/greeting-update.webp')
 
       greetingDescriptionContainer1.append(
         greetingDescription1Image,
@@ -274,7 +274,7 @@ function welcomeToNoteous(context, subcontext) {
 
     let greetingPoliciesTitle = document.createElement('p')
     greetingPoliciesTitle.classList.add('greeting-description-title')
-    if (noteousSettings != null && noteousSettings.noteousVersion < 1.60) {
+    if (noteousSettings != null && noteousSettings.noteousVersion < 1.6) {
       greetingPoliciesTitle.innerHTML =
       'Os termos foram atualizados. Para continuar, você precisa aceitar os termos a seguir'
     } else {
