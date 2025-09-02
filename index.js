@@ -1,5 +1,5 @@
 function serviceWorkerRegister() {
-    if (noteousSettings != null && noteousSettings.noteousVersion >= 1.5 ) {
+    if (noteousSettings != null && noteousSettings.noteousVersion >= 1.60 ) {
       if ('serviceWorker' in navigator) {
         navigator.serviceWorker.register('sw.js')
       }
@@ -185,10 +185,10 @@ function welcomeToNoteous(context, subcontext) {
 
       greetingDescription4.innerHTML = `<span class="greeting-description-intro">Sempre em dia</span>noteous está em constante melhoria. Quando tiver uma 🌐 nova versão, chegará automaticamente para você ✅`
 
-      greetingDescription1Image.setAttribute('src', './img/greeting-1.png')
-      greetingDescription2Image.setAttribute('src', './img/greeting-2.png')
-      greetingDescription3Image.setAttribute('src', './img/greeting-3.png')
-      greetingDescription4Image.setAttribute('src', './img/greeting-4.png')
+      greetingDescription1Image.setAttribute('src', './img/greeting-theme.webp')
+      greetingDescription2Image.setAttribute('src', './img/greeting-priority-button.webp')
+      greetingDescription3Image.setAttribute('src', './img/greeting-usage.webp')
+      greetingDescription4Image.setAttribute('src', './img/greeting-update.webp')
 
       greetingDescriptionContainer1.append(
         greetingDescription1Image,
@@ -226,14 +226,11 @@ function welcomeToNoteous(context, subcontext) {
 
       greetingDescription2.innerHTML = `<span class="greeting-description-intro">Cópias de notas</span> <br>📑 Agora você pode baixar cópias de suas notas para salvar com segurança em outro local ou ainda enviar a outro aparelho que utilize o noteous, como celular ou computador`
 
-      greetingDescription3.innerHTML = `<span class="greeting-description-intro">Experiência aprimorada</span> <br>📝 A edição de notas está ainda mais intuitiva e fácil de usar. Outras pequenas melhorias tornam tudo muito mais incrível!`
+      greetingDescription3.innerHTML = `<span class="greeting-description-intro">Atualização automática</span> <br>noteous recebe atualizações automáticas 🌐 Assim, seu aplicativo sempre está em dia.`
 
-      greetingDescription4.innerHTML = `<span class="greeting-description-intro">Atualização automática</span> <br>noteous recebe atualizações automáticas 🌐 Assim, seu aplicativo sempre está em dia.`
-
-      greetingDescription1Image.setAttribute('src', './img/greeting-3.png')
-      greetingDescription2Image.setAttribute('src', './img/greeting-1.png')
-      greetingDescription3Image.setAttribute('src', './img/greeting-3-1.png')
-      greetingDescription4Image.setAttribute('src', './img/greeting-4.png')
+      greetingDescription1Image.setAttribute('src', './assets/images/greeting-usage.webp')
+      greetingDescription2Image.setAttribute('src', './assets/images/greeting-copy.webp')
+      greetingDescription3Image.setAttribute('src', './assets/images/greeting-update.webp')
 
       greetingDescriptionContainer1.append(
         greetingDescription1Image,
@@ -247,16 +244,11 @@ function welcomeToNoteous(context, subcontext) {
         greetingDescription3Image,
         greetingDescription3
       )
-      greetingDescriptionContainer4.append(
-        greetingDescription4Image,
-        greetingDescription4
-      )
 
       greetingDescriptionContainerAll.append(
         greetingDescriptionContainer1,
         greetingDescriptionContainer2,
-        greetingDescriptionContainer3,
-        greetingDescriptionContainer4
+        greetingDescriptionContainer3
       )
     }
   } else if (context == 'render-policies') {
@@ -282,7 +274,7 @@ function welcomeToNoteous(context, subcontext) {
 
     let greetingPoliciesTitle = document.createElement('p')
     greetingPoliciesTitle.classList.add('greeting-description-title')
-    if (noteousSettings != null && noteousSettings.noteousVersion < 1.51) {
+    if (noteousSettings != null && noteousSettings.noteousVersion < 1.60) {
       greetingPoliciesTitle.innerHTML =
       'Os termos foram atualizados. Para continuar, você precisa aceitar os termos a seguir'
     } else {
