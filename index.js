@@ -219,15 +219,15 @@ function welcomeToNoteous(context, subcontext) {
       greetingTitle2.append(document.createTextNode('noteous'))
       greetingDescriptionTitle.append(
         document.createTextNode(
-          'O noteous foi atualizado! Veja algumas novidades'
+          'noteous foi atualizado! Veja algumas novidades'
         )
       )
 
-      greetingDescription1.innerHTML = `<span class="greeting-description-intro">Suporte offline</span> <br>⚡Está sem internet? Sem problema! noteous agora funciona normalmente mesmo se você não estiver conectado!`
+      greetingDescription1.innerHTML = `<span class="greeting-description-intro">Suporte offline</span> <br>⚡Está sem internet? Sem problema! noteous agora funciona mesmo se você não estiver conectado!`
 
-      greetingDescription2.innerHTML = `<span class="greeting-description-intro">Cópias de notas</span> <br>📑 Agora você pode baixar cópias de suas notas para salvar com segurança em outro local ou ainda enviar a outro aparelho que utilize o noteous, como celular ou computador`
+      greetingDescription2.innerHTML = `<span class="greeting-description-intro">Cópias de notas</span> <br>📑 Agora você pode baixar cópias de suas anotações para salvar com segurança em outro local ou ainda enviar a outro aparelho que você utilize o noteous, como celular ou computador`
 
-      greetingDescription3.innerHTML = `<span class="greeting-description-intro">Atualização automática</span> <br>noteous recebe atualizações automáticas 🌐 Assim, seu aplicativo sempre está em dia.`
+      greetingDescription3.innerHTML = `<span class="greeting-description-intro">Atualização automática</span> <br>noteous recebe atualizações automáticas 🌐 Assim, seu aplicativo sempre está em dia!`
 
       greetingDescription1Image.setAttribute('src', './assets/images/greeting-usage.webp')
       greetingDescription2Image.setAttribute('src', './assets/images/greeting-copy.webp')
