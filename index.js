@@ -93,7 +93,7 @@ function welcomeToNoteous(context, subcontext) {
     greetingTitle1.classList.add('greeting-title1')
 
     let greetingTitleIcon = document.createElement('img')
-    greetingTitleIcon.setAttribute('src', './img/logo-icon-128.png')
+    greetingTitleIcon.setAttribute('src', './assets/icons/any-icon-noteous-192.png')
     greetingTitleIcon.classList.add('greeting-title-icon')
 
     greetingTitle2 = document.createElement('p')
@@ -263,7 +263,7 @@ function welcomeToNoteous(context, subcontext) {
     greetingTitle1.classList.add('greeting-title1')
 
     let greetingTitleIcon = document.createElement('img')
-    greetingTitleIcon.setAttribute('src', './img/logo-icon-128.png')
+    greetingTitleIcon.setAttribute('src', './assets/icons/any-icon-noteous-192.png')
     greetingTitleIcon.classList.add('greeting-title-icon')
 
     greetingTitle2 = document.createElement('p')

@@ -567,7 +567,8 @@ a {
   padding-bottom: 1rem;
 }
 
-#section-read .note-container {
+#section-read .note-container,
+#modal .note-container {
   display: flex;
   flex-direction: row;
   height: max-content;
@@ -590,7 +591,8 @@ a {
   cursor: pointer;
 }
 
-#section-read .note-text-container {
+#section-read .note-text-container,
+#modal .note-text-container {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -626,7 +628,8 @@ a {
   outline: 0;
 }
 
-#section-read .note-text-container {
+#section-read .note-text-container,
+#modal .note-text-container {
   display: flex;
   flex: 1;
   padding: 1rem 1rem 0.3rem 1rem;
