@@ -238,6 +238,12 @@ html {
     var(--lum-front),
     1
   );
+  --base-options-panel: hsla(
+    var(--hue),
+    var(--accent-saturation),
+    calc(-12% + var(--lum-front-inverse)),
+    1
+  );
 }
 
 /*NAV (TODAS AS PÁGINAS)*/
@@ -537,7 +543,12 @@ a {
 
 #read-options {
   display: flex;
+  align-items: center;
   justify-content: end;
+  margin: 10px 10px;
+  height: 2rem;
+  border-radius: 10px;
+  background-color: var(--base-options-panel);
   transition: all 0.4s cubic-bezier(0.075, 0.82, 0.165, 1);
 }
 
