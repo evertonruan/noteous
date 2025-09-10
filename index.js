@@ -638,7 +638,7 @@ function sortNotes(context, subcontext) {
       noteousMain.sort((a, b) => b[noteousSettings.sort.action] - a[noteousSettings.sort.action])
       
       readOptionsSort.innerHTML = ''
-      readOptionsSort.append(document.createTextNode('Ordenando por: Recente primeiro'))
+      readOptionsSort.append(document.createTextNode('↓'))
       readOptionsSortActionButtonText()
 
 
@@ -646,7 +646,7 @@ function sortNotes(context, subcontext) {
       noteousMain.sort((a, b) => a[noteousSettings.sort.action] - b[noteousSettings.sort.action])
       
       readOptionsSort.innerHTML = ''
-      readOptionsSort.append(document.createTextNode('Ordenando por: Antigo primeiro'))
+      readOptionsSort.append(document.createTextNode('↑'))
       readOptionsSortActionButtonText()
     }
 
@@ -674,7 +674,7 @@ function sortNotes(context, subcontext) {
 
       readOptionsSort.innerHTML = ''
       readOptionsSort.append(
-        document.createTextNode('Ordenando por: Antigo primeiro')
+        document.createTextNode('↑')
       )
       
       // Ordem: Antigo para recente
@@ -690,7 +690,7 @@ function sortNotes(context, subcontext) {
       readOptionsSortActionButtonText()
 
       readOptionsSort.innerHTML = ''
-      readOptionsSort.append(document.createTextNode('Ordenando por: Recente primeiro'))
+      readOptionsSort.append(document.createTextNode('↓'))
       
       // Ordem: Recente para antigo
       noteousMain.sort((a, b) => b[noteousSettings.sort.action] - a[noteousSettings.sort.action])

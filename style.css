@@ -555,7 +555,21 @@ a {
 #read-options-sort {
   display: flex;
   color: var(--base-text);
-  text-decoration: underline;
+
+  font-family: 'Merriweather Sans', sans-serif;
+  color: var(--base-text);
+  background-color: transparent;
+  font-size: 1.5rem;
+
+  margin: 0 1rem;
+  -webkit-user-select: none;
+  user-select: none;
+  cursor: pointer;
+}
+
+#read-options-sort-action {
+  display: flex;
+  color: var(--base-text);
 
   font-family: 'Merriweather Sans', sans-serif;
   color: var(--base-text);
