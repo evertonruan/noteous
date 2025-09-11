@@ -46,6 +46,14 @@ let readNotesListDotted = document.createElement('div')
 readNotesListDotted.id = 'read-notes-list-dotted'
 readNotesListDotted.classList.add('read-notes-priority-container')
 
+// noteous preview 1.8: Personalização de Listas de Prioridade 
+// Objeto usado em renderNote para retornar a variável conforme a chamada ao construir a lista
+const readNotesLists = {
+  solid: readNotesListSolid,
+  double: readNotesListDouble,
+  dotted: readNotesListDotted
+}
+
 // VARIÁVEIS IMPORTANTES /////////////////////////////////////
 
 let currentVersion = noteousVersion
@@ -517,6 +525,7 @@ function loadNoteous(context) {
       noteousVersion: currentVersion,
       sort: { time: 'recent', action: 'id' },
       priority: 'solid',
+      priorityOrder: ['solid', 'double', 'dotted'], // preview 1.8: ordem das listas de prioridade
       input: '',
       noteId: 0,
       fileId: 0,
@@ -724,145 +733,131 @@ function renderNote(context, noteId, priority) {
       readNotesListDotted.innerHTML = ''
     }
 
-    for (let note of noteousMain) {
-      let noteContainer = document.createElement('div')
-      noteContainer.id = note.id + '-note-container'
-      noteContainer.classList.add('note-container')
+    // noteous preview 1.7.1: Listas de Prioridade. Criação primeiro das notas e depois ver qual lista vai. Problema: cada nova nota reordena a Lista de Prioridade. Por exemplo, uma nova nota com prioridade dotted joga a Lista de Prioridade dotted para o primeiro lugar.
 
-      //noteous preview 1.7.1
-      //Visualização por Listas de Prioridade
-      //Após criar as notas, irá sorteá-las de acordo com a prioridade
+    //noteous preview 1.8: personalização de ordem de Listas de Prioridade. Revisão do código para criar as listas na ordem definida pelo usuário. Agora, renderNote() primeiro verifica a ordem das listas e depois, adiciona a nota em sua respectiva lista.
 
-      //Caso alguma tenha alguma nota com prioridade solid,
-      //Adiciona lista ao container de listas (readNotesContainer) caso seja a primeira nota
-      //Depois, adiciona a nota à lista
-
-      if (note.priority == 'solid') {
-        if (!readNotesContainer.querySelector('#read-notes-list-solid')) {
-          readNotesContainer.append(readNotesListSolid)
-        }
-        readNotesListSolid.append(noteContainer)  
-
-      } else if (note.priority == 'double') {
-        if (!readNotesContainer.querySelector('#read-notes-list-double')) {
-          readNotesContainer.append(readNotesListDouble)
-        }
-        readNotesListDouble.append(noteContainer)
-
-      } else if (note.priority == 'dotted') {
-        if (!readNotesContainer.querySelector('#read-notes-list-dotted')) {
-          readNotesContainer.append(readNotesListDotted)
-        }
-        readNotesListDotted.append(noteContainer)
+    for (let priority of noteousSettings.priorityOrder) {
+      if (!readNotesContainer.querySelector(`#read-notes-list-${priority}`)) { //Se não há lista com essa prioridade, cria
+        readNotesContainer.append(readNotesLists[priority])
       }
 
-      //BORDER/PRIORITY
-      if (note.priority == 'solid') {
-        noteContainer.style.cssText = 'border-style: none;'
-      } else if (note.priority == 'double') {
-        noteContainer.style.cssText = 'border-style: double;'
-      } else if (note.priority == 'dotted') {
-        noteContainer.style.cssText = 'border-style: dotted;'
-      }
-
-      //ACTION BUTTONS
-      let actionButtonsContainer = document.createElement('div')
-      actionButtonsContainer.id = note.id + '-action-buttons-container'
-      actionButtonsContainer.classList.add('action-buttons-container')
-
-      //DELETE
-      let deleteActionButton = document.createElement('button')
-      deleteActionButton.classList.add('action-buttons', 'material-icons')
-      deleteActionButton.setAttribute('onclick', `deleteNote(${note.id})`)
-      deleteActionButton.appendChild(document.createTextNode('check_circle'))
-
-      //NOTE TEXT
-      let noteTextContainer = document.createElement('div')
-      noteTextContainer.id = note.id + '-text-container'
-      noteTextContainer.classList.add('note-text-container')
-      noteTextContainer.setAttribute('onclick', `openNote(${note.id})`)
-
-      // --> adição de 'texto' ao id porque não pode haver ids iguais
-      let textElement = document.createElement('p')
-      textElement.id = note.id + '-text'
-      noteContainer.appendChild(textElement)
-
-      // noteous em versões anteriores: se nota tivesse menos de 300 caracteres, o conteúdo seria adicionado por inteiro. Se tivesse mais de 300 carateceres, iria testar cada caractere até chegar no 300º e exibir 'VER MAIS'. Isso levava em conta somente o texto dela, para previnir que ficasse muito longo, mas não levava em conta o espaço que o elemento ocupava.
-      // noteous preview 1.7.1: caracteres da nota são contados sempre. Agora, há 3 listas de prioridade e o espaço que uma nota ocupa é muito mais importante. Assim, ao renderizar uma nota, cada caractere dela é contado para que, se alcançar 200 caracteres ou alcançar 200px de altura, o que chegar primeiro, seja exibido 'VER MAIS'. Isso previne que notas muito longas ocupem espaço demais.
-
-      let noteChar = note.text
-      let count = 0
-      for (let noteCharAt of noteChar) {
-        textElement.appendChild(document.createTextNode(noteCharAt))
-        count = count + 1
-        
-        //"Ir escrevendo" cada caractere até chegar o 30º
-        if (count == 200 || noteContainer.offsetHeight >= 200){
+      for (let note of noteousMain) {
+        // Verifica se a nota atual pertence à lista de prioridade que está sendo criada. A ordem das notas dentro da lista é definida por sortNotes(). Ou seja: noteousMain já vem ordenado pelo sortNotes()
+        if (note.priority == priority) {
+          let noteContainer = document.createElement('div')
+          noteContainer.id = note.id + '-note-container'
+          noteContainer.classList.add('note-container')
+          readNotesLists[priority].append(noteContainer)
           
-          textElement.append(document.createTextNode(' ...'))
-          textElement.append(document.createElement('br'))
-          textElement.append(document.createTextNode('[VER MAIS]'))
-
-          break
+        //BORDER/PRIORITY
+        if (note.priority == 'solid') {
+          noteContainer.style.cssText = 'border-style: none;'
+        } else if (note.priority == 'double') {
+          noteContainer.style.cssText = 'border-style: double;'
+        } else if (note.priority == 'dotted') {
+          noteContainer.style.cssText = 'border-style: dotted;'
         }
-      }
-      
 
-      //DATE
-      let noteDateContainer = document.createElement('div')
-      noteDateContainer.id = note.id + '-note-date-container'
-      noteDateContainer.classList.add('note-date-container')
+        //ACTION BUTTONS
+        let actionButtonsContainer = document.createElement('div')
+        actionButtonsContainer.id = note.id + '-action-buttons-container'
+        actionButtonsContainer.classList.add('action-buttons-container')
 
-      let dateElement = document.createElement('p')
-      dateElement.id = note.id + '-date-element'
-      dateElement.appendChild(
-        document.createTextNode(
-          `+ ${new Date(note.id).getDate()}/${findMonth(
-            new Date(note.id).getMonth()
-          )}/${new Date(note.id).getUTCFullYear()} às ${setTimeNumber(
-            new Date(note.id).getHours()
-          )}:${setTimeNumber(new Date(note.id).getMinutes())}`
-        )
-      )
-      if (note.editedAt != undefined) {
-        dateElement.appendChild(document.createElement('br'))
+        //DELETE
+        let deleteActionButton = document.createElement('button')
+        deleteActionButton.classList.add('action-buttons', 'material-icons')
+        deleteActionButton.setAttribute('onclick', `deleteNote(${note.id})`)
+        deleteActionButton.appendChild(document.createTextNode('check_circle'))
+
+        //NOTE TEXT
+        let noteTextContainer = document.createElement('div')
+        noteTextContainer.id = note.id + '-text-container'
+        noteTextContainer.classList.add('note-text-container')
+        noteTextContainer.setAttribute('onclick', `openNote(${note.id})`)
+
+        // --> adição de 'texto' ao id porque não pode haver ids iguais
+        let textElement = document.createElement('p')
+        textElement.id = note.id + '-text'
+        noteContainer.appendChild(textElement)
+
+        // noteous em versões anteriores: se nota tivesse menos de 300 caracteres, o conteúdo seria adicionado por inteiro. Se tivesse mais de 300 carateceres, iria testar cada caractere até chegar no 300º e exibir 'VER MAIS'. Isso levava em conta somente o texto dela, para previnir que ficasse muito longo, mas não levava em conta o espaço que o elemento ocupava.
+        // noteous preview 1.7.1: caracteres da nota são contados sempre. Agora, há 3 listas de prioridade e o espaço que uma nota ocupa é muito mais importante. Assim, ao renderizar uma nota, cada caractere dela é contado para que, se alcançar 200 caracteres ou alcançar 200px de altura, o que chegar primeiro, seja exibido 'VER MAIS'. Isso previne que notas muito longas ocupem espaço demais.
+
+        let noteChar = note.text
+        let count = 0
+        for (let noteCharAt of noteChar) {
+          textElement.appendChild(document.createTextNode(noteCharAt))
+          count = count + 1
+          
+          //"Ir escrevendo" cada caractere até chegar o 30º
+          if (count == 200 || noteContainer.offsetHeight >= 200){
+            
+            textElement.append(document.createTextNode(' ...'))
+            textElement.append(document.createElement('br'))
+            textElement.append(document.createTextNode('[VER MAIS]'))
+
+            break
+          }
+        }
+        
+
+        //DATE
+        let noteDateContainer = document.createElement('div')
+        noteDateContainer.id = note.id + '-note-date-container'
+        noteDateContainer.classList.add('note-date-container')
+
+        let dateElement = document.createElement('p')
+        dateElement.id = note.id + '-date-element'
         dateElement.appendChild(
           document.createTextNode(
-            `Última edição: ${new Date(note.editedAt).getDate()}/${findMonth(
-              new Date(note.editedAt).getMonth()
-            )}/${new Date(note.editedAt).getUTCFullYear()} às ${setTimeNumber(
-              new Date(note.editedAt).getHours()
-            )}:${setTimeNumber(new Date(note.editedAt).getMinutes())}`
+            `+ ${new Date(note.id).getDate()}/${findMonth(
+              new Date(note.id).getMonth()
+            )}/${new Date(note.id).getUTCFullYear()} às ${setTimeNumber(
+              new Date(note.id).getHours()
+            )}:${setTimeNumber(new Date(note.id).getMinutes())}`
           )
         )
+        if (note.editedAt != undefined) {
+          dateElement.appendChild(document.createElement('br'))
+          dateElement.appendChild(
+            document.createTextNode(
+              `Última edição: ${new Date(note.editedAt).getDate()}/${findMonth(
+                new Date(note.editedAt).getMonth()
+              )}/${new Date(note.editedAt).getUTCFullYear()} às ${setTimeNumber(
+                new Date(note.editedAt).getHours()
+              )}:${setTimeNumber(new Date(note.editedAt).getMinutes())}`
+            )
+          )
+        }
+
+        //ACESSIBILIDADE
+
+        noteTextContainer.tabIndex = tabIndexCounter += 1
+        noteTextContainer.setAttribute('aria-label', 'Anotação:' + note.text)
+        noteTextContainer.setAttribute(
+          'onkeyup',
+          `if (event.key === 'Enter') { openNote(${note.id}); }`
+        )
+
+        deleteActionButton.tabIndex = tabIndexCounter += 1
+        deleteActionButton.setAttribute('aria-label', 'Concluir nota')
+        deleteActionButton.setAttribute(
+          'onkeyup',
+          `if (event.key === 'Enter') { deleteNote(${note.id}); }`
+        )
+
+        //APPENDS
+        actionButtonsContainer.appendChild(deleteActionButton)
+        noteTextContainer.appendChild(textElement)
+        noteDateContainer.appendChild(dateElement)
+        noteTextContainer.appendChild(noteDateContainer)
+
+        noteContainer.appendChild(actionButtonsContainer)
+        noteContainer.appendChild(noteTextContainer)
+        }
       }
-
-      //ACESSIBILIDADE
-
-      noteTextContainer.tabIndex = tabIndexCounter += 1
-      noteTextContainer.setAttribute('aria-label', 'Anotação:' + note.text)
-      noteTextContainer.setAttribute(
-        'onkeyup',
-        `if (event.key === 'Enter') { openNote(${note.id}); }`
-      )
-
-      deleteActionButton.tabIndex = tabIndexCounter += 1
-      deleteActionButton.setAttribute('aria-label', 'Concluir nota')
-      deleteActionButton.setAttribute(
-        'onkeyup',
-        `if (event.key === 'Enter') { deleteNote(${note.id}); }`
-      )
-
-      //APPENDS
-      actionButtonsContainer.appendChild(deleteActionButton)
-      noteTextContainer.appendChild(textElement)
-      noteDateContainer.appendChild(dateElement)
-      noteTextContainer.appendChild(noteDateContainer)
-
-      noteContainer.appendChild(actionButtonsContainer)
-      noteContainer.appendChild(noteTextContainer)
-
-    }
+  }
 
     setTimeout(() => {
       //css inicia em 0. Após renderizar, altera para 1
