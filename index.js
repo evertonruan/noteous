@@ -32,6 +32,7 @@ let readPanel = document.querySelector('#read-panel')
 let readOptions = document.querySelector('#read-options')
 let readOptionsSort = document.querySelector('#read-options-sort')
 let readOptionsSortActionButton = document.querySelector('#read-options-sort-action')
+let readOptionsOrientationButton = document.querySelector('#read-options-orientation')
 
 let readNotesContainer = document.querySelector('#read-notes-container')
 
@@ -481,10 +482,15 @@ function loadNoteous(context) {
       } else {
         //SE NÃO HÁ NOVA VERSÃO
 
+        
         //Aplica última ordenação
         sortNotes('retrieveSort') // preview 1.8 --> Correção: como sortNotes() agora ordena de verdade (pelo JS, não mais pelo CSS), é necessário chamar antes de renderNote()
-
+        
         renderNote('render-all')
+
+        //Aplica última orientação de listas de prioridade
+        priorityListsOrientation('retrieveOrientation')
+
         orblendEngine('load')
         orblendEngine('on-change-input')
 
@@ -526,6 +532,7 @@ function loadNoteous(context) {
       sort: { time: 'recent', action: 'id' },
       priority: 'solid',
       priorityOrder: ['solid', 'double', 'dotted'], // preview 1.8: ordem das listas de prioridade
+      priorityOrientation: 'row',
       input: '',
       noteId: 0,
       fileId: 0,
@@ -624,6 +631,40 @@ writeOptions.addEventListener('click', () => {
 })
 
 //////////
+
+function priorityListsOrientation(context) {
+  if (context == 'retrieveOrientation') {
+    if (noteousSettings.priorityOrientation == 'row') {
+      readOptionsOrientationButton.innerHTML = ''
+      readOptionsOrientationButton.append(document.createTextNode('Horizontal'))
+      readNotesContainer.style.cssText = 'flex-direction: row;'
+      for (let priorityList of readNotesContainer.querySelectorAll('.read-notes-priority-container')) {
+        priorityList.style.cssText = 'flex-direction: column;  min-width: fit-content;'
+      }
+    } else if (noteousSettings.priorityOrientation == 'column') {
+      readOptionsOrientationButton.innerHTML = ''
+      readOptionsOrientationButton.append(document.createTextNode('Vertical'))
+      readNotesContainer.style.cssText = 'flex-direction: column;'
+      for (let priorityList of readNotesContainer.querySelectorAll('.read-notes-priority-container')) {
+        priorityList.style.cssText = 'flex-direction: row;'
+      }
+    }
+  } else if (context == 'change-orientation') {
+    // Alterna entre 'row' e 'column'
+    if (noteousSettings.priorityOrientation == 'row') {
+      noteousSettings.priorityOrientation = 'column';
+    } else {
+      noteousSettings.priorityOrientation = 'row';
+    }
+    localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings));
+    // Atualiza a interface após a troca
+    priorityListsOrientation('retrieveOrientation');
+  }
+}
+
+readOptionsOrientationButton.addEventListener('click', () => {
+  priorityListsOrientation('change-orientation')
+})
 
 function readOptionsSortActionButtonText() {
   if (noteousSettings.sort.action == 'editedAt') {
