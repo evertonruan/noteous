@@ -806,7 +806,7 @@ function renderNote(context, noteId, priority) {
 
       for (let note of noteousMain) {
         // Verifica se a nota atual pertence à lista de prioridade que está sendo criada. A ordem das notas dentro da lista é definida por sortNotes(). Ou seja: noteousMain já vem ordenado pelo sortNotes()
-        if (note.priority == priority) {
+        if (note.priority == priority && note.done != true) {
           let noteContainer = document.createElement('div')
           noteContainer.id = note.id + '-note-container'
           noteContainer.classList.add('note-container')
@@ -1188,7 +1188,7 @@ writeInput.addEventListener('input', () => {
 
 //////////
 
-//APAGAR NOTA
+//CONCLUIR NOTA
 let timeoutID
 function doneNote(noteId) {
   timeoutID = setTimeout(() => {
@@ -1199,8 +1199,7 @@ function doneNote(noteId) {
       noteContainer.remove()
       for (let note of noteousMain) {
         if (note.id === noteId) {
-          //note.orb = 'done'
-          noteousMain.splice(noteousMain.indexOf(note), 1)
+          note.done = true
         }
       }
 
