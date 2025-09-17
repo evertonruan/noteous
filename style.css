@@ -910,6 +910,15 @@ footer p span {
   background-color: var(--base-color);
 
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.settings-info {
+  font-size: 0.9rem;
+  margin-top: 0.5rem;
+  opacity: 0.8;
 }
 
 #copy-details-container {
