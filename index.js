@@ -399,7 +399,7 @@ function welcomeToNoteous(context, subcontext) {
         let greetingPoliciesTitle4 = document.createElement('p')
         greetingPoliciesTitle4.classList.add('greeting-policies-warning')
         greetingPoliciesTitle4.innerHTML =
-        '⚠️ Conforme explicado na Política de Privacidade, suas anotações são salvas localmente no dispositivo. Ou seja: se você limpar os dados, suas notas serão  apagadas.'
+        '⚠️ Conforme explicado na Política de Privacidade, suas anotações são salvas localmente no dispositivo. Ou seja: se você limpar os dados, suas notas serão  apagadas. <strong>Para evitar perda de dados, use o recurso Cópias de Notas em Ajustes&Info</strong>'
 
         let greetingPoliciesTitle5 = document.createElement('p')
         greetingPoliciesTitle5.classList.add('greeting-policies-description')
