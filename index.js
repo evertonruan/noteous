@@ -234,7 +234,7 @@ function welcomeToNoteous(context, subcontext) {
 
       greetingDescription4.innerHTML = `<span class="greeting-description-intro">Sempre em dia</span>noteous preview está em constante melhoria. Quando tiver uma 🌐 nova versão, chegará automaticamente para você ✅`
 
-      greetingDescription2Image.setAttribute('src', './assets/images/greeting-usage.webp')
+      greetingDescription2Image.setAttribute('src', './assets/images/greeting-copy.webp')
       greetingDescription3Image.setAttribute('src', './assets/images/greeting-priority-button.webp')
       greetingDescription4Image.setAttribute('src', './assets/images/greeting-update.webp')
 
@@ -266,19 +266,22 @@ function welcomeToNoteous(context, subcontext) {
       greetingTitle2.append(document.createTextNode('noteous preview'))
       greetingDescriptionTitle.append(
         document.createTextNode(
-          'O noteous preview foi atualizado: a versão 1.7 traz novos recursos!'
+          'O noteous preview foi atualizado: a versão 1.8 traz novos recursos!'
         )
       )
 
-      greetingDescription1.innerHTML = `<span class="greeting-description-intro">Cópias de notas</span> <br>Esse novo recurso abre novas possibilidades para o noteous! Agora, você pode Criar e Baixar uma cópia das suas notas para Abrir em outro celular ou computador que você usa o noteous preview`
+      greetingDescription1.innerHTML = `<span class="greeting-description-intro">Novos Botões de Ação!</span> <br>Suas notas ganham novas opções com os novos Botões de Ação Compartilhar e Copiar: Basta um toque para copiar uma anotação ou enviá-la a outro aplicativo`
 
-      greetingDescription2.innerHTML = `<span class="greeting-description-intro">Listas de Prioridade</span> <br>Sua organização subiu de nível. Cada prioridade que você salvar sua nota será exibida em uma lista separada para que você possa ver o que é mais importante mais rápido`
+      greetingDescription2.innerHTML = `<span class="greeting-description-intro">Opções de Visualização</span> <br>Agora você pode ordenar as notas de maneiras muito melhores: por data de criação ou edição ou ainda ver por Listas de Prioridade horizontais ou verticais`
 
-      greetingDescription3.innerHTML = `<span class="greeting-description-intro">Atualização automática</span> <br>noteous recebe atualizações automáticas 🌐 Assim, seu aplicativo sempre está em dia.`
+      greetingDescription3.innerHTML = `<span class="greeting-description-intro">Notas concluídas</span> <br>Agora, você pode ver as notas que forem concluídas em uma seção separada. Veja em Ajustes&Info`
 
-      greetingDescription1Image.setAttribute('src', './assets/images/greeting-usage.webp')
-      greetingDescription2Image.setAttribute('src', './assets/images/greeting-priority-button.webp')
-      greetingDescription3Image.setAttribute('src', './assets/images/greeting-update.webp')
+      greetingDescription4.innerHTML = `<span class="greeting-description-intro">Atualização automática</span> <br>noteous recebe atualizações automáticas 🌐 Assim, seu aplicativo sempre está em dia.`
+      
+      greetingDescription1Image.setAttribute('src', './assets/images/greeting-action-buttons.webp')
+      greetingDescription2Image.setAttribute('src', './assets/images/greeting-priority-lists-orientation.webp')
+      greetingDescription3Image.setAttribute('src', './assets/images/greeting-usage.webp')
+      greetingDescription4Image.setAttribute('src', './assets/images/greeting-update.webp')
 
       greetingDescriptionContainer1.append(
         greetingDescription1Image,
@@ -292,11 +295,16 @@ function welcomeToNoteous(context, subcontext) {
         greetingDescription3Image,
         greetingDescription3
       )
+      greetingDescriptionContainer4.append(
+        greetingDescription4Image,
+        greetingDescription4
+      )
 
       greetingDescriptionContainerAll.append(
         greetingDescriptionContainer1,
         greetingDescriptionContainer2,
-        greetingDescriptionContainer3
+        greetingDescriptionContainer3,
+        greetingDescriptionContainer4
       )
     }
   } else if (context == 'render-policies') {
@@ -340,7 +348,7 @@ function welcomeToNoteous(context, subcontext) {
     greetingPoliciesNoticeLink.classList.add('greeting-policies-text-link')
     greetingPoliciesNoticeLink.innerHTML = `<strong>Se preferir, acesse a versão estável do noteous ↗ <strong> <br> <br>`
     greetingPoliciesNoticeLink.addEventListener('click', () => {
-      window.location.replace('https://noteous.vercel.app')
+      window.location.replace('https://noteous.app')
     })
 
     let greetingPoliciesTermsUse = document.createElement('p')
