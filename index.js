@@ -844,11 +844,26 @@ function renderNote(context, noteId, priority) {
 
             //ACESSIBILIDADE
             readNotesActionButtons[actionButton].tabIndex = tabIndexCounter += 1
-            readNotesActionButtons[actionButton].setAttribute('aria-label', 'Concluir nota')
-            readNotesActionButtons[actionButton].setAttribute(
-              'onkeyup',
-              `if (event.key === 'Enter') { doneNote(${note.id}); }`
-            )
+            if (actionButton == 'done') {
+              readNotesActionButtons[actionButton].setAttribute('aria-label', 'Concluir nota')
+              readNotesActionButtons[actionButton].setAttribute(
+                'onkeyup',
+                `if (event.key === 'Enter') { doneNote(${note.id}); }`
+              )
+            } else if (actionButton == 'share') {
+              readNotesActionButtons[actionButton].setAttribute('aria-label', 'Compartilhar nota')
+              readNotesActionButtons[actionButton].setAttribute(
+                'onkeyup',
+                `if (event.key === 'Enter') { shareNote(${note.id}); }`
+              )
+            }
+            else if (actionButton == 'copy') {
+              readNotesActionButtons[actionButton].setAttribute('aria-label', 'Copiar nota')
+              readNotesActionButtons[actionButton].setAttribute(
+                'onkeyup',
+                `if (event.key === 'Enter') { copyNote(${note.id}); }`
+              )
+            }
 
             actionButtonsContainer.appendChild(readNotesActionButtons[actionButton])
         }
