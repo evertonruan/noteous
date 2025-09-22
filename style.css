@@ -672,6 +672,10 @@ a {
   outline: 0;
 }
 
+#index .action-button-copy {
+  font-size: 1.7rem;
+}
+
 #section-read .note-text-container,
 #modal .note-text-container {
   display: flex;

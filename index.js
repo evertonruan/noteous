@@ -858,6 +858,7 @@ function renderNote(context, noteId, priority) {
               )
             }
             else if (actionButton == 'copy') {
+              readNotesActionButtons[actionButton].classList.add('action-button-copy')
               readNotesActionButtons[actionButton].setAttribute('aria-label', 'Copiar nota')
               readNotesActionButtons[actionButton].setAttribute(
                 'onkeyup',
