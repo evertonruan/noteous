@@ -71,7 +71,7 @@ const readNotesActionButtons = {
 const readNotesActionButtonsIcons = {
   done: 'check_circle',
   share: 'shortcut',
-  copy: 'toll'
+  copy: 'content_copy'
 }
 
 
@@ -1276,7 +1276,24 @@ function copyNote(noteId) {
   for (let note of noteousMain) {
     if (note.id === noteId) {
       navigator.clipboard.writeText(note.text)
-        .then(() => console.log('Nota copiada com sucesso'))
+        .then(() => {
+          // Exibe feedback visual por 2s e depois restaura o texto
+          const textElement = document.getElementById(noteId + '-text')
+          const noteTextContainer = document.getElementById(noteId + '-text-container')
+          if (!textElement || !noteTextContainer) return
+
+          const originalNoteText = textElement.innerHTML
+
+          textElement.innerHTML = '<strong>✓ Texto da nota copiado</strong>'
+          textElement.setAttribute('aria-label', 'Texto da nota copiado')
+          noteTextContainer.ariaLive = 'assertive'
+
+          setTimeout(() => {
+            textElement.innerHTML = originalNoteText
+            // Não altera atributos originais do container; apenas remove o feedback ARIA
+            noteTextContainer.ariaLive = undefined
+          }, 2000)
+        })
         .catch((error) => console.log('Erro ao copiar nota', error))
     }
   }
