@@ -665,14 +665,16 @@ function priorityListsOrientation(context) {
   if (context == 'retrieveOrientation') {
     if (noteousSettings.priorityOrientation == 'row') {
       readOptionsOrientationButton.innerHTML = ''
-      readOptionsOrientationButton.append(document.createTextNode('Horizontal'))
+      readOptionsOrientationButton.append(document.createTextNode('view_agenda'))
+  readOptionsOrientationButton.style.transform = 'rotate(90deg)'
       readNotesContainer.style.cssText = 'flex-direction: row;'
       for (let priorityList of readNotesContainer.querySelectorAll('.read-notes-priority-container')) {
         priorityList.style.cssText = 'flex-direction: column;  min-width: fit-content;'
       }
     } else if (noteousSettings.priorityOrientation == 'column') {
       readOptionsOrientationButton.innerHTML = ''
-      readOptionsOrientationButton.append(document.createTextNode('Vertical'))
+      readOptionsOrientationButton.append(document.createTextNode('view_agenda'))
+  readOptionsOrientationButton.style.transform = 'rotate(0deg)'
       readNotesContainer.style.cssText = 'flex-direction: column;'
       for (let priorityList of readNotesContainer.querySelectorAll('.read-notes-priority-container')) {
         priorityList.style.cssText = 'flex-direction: row;'

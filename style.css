@@ -554,8 +554,7 @@ a {
 #read-options-orientation {
   display: flex;
   color: var(--base-text);
-
-  font-family: 'Merriweather Sans', sans-serif;
+  
   color: var(--base-text);
   background-color: transparent;
   font-size: 1rem;

@@ -841,9 +841,7 @@ function createNotePreview(note, index, context = 'copy') {
     `
     deleteButton.setAttribute('aria-label', 'Excluir nota permanentemente')
     deleteButton.addEventListener('click', () => {
-      if (confirm('Tem certeza que deseja excluir permanentemente esta nota? Esta ação não pode ser desfeita.')) {
         deleteNotePermanently(note.id)
-      }
     })
     deleteButton.addEventListener('mouseenter', () => {
       deleteButton.style.transform = 'scale(1.2)'
@@ -949,7 +947,7 @@ function restoreNote(noteId) {
     document.body.removeChild(modal.parentElement)
   }
   
-  alert('Nota restaurada com sucesso!')
+  alert('Nota restaurada')
 }
 
 //FUNÇÃO PARA EXCLUIR NOTA PERMANENTEMENTE
@@ -962,8 +960,6 @@ function deleteNotePermanently(noteId) {
   if (modal && modal.parentElement) {
     document.body.removeChild(modal.parentElement)
   }
-  
-  alert('Nota excluída permanentemente!')
 }
 
 //MODO AVANÇADO
