@@ -902,6 +902,12 @@ footer p span {
   gap: 1rem;
 }
 
+.options-container-column {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
 .option-point {
   width: fit-content;
   padding: 0.2rem 0.5rem;
@@ -917,6 +923,66 @@ footer p span {
   display: flex;
   align-items: center;
   gap: 0.3rem;
+}
+
+/* Toggles */
+.toggle {
+  display: inline-flex;
+  width: fit-content;
+  align-items: center;
+  gap: 0.9rem;
+  padding: 0.2rem 0.5rem;
+  border: 1px solid var(--base-text);
+  border-radius: 2rem;
+  background-color: var(--base-color);
+  color: var(--base-text);
+  cursor: pointer;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+.toggle-text {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 1.1rem;
+  font-family: 'Merriweather Sans', sans-serif;
+}
+
+.toggle-input {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.toggle-slider {
+  position: relative;
+  width: 2.5rem;
+  height: 1.4rem;
+  background: var(--base-options-panel);
+  border-radius: 999px;
+  transition: background 0.2s ease, box-shadow 0.2s ease;
+}
+
+.toggle-slider::after {
+  content: '';
+  position: absolute;
+  top: 0.15rem;
+  left: 0.15rem;
+  width: 1.1rem;
+  height: 1.1rem;
+  border-radius: 50%;
+  background: var(--base-text);
+  transition: transform 0.2s ease;
+}
+
+.toggle-input:checked + .toggle-slider {
+  background: var(--base-buttons);
+}
+
+.toggle-input:checked + .toggle-slider::after {
+  transform: translateX(1.1rem);
 }
 
 .settings-info {

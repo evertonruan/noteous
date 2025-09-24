@@ -146,17 +146,12 @@ function activeOptionVerifier() {
     optionLight.style.background = ''
   }
 
-  // Verificar botões de ação
-  if (noteousSettings.actionButtons.includes('share')) {
-    actionButtonShare.style.background = 'var(--base-buttons)'
-  } else {
-    actionButtonShare.style.background = ''
+  // Verificar botões de ação (toggles)
+  if (actionButtonShare) {
+    actionButtonShare.checked = noteousSettings.actionButtons.includes('share')
   }
-
-  if (noteousSettings.actionButtons.includes('copy')) {
-    actionButtonCopy.style.background = 'var(--base-buttons)'
-  } else {
-    actionButtonCopy.style.background = ''
+  if (actionButtonCopy) {
+    actionButtonCopy.checked = noteousSettings.actionButtons.includes('copy')
   }
 
   if (copyDetailsSwitchVar == 0) {
@@ -210,17 +205,13 @@ optionDark.addEventListener('click', () => {
 
 // CONFIGURAÇÃO --> BOTÕES DE AÇÃO //////
 
-actionButtonShare.addEventListener('click', () => {
-  if (noteousSettings.actionButtons.includes('share')) {
-    // Remove o botão share
+actionButtonShare.addEventListener('change', (e) => {
+  const enabled = e.target.checked
+  if (!enabled) {
     noteousSettings.actionButtons = noteousSettings.actionButtons.filter(button => button !== 'share')
-  } else {
-    // Adiciona o botão share
-    if (!noteousSettings.actionButtons.includes('share')) {
-      noteousSettings.actionButtons.push('share')
-    }
+  } else if (!noteousSettings.actionButtons.includes('share')) {
+    noteousSettings.actionButtons.push('share')
   }
-  // Garantir que 'done' sempre esteja presente
   if (!noteousSettings.actionButtons.includes('done')) {
     noteousSettings.actionButtons.unshift('done')
   }
@@ -228,17 +219,13 @@ actionButtonShare.addEventListener('click', () => {
   activeOptionVerifier()
 })
 
-actionButtonCopy.addEventListener('click', () => {
-  if (noteousSettings.actionButtons.includes('copy')) {
-    // Remove o botão copy
+actionButtonCopy.addEventListener('change', (e) => {
+  const enabled = e.target.checked
+  if (!enabled) {
     noteousSettings.actionButtons = noteousSettings.actionButtons.filter(button => button !== 'copy')
-  } else {
-    // Adiciona o botão copy
-    if (!noteousSettings.actionButtons.includes('copy')) {
-      noteousSettings.actionButtons.push('copy')
-    }
+  } else if (!noteousSettings.actionButtons.includes('copy')) {
+    noteousSettings.actionButtons.push('copy')
   }
-  // Garantir que 'done' sempre esteja presente
   if (!noteousSettings.actionButtons.includes('done')) {
     noteousSettings.actionButtons.unshift('done')
   }
