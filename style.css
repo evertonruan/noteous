@@ -856,15 +856,17 @@ footer p span {
 }
 
 .option-point {
+  display: flex;
+  align-items: center;
   padding: 0.2rem 0.5rem;
+  width: fit-content;
+  gap: 0.3rem;
   border: 1px solid var(--base-text);
   border-radius: 2rem;
-
   font-size: 1.1rem;
   font-family: 'Merriweather Sans', sans-serif;
   color: var(--base-text);
   background-color: var(--base-color);
-
   cursor: pointer;
 }
 

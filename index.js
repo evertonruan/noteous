@@ -1191,7 +1191,7 @@ writeInput.addEventListener('input', () => {
 
 //APAGAR NOTA
 let timeoutID
-function deleteNote(noteId) {
+function doneNote(noteId) {
   timeoutID = setTimeout(() => {
     let noteContainer = document.getElementById(noteId + '-note-container')
     noteContainer.style.cssText = 'opacity: 0;  transform: scale(80%);'
@@ -1200,8 +1200,7 @@ function deleteNote(noteId) {
       noteContainer.remove()
       for (let note of noteousMain) {
         if (note.id === noteId) {
-          //note.orb = 'done'
-          noteousMain.splice(noteousMain.indexOf(note), 1)
+          note.done = true
         }
       }
 

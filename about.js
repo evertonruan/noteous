@@ -32,6 +32,8 @@ let optionDark = document.querySelector('#luminosity-dark')
 let toggleActionButtonShare = document.querySelector('#toggle-action-button-share')
 let toggleActionButtonCopy = document.querySelector('#toggle-action-button-copy')
 
+let viewDoneNotesButton = document.querySelector('#view-done-notes')
+
 let buttonPolicies = document.querySelector('#about-button-policies')
 let policiesContainerData = document.querySelector('#policies-container-data')
 let policiesSwitchVar = 0
@@ -214,6 +216,13 @@ optionDark.addEventListener('click', () => {
 })
 
 noteousTheme('retrieve-theme')
+
+///////
+
+//BOTÃO VER NOTAS CONCLUÍDAS
+viewDoneNotesButton.addEventListener('click', () => {
+  showDoneNotesModal()
+})
 
 //BOTÃO DE POLICIES
 buttonPolicies.addEventListener('click', () => {
@@ -506,8 +515,27 @@ copyOpenButton.addEventListener('click', () => {
 
 })
 
+//FUNÇÃO PARA EXIBIR MODAL COM NOTAS CONCLUÍDAS
+function showDoneNotesModal() {
+  // Filtra apenas as notas concluídas
+  const doneNotes = noteousMain.filter(note => note.done === true)
+  
+  if (doneNotes.length === 0) {
+    alert('Não há notas concluídas.')
+    return
+  }
+
+  // Usa a mesma estrutura do modal de cópias de notas
+  const notesData = {
+    notes: doneNotes,
+    totalNotes: doneNotes.length
+  }
+
+  showNotesModal(notesData, 'done-notes')
+}
+
 //FUNÇÃO PARA EXIBIR MODAL COM AS NOTAS DA CÓPIA
-function showNotesModal(notesData) {
+function showNotesModal(notesData, context = 'copy') {
   // Cria o overlay do modal
   const modalOverlay = document.createElement('div')
   modalOverlay.style.cssText = `
@@ -539,7 +567,7 @@ function showNotesModal(notesData) {
 
   // Título do modal
   const modalTitle = document.createElement('h2')
-  modalTitle.textContent = 'Visualizar Cópia de Notas'
+  modalTitle.textContent = context === 'done-notes' ? 'Notas Concluídas' : 'Visualizar Cópia de Notas'
   modalTitle.style.cssText = `
     margin-bottom: 1rem;
     color: var(--base-text);
@@ -553,10 +581,16 @@ function showNotesModal(notesData) {
   `
 
   const packageInfoText = document.createElement('p')
-  packageInfoText.innerHTML = `
-    <strong>Data do pacote de cópia:</strong> ${formatDate('open-copy', notesData.exportDate)}<br>
-    <strong>Quantidade de notas:</strong> ${notesData.totalNotes}
-  `
+  if (context === 'done-notes') {
+    packageInfoText.innerHTML = `
+      <strong>Quantidade de notas concluídas:</strong> ${notesData.totalNotes}
+    `
+  } else {
+    packageInfoText.innerHTML = `
+      <strong>Data do pacote de cópia:</strong> ${formatDate('open-copy', notesData.exportDate)}<br>
+      <strong>Quantidade de notas:</strong> ${notesData.totalNotes}
+    `
+  }
   packageInfoText.style.color = 'var(--base-text)'
   packageInfo.appendChild(packageInfoText)
 
@@ -575,7 +609,7 @@ function showNotesModal(notesData) {
   // Renderiza as notas
   if (notesData.notes && notesData.notes.length > 0) {
     notesData.notes.forEach((note, index) => {
-      const noteElement = createNotePreview(note, index)
+      const noteElement = createNotePreview(note, index, context)
       notesContainer.appendChild(noteElement)
     })
   } else {
@@ -605,24 +639,30 @@ function showNotesModal(notesData) {
     document.body.removeChild(modalOverlay)
   })
 
-  // Botão Importar
-  const importButton = document.createElement('button')
-  importButton.textContent = 'Importar cópia'
-  importButton.classList.add('option-point')
-  importButton.style.cssText = `
-    background-color: var(--base-write-input-outside);
-    color: var(--base-write-input-inside);
-  `
-  importButton.addEventListener('click', () => {
-    if (confirm('Tem certeza que deseja importar estas notas? Isso substituirá todas as suas notas atuais.')) {
-      importNotes(notesData.notes)
-      document.body.removeChild(modalOverlay)
-    }
-  })
+  // Monta o modal baseado no contexto
+  if (context === 'done-notes') {
+    // Para notas concluídas, não há segundo botão
+    modal.append(modalTitle, packageInfo, buttonsContainer, notesContainer)
+    buttonsContainer.append(closeButton)
+  } else {
+    // Para cópias de notas, mantém o botão importar
+    const importButton = document.createElement('button')
+    importButton.textContent = 'Importar cópia'
+    importButton.classList.add('option-point')
+    importButton.style.cssText = `
+      background-color: var(--base-write-input-outside);
+      color: var(--base-write-input-inside);
+    `
+    importButton.addEventListener('click', () => {
+      if (confirm('Tem certeza que deseja importar estas notas? Isso substituirá todas as suas notas atuais.')) {
+        importNotes(notesData.notes)
+        document.body.removeChild(modalOverlay)
+      }
+    })
 
-  // Monta o modal
-  modal.append(modalTitle, packageInfo, buttonsContainer, notesContainer)
-  buttonsContainer.append(closeButton, importButton)
+    modal.append(modalTitle, packageInfo, buttonsContainer, notesContainer)
+    buttonsContainer.append(closeButton, importButton)
+  }
   modalOverlay.appendChild(modal)
   
   // Adiciona o modal ao body
@@ -637,7 +677,7 @@ function showNotesModal(notesData) {
 }
 
 //FUNÇÃO PARA CRIAR PREVIEW DE NOTA
-function createNotePreview(note, index) {
+function createNotePreview(note, index, context = 'copy') {
   const noteContainer = document.createElement('div')
   noteContainer.classList.add('note-container')
   
@@ -668,25 +708,7 @@ function createNotePreview(note, index) {
 
   let textElement = document.createElement('p')
 
-  let noteChar = note.text
-  if (noteChar.length < 300) {
-    //Se tamanho da nota for menor que 300, escrever nota inteira
-    textElement.appendChild(document.createTextNode(noteChar))
-  } else if (noteChar.length >= 300) {
-    //Se tamanho da nota for maior que 300, escrever apenas até o 300º caractere e acrescentar "..."
-    let count = 0
-    for (let noteCharAt of noteChar) {
-      textElement.appendChild(document.createTextNode(noteCharAt))
-      count = count + 1
-      //"Ir escrevendo" cada caractere até chegar o 300º
-      if (count == 300) {
-        textElement.append(document.createTextNode(' ...'))
-        textElement.append(document.createElement('br'))
-        textElement.append(document.createTextNode('[VER MAIS]'))
-        break
-      }
-    }
-  }
+  textElement.appendChild(document.createTextNode(note.text))
 
   //DATE
   let noteDateContainer = document.createElement('div')
@@ -696,7 +718,7 @@ function createNotePreview(note, index) {
   
   dateElement.appendChild(
     document.createTextNode(
-      `+ ${new Date(note.id).getDate()}/${findMonth(
+      `Criado em ${new Date(note.id).getDate()}/${findMonth(
         new Date(note.id).getMonth()
       )}/${new Date(note.id).getUTCFullYear()} às ${setTimeNumber(
         new Date(note.id).getHours()
@@ -722,6 +744,92 @@ function createNotePreview(note, index) {
   noteTextContainer.appendChild(noteDateContainer)
 
   noteContainer.appendChild(noteTextContainer)
+
+  // Adicionar botões de ação para notas concluídas
+  if (context === 'done-notes') {
+    const actionButtonsContainer = document.createElement('div')
+    actionButtonsContainer.classList.add('action-buttons-container')
+    actionButtonsContainer.style.cssText = `
+      display: flex;
+      flex-direction: column;
+      padding: 0.3rem;
+      align-items: center;
+      border-radius: 1.2rem 0 0 1.2rem;
+      background-color: var(--base-note-action-container);
+    `
+
+    // Botão Restaurar
+    const restoreButton = document.createElement('button')
+    restoreButton.classList.add('action-buttons', 'material-icons')
+    restoreButton.textContent = 'undo'
+    restoreButton.style.cssText = `
+      font-size: 2rem;
+      background-color: transparent;
+      color: var(--base-note-action-button);
+      transition: all 0.3s cubic-bezier(0.075, 0.82, 0.165, 1);
+      padding: 0.5rem 0.3rem;
+      -webkit-user-select: none;
+      user-select: none;
+      border: none;
+      outline: none;
+    `
+    restoreButton.setAttribute('aria-label', 'Restaurar nota')
+    restoreButton.addEventListener('click', () => {
+      if (confirm('Tem certeza que deseja restaurar esta nota?')) {
+        restoreNote(note.id)
+      }
+    })
+    restoreButton.addEventListener('mouseenter', () => {
+      restoreButton.style.transform = 'scale(1.2)'
+    })
+    restoreButton.addEventListener('mouseleave', () => {
+      restoreButton.style.transform = 'scale(1)'
+    })
+    restoreButton.addEventListener('mousedown', () => {
+      restoreButton.style.transform = 'scale(0.9)'
+    })
+    restoreButton.addEventListener('mouseup', () => {
+      restoreButton.style.transform = 'scale(1.2)'
+    })
+
+    // Botão Excluir Permanentemente
+    const deleteButton = document.createElement('button')
+    deleteButton.classList.add('action-buttons', 'material-icons')
+    deleteButton.textContent = 'clear'
+    deleteButton.style.cssText = `
+      font-size: 2rem;
+      background-color: transparent;
+      color: var(--base-note-action-button);
+      transition: all 0.3s cubic-bezier(0.075, 0.82, 0.165, 1);
+      padding: 0.5rem 0.3rem;
+      -webkit-user-select: none;
+      user-select: none;
+      border: none;
+      outline: none;
+    `
+    deleteButton.setAttribute('aria-label', 'Excluir nota permanentemente')
+    deleteButton.addEventListener('click', () => {
+        deleteNotePermanently(note.id)
+    })
+    deleteButton.addEventListener('mouseenter', () => {
+      deleteButton.style.transform = 'scale(1.2)'
+    })
+    deleteButton.addEventListener('mouseleave', () => {
+      deleteButton.style.transform = 'scale(1)'
+    })
+    deleteButton.addEventListener('mousedown', () => {
+      deleteButton.style.transform = 'scale(0.9)'
+    })
+    deleteButton.addEventListener('mouseup', () => {
+      deleteButton.style.transform = 'scale(1.2)'
+    })
+
+    actionButtonsContainer.append(restoreButton, deleteButton)
+    
+    // Inserir o container de ações à esquerda da nota
+    noteContainer.style.display = 'flex'
+    noteContainer.insertBefore(actionButtonsContainer, noteTextContainer)
+  }
 
   return noteContainer
 }
@@ -789,6 +897,35 @@ function importNotes(notes) {
   
   alert('Notas importadas com sucesso!')
   window.location.reload()
+}
+
+//FUNÇÃO PARA RESTAURAR NOTA
+function restoreNote(noteId) {
+  for (let note of noteousMain) {
+    if (note.id === noteId) {
+      note.done = false
+      break
+    }
+  }
+  localStorage.setItem('noteous-main', JSON.stringify(noteousMain))
+  
+  // Fecha o modal e recarrega a página
+  const modal = document.querySelector('#modal')
+  if (modal && modal.parentElement) {
+    document.body.removeChild(modal.parentElement)
+  }
+}
+
+//FUNÇÃO PARA EXCLUIR NOTA PERMANENTEMENTE
+function deleteNotePermanently(noteId) {
+  noteousMain = noteousMain.filter(note => note.id !== noteId)
+  localStorage.setItem('noteous-main', JSON.stringify(noteousMain))
+  
+  // Fecha o modal e recarrega a página
+  const modal = document.querySelector('#modal')
+  if (modal && modal.parentElement) {
+    document.body.removeChild(modal.parentElement)
+  }
 }
 
 
