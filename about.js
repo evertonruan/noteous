@@ -29,6 +29,9 @@ let baseRemOptionSmall = document.querySelector('#baserem-small')
 let optionLight = document.querySelector('#luminosity-light')
 let optionDark = document.querySelector('#luminosity-dark')
 
+let toggleActionButtonShare = document.querySelector('#toggle-action-button-share')
+let toggleActionButtonCopy = document.querySelector('#toggle-action-button-copy')
+
 let buttonPolicies = document.querySelector('#about-button-policies')
 let policiesContainerData = document.querySelector('#policies-container-data')
 let policiesSwitchVar = 0
@@ -121,6 +124,9 @@ noteousTheme('retrieve-theme')
 
 //VERIFICADOR DE OPÇÃO ATIVA ///////
 function activeOptionVerifier() {
+  toggleActionButtonShare.checked = noteousSettings.actionButtons.includes('share')
+  toggleActionButtonCopy.checked = noteousSettings.actionButtons.includes('copy')
+  
   if (noteousSettings.look.baseRem == '--base-rem: 100%;') {
     baseRemOptionNormal.style.background = 'var(--base-buttons)'
     baseRemOptionBig.style.background = ''
@@ -147,6 +153,33 @@ function activeOptionVerifier() {
 activeOptionVerifier()
 
 //////
+
+// 1.6 --> BOTÕES DE AÇÃO //////
+
+toggleActionButtonShare.addEventListener('change', (toggle) => {
+    if (!noteousSettings.actionButtons.includes('share')) {
+      noteousSettings.actionButtons.push('share')
+    } else {
+      noteousSettings.actionButtons = noteousSettings.actionButtons.filter(actionButton => actionButton != 'share')
+    }
+  
+  localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
+  activeOptionVerifier()
+})
+
+toggleActionButtonCopy.addEventListener('change', (toggle) => {
+    if (!noteousSettings.actionButtons.includes('copy')) {
+      noteousSettings.actionButtons.push('copy')
+    } else {
+      noteousSettings.actionButtons = noteousSettings.actionButtons.filter(actionButton => actionButton != 'copy')
+    }
+  
+  localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
+  activeOptionVerifier()
+})
+
+//////
+
 
 baseRemOptionNormal.addEventListener('click', () => {
   noteousSettings.look.baseRem = '--base-rem: 100%;'
