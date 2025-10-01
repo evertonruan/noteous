@@ -1,4 +1,4 @@
-![Apresentação do noteous](/img/preview.png)
+![Apresentação do noteous](/assets/images/preview.webp)
 # noteous
 App de notas e lembretes com um design singular
 
