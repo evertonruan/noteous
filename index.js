@@ -55,7 +55,7 @@ const readNotesActionButtonsIcons = {
 
 // VARIÁVEIS IMPORTANTES /////////////////////////////////////
 
-let currentVersion = 1.6
+let currentVersion = 1.7
 let noteIdEdit //usada para confirmar qual nota está sendo editada
 let editMode = false
 let tabIndexCounter = 10
@@ -244,14 +244,14 @@ function welcomeToNoteous(context, subcontext) {
         )
       )
 
-      greetingDescription1.innerHTML = `<span class="greeting-description-intro">Suporte offline</span> <br>⚡Está sem internet? Sem problema! noteous agora funciona mesmo se você não estiver conectado!`
+      greetingDescription1.innerHTML = `<span class="greeting-description-intro">Novos Botões de Ação!</span> <br>Suas notas ganham novas opções com os novos Botões de Ação Compartilhar e Copiar texto: Basta um toque para copiar uma anotação ou enviá-la a outro aplicativo`
 
-      greetingDescription2.innerHTML = `<span class="greeting-description-intro">Cópias de notas</span> <br>📑 Agora você pode baixar cópias de suas anotações para salvar com segurança em outro local ou ainda enviar a outro aparelho que você utilize o noteous, como celular ou computador`
+      greetingDescription2.innerHTML = `<span class="greeting-description-intro">Notas concluídas</span> <br>Agora, você pode ver as notas que forem concluídas em uma seção separada. Veja em Ajustes&Info`
 
-      greetingDescription3.innerHTML = `<span class="greeting-description-intro">Atualização automática</span> <br>noteous recebe atualizações automáticas 🌐 Assim, seu aplicativo sempre está em dia!`
-
-      greetingDescription1Image.setAttribute('src', './assets/images/greeting-usage.webp')
-      greetingDescription2Image.setAttribute('src', './assets/images/greeting-copy.webp')
+      greetingDescription3.innerHTML = `<span class="greeting-description-intro">Atualização automática</span> <br>noteous recebe atualizações automáticas 🌐 Assim, seu aplicativo sempre está em dia.`
+      
+      greetingDescription1Image.setAttribute('src', './assets/images/greeting-action-buttons.webp')
+      greetingDescription2Image.setAttribute('src', './assets/images/greeting-usage.webp')
       greetingDescription3Image.setAttribute('src', './assets/images/greeting-update.webp')
 
       greetingDescriptionContainer1.append(
@@ -808,137 +808,139 @@ function renderNote(context, noteId) {
     readNotesList.innerHTML = ''
 
     for (let note of noteousMain) {
-      let noteContainer = document.createElement('div')
-      noteContainer.id = note.id + '-note-container'
-      noteContainer.classList.add('note-container')
+      if (note.done != true) {
+        let noteContainer = document.createElement('div')
+        noteContainer.id = note.id + '-note-container'
+        noteContainer.classList.add('note-container')
 
-      //BORDER/PRIORITY
-      if (note.priority == 'solid') {
-        noteContainer.style.cssText = 'border-style: none;'
-      } else if (note.priority == 'double') {
-        noteContainer.style.cssText = 'border-style: double;'
-      } else if (note.priority == 'dotted') {
-        noteContainer.style.cssText = 'border-style: dotted;'
-      }
+        //BORDER/PRIORITY
+        if (note.priority == 'solid') {
+          noteContainer.style.cssText = 'border-style: none;'
+        } else if (note.priority == 'double') {
+          noteContainer.style.cssText = 'border-style: double;'
+        } else if (note.priority == 'dotted') {
+          noteContainer.style.cssText = 'border-style: dotted;'
+        }
 
-      //ACTION BUTTONS
+        //ACTION BUTTONS
 
-      let actionButtonsContainer = document.createElement('div')
-      actionButtonsContainer.id = note.id + '-action-buttons-container'
-      actionButtonsContainer.classList.add('action-buttons-container')
+        let actionButtonsContainer = document.createElement('div')
+        actionButtonsContainer.id = note.id + '-action-buttons-container'
+        actionButtonsContainer.classList.add('action-buttons-container')
 
-      for (let actionButton of noteousSettings.actionButtons) {
+        for (let actionButton of noteousSettings.actionButtons) {
 
-          readNotesActionButtons[actionButton] = document.createElement('button')
-          readNotesActionButtons[actionButton].classList.add('action-buttons', 'material-icons')
-          readNotesActionButtons[actionButton].setAttribute('onclick', `${actionButton}Note(${note.id})`)
-          readNotesActionButtons[actionButton].appendChild(document.createTextNode(readNotesActionButtonsIcons[actionButton]))
+            readNotesActionButtons[actionButton] = document.createElement('button')
+            readNotesActionButtons[actionButton].classList.add('action-buttons', 'material-icons')
+            readNotesActionButtons[actionButton].setAttribute('onclick', `${actionButton}Note(${note.id})`)
+            readNotesActionButtons[actionButton].appendChild(document.createTextNode(readNotesActionButtonsIcons[actionButton]))
 
-          //ACESSIBILIDADE
-          readNotesActionButtons[actionButton].tabIndex = tabIndexCounter += 1
-          if (actionButton == 'done') {
-            readNotesActionButtons[actionButton].setAttribute('aria-label', 'Concluir nota')
-            readNotesActionButtons[actionButton].setAttribute(
-              'onkeyup',
-              `if (event.key === 'Enter') { doneNote(${note.id}); }`
-            )
-          } else if (actionButton == 'share') {
-            readNotesActionButtons[actionButton].setAttribute('aria-label', 'Compartilhar nota')
-            readNotesActionButtons[actionButton].setAttribute(
-              'onkeyup',
-              `if (event.key === 'Enter') { shareNote(${note.id}); }`
-            )
-          }
-          else if (actionButton == 'copy') {
-            readNotesActionButtons[actionButton].classList.add('action-button-copy')
-            readNotesActionButtons[actionButton].setAttribute('aria-label', 'Copiar nota')
-            readNotesActionButtons[actionButton].setAttribute(
-              'onkeyup',
-              `if (event.key === 'Enter') { copyNote(${note.id}); }`
-            )
-          }
+            //ACESSIBILIDADE
+            readNotesActionButtons[actionButton].tabIndex = tabIndexCounter += 1
+            if (actionButton == 'done') {
+              readNotesActionButtons[actionButton].setAttribute('aria-label', 'Concluir nota')
+              readNotesActionButtons[actionButton].setAttribute(
+                'onkeyup',
+                `if (event.key === 'Enter') { doneNote(${note.id}); }`
+              )
+            } else if (actionButton == 'share') {
+              readNotesActionButtons[actionButton].setAttribute('aria-label', 'Compartilhar nota')
+              readNotesActionButtons[actionButton].setAttribute(
+                'onkeyup',
+                `if (event.key === 'Enter') { shareNote(${note.id}); }`
+              )
+            }
+            else if (actionButton == 'copy') {
+              readNotesActionButtons[actionButton].classList.add('action-button-copy')
+              readNotesActionButtons[actionButton].setAttribute('aria-label', 'Copiar nota')
+              readNotesActionButtons[actionButton].setAttribute(
+                'onkeyup',
+                `if (event.key === 'Enter') { copyNote(${note.id}); }`
+              )
+            }
 
-          actionButtonsContainer.appendChild(readNotesActionButtons[actionButton])
-      }
+            actionButtonsContainer.appendChild(readNotesActionButtons[actionButton])
+        }
 
-      //NOTE TEXT
-      let noteTextContainer = document.createElement('div')
-      noteTextContainer.id = note.id + '-text-container'
-      noteTextContainer.classList.add('note-text-container')
-      noteTextContainer.setAttribute('onclick', `openNote(${note.id})`)
+        //NOTE TEXT
+        let noteTextContainer = document.createElement('div')
+        noteTextContainer.id = note.id + '-text-container'
+        noteTextContainer.classList.add('note-text-container')
+        noteTextContainer.setAttribute('onclick', `openNote(${note.id})`)
 
-      // --> adição de 'texto' ao id porque não pode haver ids iguais
-      let textElement = document.createElement('p')
-      textElement.id = note.id + '-text'
+        // --> adição de 'texto' ao id porque não pode haver ids iguais
+        let textElement = document.createElement('p')
+        textElement.id = note.id + '-text'
 
-      let noteChar = note.text
-      if (noteChar.length < 300) {
-        //Se tamanho da nota for menor que 30, escrever nota inteira
-        textElement.appendChild(document.createTextNode(noteChar))
-      } else if (noteChar.length >= 300) {
-        //Se tamanho da nota for maior que 30, escrever apenas até o 30º caractere e acrescentar botão para ver nota inteira
-        let count = 0
-        for (let noteCharAt of noteChar) {
-          textElement.appendChild(document.createTextNode(noteCharAt))
-          count = count + 1
-          //"Ir escrevendo" cada caractere até chegar o 30º
-          if (count == 300) {
-            textElement.append(document.createTextNode(' ...'))
-            textElement.append(document.createElement('br'))
-            textElement.append(document.createTextNode('[VER MAIS]'))
+        let noteChar = note.text
+        if (noteChar.length < 300) {
+          //Se tamanho da nota for menor que 30, escrever nota inteira
+          textElement.appendChild(document.createTextNode(noteChar))
+        } else if (noteChar.length >= 300) {
+          //Se tamanho da nota for maior que 30, escrever apenas até o 30º caractere e acrescentar botão para ver nota inteira
+          let count = 0
+          for (let noteCharAt of noteChar) {
+            textElement.appendChild(document.createTextNode(noteCharAt))
+            count = count + 1
+            //"Ir escrevendo" cada caractere até chegar o 30º
+            if (count == 300) {
+              textElement.append(document.createTextNode(' ...'))
+              textElement.append(document.createElement('br'))
+              textElement.append(document.createTextNode('[VER MAIS]'))
 
-            break
+              break
+            }
           }
         }
-      }
 
-      //DATE
-      let noteDateContainer = document.createElement('div')
-      noteDateContainer.id = note.id + '-note-date-container'
-      noteDateContainer.classList.add('note-date-container')
+        //DATE
+        let noteDateContainer = document.createElement('div')
+        noteDateContainer.id = note.id + '-note-date-container'
+        noteDateContainer.classList.add('note-date-container')
 
-      let dateElement = document.createElement('p')
-      dateElement.id = note.id + '-date-element'
-      dateElement.appendChild(
-        document.createTextNode(
-          `Criado em: ${new Date(note.id).getDate()}/${findMonth(
-            new Date(note.id).getMonth()
-          )}/${new Date(note.id).getUTCFullYear()} às ${setTimeNumber(
-            new Date(note.id).getHours()
-          )}:${setTimeNumber(new Date(note.id).getMinutes())}`
-        )
-      )
-      if (note.editedAt != undefined) {
-        dateElement.appendChild(document.createElement('br'))
+        let dateElement = document.createElement('p')
+        dateElement.id = note.id + '-date-element'
         dateElement.appendChild(
           document.createTextNode(
-            `Última edição: ${new Date(note.editedAt).getDate()}/${findMonth(
-              new Date(note.editedAt).getMonth()
-            )}/${new Date(note.editedAt).getUTCFullYear()} às ${setTimeNumber(
-              new Date(note.editedAt).getHours()
-            )}:${setTimeNumber(new Date(note.editedAt).getMinutes())}`
+            `Criado em: ${new Date(note.id).getDate()}/${findMonth(
+              new Date(note.id).getMonth()
+            )}/${new Date(note.id).getUTCFullYear()} às ${setTimeNumber(
+              new Date(note.id).getHours()
+            )}:${setTimeNumber(new Date(note.id).getMinutes())}`
           )
         )
+        if (note.editedAt != undefined) {
+          dateElement.appendChild(document.createElement('br'))
+          dateElement.appendChild(
+            document.createTextNode(
+              `Última edição: ${new Date(note.editedAt).getDate()}/${findMonth(
+                new Date(note.editedAt).getMonth()
+              )}/${new Date(note.editedAt).getUTCFullYear()} às ${setTimeNumber(
+                new Date(note.editedAt).getHours()
+              )}:${setTimeNumber(new Date(note.editedAt).getMinutes())}`
+            )
+          )
+        }
+
+        //ACESSIBILIDADE
+
+        noteTextContainer.tabIndex = tabIndexCounter += 1
+        noteTextContainer.setAttribute('aria-label', 'Anotação:' + note.text)
+        noteTextContainer.setAttribute(
+          'onkeyup',
+          `if (event.key === 'Enter') { openNote(${note.id}); }`
+        )
+
+        //APPENDS
+        noteTextContainer.appendChild(textElement)
+        noteDateContainer.appendChild(dateElement)
+        noteTextContainer.appendChild(noteDateContainer)
+
+        noteContainer.appendChild(actionButtonsContainer)
+        noteContainer.appendChild(noteTextContainer)
+
+        readNotesList.appendChild(noteContainer)
       }
-
-      //ACESSIBILIDADE
-
-      noteTextContainer.tabIndex = tabIndexCounter += 1
-      noteTextContainer.setAttribute('aria-label', 'Anotação:' + note.text)
-      noteTextContainer.setAttribute(
-        'onkeyup',
-        `if (event.key === 'Enter') { openNote(${note.id}); }`
-      )
-
-      //APPENDS
-      noteTextContainer.appendChild(textElement)
-      noteDateContainer.appendChild(dateElement)
-      noteTextContainer.appendChild(noteDateContainer)
-
-      noteContainer.appendChild(actionButtonsContainer)
-      noteContainer.appendChild(noteTextContainer)
-
-      readNotesList.appendChild(noteContainer)
     }
 
     setTimeout(() => {
