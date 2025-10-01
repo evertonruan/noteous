@@ -32,6 +32,27 @@ let readOptions = document.querySelector('#read-options')
 let readOptionsSort = document.querySelector('#read-options-sort')
 let readNotesList = document.querySelector('#read-notes')
 
+// noteous 1.7: Botões de Ação
+
+//Variáveis para Botões de Ação
+let doneActionButton
+let shareActionButton
+let copyActionButton
+
+// Objeto usado em renderNote para retornar a variável conforme a chamada ao construir a lista
+const readNotesActionButtons = {
+  done: doneActionButton,
+  share: shareActionButton,
+  copy: copyActionButton
+}
+
+const readNotesActionButtonsIcons = {
+  done: 'check_circle',
+  share: 'shortcut',
+  copy: 'content_copy'
+}
+
+
 // VARIÁVEIS IMPORTANTES /////////////////////////////////////
 
 let currentVersion = 1.6
@@ -484,6 +505,7 @@ function loadNoteous(context) {
       noteousVersion: currentVersion,
       sort: 'recent',
       priority: 'solid',
+      actionButtons: ['done', 'share'],
       input: '',
       noteId: 0,
       look: { baseRem: '--base-rem: 100%;' }
@@ -800,15 +822,44 @@ function renderNote(context, noteId) {
       }
 
       //ACTION BUTTONS
+
       let actionButtonsContainer = document.createElement('div')
       actionButtonsContainer.id = note.id + '-action-buttons-container'
       actionButtonsContainer.classList.add('action-buttons-container')
 
-      //DELETE
-      let deleteActionButton = document.createElement('button')
-      deleteActionButton.classList.add('action-buttons', 'material-icons')
-      deleteActionButton.setAttribute('onclick', `deleteNote(${note.id})`)
-      deleteActionButton.appendChild(document.createTextNode('check_circle'))
+      for (let actionButton of noteousSettings.actionButtons) {
+
+          readNotesActionButtons[actionButton] = document.createElement('button')
+          readNotesActionButtons[actionButton].classList.add('action-buttons', 'material-icons')
+          readNotesActionButtons[actionButton].setAttribute('onclick', `${actionButton}Note(${note.id})`)
+          readNotesActionButtons[actionButton].appendChild(document.createTextNode(readNotesActionButtonsIcons[actionButton]))
+
+          //ACESSIBILIDADE
+          readNotesActionButtons[actionButton].tabIndex = tabIndexCounter += 1
+          if (actionButton == 'done') {
+            readNotesActionButtons[actionButton].setAttribute('aria-label', 'Concluir nota')
+            readNotesActionButtons[actionButton].setAttribute(
+              'onkeyup',
+              `if (event.key === 'Enter') { doneNote(${note.id}); }`
+            )
+          } else if (actionButton == 'share') {
+            readNotesActionButtons[actionButton].setAttribute('aria-label', 'Compartilhar nota')
+            readNotesActionButtons[actionButton].setAttribute(
+              'onkeyup',
+              `if (event.key === 'Enter') { shareNote(${note.id}); }`
+            )
+          }
+          else if (actionButton == 'copy') {
+            readNotesActionButtons[actionButton].classList.add('action-button-copy')
+            readNotesActionButtons[actionButton].setAttribute('aria-label', 'Copiar nota')
+            readNotesActionButtons[actionButton].setAttribute(
+              'onkeyup',
+              `if (event.key === 'Enter') { copyNote(${note.id}); }`
+            )
+          }
+
+          actionButtonsContainer.appendChild(readNotesActionButtons[actionButton])
+      }
 
       //NOTE TEXT
       let noteTextContainer = document.createElement('div')
@@ -879,15 +930,7 @@ function renderNote(context, noteId) {
         `if (event.key === 'Enter') { openNote(${note.id}); }`
       )
 
-      deleteActionButton.tabIndex = tabIndexCounter += 1
-      deleteActionButton.setAttribute('aria-label', 'Concluir nota')
-      deleteActionButton.setAttribute(
-        'onkeyup',
-        `if (event.key === 'Enter') { deleteNote(${note.id}); }`
-      )
-
       //APPENDS
-      actionButtonsContainer.appendChild(deleteActionButton)
       noteTextContainer.appendChild(textElement)
       noteDateContainer.appendChild(dateElement)
       noteTextContainer.appendChild(noteDateContainer)
@@ -919,15 +962,44 @@ function renderNote(context, noteId) {
         }
 
         //ACTION BUTTONS
+
         let actionButtonsContainer = document.createElement('div')
         actionButtonsContainer.id = note.id + '-action-buttons-container'
         actionButtonsContainer.classList.add('action-buttons-container')
 
-        //DELETE
-        let deleteActionButton = document.createElement('a')
-        deleteActionButton.classList.add('action-buttons', 'material-icons')
-        deleteActionButton.setAttribute('onclick', `deleteNote(${note.id})`)
-        deleteActionButton.appendChild(document.createTextNode('check_circle'))
+        for (let actionButton of noteousSettings.actionButtons) {
+
+            readNotesActionButtons[actionButton] = document.createElement('button')
+            readNotesActionButtons[actionButton].classList.add('action-buttons', 'material-icons')
+            readNotesActionButtons[actionButton].setAttribute('onclick', `${actionButton}Note(${note.id})`)
+            readNotesActionButtons[actionButton].appendChild(document.createTextNode(readNotesActionButtonsIcons[actionButton]))
+
+            //ACESSIBILIDADE
+            readNotesActionButtons[actionButton].tabIndex = tabIndexCounter += 1
+            if (actionButton == 'done') {
+              readNotesActionButtons[actionButton].setAttribute('aria-label', 'Concluir nota')
+              readNotesActionButtons[actionButton].setAttribute(
+                'onkeyup',
+                `if (event.key === 'Enter') { doneNote(${note.id}); }`
+              )
+            } else if (actionButton == 'share') {
+              readNotesActionButtons[actionButton].setAttribute('aria-label', 'Compartilhar nota')
+              readNotesActionButtons[actionButton].setAttribute(
+                'onkeyup',
+                `if (event.key === 'Enter') { shareNote(${note.id}); }`
+              )
+            }
+            else if (actionButton == 'copy') {
+              readNotesActionButtons[actionButton].classList.add('action-button-copy')
+              readNotesActionButtons[actionButton].setAttribute('aria-label', 'Copiar nota')
+              readNotesActionButtons[actionButton].setAttribute(
+                'onkeyup',
+                `if (event.key === 'Enter') { copyNote(${note.id}); }`
+              )
+            }
+
+            actionButtonsContainer.appendChild(readNotesActionButtons[actionButton])
+        }
 
         //NOTE TEXT
         let noteTextContainer = document.createElement('div')
@@ -998,15 +1070,7 @@ function renderNote(context, noteId) {
           `if (event.key === 'Enter') { openNote(${note.id}); }`
         )
 
-        deleteActionButton.tabIndex = tabIndexCounter += 1
-        deleteActionButton.setAttribute('aria-label', 'Concluir nota')
-        deleteActionButton.setAttribute(
-          'onkeyup',
-          `if (event.key === 'Enter') { deleteNote(${note.id}); }`
-        )
-
         //APPENDS
-        actionButtonsContainer.appendChild(deleteActionButton)
         noteTextContainer.appendChild(textElement)
         noteDateContainer.appendChild(dateElement)
         noteTextContainer.appendChild(noteDateContainer)
@@ -1178,6 +1242,28 @@ function deleteNote(noteId) {
 
   actionButtonsContainer.style.cssText = 'opacity: 0;'
   noteDateContainer.style.cssText = 'opacity: 0;'
+}
+
+//////////
+
+//SHARE NOTE
+function shareNote(noteId) {
+  for (let note of noteousMain) {
+    if (note.id === noteId) {
+      if (navigator.share) {
+        navigator
+          .share({
+            title: 'Anotação do noteous',
+            text: note.text
+          })
+          .then(() => console.log('Successful share'))
+          .catch((error) => console.log('Error sharing', error))
+      } else {
+        // fallback
+        alert('Seu navegador não suporta o recurso de compartilhamento.')
+      }
+    }
+  }
 }
 
 //////////
