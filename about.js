@@ -124,6 +124,9 @@ noteousTheme('retrieve-theme')
 
 //VERIFICADOR DE OPÇÃO ATIVA ///////
 function activeOptionVerifier() {
+  toggleActionButtonShare.checked = noteousSettings.actionButtons.includes('share')
+  toggleActionButtonCopy.checked = noteousSettings.actionButtons.includes('copy')
+  
   if (noteousSettings.look.baseRem == '--base-rem: 100%;') {
     baseRemOptionNormal.style.background = 'var(--base-buttons)'
     baseRemOptionBig.style.background = ''
@@ -144,14 +147,6 @@ function activeOptionVerifier() {
   } else if (noteousSettings.look.luminosity == 'dark') {
     optionDark.style.background = 'var(--base-buttons)'
     optionLight.style.background = ''
-  }
-
-  // Verificar botões de ação (toggles)
-  if (actionButtonShare) {
-    actionButtonShare.checked = noteousSettings.actionButtons.includes('share')
-  }
-  if (actionButtonCopy) {
-    actionButtonCopy.checked = noteousSettings.actionButtons.includes('copy')
   }
 
   if (copyDetailsSwitchVar == 0) {
@@ -203,35 +198,32 @@ optionDark.addEventListener('click', () => {
   activeOptionVerifier()
 })
 
-// CONFIGURAÇÃO --> BOTÕES DE AÇÃO //////
+// BOTÕES DE AÇÃO //////
 
-actionButtonShare.addEventListener('change', (e) => {
-  const enabled = e.target.checked
-  if (!enabled) {
-    noteousSettings.actionButtons = noteousSettings.actionButtons.filter(button => button !== 'share')
-  } else if (!noteousSettings.actionButtons.includes('share')) {
-    noteousSettings.actionButtons.push('share')
-  }
-  if (!noteousSettings.actionButtons.includes('done')) {
-    noteousSettings.actionButtons.unshift('done')
-  }
+toggleActionButtonShare.addEventListener('change', () => {
+    if (!noteousSettings.actionButtons.includes('share')) {
+      noteousSettings.actionButtons.push('share')
+    } else {
+      noteousSettings.actionButtons = noteousSettings.actionButtons.filter(actionButton => actionButton != 'share')
+    }
+  
   localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
   activeOptionVerifier()
 })
 
-actionButtonCopy.addEventListener('change', (e) => {
-  const enabled = e.target.checked
-  if (!enabled) {
-    noteousSettings.actionButtons = noteousSettings.actionButtons.filter(button => button !== 'copy')
-  } else if (!noteousSettings.actionButtons.includes('copy')) {
-    noteousSettings.actionButtons.push('copy')
-  }
-  if (!noteousSettings.actionButtons.includes('done')) {
-    noteousSettings.actionButtons.unshift('done')
-  }
+toggleActionButtonCopy.addEventListener('change', () => {
+    if (!noteousSettings.actionButtons.includes('copy')) {
+      noteousSettings.actionButtons.push('copy')
+    } else {
+      noteousSettings.actionButtons = noteousSettings.actionButtons.filter(actionButton => actionButton != 'copy')
+    }
+  
   localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
   activeOptionVerifier()
 })
+
+//////
+
 
 noteousTheme('retrieve-theme')
 
