@@ -28,8 +28,8 @@ let baseRemOptionSmall = document.querySelector('#baserem-small')
 let optionLight = document.querySelector('#luminosity-light')
 let optionDark = document.querySelector('#luminosity-dark')
 
-let actionButtonShare = document.querySelector('#action-button-share')
-let actionButtonCopy = document.querySelector('#action-button-copy')
+let toggleActionButtonShare = document.querySelector('#toggle-action-button-share')
+let toggleActionButtonCopy = document.querySelector('#toggle-action-button-copy')
 
 let viewDoneNotesButton = document.querySelector('#view-done-notes')
 
