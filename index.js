@@ -1189,7 +1189,6 @@ writeInput.addEventListener('input', () => {
 
 //////////
 
-//APAGAR NOTA
 let timeoutID
 function doneNote(noteId) {
   timeoutID = setTimeout(() => {
@@ -1245,7 +1244,6 @@ function doneNote(noteId) {
 
 //////////
 
-//SHARE NOTE
 function shareNote(noteId) {
   for (let note of noteousMain) {
     if (note.id === noteId) {
@@ -1267,7 +1265,36 @@ function shareNote(noteId) {
 
 //////////
 
-//ABRIR NOTA
+function copyNote(noteId) {
+  for (let note of noteousMain) {
+    if (note.id === noteId) {
+      navigator.clipboard.writeText(note.text)
+        .then(() => {
+          
+          const textElement = document.getElementById(noteId + '-text')
+          const noteTextContainer = document.getElementById(noteId + '-text-container')
+          if (!textElement || !noteTextContainer) return
+
+          const originalNoteText = textElement.innerHTML
+
+          textElement.innerHTML = '<strong>✓ Texto da nota copiado</strong>'
+          textElement.setAttribute('aria-label', 'Texto da nota copiado')
+          noteTextContainer.ariaLive = 'assertive'
+
+          setTimeout(() => {
+            textElement.innerHTML = originalNoteText
+            
+            noteTextContainer.ariaLive = undefined
+          }, 1500)
+        })
+        .catch((error) => console.log('Erro ao copiar nota', error))
+    }
+  }
+}
+
+//////////
+
+
 function openNote(noteId) {
   editMode = true
   for (let note of noteousMain) {
