@@ -238,6 +238,12 @@ html {
     var(--lum-front),
     1
   );
+  --base-options-toggle: hsla(
+    var(--hue),
+    var(--accent-saturation),
+    calc(-12% + var(--lum-front-inverse)),
+    1
+  );
 }
 
 /*NAV (TODAS AS PÁGINAS)*/
@@ -628,6 +634,10 @@ a {
   outline: 0;
 }
 
+#index .action-button-copy {
+  font-size: 1.7rem;
+}
+
 #section-read .note-text-container,
 #modal .note-text-container {
   display: flex;
@@ -856,6 +866,72 @@ footer p span {
   background-color: var(--base-color);
 
   cursor: pointer;
+}
+
+.toggle {
+  display: inline-flex;
+  width: fit-content;
+  align-items: center;
+  gap: 0.9rem;
+  margin-top: 5px;
+  padding: 0.2rem 0.5rem;
+  border: 1px solid var(--base-text);
+  border-radius: 2rem;
+  background-color: var(--base-color);
+  color: var(--base-text);
+  cursor: pointer;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+.toggle-text {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 1.1rem;
+  font-family: 'Merriweather Sans', sans-serif;
+}
+
+.toggle-input {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.toggle-slider {
+  position: relative;
+  width: 2.5rem;
+  height: 1.4rem;
+  background: var(--base-options-toggle);
+  border-radius: 10px;
+  transition: background 0.2s ease, box-shadow 0.2s ease;
+}
+
+.toggle-slider::after {
+  content: '';
+  position: absolute;
+  top: 0.15rem;
+  left: 0.15rem;
+  width: 1.1rem;
+  height: 1.1rem;
+  border-radius: 50%;
+  background: var(--base-text);
+  transition: transform 0.2s ease;
+}
+
+.toggle-input:checked + .toggle-slider {
+  background: var(--base-buttons);
+}
+
+.toggle-input:checked + .toggle-slider::after {
+  transform: translateX(1.1rem);
+}
+
+.settings-info {
+  font-size: 0.9rem;
+  margin-top: 0.5rem;
+  opacity: 0.8;
 }
 
 .about-section {
