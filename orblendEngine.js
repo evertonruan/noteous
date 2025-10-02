@@ -61,6 +61,8 @@ function orblendEngine(context) {
     }
     infoPanel.innerHTML = ''
     infoPanel.append(dateElement(), infoElement(subcontext, getRandom()))
+    // Ensure install button is present if eligible after info panel refresh
+    placeInstallButton()
   } else if (context == 'load') {
     //Backup Inteligente de Nota
     //Verifica se há uma nota não salva
@@ -102,6 +104,8 @@ function orblendEngine(context) {
     }
     infoPanel.innerHTML = ''
     infoPanel.append(dateElement(), infoElement(subcontext, getRandom()))
+    // Ensure install button is present if eligible on first load
+    placeInstallButton()
   } else if (context == 'on-change-input') {
     //Habilitar/Desabilitar Botão Adicionar Nota
     if (writeInput.value === '') {

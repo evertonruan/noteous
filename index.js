@@ -6,6 +6,85 @@ function serviceWorkerRegister() {
     }
 }
 
+
+// PWA INSTALL /////////////////////////////////
+// Holds the deferred prompt event provided by the browser
+let deferredInstallPrompt = null
+
+// Utility: check if app already installed (standalone or iOS PWA)
+function isAppInstalled() {
+  return (
+    window.matchMedia && window.matchMedia('(display-mode: standalone)').matches
+  ) || (navigator.standalone === true)
+}
+
+// Create or ensure the Install button exists inside #info-panel
+function placeInstallButton() {
+  const panel = document.querySelector('#info-panel')
+  if (!panel) return
+  // Only show when we have a deferred prompt and the app is not installed
+  if (!deferredInstallPrompt || isAppInstalled()) {
+    const maybeBtn = panel.querySelector('#install-button') || document.querySelector('#install-button')
+    if (maybeBtn) maybeBtn.remove()
+    return
+  }
+
+  // If infoPanel was re-rendered, we need to re-append the button
+  const existing = document.querySelector('#install-button')
+  if (existing) {
+    // Ensure it's visible and inside the current infoPanel
+    if (existing.parentElement !== panel) {
+      existing.remove()
+      panel.appendChild(existing)
+    }
+    existing.style.display = 'inline-block'
+    return
+  }
+
+  const installBtn = document.createElement('button')
+  installBtn.id = 'install-button'
+  // Reuse existing visual style for greeting buttons
+  installBtn.classList.add('greeting-buttons')
+  installBtn.textContent = 'Instalar noteous'
+  installBtn.addEventListener('click', async () => {
+    try {
+      installBtn.disabled = true
+      // Show the browser install prompt
+      deferredInstallPrompt.prompt()
+      const { outcome } = await deferredInstallPrompt.userChoice
+      // Clear the saved event regardless of outcome
+      deferredInstallPrompt = null
+      if (outcome === 'accepted') {
+        // Hide button; appinstalled event will also fire
+        const b = document.querySelector('#install-button')
+        if (b) b.remove()
+      } else {
+        // If dismissed, we can enable again to allow retry later
+        installBtn.disabled = false
+      }
+    } catch (e) {
+      // On any error, allow retry later
+      installBtn.disabled = false
+    }
+  })
+
+  panel.appendChild(installBtn)
+}
+
+// Listen for the install prompt and show the button
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault()
+  deferredInstallPrompt = e
+  placeInstallButton()
+})
+
+// When app is installed, remove the button
+window.addEventListener('appinstalled', () => {
+  deferredInstallPrompt = null
+  const btn = document.querySelector('#install-button')
+  if (btn) btn.remove()
+})
+
 // ELEMENTOS /////////////////////////////////////
 let body = document.querySelector('body')
 
