@@ -1,4 +1,4 @@
-![noteous-presenting](https://github.com/user-attachments/assets/83ee9f04-c4d9-4ca4-b23a-2e8520b88873)
+![noteous-presenting-cp](https://github.com/user-attachments/assets/14ea66ea-9d52-4112-b05f-e78289702ea5)
 
 # Bem-vindo ao repositório do noteous
 ### noteous é um web app simples de notas e lembretes
