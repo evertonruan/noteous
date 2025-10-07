@@ -543,7 +543,6 @@ a {
 #read-options {
   display: flex;
   align-items: center;
-  justify-content: end;
   margin: 10px 10px;
   height: 2rem;
   border-radius: 10px;
@@ -551,48 +550,65 @@ a {
   transition: all 0.4s cubic-bezier(0.075, 0.82, 0.165, 1);
 }
 
-#read-options-orientation {
+#read-options-container {
   display: flex;
+  flex-grow: 1;
+  align-items: center;
+}
+
+#read-options-label {
+  margin-left: 15px;
+  font-size: 0.7rem;
+  line-height: 12px;
   color: var(--base-text);
-  
+  opacity: 60%;
+  transition: opacity 0.3s ease-in-out;
+}
+
+#read-options-search-input {
+  margin: 0 5px;
+  width: 100%;
+  padding: 0.2rem 0.5rem;
+  border: 1px solid var(--base-text);
+  border-radius: 8px;
+  outline: none;
+  font-size: 0.8rem;
+  font-family: 'Merriweather Sans', sans-serif;
+  color: var(--base-text);
+  background-color: var(--base-color);
+  transition: opacity 0.3s ease-in-out;
+}
+
+.hidden-element {
+  display: none;
+}
+
+#read-options-buttons-container {
+  display: flex;
+  margin-left: auto;
+  padding-right: 10px;
+  align-items: center;
+  gap: 1rem;
+}
+
+.read-options-buttons {
+  width: 30px;
+  height: auto;
+  font-size: 1rem;
+  align-self: center;
   color: var(--base-text);
   background-color: transparent;
-  font-size: 1rem;
-
-  margin: 0 1rem;
   -webkit-user-select: none;
   user-select: none;
   cursor: pointer;
 }
 
-#read-options-sort {
-  display: flex;
-  color: var(--base-text);
-
-  font-family: 'Merriweather Sans', sans-serif;
-  color: var(--base-text);
-  background-color: transparent;
-  font-size: 1.5rem;
-
-  margin: 0 1rem;
-  -webkit-user-select: none;
-  user-select: none;
-  cursor: pointer;
+#index .active-button {
+  background-color: var(--base-buttons);
 }
 
-#read-options-sort-action {
-  display: flex;
-  color: var(--base-text);
-
-  font-family: 'Merriweather Sans', sans-serif;
-  color: var(--base-text);
-  background-color: transparent;
-  font-size: 1rem;
-
-  margin: 0 1rem;
-  -webkit-user-select: none;
-  user-select: none;
-  cursor: pointer;
+#read-options-search {
+  border-radius: 25%;
 }
 
 #read-notes-container {

@@ -109,6 +109,9 @@ let writeButtonCancelEdit = document.querySelector('#write-button-cancel')
 let readSection = document.querySelector('#section-read')
 let readPanel = document.querySelector('#read-panel')
 let readOptions = document.querySelector('#read-options')
+let readOptionsLabel = document.querySelector('#read-options-label')
+let readOptionsSearchInput = document.querySelector('#read-options-search-input')
+let readOptionsSearch = document.querySelector('#read-options-search')
 let readOptionsSort = document.querySelector('#read-options-sort')
 let readOptionsSortActionButton = document.querySelector('#read-options-sort-action')
 let readOptionsOrientationButton = document.querySelector('#read-options-orientation')
@@ -161,6 +164,7 @@ let noteIdEdit //usada para confirmar qual nota está sendo editada
 let editMode = false
 let tabIndexCounter = 10
 let sortActionSelection = ''
+let labelTimeoutId = null // Para controlar o timeout da label
 
 //função em variável para 'desbloquear' writeInput se tela é pequena
 //usado em openNote() e exitEditMode()
@@ -168,6 +172,36 @@ let writeInputEdit = function (event) {
   writeInput.removeAttribute('readonly')
   writeInput.focus()
   labelWrite.innerHTML = '📝 Edite aqui sua nota'
+}
+
+// Função para mostrar temporariamente uma mensagem no read-options-label
+function readOptionsMessage(message) {
+  // Limpa qualquer timeout anterior
+  if (labelTimeoutId) {
+    clearTimeout(labelTimeoutId)
+  }
+  
+  // Fade out
+  readOptionsLabel.style.opacity = '0'
+  
+  setTimeout(() => {
+    // Muda o texto
+    readOptionsLabel.textContent = message
+    
+    // Fade in
+    readOptionsLabel.style.opacity = '0.6'
+    
+    // Aguarda 1s e faz fade out + volta ao texto original
+    labelTimeoutId = setTimeout(() => {
+      readOptionsLabel.style.opacity = '0'
+      
+      setTimeout(() => {
+        readOptionsLabel.textContent = 'Opções de organização'
+        readOptionsLabel.style.opacity = '0.6'
+        labelTimeoutId = null
+      }, 200)
+    }, 1500)
+  }, 200)
 }
 
 ////////
@@ -740,6 +774,46 @@ writeOptions.addEventListener('click', () => {
 
 //////////
 
+function toggleReadOptionsSearch() {
+  if (readOptionsSearchInput.classList.contains('hidden-element')) {
+    // Fade out label
+    readOptionsLabel.style.opacity = '0'
+    readOptionsSearch.classList.add('active-button')
+
+    setTimeout(() => {
+      readOptionsSearchInput.classList.remove('hidden-element')
+      readOptionsLabel.classList.add('hidden-element')
+      
+      // Inicia o search input com opacity 0 e depois fade in
+      readOptionsSearchInput.style.opacity = '0'
+      setTimeout(() => {
+        readOptionsSearchInput.style.opacity = '1'
+      }, 10)
+    }, 200)
+  } else {
+    // Fade out search input
+    readOptionsSearchInput.style.opacity = '0'
+    readOptionsSearch.classList.remove('active-button')
+    
+    setTimeout(() => {
+      readOptionsSearchInput.classList.add('hidden-element')
+      readOptionsLabel.classList.remove('hidden-element')
+      
+      // Inicia o label com opacity 0 e depois fade in
+      readOptionsLabel.style.opacity = '0'
+      setTimeout(() => {
+        readOptionsLabel.style.opacity = '0.6'
+      }, 10)
+    }, 200)
+  }
+}
+
+readOptionsSearch.addEventListener('click', () => {
+  toggleReadOptionsSearch()
+})
+
+//////////
+
 function priorityListsOrientation(context) {
   if (context == 'retrieveOrientation') {
     if (noteousSettings.priorityOrientation == 'row') {
@@ -769,6 +843,12 @@ function priorityListsOrientation(context) {
     localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings));
     // Atualiza a interface após a troca
     priorityListsOrientation('retrieveOrientation');
+    
+    // Mostra a orientação atual no label
+    const orientationText = noteousSettings.priorityOrientation == 'row' 
+      ? 'Orientação: Horizontal' 
+      : 'Orientação: Vertical'
+    readOptionsMessage(orientationText)
   }
 }
 
@@ -779,10 +859,10 @@ readOptionsOrientationButton.addEventListener('click', () => {
 function readOptionsSortActionButtonText() {
   if (noteousSettings.sort.action == 'editedAt') {
     readOptionsSortActionButton.innerHTML = ''
-    readOptionsSortActionButton.append(document.createTextNode('Edição'))
+    readOptionsSortActionButton.append(document.createTextNode('edit_note'))
   } else if (noteousSettings.sort.action == 'id') {
     readOptionsSortActionButton.innerHTML = ''
-    readOptionsSortActionButton.append(document.createTextNode('Criação'))
+    readOptionsSortActionButton.append(document.createTextNode('post_add'))
   }
 }
 
@@ -798,7 +878,7 @@ function sortNotes(context, subcontext) {
       noteousMain.sort((a, b) => b[noteousSettings.sort.action] - a[noteousSettings.sort.action])
       
       readOptionsSort.innerHTML = ''
-      readOptionsSort.append(document.createTextNode('↓'))
+      readOptionsSort.append(document.createTextNode('arrow_downward'))
       readOptionsSortActionButtonText()
 
 
@@ -806,7 +886,7 @@ function sortNotes(context, subcontext) {
       noteousMain.sort((a, b) => a[noteousSettings.sort.action] - b[noteousSettings.sort.action])
       
       readOptionsSort.innerHTML = ''
-      readOptionsSort.append(document.createTextNode('↑'))
+      readOptionsSort.append(document.createTextNode('arrow_upward'))
       readOptionsSortActionButtonText()
     }
 
@@ -816,10 +896,12 @@ function sortNotes(context, subcontext) {
       if (noteousSettings.sort.action == 'editedAt') {
           noteousSettings.sort.action = 'id' // Troca ordem de notas pela Criação
           localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
+          readOptionsMessage('Ordenar por: Criação')
         
       } else if (noteousSettings.sort.action == 'id') {
           noteousSettings.sort.action = 'editedAt' // Troca ordem de notas pela Edição
           localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
+          readOptionsMessage('Ordenar por: Edição')
       }
       sortNotes('retrieveSort')
 
@@ -834,8 +916,10 @@ function sortNotes(context, subcontext) {
 
       readOptionsSort.innerHTML = ''
       readOptionsSort.append(
-        document.createTextNode('↑')
+        document.createTextNode('arrow_upward')
       )
+      
+      readOptionsMessage('Ordem: Mais antigas primeiro')
       
       // Ordem: Antigo para recente
       noteousMain.sort((a, b) => a[noteousSettings.sort.action] - b[noteousSettings.sort.action])
@@ -850,7 +934,9 @@ function sortNotes(context, subcontext) {
       readOptionsSortActionButtonText()
 
       readOptionsSort.innerHTML = ''
-      readOptionsSort.append(document.createTextNode('↓'))
+      readOptionsSort.append(document.createTextNode('arrow_downward'))
+      
+      readOptionsMessage('Ordem: Mais recentes primeiro')
       
       // Ordem: Recente para antigo
       noteousMain.sort((a, b) => b[noteousSettings.sort.action] - a[noteousSettings.sort.action])
