@@ -774,6 +774,8 @@ writeOptions.addEventListener('click', () => {
 
 //////////
 
+
+//noteous preview 1.9: Elemento Buscar
 function toggleReadOptionsSearch() {
   if (readOptionsSearchInput.classList.contains('hidden-element')) {
     // Fade out label
@@ -810,6 +812,10 @@ function toggleReadOptionsSearch() {
 
 readOptionsSearch.addEventListener('click', () => {
   toggleReadOptionsSearch()
+})
+
+readOptionsSearchInput.addEventListener('input', () => {
+  renderNote('render-all', '', readOptionsSearchInput.value)
 })
 
 //////////
@@ -954,7 +960,7 @@ readOptionsSortActionButton.addEventListener('click', () => {
 
 //////////
 
-function renderNote(context, noteId, priority) {
+function renderNote(context, noteId, searchTerm) {
 
   //ESSE CONTEXTO É USADO AO CARREGAR A PÁGINA, RENDERIZANDO TODAS AS NOTAS
 
@@ -981,7 +987,8 @@ function renderNote(context, noteId, priority) {
 
       for (let note of noteousMain) {
         // Verifica se a nota atual pertence à lista de prioridade que está sendo criada. A ordem das notas dentro da lista é definida por sortNotes(). Ou seja: noteousMain já vem ordenado pelo sortNotes()
-        if (note.priority == priority && note.done != true) {
+        //noteous preview 1.9: ao renderizar todas as notas, se houver termo de busca, filtra as notas que contêm o termo (sem diferenciar maiúsculas e minúsculas)
+        if (note.priority == priority && note.done != true && (searchTerm == undefined || note.text.toLowerCase().includes(searchTerm.toLowerCase()))) {
           let noteContainer = document.createElement('div')
           noteContainer.id = note.id + '-note-container'
           noteContainer.classList.add('note-container')
@@ -1057,7 +1064,7 @@ function renderNote(context, noteId, priority) {
           textElement.appendChild(document.createTextNode(noteCharAt))
           count = count + 1
           
-          //"Ir escrevendo" cada caractere até chegar o 30º
+          //"Ir escrevendo" cada caractere até chegar o 30º ou até a altura da nota ser 200px
           if (count == 200 || noteContainer.offsetHeight >= 200){
             
             textElement.append(document.createTextNode(' ...'))
