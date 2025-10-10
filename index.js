@@ -102,6 +102,7 @@ let writeOptions = document.querySelector('#write-options')
 let labelWrite = document.querySelector('#write-label')
 let writeInput = document.querySelector('#write-input')
 let writeButtonAdd = document.querySelector('#write-button-add')
+let writeButtonDismiss = document.querySelector('#write-button-dismiss')
 let writeButtonEdit = document.querySelector('#write-button-edit')
 let writeButtonCancelEdit = document.querySelector('#write-button-cancel')
 
@@ -1382,6 +1383,14 @@ writeButtonAdd.addEventListener('click', addNote)
 
 writeInput.addEventListener('input', () => {
   orblendEngine('on-change-input')
+})
+
+writeButtonDismiss.addEventListener('click', () => {
+  writeInput.value = ''
+  noteousSettings.input = ''
+  localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
+  writeButtonDismiss.classList.add('hidden-element')
+  writeInput.focus()
 })
 
 //////////

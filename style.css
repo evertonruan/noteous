@@ -515,6 +515,12 @@ a {
   transform: scale(0.95);
 }
 
+#write-button-dismiss {
+  line-height: 0;
+  padding-left: 12px;
+  padding-right: 12px;
+}
+
 /*-----SECTION-READ-----*/
 
 #section-read {
@@ -579,7 +585,7 @@ a {
   transition: opacity 0.3s ease-in-out;
 }
 
-.hidden-element {
+#index .hidden-element {
   display: none;
 }
 

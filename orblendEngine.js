@@ -71,12 +71,10 @@ function orblendEngine(context) {
         openNote(noteousSettings.noteId)
         writeInput.value = noteousSettings.input
       } else {
-        if (confirm('Há uma nota não salva. Deseja recuperá-la?')) {
-          writeInput.value = noteousSettings.input
-          writeInput.focus()
-        } else {
-          noteousSettings.input = ''
-        }
+        labelWrite.innerHTML = '✏️ Continue escrevendo sua nota'
+        writeInput.value = noteousSettings.input
+        writeInput.focus() 
+        writeButtonDismiss.classList.remove('hidden-element')
       }
     }
 
