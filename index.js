@@ -1538,6 +1538,22 @@ function openNote(noteId) {
 
 //////////
 
+function toggleEditButtons(noteText) {
+  if (editMode == true) {
+    console.log(noteText)
+    console.log("writeInput" + writeInput.value)
+    if (writeInput.value == noteText) {
+      writeButtonEdit.setAttribute('hidden', 'true')
+      writeButtonCancelEdit.removeAttribute('hidden')
+      notePriority('retrievePriorityBlurInput', noteousSettings.priority)
+    } else if (writeInput.value != noteText) {
+      writeButtonEdit.removeAttribute('hidden')
+      writeButtonCancelEdit.removeAttribute('hidden')
+      notePriority('retrievePriority', noteousSettings.priority)
+    }
+  }
+}
+
 function editNote(noteId) {
   for (let note of noteousMain) {
     noteIdEdit = noteId
@@ -1556,18 +1572,14 @@ function editNote(noteId) {
       writeInput.value = note.text //coloca o texto da nota dentro do campo de input
 
       writeInput.addEventListener('input', () => {
-        if (editMode == true) {
-          if (writeInput.value == note.text) {
-            writeButtonEdit.setAttribute('hidden', 'true')
-            writeButtonCancelEdit.removeAttribute('hidden')
-            notePriority('retrievePriorityBlurInput', noteousSettings.priority)
-          } else if (writeInput.value != note.text) {
-            writeButtonEdit.removeAttribute('hidden')
-            writeButtonCancelEdit.removeAttribute('hidden')
-            notePriority('retrievePriority', noteousSettings.priority)
-          }
-        }
+        toggleEditButtons(note.text)
       })
+
+      //orblendEngine: Backup Inteligente de Nota
+      if (noteousSettings.noteId != 0) {
+        toggleEditButtons(noteousSettings.input)
+        labelWrite.innerHTML = '📝 Continue sua edição'
+      }
 
       //Se durante Modo de edição clicar em "Confirmar edição"
       writeButtonEdit.addEventListener('click', () => {

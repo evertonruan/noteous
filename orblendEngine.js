@@ -68,13 +68,8 @@ function orblendEngine(context) {
     //Verifica se há uma nota não salva
     if (noteousSettings.input != '') {
       if (noteousSettings.noteId != 0) {
-        if (confirm('Você estava editando uma nota, deseja recuperá-la?')) {
-          openNote(noteousSettings.noteId)
-          writeInput.value = noteousSettings.input
-        } else {
-          noteousSettings.input = ''
-          noteousSettings.noteId = 0
-        }
+        openNote(noteousSettings.noteId)
+        writeInput.value = noteousSettings.input
       } else {
         if (confirm('Há uma nota não salva. Deseja recuperá-la?')) {
           writeInput.value = noteousSettings.input
