@@ -99,7 +99,7 @@ let infoPanel = document.querySelector('#info-panel')
 
 let writeOptions = document.querySelector('#write-options')
 
-let labelWrite = document.querySelector('#write-label')
+let writeLabel = document.querySelector('#write-label')
 let writeInput = document.querySelector('#write-input')
 let writeButtonAdd = document.querySelector('#write-button-add')
 let writeButtonDismiss = document.querySelector('#write-button-dismiss')
@@ -172,7 +172,6 @@ let labelTimeoutId = null // Para controlar o timeout da label
 let writeInputEdit = function (event) {
   writeInput.removeAttribute('readonly')
   writeInput.focus()
-  labelWrite.innerHTML = '📝 Edite aqui sua nota'
 }
 
 // Função para mostrar temporariamente uma mensagem no read-options-label
@@ -1385,9 +1384,11 @@ writeInput.addEventListener('input', () => {
   orblendEngine('on-change-input')
 })
 
+// noteous preview 1.9: nova experiência ao sair sem salvar uma nota
 writeButtonDismiss.addEventListener('click', () => {
   writeInput.value = ''
   noteousSettings.input = ''
+  orblendEngine('on-change-input')
   localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
   writeButtonDismiss.classList.add('hidden-element')
   writeInput.focus()
@@ -1516,8 +1517,8 @@ function openNote(noteId) {
     writeInput.setAttribute('readonly', true)
     writeInput.focus()
     writeButtonCancelEdit.removeAttribute('hidden')
-    labelWrite.innerHTML = '📄 Veja aqui sua nota'
     editNote(noteId)
+    orblendEngine('', 'open-note')
 
     //Acessibilidade e Experiência do usuário: Quando o tamanho de tela é inferior a 600px, ao clicar em uma nota, a função openNote() torna readonly a caixa de texto (writeInput) para que o teclado não apareça e confunda a experiência. Ao dar um toque, a caixa é liberada para edição. PROBLEMA: Quando o recurso TalkBack (do Android) é utilizado, não é possível reconhecer o toque na caixa de texto (writeInput). Talvez isso ocorra porque a acessibilidade do Android desative o "clique" em uma caixa de texto readonly.
     //SOLUÇÃO: capturar posição do writeInput e da posição do mouse e verificar se o clique está dentro dessa área. Se estiver, desbloquear o input para edição.
@@ -1533,6 +1534,7 @@ function openNote(noteId) {
           && clickY > writeInputPosition.top && clickY < writeInputPosition.bottom
         ) {
           writeInputEdit()
+          orblendEngine('', 'edit-note')
         }
       }
     })
@@ -1540,7 +1542,6 @@ function openNote(noteId) {
   } else if (window.screen.width >= 601) {
     writeInput.focus()
     writeButtonCancelEdit.removeAttribute('hidden')
-    labelWrite.innerHTML = '📝 Edite aqui sua nota'
     editNote(noteId)
   }
 }
@@ -1548,9 +1549,8 @@ function openNote(noteId) {
 //////////
 
 function toggleEditButtons(noteText) {
+  //Controla a exibição dos botões de edição (confirmar e cancelar) conforme o texto do input
   if (editMode == true) {
-    console.log(noteText)
-    console.log("writeInput" + writeInput.value)
     if (writeInput.value == noteText) {
       writeButtonEdit.setAttribute('hidden', 'true')
       writeButtonCancelEdit.removeAttribute('hidden')
@@ -1567,27 +1567,28 @@ function editNote(noteId) {
   for (let note of noteousMain) {
     noteIdEdit = noteId
     if (note.id === noteId) {
-      //Entra no Modo de edição
       editMode = true
       writeOptions.classList.add('edit-mode')
       writeInput.classList.add('edit-mode')
-      readSection.classList.add('edit-mode') //coloca a seção de leitura das nota no modo de edição (que desabilita as ações das notas enquanto uma nota está sendo editada)
+      readSection.classList.add('edit-mode')
       writePanel.classList.add('edit-mode')
 
       infoPanel.innerHTML = ''
 
       writeButtonAdd.setAttribute('hidden', 'true')
 
-      writeInput.value = note.text //coloca o texto da nota dentro do campo de input
-
+      writeInput.value = note.text
+      
       writeInput.addEventListener('input', () => {
         toggleEditButtons(note.text)
       })
 
-      //orblendEngine: Backup Inteligente de Nota
+      orblendEngine('', 'edit-note')
+      
+      //orblendEngine: Backup Inteligente de Nota: Edição: Configuração dos botões de edição 
       if (noteousSettings.noteId != 0) {
+        orblendEngine('', 'continue-editing')
         toggleEditButtons(noteousSettings.input)
-        labelWrite.innerHTML = '📝 Continue sua edição'
       }
 
       //Se durante Modo de edição clicar em "Confirmar edição"
@@ -1652,5 +1653,4 @@ function exitEditMode() {
   writeButtonAdd.disabled = true
   writeButtonEdit.setAttribute('hidden', 'true')
   writeButtonCancelEdit.setAttribute('hidden', 'true')
-  labelWrite.innerHTML = 'Qual o próximo passo?'
 }

@@ -1,4 +1,4 @@
-function orblendEngine(context) {
+function orblendEngine(context, labelMessage) {
   let subcontext
 
   const getRandom = () => {
@@ -45,6 +45,28 @@ function orblendEngine(context) {
     return infoElementTip
   }
 
+  if (context == '' && labelMessage != '') {
+    //Utiliza função setWriteLabel se não houver contexto mas houver mensagem de label 
+    setWriteLabel(labelMessage)
+  }
+  
+  function setWriteLabel(labelMessage) {
+    // noteous preview 1.9: writeLabel agora é controlado pelo Orblend Engine
+    if (labelMessage == 'continue-editing') {
+      writeLabel.innerHTML = '✏️ Continue escrevendo sua nota'
+    } else if (labelMessage == 'add-note'){
+      writeLabel.innerHTML = '📝 Adicione sua próxima nota'
+    } else if (labelMessage == 'edit-note') {
+      writeLabel.innerHTML = '✏️ Edite aqui sua nota'
+    } else if (labelMessage == 'open-note') {
+      writeLabel.innerHTML = '📃 Veja sua nota'
+    } else if (labelMessage == 'start-note') {
+      writeLabel.innerHTML = 'Qual o próximo passo?'
+    } else if (labelMessage == 'restore-note') {
+      writeLabel.innerHTML = '📝 Essa nota não foi adicionada'
+    }
+  }
+
   if (context == 'change') {
     //exibir/ocultar readOptions
     if (noteousMain.length > 1) {
@@ -65,13 +87,15 @@ function orblendEngine(context) {
     placeInstallButton()
   } else if (context == 'load') {
     //Backup Inteligente de Nota
-    //Verifica se há uma nota não salva
+    
     if (noteousSettings.input != '') {
+      //Há uma nota não salva
       if (noteousSettings.noteId != 0) {
+        //Há uma nota em edição
         openNote(noteousSettings.noteId)
         writeInput.value = noteousSettings.input
       } else {
-        labelWrite.innerHTML = '✏️ Continue escrevendo sua nota'
+        orblendEngine('', 'restore-note')
         writeInput.value = noteousSettings.input
         writeInput.focus() 
         writeButtonDismiss.classList.remove('hidden-element')
@@ -102,9 +126,14 @@ function orblendEngine(context) {
   } else if (context == 'on-change-input') {
     //Habilitar/Desabilitar Botão Adicionar Nota
     if (writeInput.value === '') {
+      setWriteLabel('start-note')
+      writeButtonDismiss.classList.add('hidden-element')
       writeButtonAdd.disabled = true
       writeButtonAdd.setAttribute('aria-hidden', 'true')
     } else {
+      if (noteousSettings.input == '' && editMode == false) {
+        setWriteLabel('add-note')
+      } 
       writeButtonAdd.disabled = false
       writeButtonAdd.setAttribute('aria-hidden', 'false')
     }
