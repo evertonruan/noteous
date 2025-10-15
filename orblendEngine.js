@@ -69,23 +69,21 @@ function orblendEngine(context, labelMessage) {
 
   if (context == 'change') {
     //exibir/ocultar readOptions
-    if (noteousMain.length > 1) {
-      readOptionsSort.style.cssText = 'opacity: 1'
+    if (readNotesContainer.clientHeight < 30 && readOptionsSearchInput.value == '') {
+      readOptions.classList.add('hidden-element')
+      subcontext = 'no-notes'
     } else {
-      readOptionsSort.style.cssText = 'opacity: 0'
+      readOptions.classList.remove('hidden-element')
+      subcontext = 'has-notes'
     }
 
     //Configurar informações
-    if (noteousMain.length > 0) {
-      subcontext = 'has-notes'
-    } else {
-      subcontext = 'no-notes'
-    }
     infoPanel.innerHTML = ''
     infoPanel.append(dateElement(), infoElement(subcontext, getRandom()))
     // Ensure install button is present if eligible after info panel refresh
     placeInstallButton()
   } else if (context == 'load') {
+    
     //Backup Inteligente de Nota
     
     if (noteousSettings.input != '') {
