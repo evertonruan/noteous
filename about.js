@@ -47,6 +47,9 @@ let cupcake = document.querySelector('#cupcake')
 let cupcakeOutline = document.querySelector('#cupcake-outline')
 let label = document.querySelector('#gen-child-2')
 
+// ELEMENTOS DO DRAG-DROP DE PRIORIDADE
+let priorityContainer = document.querySelector('#priority-order-container')
+
 ///////
 
 function navLink() {
@@ -160,9 +163,109 @@ function activeOptionVerifier() {
     copyOpenButton.style.background = 'var(--base-buttons)'
     copyCreateButton.style.background = ''
   }
+  
+  // Atualiza a ordem das prioridades na interface
+  if (priorityContainer && noteousSettings.priorityOrder) {
+    updatePriorityNumbers()
+  }
 }
 
 activeOptionVerifier()
+
+//////
+
+// SISTEMA DE DRAG-DROP PARA PRIORIDADES //////
+let draggedElement = null
+
+function initPriorityDragDrop() {
+  if (!priorityContainer) return
+  
+  const items = priorityContainer.querySelectorAll('.priority-item')
+  items.forEach(item => {
+    item.addEventListener('dragstart', e => {
+      draggedElement = item
+      item.classList.add('dragging')
+    })
+    
+    item.addEventListener('dragover', e => e.preventDefault())
+    
+    item.addEventListener('dragenter', e => {
+      if (item !== draggedElement) item.classList.add('drag-over')
+    })
+    
+    item.addEventListener('dragleave', e => item.classList.remove('drag-over'))
+    
+    item.addEventListener('drop', e => {
+      e.preventDefault()
+      if (item !== draggedElement) swapPriorities(draggedElement, item)
+      item.classList.remove('drag-over')
+    })
+    
+    item.addEventListener('dragend', e => {
+      items.forEach(i => i.classList.remove('dragging', 'drag-over'))
+      draggedElement = null
+    })
+  })
+  
+  updatePriorityNumbers()
+}
+
+function swapPriorities(from, to) {
+  const fromPriority = from.dataset.priority
+  const toPriority = to.dataset.priority
+  const fromIndex = noteousSettings.priorityOrder.indexOf(fromPriority)
+  const toIndex = noteousSettings.priorityOrder.indexOf(toPriority)
+  
+  // Troca no array
+  noteousSettings.priorityOrder[fromIndex] = toPriority
+  noteousSettings.priorityOrder[toIndex] = fromPriority
+  
+  // Troca os data-priority dos elementos para atualizar os estilos visuais
+  from.dataset.priority = toPriority
+  to.dataset.priority = fromPriority
+  
+  // Salva no localStorage
+  localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
+  
+  // Atualiza apenas os números
+  updatePriorityNumbers()
+}
+
+function reorderPriorityItems() {
+  if (!noteousSettings.priorityOrder) return
+  
+  const items = Array.from(priorityContainer.children)
+  
+  // Limpa o container
+  priorityContainer.innerHTML = ''
+  
+  // Reordena baseado no priorityOrder
+  noteousSettings.priorityOrder.forEach((priority, index) => {
+    const item = items.find(i => i.dataset.priority === priority)
+    if (item) {
+      item.textContent = index + 1
+      priorityContainer.appendChild(item)
+    }
+  })
+}
+
+function updatePriorityNumbers() {
+  const items = priorityContainer.querySelectorAll('.priority-item')
+  items.forEach((item, index) => item.textContent = index + 1)
+}
+
+// Inicializa o sistema
+if (priorityContainer) {
+  loadPriorityOrder()
+  initPriorityDragDrop()
+}
+
+function loadPriorityOrder() {
+  // Recupera a ordem salva e reordena a interface
+  if (noteousSettings && noteousSettings.priorityOrder) {
+    reorderPriorityItems()
+  }
+}
 
 //////
 

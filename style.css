@@ -946,6 +946,60 @@ footer p span {
   gap: 0.3rem;
 }
 
+/* Priority Order Drag and Drop */
+#priority-order-container {
+  display: flex;
+  gap: 1rem;
+  margin: 1rem 0;
+}
+
+.priority-item {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.5rem;
+  font-weight: bold;
+  cursor: grab;
+  transition: all 0.2s ease;
+  font-size: 1.1rem;
+}
+
+.priority-item[data-priority="solid"] {
+  border: 3px solid var(--base-text);
+  background: var(--base-color);
+}
+
+.priority-item[data-priority="double"] {
+  border: 3px double var(--base-text);
+  background: var(--base-color);
+}
+
+.priority-item[data-priority="dotted"] {
+  border: 3px dotted var(--base-text);
+  background: var(--base-color);
+}
+
+.priority-item:hover {
+  transform: translateY(-2px);
+  background: var(--base-note-action-container);
+}
+
+.priority-item:active {
+  cursor: grabbing;
+}
+
+.priority-item.dragging {
+  opacity: 0.5;
+  transform: scale(1.1);
+}
+
+.priority-item.drag-over {
+  border-color: var(--base-accent);
+  background: var(--base-note-action-container);
+}
+
 /* Toggles */
 .toggle {
   display: inline-flex;
