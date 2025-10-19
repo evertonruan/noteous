@@ -379,21 +379,21 @@ function welcomeToNoteous(context, subcontext) {
       greetingTitle2.append(document.createTextNode('noteous preview'))
       greetingDescriptionTitle.append(
         document.createTextNode(
-          'O noteous preview foi atualizado com melhorias adicionais! Esses são os destaques da versão 1.8'
+          '✨ Atualização concluída! Veja os destaques do noteous preview 1.9'
         )
       )
 
-      greetingDescription1.innerHTML = `<span class="greeting-description-intro">Novos Botões de Ação!</span> <br>Suas notas ganham novas opções com os novos Botões de Ação Compartilhar e Copiar: Basta um toque para copiar uma anotação ou enviá-la a outro aplicativo`
+      greetingDescription1.innerHTML = `<span class="greeting-description-intro">Buscar notas</span> <br>Agora ficou muito fácil encontrar as notas que você procura!`
 
-      greetingDescription2.innerHTML = `<span class="greeting-description-intro">Opções de Visualização</span> <br>Agora você pode ordenar as notas de maneiras muito melhores: por data de criação ou edição ou ainda ver por Listas de Prioridade horizontais ou verticais`
+      greetingDescription2.innerHTML = `<span class="greeting-description-intro">Backup Inteligente de Nota</span>Saiu e esqueceu de adicionar? Sem problema: noteous usa o Orblend Engine para recuperar de forma automática sua nota`
 
-      greetingDescription3.innerHTML = `<span class="greeting-description-intro">Notas concluídas</span> <br>Agora, você pode ver as notas que forem concluídas em uma seção separada. Veja em Ajustes&Info`
+      greetingDescription3.innerHTML = `<span class="greeting-description-intro">Opções de Organização</span> <br>Com um visual renovado, as Opções de Visualização agora se chamam Opções de Organização!`
 
       greetingDescription4.innerHTML = `<span class="greeting-description-intro">Atualização automática</span> <br>noteous recebe atualizações automáticas 🌐 Assim, seu aplicativo sempre está em dia.`
       
-      greetingDescription1Image.setAttribute('src', './assets/images/greeting-action-buttons.webp')
-      greetingDescription2Image.setAttribute('src', './assets/images/greeting-priority-lists-orientation.webp')
-      greetingDescription3Image.setAttribute('src', './assets/images/greeting-usage.webp')
+      greetingDescription1Image.setAttribute('src', './assets/images/greeting-search.webp')
+      greetingDescription2Image.setAttribute('src', './assets/images/greeting-usage.webp')
+      greetingDescription3Image.setAttribute('src', './assets/images/greeting-read-options.webp')
       greetingDescription4Image.setAttribute('src', './assets/images/greeting-update.webp')
 
       greetingDescriptionContainer1.append(
