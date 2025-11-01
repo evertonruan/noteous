@@ -344,21 +344,18 @@ a {
   flex: 1;
 }
 
-/* Layout guards to prevent flex overflow when notes get wide
-   - Ensure sections can shrink within the flex container
-   - Keep the notes area within the viewport and scroll its own content */
 #index main > section {
-  min-width: 0; /* allow children with overflow to shrink instead of forcing container growth */
+  min-width: 0;
 }
 
 #section-write,
 #section-read {
-  flex: 1 1 0; /* share space and allow shrinking */
-  min-width: 0; /* critical for nested overflow to work */
+  flex: 1 1 0;
+  min-width: 0;
 }
 
 #read-panel {
-  min-width: 0; /* let inner container define scroll instead of expanding parent */
+  min-width: 0;
 }
 
 #index,
@@ -642,10 +639,10 @@ a {
   
   height: auto;
   padding-bottom: 1rem;
-  overflow-x: auto; /* horizontal scroll when content exceeds viewport */
+  overflow-x: auto;
   max-width: 100%;
   width: 100%;
-  min-width: 0; /* prevents flex content from growing parent width */
+  min-width: 0;
 }
 
 .read-notes-priority-container {
@@ -653,7 +650,34 @@ a {
   gap: 0.5rem;
   overflow-x: auto;
   overflow-y: auto;
-  flex: 0 0 auto; /* take only the space needed by the list, do not stretch */
+  flex: 0 0 auto;
+}
+
+.read-notes-priority-container::-webkit-scrollbar {
+  height: 8px;
+  width: 8px;
+}
+
+.read-notes-priority-container::-webkit-scrollbar-track {
+  background: var(--base-color);
+  border-radius: 10px;
+}
+
+.read-notes-priority-container::-webkit-scrollbar-thumb {
+  background: var(--base-buttons);
+  border-radius: 10px;
+  transition: all 0.3s ease;
+}
+
+.read-notes-priority-container::-webkit-scrollbar-thumb:hover {
+  background: var(--base-text);
+}
+
+@supports (scrollbar-color: auto) {
+  .read-notes-priority-container {
+    scrollbar-color: var(--base-buttons) var(--base-color);
+    scrollbar-width: thin;
+  }
 }
 
 #section-read .note-container,
