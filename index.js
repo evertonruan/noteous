@@ -331,11 +331,11 @@ function welcomeToNoteous(context, subcontext) {
     ////////////////////////////////////////////////
 
     if (subcontext == 'first-access') {
-      greetingTitle1.append(document.createTextNode('Bem-vindo ao'))
+      greetingTitle1.append(document.createTextNode('Boas-vindas ao'))
       greetingTitle2.append(document.createTextNode('noteous preview'))
       greetingDescriptionTitle.append(
         document.createTextNode(
-          'Faça anotações, realize tarefas, seja mais produtivo'
+          'Suas notas sempre à mão'
         )
       )
 
@@ -375,11 +375,11 @@ function welcomeToNoteous(context, subcontext) {
         greetingDescriptionContainer4
       )
     } else if (subcontext == 'new-version') {
-      greetingTitle1.append(document.createTextNode('Bem-vindo ao'))
+      greetingTitle1.append(document.createTextNode('Boas-vindas ao'))
       greetingTitle2.append(document.createTextNode('noteous preview'))
       greetingDescriptionTitle.append(
         document.createTextNode(
-          '✨ Atualização concluída! Veja os destaques do noteous preview 1.9'
+          '✨ Atualização concluída! Veja os destaques do noteous preview 1.9. Essa atualização traz algumas melhorias adicionais.'
         )
       )
 
@@ -438,7 +438,7 @@ function welcomeToNoteous(context, subcontext) {
     greetingTitle2.classList.add('greeting-title2')
     greetingTitleContainer.append(greetingTitleIcon, greetingTitle2)
 
-    greetingTitle1.append(document.createTextNode('Bem-vindo ao'))
+    greetingTitle1.append(document.createTextNode('Boas-vindas ao'))
     greetingTitle2.append(document.createTextNode('noteous preview'))
 
     let greetingPoliciesTitle = document.createElement('p')
@@ -455,7 +455,7 @@ function welcomeToNoteous(context, subcontext) {
 
     let greetingPoliciesNotice = document.createElement('p')
     greetingPoliciesNotice.classList.add('greeting-policies-text')
-    greetingPoliciesNotice.innerHTML = `<em> Importante: Você está acessando o noteous preview, que é um canal de testes do noteous. Ao continuar, você está ciente que este aplicativo pode apresentar erros e instabilidades.</em> <br>`
+    greetingPoliciesNotice.innerHTML = `<em> ⚠️ Importante: Você está acessando o noteous preview, que é um canal de testes do noteous. Ao continuar, você está ciente que este aplicativo pode apresentar erros e instabilidades.</em> <br>`
     
     let greetingPoliciesNoticeLink = document.createElement('p')
     greetingPoliciesNoticeLink.classList.add('greeting-policies-text-link')

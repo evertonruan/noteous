@@ -767,6 +767,8 @@ footer p span {
 
   filter: brightness(90%);
   border-radius: 15px;
+  -webkit-user-select: none;
+  user-select: none;
 }
 
 .greeting-title-container {
