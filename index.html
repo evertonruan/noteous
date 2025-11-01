@@ -105,6 +105,9 @@
       <section id="section-read">
         <div id="read-options">
           <button id="read-options-sort" type="button" tabindex="6"></button>
+          <input type="search" name="read-options-search-input" id="read-options-search-input" class="hidden-element"
+          placeholder="Pesquisar notas" tabindex="4"/>
+          <button id="read-options-search" class="material-icons read-options-buttons" type="button" tabindex="5">search</button>
         </div>
 
         <div id="read-panel">
@@ -114,9 +117,11 @@
     </main>
 
     <footer>
-      <p><span>noteous</span>1.7</p>
+      <p id="noteous-version-label"><span></span></p>
     </footer>
 
+    <script type="text/javascript" src="noteousParams.js"></script>
+    <script type="text/javascript" src="orblendEngine.js"></script>
     <script type="text/javascript" src="index.js"></script>
 
     <script>

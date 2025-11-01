@@ -169,6 +169,10 @@ html {
     gap: 0.3rem;
   }
 
+  #section-read #read-notes {
+    flex-direction: column;
+  }
+
   #section-read #read-notes .note-container {
     max-width: none;
     flex-basis: 90%;
@@ -346,6 +350,14 @@ a {
 #index,
 #index #write-input {
   font-family: 'Merriweather Sans', sans-serif;
+}
+
+#index .hidden-element {
+  display: none;
+}
+
+#index .active-button {
+  background-color: var(--base-buttons);
 }
 
 /*-----SECTION-WRITE-----*/
@@ -554,14 +566,42 @@ a {
   display: flex;
   color: var(--base-text);
   text-decoration: underline;
-
+  
   font-family: 'Merriweather Sans', sans-serif;
   color: var(--base-text);
   background-color: transparent;
   font-size: 1rem;
-
+  
   margin: 0 1rem;
+  
+  -webkit-user-select: none;
+  user-select: none;
+  cursor: pointer;
+}
 
+#read-options-search-input {
+  margin: 0 10px;
+  width: 100%;
+  padding: 0.2rem 0.5rem;
+  border: 1px solid var(--base-text);
+  border-radius: 8px;
+  outline: none;
+  font-size: 0.8rem;
+  font-family: 'Merriweather Sans', sans-serif;
+  color: var(--base-text);
+  background-color: var(--base-color);
+  transition: opacity 0.3s ease-in-out;
+}
+
+.read-options-buttons {
+  width: 30px;
+  height: auto;
+  border-radius: 5px;
+  margin-right: 10px;
+  font-size: 0.8rem;
+  align-self: center;
+  color: var(--base-text);
+  background-color: transparent;
   -webkit-user-select: none;
   user-select: none;
   cursor: pointer;
@@ -707,6 +747,8 @@ footer p span {
 
   filter: brightness(90%);
   border-radius: 15px;
+  -webkit-user-select: none;
+  user-select: none;
 }
 
 .greeting-title-container {
@@ -1118,12 +1160,26 @@ footer p span {
   border-radius: 2rem;
 }
 
-.about-update-point {
-  margin-bottom: 2rem;
-}
 
 #about-update-list {
+  display: flex;
+  flex-direction: row;
+  max-width: 100%;
+  overflow-x: auto;
   padding: 0 1rem;
+  margin-bottom: 20px;
+  gap: 30px;
+}
+
+.about-update-point {
+  min-width: 250px;
+  max-height: 400px;
+  overflow-y: auto;
+  padding: 1rem;
+  word-wrap: break-word;
+
+  border: 1px solid var(--base-text);
+  border-radius: 20px;
 }
 
 .update-description {
@@ -1131,8 +1187,8 @@ footer p span {
 }
 
 .update-type {
-  border: 1px solid;
-  border-color: var(--base-text);
+  background-color: var(--base-buttons);
+  color: var(--base-text);
   border-radius: 8px;
   padding: 0.08px 3px;
   margin-right: 4px;
@@ -1140,9 +1196,9 @@ footer p span {
 
 .about-update-point-container {
   display: flex;
-  flex-direction: row;
-  align-items: center;
-  gap: 1rem;
+  flex-direction: column;
+  align-items: baseline;
+  margin-bottom: 16px;
 }
 
 .update-advanced {
@@ -1152,11 +1208,14 @@ footer p span {
 }
 
 #about-update-point-actual {
-  border: 1px solid;
-  border-color: var(--base-text);
-  border-radius: 1rem;
+  min-width: 250px;
+  max-height: 400px;
+  overflow-y: auto;
   padding: 1rem;
-  margin: 1.5rem 0;
+  word-wrap: break-word;
+
+  border: 1px solid var(--base-text);
+  border-radius: 20px;
 }
 
 .about-update-point-version {

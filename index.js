@@ -88,6 +88,7 @@ window.addEventListener('appinstalled', () => {
 let body = document.querySelector('body')
 
 let themeButton = document.querySelector('#theme-container')
+let noteousVersionLabel = document.querySelector('#noteous-version-label')
 
 //WRITE-SECTION
 let writeSection = document.querySelector('#section-write')
@@ -107,6 +108,8 @@ let writeButtonCancelEdit = document.querySelector('#write-button-cancel')
 let readSection = document.querySelector('#section-read')
 let readPanel = document.querySelector('#read-panel')
 let readOptions = document.querySelector('#read-options')
+let readOptionsSearchInput = document.querySelector('#read-options-search-input')
+let readOptionsSearch = document.querySelector('#read-options-search')
 let readOptionsSort = document.querySelector('#read-options-sort')
 let readNotesList = document.querySelector('#read-notes')
 
@@ -133,7 +136,7 @@ const readNotesActionButtonsIcons = {
 
 // VARIÁVEIS IMPORTANTES /////////////////////////////////////
 
-let currentVersion = 1.7
+let currentVersion = noteousVersion
 let noteIdEdit //usada para confirmar qual nota está sendo editada
 let editMode = false
 let tabIndexCounter = 10
@@ -151,6 +154,10 @@ let writeInputEdit = function (event) {
 function navLink() {
   window.location.replace('./about.html')
 }
+
+///////
+
+noteousVersionLabel.innerHTML = `<span>noteous</span> ${noteousVersion}`
 
 //INICIALIZAÇÃO //////////////////////////////////////////////
 
@@ -269,17 +276,17 @@ function welcomeToNoteous(context, subcontext) {
     ////////////////////////////////////////////////
 
     if (subcontext == 'first-access') {
-      greetingTitle1.append(document.createTextNode('Bem-vindo ao'))
+      greetingTitle1.append(document.createTextNode('Boas-vindas ao'))
       greetingTitle2.append(document.createTextNode('noteous'))
       greetingDescriptionTitle.append(
         document.createTextNode(
-          'Faça anotações, realize tarefas, seja mais produtivo'
+          'Suas notas sempre à mão'
         )
       )
 
       greetingDescription1.innerHTML = `<span class="greeting-description-intro">Temas</span>🎨 Personalize sua experiência com o brilhante tema claro ou com o elegante tema escuro`
 
-      greetingDescription2.innerHTML = `<span class="greeting-description-intro">Organize por prioridade</span>Clique no círculo ⭕ para trocar entre diferentes bordas, que representam prioridades`
+      greetingDescription2.innerHTML = `<span class="greeting-description-intro">Personalize as notas</span>Clique no círculo ⭕ para trocar entre diferentes bordas`
 
       greetingDescription3.innerHTML = `<span class="greeting-description-intro">Design incrível</span>noteous possui um design inovador que convida você a fazer anotações. <br><br>📅 Veja a data de hoje <br>📋 Escreva sua próxima tarefa<br>💡 Registre algo para não esquecer `
 
@@ -314,21 +321,21 @@ function welcomeToNoteous(context, subcontext) {
         greetingDescriptionContainer4
       )
     } else if (subcontext == 'new-version') {
-      greetingTitle1.append(document.createTextNode('Bem-vindo ao'))
+      greetingTitle1.append(document.createTextNode('Boas-vindas ao'))
       greetingTitle2.append(document.createTextNode('noteous'))
       greetingDescriptionTitle.append(
         document.createTextNode(
-          'noteous foi atualizado! Veja algumas novidades'
+          '✨ Atualização concluída! Veja os destaques do noteous 1.8'
         )
       )
 
-      greetingDescription1.innerHTML = `<span class="greeting-description-intro">Novos Botões de Ação!</span> <br>Suas notas ganham novas opções com os novos Botões de Ação Compartilhar e Copiar texto: Basta um toque para copiar uma anotação ou enviá-la a outro aplicativo`
+      greetingDescription1.innerHTML = `<span class="greeting-description-intro">Buscar notas</span> <br>Agora ficou muito fácil encontrar as notas que você procura!`
 
-      greetingDescription2.innerHTML = `<span class="greeting-description-intro">Notas concluídas</span> <br>Agora, você pode ver as notas que forem concluídas em uma seção separada. Veja em Ajustes&Info`
+      greetingDescription2.innerHTML = `<span class="greeting-description-intro">Outras melhorias</span> <br>Alguns detalhes foram ajustados para uma experiência ainda melhor!`
 
       greetingDescription3.innerHTML = `<span class="greeting-description-intro">Atualização automática</span> <br>noteous recebe atualizações automáticas 🌐 Assim, seu aplicativo sempre está em dia.`
       
-      greetingDescription1Image.setAttribute('src', './assets/images/greeting-action-buttons.webp')
+      greetingDescription1Image.setAttribute('src', './assets/images/greeting-search.webp')
       greetingDescription2Image.setAttribute('src', './assets/images/greeting-usage.webp')
       greetingDescription3Image.setAttribute('src', './assets/images/greeting-update.webp')
 
@@ -369,7 +376,7 @@ function welcomeToNoteous(context, subcontext) {
     greetingTitle2.classList.add('greeting-title2')
     greetingTitleContainer.append(greetingTitleIcon, greetingTitle2)
 
-    greetingTitle1.append(document.createTextNode('Bem-vindo ao'))
+    greetingTitle1.append(document.createTextNode('Boas-vindas ao'))
     greetingTitle2.append(document.createTextNode('noteous'))
 
     let greetingPoliciesTitle = document.createElement('p')
@@ -542,15 +549,11 @@ function loadNoteous(context) {
         welcomeToNoteous('render-welcome', 'new-version')
       } else {
         //SE NÃO HÁ NOVA VERSÃO
+        sortNotes('retrieveSort')
         renderNote('render-all')
         orblendEngine('load')
         orblendEngine('on-change-input')
-
-        //Aplica última ordenação
-        sortNotes('retrieveSort')
-        //Aplica último tema
         noteousTheme('retrieve-theme')
-        //Aplica borda como solid
         noteousSettings.priority = 'solid'
         localStorage.setItem(
           'noteous-settings',
@@ -592,160 +595,6 @@ function loadNoteous(context) {
 
     //2.1. Aplicar configurações de tema
     noteousTheme('set-theme-light')
-  }
-}
-
-//////////
-
-function orblendEngine(context) {
-  let subcontext
-
-  const getRandom = () => {
-    let math = Math.random()
-    if (math < 0.5) {
-      return false
-    } else {
-      return true
-    }
-  }
-
-  let dateElement = function makeDateElement() {
-    let dateNow = new Date()
-    let infoElementDate = document.createElement('p')
-    infoElementDate.classList.add('info-element')
-    let infoElementDateText = document.createTextNode(
-      `Olá! Hoje é ${findWeek(new Date(dateNow).getDay())}, ${new Date(
-        dateNow
-      ).getDate()} de ${findMonth(new Date(dateNow).getMonth())}`
-    )
-    infoElementDate.append(infoElementDateText)
-    return infoElementDate
-  }
-
-  let infoElement = function makeInfoElement(subcontext, random) {
-    let infoText
-    if (subcontext == 'no-notes') {
-      infoText = 'Você ainda não tem anotações \n Adicione sua próxima tarefa!'
-    } else if (subcontext == 'has-notes') {
-      infoText = ''
-    }
-    let infoElementTip = document.createElement('p')
-    infoElementTip.classList.add('info-element')
-    let infoElementTipText = document.createTextNode(`${infoText}`)
-    infoElementTip.append(infoElementTipText)
-
-    if (infoText == '') {
-      infoElementTip.style.marginBottom = '0;'
-      infoPanel.style.cssText = 'margin-bottom: 0;'
-    } else {
-      infoPanel.style.cssText = ''
-    }
-
-    return infoElementTip
-  }
-
-  if (context == 'change') {
-    //exibir/ocultar readOptions
-    if (noteousMain.length > 1) {
-      readOptionsSort.style.cssText = 'opacity: 1'
-    } else {
-      readOptionsSort.style.cssText = 'opacity: 0'
-    }
-
-    //Configurar informações
-    if (noteousMain.length > 0) {
-      subcontext = 'has-notes'
-    } else {
-      subcontext = 'no-notes'
-    }
-    infoPanel.innerHTML = ''
-    infoPanel.append(dateElement(), infoElement(subcontext, getRandom()))
-    // Ensure install button is present if eligible after info panel refresh
-    placeInstallButton()
-  } else if (context == 'load') {
-    //Backup Inteligente de Nota
-    //Verifica se há uma nota não salva
-    if (noteousSettings.input != '') {
-      if (noteousSettings.noteId != 0) {
-        if (confirm('Você estava editando uma nota, deseja recuperá-la?')) {
-          openNote(noteousSettings.noteId)
-          writeInput.value = noteousSettings.input
-        } else {
-          noteousSettings.input = ''
-          noteousSettings.noteId = 0
-        }
-      } else {
-        if (confirm('Há uma nota não salva. Deseja recuperá-la?')) {
-          writeInput.value = noteousSettings.input
-          writeInput.focus()
-        } else {
-          noteousSettings.input = ''
-        }
-      }
-    }
-
-    ////////////////////////////
-
-    //exibir/ocultar readOptions
-    if (noteousMain.length > 1) {
-      readOptionsSort.style.cssText = 'opacity: 1'
-    } else {
-      readOptionsSort.style.cssText = 'opacity: 0'
-    }
-
-    ////////////////////////////
-
-    //Configurar informações
-    if (noteousMain.length > 0) {
-      subcontext = 'has-notes'
-    } else {
-      subcontext = 'no-notes'
-    }
-    infoPanel.innerHTML = ''
-    infoPanel.append(dateElement(), infoElement(subcontext, getRandom()))
-    // Ensure install button is present if eligible on first load
-    placeInstallButton()
-  } else if (context == 'on-change-input') {
-    //Habilitar/Desabilitar Botão Adicionar Nota
-    if (writeInput.value === '') {
-      writeButtonAdd.disabled = true
-      writeButtonAdd.setAttribute('aria-hidden', 'true')
-    } else {
-      writeButtonAdd.disabled = false
-      writeButtonAdd.setAttribute('aria-hidden', 'false')
-    }
-
-    //Backup Inteligente de Nota
-    if (editMode == false) {
-      noteousSettings.input = writeInput.value
-      localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
-    } else if (editMode == true) {
-      noteousSettings.input = writeInput.value
-      noteousSettings.noteId = noteIdEdit
-      localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
-    }
-
-    //Redimensionamento Inteligente do Campo de Input
-    //Verifica quantas linhas há no Campo de Input
-    let input = noteousSettings.input
-    let newLines
-    if (input.match(/\n/g) == null) {
-      //se não houver novas linhas (/n) --> esvazia variável newLines que indica quantidade de linhas
-      newLines = ['']
-    } else {
-      newLines = input.match(/\n/g) //se houver linhas, informa quantidade na variável newLines
-    }
-
-    //Aplica novo tamanho se tiver 2 linhas OU mais de 120 caracteres
-    if (editMode == false) {
-      if (newLines.length > 2 || writeInput.value.length > 120) {
-        writeInput.classList.add('edit-mode')
-        writePanel.classList.add('edit-mode')
-      } else if (newLines.length < 2 || writeInput.value.length < 120) {
-        writeInput.classList.remove('edit-mode')
-        writePanel.classList.remove('edit-mode')
-      }
-    }
   }
 }
 
@@ -838,19 +687,47 @@ writeOptions.addEventListener('click', () => {
 
 //////////
 
+//noteous 1.8: Buscar
+function toggleReadOptionsSearch() {
+  if (readOptionsSearchInput.classList.contains('hidden-element')) {
+    readOptionsSearch.classList.add('active-button')
+    readOptionsSearchInput.classList.remove('hidden-element')
+    readOptionsSort.classList.add('hidden-element')
+  } else {
+    readOptionsSearchInput.classList.add('hidden-element')
+    readOptionsSearch.classList.remove('active-button')
+    readOptionsSort.classList.remove('hidden-element')
+  }
+}
+
+readOptionsSearch.addEventListener('click', () => {
+  toggleReadOptionsSearch()
+})
+
+readOptionsSearchInput.addEventListener('input', () => {
+  renderNote('render-all', '', readOptionsSearchInput.value)
+})
+
+//////////
+
 function sortNotes(context) {
+
+  // noteous em versões anteriores: Antes, apenas dava a 'sensação' de que as notas foram ordenadas, apenas usando flex-reverse.
+  // noteous preview 1.7.1: função sortNotes() revisada. Agora, faz uma inversão de verdade, ordenando o array de notas.
+
   if (context == 'retrieveSort') {
     if (noteousSettings.sort == 'recent') {
-      readNotesList.style.cssText = 'flex-wrap: wrap; flex-direction: row;'
-
+      // Ordena as notas do mais recente para o mais antigo (ordem decrescente por ID)
+      noteousMain.sort((a, b) => b.id - a.id)
+      
       readOptionsSort.innerHTML = ''
       readOptionsSort.append(
         document.createTextNode('Ordenando por: Recente primeiro')
       )
     } else if (noteousSettings.sort == 'old') {
-      readNotesList.style.cssText =
-        'flex-wrap: wrap-reverse; flex-direction: row-reverse;'
-
+      // Ordena as notas do mais antigo para o mais recente (ordem crescente por ID)
+      noteousMain.sort((a, b) => a.id - b.id)
+      
       readOptionsSort.innerHTML = ''
       readOptionsSort.append(
         document.createTextNode('Ordenando por: Antigo primeiro')
@@ -858,39 +735,43 @@ function sortNotes(context) {
     }
   } else {
     if (noteousSettings.sort == 'recent') {
-      readNotesList.style.cssText =
-        'flex-wrap: wrap-reverse; flex-direction: row-reverse;'
-
       readOptionsSort.innerHTML = ''
       readOptionsSort.append(
         document.createTextNode('Ordenando por: Antigo primeiro')
       )
       noteousSettings.sort = 'old'
-      renderNote()
+      
+      // Ordena as notas do mais antigo para o mais recente (ordem crescente por ID)
+      noteousMain.sort((a, b) => a.id - b.id)
+      
+      renderNote('render-all')
       localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
     } else if (noteousSettings.sort == 'old') {
-      readNotesList.style.cssText = 'flex-wrap: wrap; flex-direction: row;'
-
       readOptionsSort.innerHTML = ''
       readOptionsSort.append(
         document.createTextNode('Ordenando por: Recente primeiro')
       )
       noteousSettings.sort = 'recent'
-      renderNote()
+      
+      // Ordena as notas do mais recente para o mais antigo (ordem decrescente por ID)
+      noteousMain.sort((a, b) => b.id - a.id)
+      
+      renderNote('render-all')
       localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
     }
   }
 }
+
 readOptionsSort.addEventListener('click', sortNotes)
 
 //////////
 
-function renderNote(context, noteId) {
+function renderNote(context, noteId, searchTerm) {
   if (context == 'render-all') {
     readNotesList.innerHTML = ''
 
     for (let note of noteousMain) {
-      if (note.done != true) {
+      if (note.done != true && (searchTerm == undefined || note.text.toLowerCase().includes(searchTerm.toLowerCase()))) {
         let noteContainer = document.createElement('div')
         noteContainer.id = note.id + '-note-container'
         noteContainer.classList.add('note-container')
