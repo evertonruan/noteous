@@ -1,7 +1,7 @@
 ![noteous-presenting-cp](https://github.com/user-attachments/assets/14ea66ea-9d52-4112-b05f-e78289702ea5)
 
 # Bem-vindo ao repositório do noteous
-### noteous é um web app simples de notas e lembretes
+### noteous é um web app simples de notas, para você tê-las sempre à mão!
 
 ### 🧁 Ele é tão recheado de pequenos recursos interessantes que você vai amar conhecer melhor!
 
