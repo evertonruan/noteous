@@ -29,6 +29,10 @@ html {
     overflow-y: auto;
   }
 
+  .read-notes-priority-container {
+    max-height: 60vh;
+  }
+
   #section-read #read-notes-container .note-container {
     max-width: 40%;
   }
@@ -124,15 +128,18 @@ html {
     min-height: 100vh;
   }
 
+  #index #read-panel {
+    flex-direction: column;
+  }
+
   #section-read #read-notes-container {
     justify-content: flex-start;
-
     max-height: max-content;
     overflow-y: hidden;
   }
 
-  #index #read-panel {
-    flex-direction: column;
+  .read-notes-priority-container {
+    max-height: 90vh;
   }
 
   #section-read #read-notes-container .note-container {
@@ -345,12 +352,6 @@ a {
 }
 
 #index main > section {
-  min-width: 0;
-}
-
-#section-write,
-#section-read {
-  flex: 1 1 0;
   min-width: 0;
 }
 
