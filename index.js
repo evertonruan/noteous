@@ -218,7 +218,14 @@ function navLink() {
 
 ////
 
-noteousVersionLabel.innerHTML = `<span>noteous preview</span> ${noteousVersion}`
+function renderNoteousVersionLabel() {
+  if (noteousVersion.toString().length == 3) {
+    noteousVersionLabel.innerHTML = `<span>noteous preview</span> ${noteousVersion}`
+  } else if (noteousVersion.toString().length == 4) {
+    noteousVersionLabel.innerHTML = `<span>noteous preview</span> ${noteousVersion.toString().slice(0,3)}.${noteousVersion.toString().slice(3)}`
+  }
+}
+renderNoteousVersionLabel()
 
 //INICIALIZAÇÃO //////////////////////////////////////////////
 
