@@ -635,7 +635,7 @@ function loadNoteous(context) {
     //JÁ ACESSOU NOTEOUS --> recupera dados
     if (noteousSettings != null) {
       //VERIFICA SE HÁ NOVA VERSÃO
-      if (noteousSettings.noteousApp.noteousVersion != currentVersion) {
+      if (noteousSettings?.noteousApp?.noteousVersion != currentVersion) {
         //SE HÁ NOVA VERSÃO
         welcomeToNoteous('render-welcome', 'new-version')
       } else {
