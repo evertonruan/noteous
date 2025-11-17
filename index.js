@@ -1,5 +1,5 @@
 function serviceWorkerRegister() {
-    if (noteousSettings != null && noteousSettings.noteousVersion >= 1.5 ) {
+    if (noteousSettings != null && noteousSettings.noteousApp.noteousVersion >= 1.5 ) {
       if ('serviceWorker' in navigator) {
         navigator.serviceWorker.register('sw.js')
       }
@@ -327,7 +327,12 @@ function welcomeToNoteous(context, subcontext) {
     btnNext.classList.add('greeting-buttons')
     btnNext.appendChild(document.createTextNode('Continuar →'))
     btnNext.addEventListener('click', () => {
-      welcomeToNoteous('render-policies')
+      if (noteousSettings == null || noteousSettings.noteousApp.acceptedTermsVersion != termsVersion) {
+        welcomeToNoteous('render-policies')
+      } else {
+        loadNoteous('set-settings')
+        window.location.reload()
+      }
     })
 
     //Appends
@@ -456,7 +461,7 @@ function welcomeToNoteous(context, subcontext) {
 
     let greetingPoliciesTitle = document.createElement('p')
     greetingPoliciesTitle.classList.add('greeting-description-title')
-    if (noteousSettings != null && noteousSettings.noteousVersion < 1.61) {
+    if (noteousSettings != null && noteousSettings.noteousApp.noteousVersion < 1.61) {
       greetingPoliciesTitle.innerHTML =
       'Para continuar, você precisa aceitar os termos a seguir'
     } else {
@@ -630,7 +635,7 @@ function loadNoteous(context) {
     //JÁ ACESSOU NOTEOUS --> recupera dados
     if (noteousSettings != null) {
       //VERIFICA SE HÁ NOVA VERSÃO
-      if (noteousSettings.noteousVersion != currentVersion) {
+      if (noteousSettings.noteousApp.noteousVersion != currentVersion) {
         //SE HÁ NOVA VERSÃO
         welcomeToNoteous('render-welcome', 'new-version')
       } else {
@@ -682,8 +687,7 @@ function loadNoteous(context) {
     //2.Aplicar novas configurações
     //preview 1.8: sort agora é objeto com time e action
     noteousSettings = {
-      noteousVersion: currentVersion,
-      noteousApp: { installPrompt: 0},
+      noteousApp: { noteousVersion: currentVersion, installPrompt: 0, acceptedTermsVersion: termsVersion },
       sort: { time: 'recent', action: 'id' },
       priority: 'solid',
       priorityOrder: ['solid', 'double', 'dotted'], // preview 1.8: ordem das listas de prioridade
