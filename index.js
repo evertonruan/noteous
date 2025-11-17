@@ -461,7 +461,7 @@ function welcomeToNoteous(context, subcontext) {
 
     let greetingPoliciesTitle = document.createElement('p')
     greetingPoliciesTitle.classList.add('greeting-description-title')
-    if (noteousSettings != null && noteousSettings.noteousApp.noteousVersion < 1.61) {
+    if (noteousSettings != null && noteousSettings?.noteousApp?.noteousVersion < 1.61) {
       greetingPoliciesTitle.innerHTML =
       'Para continuar, você precisa aceitar os termos a seguir'
     } else {
