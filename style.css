@@ -568,10 +568,12 @@ a {
   display: flex;
   flex-grow: 1;
   align-items: center;
+  padding-left: 5px;
 }
 
 #read-options-label {
-  margin-left: 15px;
+  min-width: 125px;
+  margin: 0 10px;
   font-size: 0.7rem;
   line-height: 12px;
   color: var(--base-text);
@@ -582,8 +584,10 @@ a {
 #read-options-search-input {
   margin: 0 5px;
   width: 100%;
+  margin-left: auto;
+  max-width: 400px;
   padding: 0.2rem 0.5rem;
-  border: 1px solid var(--base-text);
+  border: 2px solid var(--base-buttons);
   border-radius: 8px;
   outline: none;
   font-size: 0.8rem;

@@ -44,8 +44,8 @@ function placeInstallButton() {
   const installBtn = document.createElement('button')
   installBtn.id = 'install-button'
   // Reuse existing visual style for greeting buttons
-  installBtn.classList.add('greeting-buttons')
-  installBtn.textContent = 'Instalar noteous'
+  installBtn.classList.add('write-buttons')
+  installBtn.innerHTML = '<span style="font-style: normal;">🧁</span> Instalar noteous'
   installBtn.addEventListener('click', async () => {
     try {
       installBtn.disabled = true
@@ -75,7 +75,12 @@ function placeInstallButton() {
 window.addEventListener('beforeinstallprompt', (e) => {
   e.preventDefault()
   deferredInstallPrompt = e
-  placeInstallButton()
+  
+  if (noteousSettings.noteousApp.installPrompt <= 3) {
+    noteousSettings.noteousApp.installPrompt++
+    localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
+    placeInstallButton()
+  }
 })
 
 // When app is installed, remove the button
@@ -110,6 +115,7 @@ let writeButtonCancelEdit = document.querySelector('#write-button-cancel')
 let readSection = document.querySelector('#section-read')
 let readPanel = document.querySelector('#read-panel')
 let readOptions = document.querySelector('#read-options')
+let readOptionsContainer = document.querySelector('#read-options-container')
 let readOptionsLabel = document.querySelector('#read-options-label')
 let readOptionsSearchInput = document.querySelector('#read-options-search-input')
 let readOptionsSearch = document.querySelector('#read-options-search')
@@ -670,6 +676,7 @@ function loadNoteous(context) {
     //preview 1.8: sort agora é objeto com time e action
     noteousSettings = {
       noteousVersion: currentVersion,
+      noteousApp: { installPrompt: 0},
       sort: { time: 'recent', action: 'id' },
       priority: 'solid',
       priorityOrder: ['solid', 'double', 'dotted'], // preview 1.8: ordem das listas de prioridade
@@ -779,13 +786,16 @@ writeOptions.addEventListener('click', () => {
 function toggleReadOptionsSearch() {
   if (readOptionsSearchInput.classList.contains('hidden-element')) {
     // Fade out label
-    readOptionsLabel.style.opacity = '0'
+    if (readOptionsContainer.offsetWidth <= 570) {
+      readOptionsLabel.style.opacity = '0'
+    }
     readOptionsSearch.classList.add('active-button')
 
     setTimeout(() => {
       readOptionsSearchInput.classList.remove('hidden-element')
-      readOptionsLabel.classList.add('hidden-element')
-      
+      if (readOptionsContainer.offsetWidth <= 570) {
+        readOptionsLabel.classList.add('hidden-element')
+      }
       // Inicia o search input com opacity 0 e depois fade in
       readOptionsSearchInput.style.opacity = '0'
       setTimeout(() => {
@@ -794,18 +804,21 @@ function toggleReadOptionsSearch() {
     }, 200)
   } else {
     // Fade out search input
-    readOptionsSearchInput.style.opacity = '0'
+      readOptionsSearchInput.style.opacity = '0'
     readOptionsSearch.classList.remove('active-button')
     
     setTimeout(() => {
       readOptionsSearchInput.classList.add('hidden-element')
-      readOptionsLabel.classList.remove('hidden-element')
-      
+      if (readOptionsContainer.offsetWidth <= 570) {
+        readOptionsLabel.classList.remove('hidden-element')
+      }
       // Inicia o label com opacity 0 e depois fade in
+      if (readOptionsContainer.offsetWidth <= 570) {
       readOptionsLabel.style.opacity = '0'
       setTimeout(() => {
         readOptionsLabel.style.opacity = '0.6'
       }, 10)
+    }
     }, 200)
   }
 }
