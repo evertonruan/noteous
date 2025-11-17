@@ -327,7 +327,7 @@ function welcomeToNoteous(context, subcontext) {
     btnNext.classList.add('greeting-buttons')
     btnNext.appendChild(document.createTextNode('Continuar →'))
     btnNext.addEventListener('click', () => {
-      if (noteousSettings == null || noteousSettings.noteousApp.acceptedTermsVersion != termsVersion) {
+      if (noteousSettings == null || noteousSettings?.noteousApp?.acceptedTermsVersion != termsVersion) {
         welcomeToNoteous('render-policies')
       } else {
         loadNoteous('set-settings')
