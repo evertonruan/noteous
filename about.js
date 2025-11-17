@@ -21,6 +21,8 @@ if (noteousSettings == null || noteousSettings.noteousVersion < 1.5) {
 
 //ELEMENTOS //////
 
+let aboutSettingsSection = document.querySelector('#about-settings')
+
 let baseRemOptionNormal = document.querySelector('#baserem-normal')
 let baseRemOptionBig = document.querySelector('#baserem-big')
 let baseRemOptionSmall = document.querySelector('#baserem-small')
@@ -72,6 +74,44 @@ ${noteousSettings.look.lumAccentContainer}`
 }
 
 ///////
+
+let installButton = document.createElement('button')
+installButton.id = 'install-button'
+installButton.type = 'button'
+installButton.classList.add('write-buttons')
+installButton.append('Instalar noteous')
+let deferredInstallPrompt
+
+installButton.addEventListener('click', async () => {
+    try {
+      installButton.disabled = true
+      // Show the browser install prompt
+      deferredInstallPrompt.prompt()
+      const { outcome } = await deferredInstallPrompt.userChoice
+      // Clear the saved event regardless of outcome
+      deferredInstallPrompt = null
+      if (outcome === 'accepted') {
+        // Hide button; appinstalled event will also fire
+        const b = document.querySelector('#install-button')
+        if (b) b.remove()
+      } else {
+        // If dismissed, we can enable again to allow retry later
+        installButton.disabled = false
+      }
+    } catch (e) {
+      // On any error, allow retry later
+      installButton.disabled = false
+    }
+  })
+
+function renderInstallButton() {
+  window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault()
+    deferredInstallPrompt = e
+    aboutSettingsSection.prepend(installButton)
+  })
+}
+renderInstallButton()
 
 // CONFIGURAÇÕES DE TEMA ////////////////////////////////////
 function noteousTheme(context) {

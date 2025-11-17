@@ -397,7 +397,7 @@ function welcomeToNoteous(context, subcontext) {
       greetingTitle2.append(document.createTextNode('noteous preview'))
       greetingDescriptionTitle.append(
         document.createTextNode(
-          '✨ Atualização concluída! Veja os destaques do noteous preview 1.9. Essa atualização traz algumas melhorias adicionais.'
+          '✨ Atualização concluída! Veja os destaques do noteous preview 1.9. Você recebeu uma atualização com algumas melhorias adicionais.'
         )
       )
 
