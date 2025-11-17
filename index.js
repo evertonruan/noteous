@@ -1,5 +1,5 @@
 function serviceWorkerRegister() {
-    if (noteousSettings != null && noteousSettings.noteousApp.noteousVersion >= 1.5 ) {
+    if (noteousSettings?.noteousApp?.noteousVersion >= 1.5) {
       if ('serviceWorker' in navigator) {
         navigator.serviceWorker.register('sw.js')
       }
@@ -76,7 +76,7 @@ window.addEventListener('beforeinstallprompt', (e) => {
   e.preventDefault()
   deferredInstallPrompt = e
   
-  if (noteousSettings.noteousApp.installPrompt <= 3) {
+  if (noteousSettings?.noteousApp?.installPrompt <= 3) {
     noteousSettings.noteousApp.installPrompt++
     localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
     placeInstallButton()
