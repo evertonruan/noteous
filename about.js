@@ -170,6 +170,11 @@ function activeOptionVerifier() {
   toggleActionButtonShare.checked = noteousSettings.actionButtons.includes('share')
   toggleActionButtonCopy.checked = noteousSettings.actionButtons.includes('copy')
   
+  // Exibe o botão "Criar Cópia" apenas se houver ao menos 1 nota salva
+  if (noteousMain.length == 0) {
+    copyCreateButton.classList.add('hidden-element')
+  }
+  
   if (noteousSettings.look.baseRem == '--base-rem: 100%;') {
     baseRemOptionNormal.style.background = 'var(--base-buttons)'
     baseRemOptionBig.style.background = ''
@@ -431,6 +436,8 @@ buttonPolicies.addEventListener('click', () => {
 
 //BOTÃO CRIAR CÓPIA
 copyCreateButton.addEventListener('click', () => {
+  // Segurança adicional: não permite abrir se não houver notas
+  if (!noteousMain || noteousMain.length === 0) return
   if (copyDetailsSwitchVar == 0 || copyDetailsSwitchVar == 2) {
     copyDetailsSwitchVar = 1
     copyDetailsContainer.innerHTML = ''

@@ -601,7 +601,8 @@ a {
   transition: opacity 0.3s ease-in-out;
 }
 
-#index .hidden-element {
+#index .hidden-element,
+#about .hidden-element {
   display: none;
 }
 
