@@ -384,18 +384,18 @@ function welcomeToNoteous(context, subcontext) {
       greetingTitle2.append(document.createTextNode('noteous'))
       greetingDescriptionTitle.append(
         document.createTextNode(
-          '✨ Atualização concluída! Veja os destaques do noteous 1.8'
+          '✨ Atualização concluída! Veja os destaques do noteous 1.9'
         )
       )
 
-      greetingDescription1.innerHTML = `<span class="greeting-description-intro">Buscar notas</span> <br>Agora ficou muito fácil encontrar as notas que você procura!`
+      greetingDescription1.innerHTML = `<span class="greeting-description-intro">Listas de Prioridade</span> <br>Sua organização foi para o próximo nível. Veja suas notas em listas separadas, de acordo com a prioridade (borda)`
 
-      greetingDescription2.innerHTML = `<span class="greeting-description-intro">Outras melhorias</span> <br>Alguns detalhes foram ajustados para uma experiência ainda melhor!`
+      greetingDescription2.innerHTML = `<span class="greeting-description-intro">Opções de Organização</span> <br>Pesquise, Oriente, Ordene. Tudo fica melhor com as novas Opções de Organização`
 
       greetingDescription3.innerHTML = `<span class="greeting-description-intro">Atualização automática</span> <br>noteous recebe atualizações automáticas 🌐 Assim, seu aplicativo sempre está em dia.`
       
-      greetingDescription1Image.setAttribute('src', './assets/images/greeting-search.webp')
-      greetingDescription2Image.setAttribute('src', './assets/images/greeting-usage.webp')
+      greetingDescription1Image.setAttribute('src', './assets/images/greeting-priority.webp')
+      greetingDescription2Image.setAttribute('src', './assets/images/greeting-read-options.webp')
       greetingDescription3Image.setAttribute('src', './assets/images/greeting-update.webp')
 
       greetingDescriptionContainer1.append(
