@@ -28,6 +28,10 @@
       href="https://fonts.googleapis.com/icon?family=Material+Icons"
       rel="stylesheet"
     />
+    <link
+    href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined"
+    rel="stylesheet"
+    />
     <meta name="theme-color" content="#f5993d" />
     <title>noteous</title>
     <link rel="shortcut icon" href="./img/favicon.png" type="image/x-icon" />
@@ -104,10 +108,18 @@
 
       <section id="section-read">
         <div id="read-options">
-          <button id="read-options-sort" type="button" tabindex="6"></button>
-          <input type="search" name="read-options-search-input" id="read-options-search-input" class="hidden-element"
-          placeholder="Pesquisar notas" tabindex="4"/>
-          <button id="read-options-search" class="material-icons read-options-buttons" type="button" tabindex="5">search</button>
+          <div id="read-options-container">
+            <p id="read-options-label">Opções de organização</p>
+            <input type="search" name="read-options-search-input" id="read-options-search-input" class="hidden-element"
+            placeholder="Pesquisar notas" tabindex="4"/>
+          </div>
+          <div id="read-options-buttons-container">
+            <button id="read-options-search" class="material-icons read-options-buttons" type="button" tabindex="5">search</button>
+            <button id="read-options-orientation" class="material-icons-outlined read-options-buttons" type="button" tabindex="6"></button>
+            <button id="read-options-sort-action" class="material-icons read-options-buttons" type="button" tabindex="7"></button>
+            <button id="read-options-sort" class="material-icons read-options-buttons" type="button" tabindex="8"></button>
+          </div>
+          
         </div>
 
         <div id="read-panel">

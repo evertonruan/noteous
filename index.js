@@ -108,10 +108,34 @@ let writeButtonCancelEdit = document.querySelector('#write-button-cancel')
 let readSection = document.querySelector('#section-read')
 let readPanel = document.querySelector('#read-panel')
 let readOptions = document.querySelector('#read-options')
+let readOptionsContainer = document.querySelector('#read-options-container')
+let readOptionsLabel = document.querySelector('#read-options-label')
 let readOptionsSearchInput = document.querySelector('#read-options-search-input')
 let readOptionsSearch = document.querySelector('#read-options-search')
 let readOptionsSort = document.querySelector('#read-options-sort')
-let readNotesList = document.querySelector('#read-notes')
+let readOptionsSortActionButton = document.querySelector('#read-options-sort-action')
+let readOptionsOrientationButton = document.querySelector('#read-options-orientation')
+
+let readNotesContainer = document.querySelector('#read-notes')
+
+//noteous 1.9: Cria listas de prioridade para depois adicioná-las ao readNotesContainer caso haja notas
+let readNotesListSolid = document.createElement('div')
+readNotesListSolid.id = 'read-notes-list-solid'
+readNotesListSolid.classList.add('read-notes-priority-container')
+let readNotesListDouble = document.createElement('div')
+readNotesListDouble.id = 'read-notes-list-double'
+readNotesListDouble.classList.add('read-notes-priority-container')
+let readNotesListDotted = document.createElement('div')
+readNotesListDotted.id = 'read-notes-list-dotted'
+readNotesListDotted.classList.add('read-notes-priority-container')
+
+// noteous 1.9: Personalização de Listas de Prioridade 
+// Objeto usado em renderNote para retornar a variável conforme a chamada ao construir a lista
+const readNotesLists = {
+  solid: readNotesListSolid,
+  double: readNotesListDouble,
+  dotted: readNotesListDotted
+}
 
 // noteous 1.7: Botões de Ação
 
@@ -140,6 +164,8 @@ let currentVersion = noteousVersion
 let noteIdEdit //usada para confirmar qual nota está sendo editada
 let editMode = false
 let tabIndexCounter = 10
+let sortActionSelection = ''
+let labelTimeoutId = null // Para controlar o timeout da label
 
 //função em variável para 'desbloquear' writeInput se tela é pequena
 //usado em openNote() e exitEditMode()
@@ -148,6 +174,39 @@ let writeInputEdit = function (event) {
   writeInput.focus()
   labelWrite.innerHTML = '📝 Edite aqui sua nota'
 }
+
+////////
+
+// Função para mostrar temporariamente uma mensagem no read-options-label
+function readOptionsMessage(message) {
+  // Limpa qualquer timeout anterior
+  if (labelTimeoutId) {
+    clearTimeout(labelTimeoutId)
+  }
+  
+  // Fade out
+  readOptionsLabel.style.opacity = '0'
+  
+  setTimeout(() => {
+    // Muda o texto
+    readOptionsLabel.textContent = message
+    
+    // Fade in
+    readOptionsLabel.style.opacity = '0.6'
+    
+    // Aguarda 1s e faz fade out + volta ao texto original
+    labelTimeoutId = setTimeout(() => {
+      readOptionsLabel.style.opacity = '0'
+      
+      setTimeout(() => {
+        readOptionsLabel.textContent = 'Opções de organização'
+        readOptionsLabel.style.opacity = '0.6'
+        labelTimeoutId = null
+      }, 200)
+    }, 1500)
+  }, 200)
+}
+
 
 ////////
 
@@ -551,6 +610,7 @@ function loadNoteous(context) {
         //SE NÃO HÁ NOVA VERSÃO
         sortNotes('retrieveSort')
         renderNote('render-all')
+        priorityListsOrientation('retrieveOrientation')
         orblendEngine('load')
         orblendEngine('on-change-input')
         noteousTheme('retrieve-theme')
@@ -584,11 +644,14 @@ function loadNoteous(context) {
     //2.Aplicar novas configurações
     noteousSettings = {
       noteousVersion: currentVersion,
-      sort: 'recent',
+      sort: { time: 'recent', action: 'id' },
       priority: 'solid',
+      priorityOrder: ['solid', 'double', 'dotted'],
+      priorityOrientation: 'row',
       actionButtons: ['done', 'share'],
       input: '',
       noteId: 0,
+      fileId: 0,
       look: { baseRem: '--base-rem: 100%;' }
     }
     localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
@@ -688,15 +751,44 @@ writeOptions.addEventListener('click', () => {
 //////////
 
 //noteous 1.8: Buscar
+// noteous 1.9: Buscar integrado a Opções de Organização
 function toggleReadOptionsSearch() {
   if (readOptionsSearchInput.classList.contains('hidden-element')) {
+    // Fade out label
+    if (readOptionsContainer.offsetWidth <= 570) {
+      readOptionsLabel.style.opacity = '0'
+    }
     readOptionsSearch.classList.add('active-button')
-    readOptionsSearchInput.classList.remove('hidden-element')
-    readOptionsSort.classList.add('hidden-element')
+
+    setTimeout(() => {
+      readOptionsSearchInput.classList.remove('hidden-element')
+      if (readOptionsContainer.offsetWidth <= 570) {
+        readOptionsLabel.classList.add('hidden-element')
+      }
+      // Inicia o search input com opacity 0 e depois fade in
+      readOptionsSearchInput.style.opacity = '0'
+      setTimeout(() => {
+        readOptionsSearchInput.style.opacity = '1'
+      }, 10)
+    }, 200)
   } else {
-    readOptionsSearchInput.classList.add('hidden-element')
+    // Fade out search input
+      readOptionsSearchInput.style.opacity = '0'
     readOptionsSearch.classList.remove('active-button')
-    readOptionsSort.classList.remove('hidden-element')
+    
+    setTimeout(() => {
+      readOptionsSearchInput.classList.add('hidden-element')
+      if (readOptionsContainer.offsetWidth <= 570) {
+        readOptionsLabel.classList.remove('hidden-element')
+      }
+      // Inicia o label com opacity 0 e depois fade in
+      if (readOptionsContainer.offsetWidth <= 570) {
+      readOptionsLabel.style.opacity = '0'
+      setTimeout(() => {
+        readOptionsLabel.style.opacity = '0.6'
+      }, 10)
+    }
+    }, 200)
   }
 }
 
@@ -710,72 +802,193 @@ readOptionsSearchInput.addEventListener('input', () => {
 
 //////////
 
-function sortNotes(context) {
-
-  // noteous em versões anteriores: Antes, apenas dava a 'sensação' de que as notas foram ordenadas, apenas usando flex-reverse.
-  // noteous preview 1.7.1: função sortNotes() revisada. Agora, faz uma inversão de verdade, ordenando o array de notas.
-
-  if (context == 'retrieveSort') {
-    if (noteousSettings.sort == 'recent') {
-      // Ordena as notas do mais recente para o mais antigo (ordem decrescente por ID)
-      noteousMain.sort((a, b) => b.id - a.id)
-      
-      readOptionsSort.innerHTML = ''
-      readOptionsSort.append(
-        document.createTextNode('Ordenando por: Recente primeiro')
-      )
-    } else if (noteousSettings.sort == 'old') {
-      // Ordena as notas do mais antigo para o mais recente (ordem crescente por ID)
-      noteousMain.sort((a, b) => a.id - b.id)
-      
-      readOptionsSort.innerHTML = ''
-      readOptionsSort.append(
-        document.createTextNode('Ordenando por: Antigo primeiro')
-      )
+function priorityListsOrientation(context) {
+  if (context == 'retrieveOrientation') {
+    if (noteousSettings.priorityOrientation == 'row') {
+      readOptionsOrientationButton.innerHTML = ''
+      readOptionsOrientationButton.append(document.createTextNode('view_agenda'))
+  readOptionsOrientationButton.style.transform = 'rotate(90deg)'
+      readNotesContainer.style.cssText = 'flex-direction: row;'
+      for (let priorityList of readNotesContainer.querySelectorAll('.read-notes-priority-container')) {
+        priorityList.style.cssText = 'flex-direction: column;  min-width: fit-content;'
+      }
+    } else if (noteousSettings.priorityOrientation == 'column') {
+      readOptionsOrientationButton.innerHTML = ''
+      readOptionsOrientationButton.append(document.createTextNode('view_agenda'))
+  readOptionsOrientationButton.style.transform = 'rotate(0deg)'
+      readNotesContainer.style.cssText = 'flex-direction: column;'
+      for (let priorityList of readNotesContainer.querySelectorAll('.read-notes-priority-container')) {
+        priorityList.style.cssText = 'flex-direction: row;'
+      }
     }
-  } else {
-    if (noteousSettings.sort == 'recent') {
-      readOptionsSort.innerHTML = ''
-      readOptionsSort.append(
-        document.createTextNode('Ordenando por: Antigo primeiro')
-      )
-      noteousSettings.sort = 'old'
-      
-      // Ordena as notas do mais antigo para o mais recente (ordem crescente por ID)
-      noteousMain.sort((a, b) => a.id - b.id)
-      
-      renderNote('render-all')
-      localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
-    } else if (noteousSettings.sort == 'old') {
-      readOptionsSort.innerHTML = ''
-      readOptionsSort.append(
-        document.createTextNode('Ordenando por: Recente primeiro')
-      )
-      noteousSettings.sort = 'recent'
-      
-      // Ordena as notas do mais recente para o mais antigo (ordem decrescente por ID)
-      noteousMain.sort((a, b) => b.id - a.id)
-      
-      renderNote('render-all')
-      localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
+  } else if (context == 'change-orientation') {
+    // Alterna entre 'row' e 'column'
+    if (noteousSettings.priorityOrientation == 'row') {
+      noteousSettings.priorityOrientation = 'column';
+    } else {
+      noteousSettings.priorityOrientation = 'row';
     }
+    localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings));
+    // Atualiza a interface após a troca
+    priorityListsOrientation('retrieveOrientation');
+    
+    // Mostra a orientação atual no label
+    const orientationText = noteousSettings.priorityOrientation == 'row' 
+      ? 'Orientação: Horizontal' 
+      : 'Orientação: Vertical'
+    readOptionsMessage(orientationText)
   }
 }
 
-readOptionsSort.addEventListener('click', sortNotes)
+readOptionsOrientationButton.addEventListener('click', () => {
+  priorityListsOrientation('change-orientation')
+})
+
+function readOptionsSortActionButtonText() {
+  if (noteousSettings.sort.action == 'editedAt') {
+    readOptionsSortActionButton.innerHTML = ''
+    readOptionsSortActionButton.append(document.createTextNode('edit_note'))
+  } else if (noteousSettings.sort.action == 'id') {
+    readOptionsSortActionButton.innerHTML = ''
+    readOptionsSortActionButton.append(document.createTextNode('post_add'))
+  }
+}
+
+function sortNotes(context, subcontext) {
+
+  // noteous em versões anteriores: Antes, apenas dava a 'sensação' de que as notas foram ordenadas, apenas usando flex-reverse.
+  // noteous preview 1.7.1: função sortNotes() revisada. Agora, faz uma inversão de verdade, ordenando o array de notas.
+  // noteous preview 1.8: função sortNotes() revisada. Agora, há dois critérios de ordenação: (1) tempo (recente ou antigo primeiro) e (2) ação (ordem pela criação ou pela edição). Assim, o usuário pode escolher se quer ver as notas mais recentes primeiro ou as mais antigas primeiro, e também se quer que a ordenação seja feita pela data de criação ou pela data de edição.
+
+  if (context == 'retrieveSort') {
+    const getSortValue = (note) => {
+      if (noteousSettings.sort.action === 'editedAt') {
+        return note.editedAt ?? note.id
+      }
+      return note.id
+    }
+
+    if (noteousSettings.sort.time == 'recent') {
+      noteousMain.sort((a, b) => getSortValue(b) - getSortValue(a))
+      
+      readOptionsSort.innerHTML = ''
+      readOptionsSort.append(document.createTextNode('arrow_downward'))
+      readOptionsSortActionButtonText()
+
+
+    } else if (noteousSettings.sort.time == 'old') {
+      noteousMain.sort((a, b) => getSortValue(a) - getSortValue(b))
+      
+      readOptionsSort.innerHTML = ''
+      readOptionsSort.append(document.createTextNode('arrow_upward'))
+      readOptionsSortActionButtonText()
+    }
+
+    renderNote('render-all')
+
+  } else if (context == 'change-sort-action') {
+      if (noteousSettings.sort.action == 'editedAt') {
+          noteousSettings.sort.action = 'id' // Troca ordem de notas pela Criação
+          localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
+          readOptionsMessage('Ordenar por: Criação')
+        
+      } else if (noteousSettings.sort.action == 'id') {
+          noteousSettings.sort.action = 'editedAt' // Troca ordem de notas pela Edição
+          localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
+          readOptionsMessage('Ordenar por: Edição')
+      }
+      sortNotes('retrieveSort')
+
+  } else if (context == 'change-sort-time') {
+    const getSortValue = (note) => {
+      if (noteousSettings.sort.action === 'editedAt') {
+        return note.editedAt ?? note.id
+      }
+      return note.id
+    }
+
+    //Se o tempo era recente, troca para antigo
+    if (noteousSettings.sort.time == 'recent') {
+      noteousSettings.sort.time = 'old'
+      localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
+
+      readOptionsSortActionButtonText()
+
+      readOptionsSort.innerHTML = ''
+      readOptionsSort.append(
+        document.createTextNode('arrow_upward')
+      )
+      
+      readOptionsMessage('Ordem: Mais antigas primeiro')
+      
+      // Ordem: Antigo para recente
+      noteousMain.sort((a, b) => getSortValue(a) - getSortValue(b))
+
+      renderNote('render-all')
+
+      //Se o tempo era antigo, troca para recente
+    } else if (noteousSettings.sort.time == 'old') {
+      noteousSettings.sort.time = 'recent'
+      localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
+
+      readOptionsSortActionButtonText()
+
+      readOptionsSort.innerHTML = ''
+      readOptionsSort.append(document.createTextNode('arrow_downward'))
+      
+      readOptionsMessage('Ordem: Mais recentes primeiro')
+      
+      // Ordem: Recente para antigo
+      noteousMain.sort((a, b) => getSortValue(b) - getSortValue(a))
+
+      renderNote('render-all')
+    }
+  }
+}
+readOptionsSort.addEventListener('click', () => {
+  sortNotes('change-sort-time')
+})
+readOptionsSortActionButton.addEventListener('click', () => {
+  sortNotes('change-sort-action')
+})
 
 //////////
 
+
 function renderNote(context, noteId, searchTerm) {
+
+  //ESSE CONTEXTO É USADO AO CARREGAR A PÁGINA, RENDERIZANDO TODAS AS NOTAS
+
   if (context == 'render-all') {
-    readNotesList.innerHTML = ''
+    readNotesContainer.innerHTML = ''
+    if (readNotesListSolid) {
+      readNotesListSolid.innerHTML = ''
+    }
+    if (readNotesListDouble) {
+      readNotesListDouble.innerHTML = ''
+    }
+    if (readNotesListDotted) {
+      readNotesListDotted.innerHTML = ''
+    }
 
-    for (let note of noteousMain) {
-      if (note.done != true && (searchTerm == undefined || note.text.toLowerCase().includes(searchTerm.toLowerCase()))) {
-        let noteContainer = document.createElement('div')
-        noteContainer.id = note.id + '-note-container'
-        noteContainer.classList.add('note-container')
+    // noteous preview 1.7.1: Listas de Prioridade. Criação primeiro das notas e depois ver qual lista vai. Problema: cada nova nota reordena a Lista de Prioridade. Por exemplo, uma nova nota com prioridade dotted joga a Lista de Prioridade dotted para o primeiro lugar.
 
+    //noteous preview 1.8: personalização de ordem de Listas de Prioridade. Revisão do código para criar as listas na ordem definida pelo usuário. Agora, renderNote() primeiro verifica a ordem das listas e depois, adiciona a nota em sua respectiva lista.
+
+    for (let priority of noteousSettings.priorityOrder) {
+      if (!readNotesContainer.querySelector(`#read-notes-list-${priority}`)) { //Se não há lista com essa prioridade, cria
+        readNotesContainer.append(readNotesLists[priority])
+      }
+
+      for (let note of noteousMain) {
+        // Verifica se a nota atual pertence à lista de prioridade que está sendo criada. A ordem das notas dentro da lista é definida por sortNotes(). Ou seja: noteousMain já vem ordenado pelo sortNotes()
+        //noteous preview 1.9: ao renderizar todas as notas, se houver termo de busca, filtra as notas que contêm o termo (sem diferenciar maiúsculas e minúsculas)
+        if (note.priority == priority && note.done != true && (searchTerm == undefined || note.text.toLowerCase().includes(searchTerm.toLowerCase()))) {
+          let noteContainer = document.createElement('div')
+          noteContainer.id = note.id + '-note-container'
+          noteContainer.classList.add('note-container')
+          readNotesLists[priority].append(noteContainer)
+          
         //BORDER/PRIORITY
         if (note.priority == 'solid') {
           noteContainer.style.cssText = 'border-style: none;'
@@ -824,6 +1037,7 @@ function renderNote(context, noteId, searchTerm) {
 
             actionButtonsContainer.appendChild(readNotesActionButtons[actionButton])
         }
+        
 
         //NOTE TEXT
         let noteTextContainer = document.createElement('div')
@@ -834,27 +1048,28 @@ function renderNote(context, noteId, searchTerm) {
         // --> adição de 'texto' ao id porque não pode haver ids iguais
         let textElement = document.createElement('p')
         textElement.id = note.id + '-text'
+        noteContainer.appendChild(textElement)
+
+        // noteous em versões anteriores: se nota tivesse menos de 300 caracteres, o conteúdo seria adicionado por inteiro. Se tivesse mais de 300 carateceres, iria testar cada caractere até chegar no 300º e exibir 'VER MAIS'. Isso levava em conta somente o texto dela, para previnir que ficasse muito longo, mas não levava em conta o espaço que o elemento ocupava.
+        // noteous preview 1.7.1: caracteres da nota são contados sempre. Agora, há 3 listas de prioridade e o espaço que uma nota ocupa é muito mais importante. Assim, ao renderizar uma nota, cada caractere dela é contado para que, se alcançar 200 caracteres ou alcançar 200px de altura, o que chegar primeiro, seja exibido 'VER MAIS'. Isso previne que notas muito longas ocupem espaço demais.
 
         let noteChar = note.text
-        if (noteChar.length < 300) {
-          //Se tamanho da nota for menor que 30, escrever nota inteira
-          textElement.appendChild(document.createTextNode(noteChar))
-        } else if (noteChar.length >= 300) {
-          //Se tamanho da nota for maior que 30, escrever apenas até o 30º caractere e acrescentar botão para ver nota inteira
-          let count = 0
-          for (let noteCharAt of noteChar) {
-            textElement.appendChild(document.createTextNode(noteCharAt))
-            count = count + 1
-            //"Ir escrevendo" cada caractere até chegar o 30º
-            if (count == 300) {
-              textElement.append(document.createTextNode(' ...'))
-              textElement.append(document.createElement('br'))
-              textElement.append(document.createTextNode('[VER MAIS]'))
+        let count = 0
+        for (let noteCharAt of noteChar) {
+          textElement.appendChild(document.createTextNode(noteCharAt))
+          count = count + 1
+          
+          //"Ir escrevendo" cada caractere até chegar o 30º ou até a altura da nota ser 200px
+          if (count == 200 || noteContainer.offsetHeight >= 200){
+            
+            textElement.append(document.createTextNode(' ...'))
+            textElement.append(document.createElement('br'))
+            textElement.append(document.createTextNode('[VER MAIS]'))
 
-              break
-            }
+            break
           }
         }
+        
 
         //DATE
         let noteDateContainer = document.createElement('div')
@@ -865,7 +1080,7 @@ function renderNote(context, noteId, searchTerm) {
         dateElement.id = note.id + '-date-element'
         dateElement.appendChild(
           document.createTextNode(
-            `Criado em: ${new Date(note.id).getDate()}/${findMonth(
+            `+ ${new Date(note.id).getDate()}/${findMonth(
               new Date(note.id).getMonth()
             )}/${new Date(note.id).getUTCFullYear()} às ${setTimeNumber(
               new Date(note.id).getHours()
@@ -894,6 +1109,8 @@ function renderNote(context, noteId, searchTerm) {
           `if (event.key === 'Enter') { openNote(${note.id}); }`
         )
 
+        
+
         //APPENDS
         noteTextContainer.appendChild(textElement)
         noteDateContainer.appendChild(dateElement)
@@ -901,21 +1118,51 @@ function renderNote(context, noteId, searchTerm) {
 
         noteContainer.appendChild(actionButtonsContainer)
         noteContainer.appendChild(noteTextContainer)
-
-        readNotesList.appendChild(noteContainer)
+        }
       }
-    }
+  }
 
     setTimeout(() => {
       //css inicia em 0. Após renderizar, altera para 1
       readPanel.style.cssText = 'opacity: 1; transform: translateY(-10px);'
     }, 300)
-  } else if (context == 'add') {
+  }
+  
+  // ESSE CONTEXTO É USADO AO ADICIONAR NOTA, PARA RENDERIZÁ-LA
+  
+  else if (context == 'add') {
     for (let note of noteousMain) {
       if (note.id == noteId) {
         let noteContainer = document.createElement('div')
         noteContainer.id = note.id + '-note-container'
         noteContainer.classList.add('note-container')
+        
+        //noteous preview 1.7.1
+        //Visualização por Listas de Prioridade
+        //Após criar as notas, irá sorteá-las de acordo com a prioridade
+
+        //Caso alguma tenha alguma nota com prioridade solid,
+        //Adiciona lista ao container de listas (readNotesContainer) caso seja a primeira nota
+        //Depois, adiciona a nota à lista
+
+        if (note.priority == 'solid') {
+          if (!readNotesContainer.querySelector('#read-notes-list-solid')) {
+            readNotesContainer.append(readNotesListSolid)
+          }
+          readNotesListSolid.append(noteContainer)  
+
+        } else if (note.priority == 'double') {
+          if (!readNotesContainer.querySelector('#read-notes-list-double')) {
+            readNotesContainer.append(readNotesListDouble)
+          }
+          readNotesListDouble.append(noteContainer)
+
+        } else if (note.priority == 'dotted') {
+          if (!readNotesContainer.querySelector('#read-notes-list-dotted')) {
+            readNotesContainer.append(readNotesListDotted)
+          }
+          readNotesListDotted.append(noteContainer)
+        }
 
         //BORDER/PRIORITY
         if (note.priority == 'solid') {
@@ -927,73 +1174,45 @@ function renderNote(context, noteId, searchTerm) {
         }
 
         //ACTION BUTTONS
-
         let actionButtonsContainer = document.createElement('div')
         actionButtonsContainer.id = note.id + '-action-buttons-container'
         actionButtonsContainer.classList.add('action-buttons-container')
 
-        for (let actionButton of noteousSettings.actionButtons) {
-
-            readNotesActionButtons[actionButton] = document.createElement('button')
-            readNotesActionButtons[actionButton].classList.add('action-buttons', 'material-icons')
-            readNotesActionButtons[actionButton].setAttribute('onclick', `${actionButton}Note(${note.id})`)
-            readNotesActionButtons[actionButton].appendChild(document.createTextNode(readNotesActionButtonsIcons[actionButton]))
-
-            //ACESSIBILIDADE
-            readNotesActionButtons[actionButton].tabIndex = tabIndexCounter += 1
-            if (actionButton == 'done') {
-              readNotesActionButtons[actionButton].setAttribute('aria-label', 'Concluir nota')
-              readNotesActionButtons[actionButton].setAttribute(
-                'onkeyup',
-                `if (event.key === 'Enter') { doneNote(${note.id}); }`
-              )
-            } else if (actionButton == 'share') {
-              readNotesActionButtons[actionButton].setAttribute('aria-label', 'Compartilhar nota')
-              readNotesActionButtons[actionButton].setAttribute(
-                'onkeyup',
-                `if (event.key === 'Enter') { shareNote(${note.id}); }`
-              )
-            }
-            else if (actionButton == 'copy') {
-              readNotesActionButtons[actionButton].classList.add('action-button-copy')
-              readNotesActionButtons[actionButton].setAttribute('aria-label', 'Copiar nota')
-              readNotesActionButtons[actionButton].setAttribute(
-                'onkeyup',
-                `if (event.key === 'Enter') { copyNote(${note.id}); }`
-              )
-            }
-
-            actionButtonsContainer.appendChild(readNotesActionButtons[actionButton])
-        }
+        //done
+        let doneActionButton = document.createElement('a')
+        doneActionButton.classList.add('action-buttons', 'material-icons')
+        doneActionButton.setAttribute('onclick', `doneNote(${note.id})`)
+        doneActionButton.appendChild(document.createTextNode('check_circle'))
 
         //NOTE TEXT
         let noteTextContainer = document.createElement('div')
         noteTextContainer.id = note.id + '-text-container'
         noteTextContainer.classList.add('note-text-container')
         noteTextContainer.setAttribute('onclick', `openNote(${note.id})`)
+        
         // --> adição de 'texto' ao id porque não pode haver ids iguais
-
         let textElement = document.createElement('p')
         textElement.id = note.id + '-text'
+        noteContainer.appendChild(textElement)
+
+        // noteous em versões anteriores: se nota tivesse menos de 300 caracteres, o conteúdo seria adicionado por inteiro. Se tivesse mais de 300 carateceres, iria testar cada caractere até chegar no 300º e exibir 'VER MAIS'. Isso levava em conta somente o texto dela, para previnir que ficasse muito longo, mas não levava em conta o espaço que o elemento ocupava.
+        // noteous preview 1.7.1: caracteres da nota são contados sempre. Agora, há 3 listas de prioridade e o espaço que uma nota ocupa é muito mais importante. Assim, ao renderizar uma nota, cada caractere dela é contado para que, se alcançar 200 caracteres ou alcançar 200px de altura, o que chegar primeiro, seja exibido 'VER MAIS'. Isso previne que notas muito longas ocupem espaço demais.
 
         let noteChar = note.text
-        if (noteChar.length < 300) {
-          //Se tamanho da nota for menor que 30, escrever nota inteira
-          textElement.appendChild(document.createTextNode(noteChar))
-        } else if (noteChar.length >= 300) {
-          //Se tamanho da nota for maior que 30, escrever apenas até o 30º caractere e acrescentar botão para ver nota inteira
-          let count = 0
-          for (let noteCharAt of noteChar) {
-            textElement.appendChild(document.createTextNode(noteCharAt))
-            count = count + 1
-            //"Ir escrevendo" cada caractere até chegar o 30º
-            if (count == 300) {
-              textElement.append(document.createTextNode(' ...'))
-              textElement.append(document.createElement('br'))
-              textElement.append(document.createTextNode('[VER MAIS]'))
+        let count = 0
+        for (let noteCharAt of noteChar) {
+          textElement.appendChild(document.createTextNode(noteCharAt))
+          count = count + 1
+          
+          console.log(noteContainer.offsetHeight)
+          //"Ir escrevendo" cada caractere até chegar o 30º
+          if (count == 200 || noteContainer.offsetHeight >= 200){
+            
+            textElement.append(document.createTextNode(' ...'))
+            textElement.append(document.createElement('br'))
+            textElement.append(document.createTextNode('[VER MAIS]'))
 
-              break
-            }
+            break
           }
         }
 
@@ -1035,7 +1254,15 @@ function renderNote(context, noteId, searchTerm) {
           `if (event.key === 'Enter') { openNote(${note.id}); }`
         )
 
+        doneActionButton.tabIndex = tabIndexCounter += 1
+        doneActionButton.setAttribute('aria-label', 'Concluir nota')
+        doneActionButton.setAttribute(
+          'onkeyup',
+          `if (event.key === 'Enter') { doneNote(${note.id}); }`
+        )
+
         //APPENDS
+        actionButtonsContainer.appendChild(doneActionButton)
         noteTextContainer.appendChild(textElement)
         noteDateContainer.appendChild(dateElement)
         noteTextContainer.appendChild(noteDateContainer)
@@ -1043,12 +1270,13 @@ function renderNote(context, noteId, searchTerm) {
         noteContainer.appendChild(actionButtonsContainer)
         noteContainer.appendChild(noteTextContainer)
 
-        readNotesList.prepend(noteContainer)
+        readNotesContainer.prepend(noteContainer)
       }
     }
   }
   orblendEngine('change')
 }
+
 
 function findMonth(number) {
   if (number == 0) {
@@ -1349,7 +1577,7 @@ function editNote(noteId) {
             }
           }
 
-          renderNote('render-all')
+          sortNotes('retrieveSort')
 
           exitEditMode()
         }
