@@ -975,7 +975,8 @@ function renderNote(context, noteId, searchTerm) {
 
     //noteous preview 1.8: personalização de ordem de Listas de Prioridade. Revisão do código para criar as listas na ordem definida pelo usuário. Agora, renderNote() primeiro verifica a ordem das listas e depois, adiciona a nota em sua respectiva lista.
 
-    for (let priority of noteousSettings.priorityOrder) {
+    const priorities = noteousSettings.priorityOrder || ['solid', 'double', 'dotted']
+    for (let priority of priorities) {
       if (!readNotesContainer.querySelector(`#read-notes-list-${priority}`)) { //Se não há lista com essa prioridade, cria
         readNotesContainer.append(readNotesLists[priority])
       }
