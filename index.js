@@ -903,9 +903,15 @@ function sortNotes(context, subcontext) {
   // noteous preview 1.8: função sortNotes() revisada. Agora, há dois critérios de ordenação: (1) tempo (recente ou antigo primeiro) e (2) ação (ordem pela criação ou pela edição). Assim, o usuário pode escolher se quer ver as notas mais recentes primeiro ou as mais antigas primeiro, e também se quer que a ordenação seja feita pela data de criação ou pela data de edição.
 
   if (context == 'retrieveSort') {
+    const getSortValue = (note) => {
+      if (noteousSettings.sort.action === 'editedAt') {
+        return note.editedAt ?? note.id
+      }
+      return note.id
+    }
 
     if (noteousSettings.sort.time == 'recent') {
-      noteousMain.sort((a, b) => b[noteousSettings.sort.action] - a[noteousSettings.sort.action])
+      noteousMain.sort((a, b) => getSortValue(b) - getSortValue(a))
       
       readOptionsSort.innerHTML = ''
       readOptionsSort.append(document.createTextNode('arrow_downward'))
@@ -913,7 +919,7 @@ function sortNotes(context, subcontext) {
 
 
     } else if (noteousSettings.sort.time == 'old') {
-      noteousMain.sort((a, b) => a[noteousSettings.sort.action] - b[noteousSettings.sort.action])
+      noteousMain.sort((a, b) => getSortValue(a) - getSortValue(b))
       
       readOptionsSort.innerHTML = ''
       readOptionsSort.append(document.createTextNode('arrow_upward'))
@@ -936,6 +942,12 @@ function sortNotes(context, subcontext) {
       sortNotes('retrieveSort')
 
   } else if (context == 'change-sort-time') {
+    const getSortValue = (note) => {
+      if (noteousSettings.sort.action === 'editedAt') {
+        return note.editedAt ?? note.id
+      }
+      return note.id
+    }
 
     //Se o tempo era recente, troca para antigo
     if (noteousSettings.sort.time == 'recent') {
@@ -952,7 +964,7 @@ function sortNotes(context, subcontext) {
       readOptionsMessage('Ordem: Mais antigas primeiro')
       
       // Ordem: Antigo para recente
-      noteousMain.sort((a, b) => a[noteousSettings.sort.action] - b[noteousSettings.sort.action])
+      noteousMain.sort((a, b) => getSortValue(a) - getSortValue(b))
 
       renderNote('render-all')
 
@@ -969,7 +981,7 @@ function sortNotes(context, subcontext) {
       readOptionsMessage('Ordem: Mais recentes primeiro')
       
       // Ordem: Recente para antigo
-      noteousMain.sort((a, b) => b[noteousSettings.sort.action] - a[noteousSettings.sort.action])
+      noteousMain.sort((a, b) => getSortValue(b) - getSortValue(a))
 
       renderNote('render-all')
     }
@@ -1627,7 +1639,7 @@ function editNote(noteId) {
             }
           }
 
-          renderNote('render-all')
+          sortNotes('retrieveSort')
 
           exitEditMode()
         }
