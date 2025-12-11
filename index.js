@@ -135,7 +135,7 @@ const readNotesActionButtonsIcons = {
 
 
 // VARIÁVEIS IMPORTANTES /////////////////////////////////////
-
+//a
 let currentVersion = noteousVersion
 let noteIdEdit //usada para confirmar qual nota está sendo editada
 let editMode = false
