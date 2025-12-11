@@ -608,6 +608,12 @@ function loadNoteous(context) {
         welcomeToNoteous('render-welcome', 'new-version')
       } else {
         //SE NÃO HÁ NOVA VERSÃO
+
+        //noteous 1.9.1: Corrige problema em que a atualização não adiciona novas chaves (relacionada as novas Opções de Organização) ao LocalStorage. Solução: verificar se uma das novas chaves existe. se não existir, voltar a tela de atualização.
+        if (noteousSettings.priorityOrientation == null && noteousSettings.noteousVersion >= 1.9) {
+          welcomeToNoteous('render-welcome', 'new-version')
+        }
+
         sortNotes('retrieveSort')
         renderNote('render-all')
         priorityListsOrientation('retrieveOrientation')
@@ -857,8 +863,7 @@ function readOptionsSortActionButtonText() {
 function sortNotes(context, subcontext) {
 
   // noteous em versões anteriores: Antes, apenas dava a 'sensação' de que as notas foram ordenadas, apenas usando flex-reverse.
-  // noteous preview 1.7.1: função sortNotes() revisada. Agora, faz uma inversão de verdade, ordenando o array de notas.
-  // noteous preview 1.8: função sortNotes() revisada. Agora, há dois critérios de ordenação: (1) tempo (recente ou antigo primeiro) e (2) ação (ordem pela criação ou pela edição). Assim, o usuário pode escolher se quer ver as notas mais recentes primeiro ou as mais antigas primeiro, e também se quer que a ordenação seja feita pela data de criação ou pela data de edição.
+  // noteous 1.9: Agora as notas são realmente ordenadas no array noteousMain. Esse recurso está integrado às Opções de Organização.
 
   if (context == 'retrieveSort') {
     const getSortValue = (note) => {
