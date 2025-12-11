@@ -608,6 +608,12 @@ function loadNoteous(context) {
         welcomeToNoteous('render-welcome', 'new-version')
       } else {
         //SE NÃO HÁ NOVA VERSÃO
+
+        //noteous 1.9.1: Corrige problema em que a atualização não adiciona novas chaves (relacionada as novas Opções de Organização) ao LocalStorage. Solução: verificar se uma das novas chaves existe. se não existir, voltar a tela de atualização.
+        if (noteousSettings.priorityOrientation == null && noteousSettings.noteousVersion >= 1.9) {
+          welcomeToNoteous('render-welcome', 'new-version')
+        }
+
         sortNotes('retrieveSort')
         renderNote('render-all')
         priorityListsOrientation('retrieveOrientation')
