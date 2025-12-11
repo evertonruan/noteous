@@ -6,7 +6,7 @@ function serviceWorkerRegister() {
     }
 }
 
-// PWA INSTALL /////////////////////////////////
+// PWA INSTALL //////////////////////////////////
 // Holds the deferred prompt event provided by the browser
 let deferredInstallPrompt = null
 
