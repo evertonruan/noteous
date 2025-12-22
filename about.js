@@ -448,7 +448,13 @@ copyCreateButton.addEventListener('click', () => {
 
     // Informação sobre quantidade de notas
     let notesInfo = document.createElement('p')
-    notesInfo.textContent = `Você tem ${noteousMain.length} nota${noteousMain.length !== 1 ? 's' : ''}`
+
+    const doneNotesCount = noteousMain.filter(note => note.done === true).length
+    const doneNotesText = doneNotesCount > 0
+      ? `, incluindo ${doneNotesCount} nota${doneNotesCount !== 1 ? 's' : ''} concluída${doneNotesCount !== 1 ? 's' : ''}`
+      : ''
+
+    notesInfo.textContent = `Você tem ${noteousMain.length} nota${noteousMain.length !== 1 ? 's' : ''}${doneNotesText}`
 
     // Container para os botões
     let buttonsContainer = document.createElement('div')
@@ -836,18 +842,9 @@ function showNotesModal(notesData, context = 'copy') {
 function createNotePreview(note, index, context = 'copy') {
   const noteContainer = document.createElement('div')
   noteContainer.classList.add('note-container')
-  
 
+  noteContainer.style.minWidth = 'auto'
 
-  // Responsividade baseada no CSS original
-  if (window.innerWidth <= 450) {
-    noteContainer.style.maxWidth = 'none'
-    noteContainer.style.flexBasis = '90%'
-  } else if (window.innerWidth <= 600) {
-    noteContainer.style.maxWidth = '40vw'
-  } else {
-    noteContainer.style.maxWidth = '40%'
-  }
 
   //BORDER/PRIORITY
   if (note.priority == 'solid') {
