@@ -141,6 +141,12 @@ noteousTheme('retrieve-theme')
 // Pesquisa de Experiência do noteous
 
 let access = noteousSettings.noteousApp.firstAccess + 604800000
+aboutButtonSurvey.addEventListener('click', () => {
+  noteousSettings.noteousApp.surveyStatus = true
+  localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
+  window.location.assign(`https://evertonruan.com/noteous/survey?a=${access}`);
+  window.location.reload();
+})
 
 // Se ainda não respondeu à pesquisa
 if (noteousSettings.noteousApp.surveyStatus == false) {
@@ -150,12 +156,6 @@ if (noteousSettings.noteousApp.surveyStatus == false) {
     aboutSurveyInfo.innerHTML = '<strong>🗓️ Você precisa utilizar o noteous por pelo menos 1 semana para responder à Pesquisa de Experiência</strong>'
     aboutButtonSurvey.classList.add('hidden-element')
   }
-
-  aboutButtonSurvey.addEventListener('click', () => {
-    noteousSettings.noteousApp.surveyStatus = true
-    localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
-    window.location.assign(`https://evertonruan.com/noteous/survey?a=${access}`);
-  })
 } else if (noteousSettings.noteousApp.surveyStatus == true && noteousSettings.noteousApp.surveyBonus == null) {
   // Se já respondeu, mas não inseriu o código bônus
   surveyBonusLabel.classList.remove('hidden-element')
