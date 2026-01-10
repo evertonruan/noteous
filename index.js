@@ -43,8 +43,8 @@ function placeInstallButton() {
   const installBtn = document.createElement('button')
   installBtn.id = 'install-button'
   // Reuse existing visual style for greeting buttons
-  installBtn.classList.add('greeting-buttons')
-  installBtn.textContent = 'Instalar noteous'
+  installBtn.classList.add('write-buttons')
+  installBtn.innerHTML = '<span style="font-style: normal;">🧁</span> Instalar noteous'
   installBtn.addEventListener('click', async () => {
     try {
       installBtn.disabled = true
@@ -74,7 +74,12 @@ function placeInstallButton() {
 window.addEventListener('beforeinstallprompt', (e) => {
   e.preventDefault()
   deferredInstallPrompt = e
-  placeInstallButton()
+  
+  if (noteousSettings?.noteousApp?.installPrompt <= 3) {
+    noteousSettings.noteousApp.installPrompt++
+    localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
+    placeInstallButton()
+  }
 })
 
 // When app is installed, remove the button
@@ -98,9 +103,10 @@ let infoPanel = document.querySelector('#info-panel')
 
 let writeOptions = document.querySelector('#write-options')
 
-let labelWrite = document.querySelector('#write-label')
+let writeLabel = document.querySelector('#write-label')
 let writeInput = document.querySelector('#write-input')
 let writeButtonAdd = document.querySelector('#write-button-add')
+let writeButtonDismiss = document.querySelector('#write-button-dismiss')
 let writeButtonEdit = document.querySelector('#write-button-edit')
 let writeButtonCancelEdit = document.querySelector('#write-button-cancel')
 
@@ -116,7 +122,7 @@ let readOptionsSort = document.querySelector('#read-options-sort')
 let readOptionsSortActionButton = document.querySelector('#read-options-sort-action')
 let readOptionsOrientationButton = document.querySelector('#read-options-orientation')
 
-let readNotesContainer = document.querySelector('#read-notes')
+let readNotesContainer = document.querySelector('#read-notes-container')
 
 //noteous 1.9: Cria listas de prioridade para depois adicioná-las ao readNotesContainer caso haja notas
 let readNotesListSolid = document.createElement('div')
@@ -172,10 +178,7 @@ let labelTimeoutId = null // Para controlar o timeout da label
 let writeInputEdit = function (event) {
   writeInput.removeAttribute('readonly')
   writeInput.focus()
-  labelWrite.innerHTML = '📝 Edite aqui sua nota'
 }
-
-////////
 
 // Função para mostrar temporariamente uma mensagem no read-options-label
 function readOptionsMessage(message) {
@@ -214,9 +217,16 @@ function navLink() {
   window.location.replace('./about.html')
 }
 
-///////
+////
 
-noteousVersionLabel.innerHTML = `<span>noteous</span> ${noteousVersion}`
+function renderNoteousVersionLabel() {
+  if (noteousVersion.toString().length == 3) {
+    noteousVersionLabel.innerHTML = `<span>noteous</span> ${noteousVersion}`
+  } else if (noteousVersion.toString().length == 4) {
+    noteousVersionLabel.innerHTML = `<span>noteous</span> ${noteousVersion.toString().slice(0,3)}.${noteousVersion.toString().slice(3)}`
+  }
+}
+renderNoteousVersionLabel()
 
 //INICIALIZAÇÃO //////////////////////////////////////////////
 
@@ -318,7 +328,12 @@ function welcomeToNoteous(context, subcontext) {
     btnNext.classList.add('greeting-buttons')
     btnNext.appendChild(document.createTextNode('Continuar →'))
     btnNext.addEventListener('click', () => {
-      welcomeToNoteous('render-policies')
+      if (noteousSettings == null || noteousSettings?.noteousApp?.acceptedTermsVersion != termsVersion) {
+        welcomeToNoteous('render-policies')
+      } else {
+        loadNoteous('set-settings')
+        window.location.reload()
+      }
     })
 
     //Appends
@@ -382,21 +397,17 @@ function welcomeToNoteous(context, subcontext) {
     } else if (subcontext == 'new-version') {
       greetingTitle1.append(document.createTextNode('Boas-vindas ao'))
       greetingTitle2.append(document.createTextNode('noteous'))
-      greetingDescriptionTitle.append(
-        document.createTextNode(
-          '✨ Atualização concluída! Veja os destaques do noteous 1.9'
-        )
-      )
+      greetingDescriptionTitle.innerHTML = `✨ Você recebeu uma atualização com várias melhorias <br> <br> Essa é a atualização de Janeiro de 2026`
 
-      greetingDescription1.innerHTML = `<span class="greeting-description-intro">Listas de Prioridade</span> <br>Sua organização foi para o próximo nível. Veja suas notas em listas separadas, de acordo com a prioridade (borda)`
+      greetingDescription1.innerHTML = `<span class="greeting-description-intro">Backup Inteligente de Nota</span>Saiu e esqueceu de adicionar? Sem problema: noteous usa o Orblend Engine para recuperar de forma automática sua nota, agora com um visual integrado`
 
-      greetingDescription2.innerHTML = `<span class="greeting-description-intro">Opções de Organização</span> <br>Pesquise, Oriente, Ordene. Tudo fica melhor com as novas Opções de Organização`
+      greetingDescription2.innerHTML = `<span class="greeting-description-intro">Opções de Organização</span> <br>Pesquise, Oriente, Ordene. Tudo fica melhor com as Opções de Organização`
 
-      greetingDescription3.innerHTML = `<span class="greeting-description-intro">Atualização automática</span> <br>noteous recebe atualizações automáticas 🌐 Assim, seu aplicativo sempre está em dia.`
+      greetingDescription3.innerHTML = `<span class="greeting-description-intro">Os próximos passos do noteous</span> <br> noteous 2ª Geração, disponível em breve, ainda no início do ano`
       
-      greetingDescription1Image.setAttribute('src', './assets/images/greeting-priority.webp')
+      greetingDescription1Image.setAttribute('src', './assets/images/greeting-usage.webp')
       greetingDescription2Image.setAttribute('src', './assets/images/greeting-read-options.webp')
-      greetingDescription3Image.setAttribute('src', './assets/images/greeting-update.webp')
+      greetingDescription3Image.setAttribute('src', './assets/images/greeting-2ndgen.webp')
 
       greetingDescriptionContainer1.append(
         greetingDescription1Image,
@@ -440,9 +451,9 @@ function welcomeToNoteous(context, subcontext) {
 
     let greetingPoliciesTitle = document.createElement('p')
     greetingPoliciesTitle.classList.add('greeting-description-title')
-    if (noteousSettings != null && noteousSettings.noteousVersion < 1.6) {
+    if (noteousSettings != null && noteousSettings?.noteousApp?.noteousVersion < 1.61) {
       greetingPoliciesTitle.innerHTML =
-      'Os termos foram atualizados. Para continuar, você precisa aceitar os termos a seguir'
+      'Para continuar, você precisa aceitar os termos a seguir'
     } else {
       greetingPoliciesTitle.innerHTML = 'Para continuar, você precisa aceitar os termos a seguir'
     }
@@ -498,15 +509,14 @@ function welcomeToNoteous(context, subcontext) {
         let greetingPoliciesTitle4 = document.createElement('p')
         greetingPoliciesTitle4.classList.add('greeting-policies-warning')
         greetingPoliciesTitle4.innerHTML =
-          '⚠️ Conforme explicado na Política de Privacidade, suas anotações são salvas localmente no dispositivo. Ou seja: se você limpar os dados, suas notas serão  apagadas.'
+        '⚠️ Conforme explicado na Política de Privacidade, suas anotações são salvas localmente no dispositivo. Ou seja: se você limpar os dados, suas notas serão  apagadas. <strong>Para evitar perda de dados, use o recurso Cópias de Notas em Ajustes&Info</strong>'
 
         let greetingPoliciesTitle5 = document.createElement('p')
         greetingPoliciesTitle5.classList.add('greeting-policies-description')
-        greetingPoliciesTitle5.innerHTML =
-          'Ao clicar no botão Aceito, você concorda com as condições dos Termos de Uso e Política de Privacidade. Se não aceitar estas condições, não poderá usar o aplicativo.'
+        greetingPoliciesTitle5.innerHTML = 'Ao clicar no botão Aceito, você concorda com as condições dos Termos de Uso e Política de Privacidade. Se não aceitar estas condições, não poderá usar o aplicativo.'
 
         greetingPoliciesContainer.append(
-          greetingPoliciesTitle2,
+                    greetingPoliciesTitle2,
           greetingPoliciesTermsUse,
           greetingPoliciesTitle3,
           greetingPoliciesPrivacyPolicy,
@@ -598,12 +608,11 @@ ${noteousSettings.look.lumAccentContainer}`
 
 //loadNoteous --> ao carregar noteous, realiza verificações
 function loadNoteous(context) {
-  console.log(window.location.hostname)
   if (context == 'check-settings') {
     //JÁ ACESSOU NOTEOUS --> recupera dados
     if (noteousSettings != null) {
       //VERIFICA SE HÁ NOVA VERSÃO
-      if (noteousSettings.noteousVersion != currentVersion) {
+      if (noteousSettings?.noteousApp?.noteousVersion != currentVersion) {
         //SE HÁ NOVA VERSÃO
         welcomeToNoteous('render-welcome', 'new-version')
       } else {
@@ -613,7 +622,7 @@ function loadNoteous(context) {
         if (noteousSettings.priorityOrientation == null && noteousSettings.noteousVersion >= 1.9) {
           welcomeToNoteous('render-welcome', 'new-version')
         }
-
+        
         sortNotes('retrieveSort')
         renderNote('render-all')
         priorityListsOrientation('retrieveOrientation')
@@ -643,14 +652,37 @@ function loadNoteous(context) {
   }
 
   if (context == 'set-settings') {
+    //Registro de primeiro acesso
+    let accessDate
+    let promptTimes
+    let doneSurvey
+    let bonusCode
+    if (noteousSettings == null) {
+      accessDate = Date.now()
+      promptTimes = 0
+      doneSurvey = false
+    } else {
+      if (noteousSettings?.noteousApp?.firstAccess == null) {
+        accessDate = Date.now()
+        accessDate = accessDate - 907200000
+        promptTimes = 0
+        doneSurvey = false
+      } else if (noteousSettings?.noteousApp?.firstAccess !== null) {
+        accessDate = noteousSettings.noteousApp.firstAccess
+        promptTimes = noteousSettings.noteousApp.surveyPrompt
+        doneSurvey = noteousSettings.noteousApp.surveyStatus
+        bonusCode = noteousSettings.noteousApp.surveyBonus
+      }
+    }
+    
     //1.Limpar configurações (elimina propriedades de versões antigas, como :theme)
     noteousSettings = {}
     localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
 
     //2.Aplicar novas configurações
     noteousSettings = {
-      noteousVersion: currentVersion,
-      sort: { time: 'recent', action: 'id' },
+      noteousApp: { noteousVersion: currentVersion, installPrompt: 0, acceptedTermsVersion: termsVersion, firstAccess: accessDate, surveyStatus: doneSurvey, surveyPrompt: promptTimes, surveyBonus: bonusCode },
+      sort: { time: 'recent', action: 'editedAt' },
       priority: 'solid',
       priorityOrder: ['solid', 'double', 'dotted'],
       priorityOrientation: 'row',
@@ -666,8 +698,6 @@ function loadNoteous(context) {
     noteousTheme('set-theme-light')
   }
 }
-
-//////////
 
 function notePriority(context, priority) {
   //context ==> (1) recuperarPrioridade, (2)recuperarPrioridadeAoDesfocarInput (ao tirar foco define opacidade = 0 de Opções da Nota. Mas, é necessário também definir junto a borda, pois ao contrário um sobrescreve o outro), (3) trocarPrioridade
@@ -959,7 +989,6 @@ readOptionsSortActionButton.addEventListener('click', () => {
 
 //////////
 
-
 function renderNote(context, noteId, searchTerm) {
 
   //ESSE CONTEXTO É USADO AO CARREGAR A PÁGINA, RENDERIZANDO TODAS AS NOTAS
@@ -976,9 +1005,7 @@ function renderNote(context, noteId, searchTerm) {
       readNotesListDotted.innerHTML = ''
     }
 
-    // noteous preview 1.7.1: Listas de Prioridade. Criação primeiro das notas e depois ver qual lista vai. Problema: cada nova nota reordena a Lista de Prioridade. Por exemplo, uma nova nota com prioridade dotted joga a Lista de Prioridade dotted para o primeiro lugar.
-
-    //noteous preview 1.8: personalização de ordem de Listas de Prioridade. Revisão do código para criar as listas na ordem definida pelo usuário. Agora, renderNote() primeiro verifica a ordem das listas e depois, adiciona a nota em sua respectiva lista.
+    // noteous 1.9: Listas de Prioridade. renderNote() primeiro verifica a ordem das listas e as adiciona. Depois, adiciona a nota em sua respectiva lista
 
     const priorities = noteousSettings.priorityOrder || ['solid', 'double', 'dotted']
     for (let priority of priorities) {
@@ -987,8 +1014,8 @@ function renderNote(context, noteId, searchTerm) {
       }
 
       for (let note of noteousMain) {
-        // Verifica se a nota atual pertence à lista de prioridade que está sendo criada. A ordem das notas dentro da lista é definida por sortNotes(). Ou seja: noteousMain já vem ordenado pelo sortNotes()
-        //noteous preview 1.9: ao renderizar todas as notas, se houver termo de busca, filtra as notas que contêm o termo (sem diferenciar maiúsculas e minúsculas)
+        //noteous 1.9: Verifica se a nota atual pertence à lista de prioridade que está sendo criada. A ordem das notas dentro da lista é definida por sortNotes(). Ou seja: noteousMain já vem ordenado pelo sortNotes()
+        //Ao renderizar todas as notas, se houver termo de busca, filtra as notas que contêm o termo (sem diferenciar maiúsculas e minúsculas)
         if (note.priority == priority && note.done != true && (searchTerm == undefined || note.text.toLowerCase().includes(searchTerm.toLowerCase()))) {
           let noteContainer = document.createElement('div')
           noteContainer.id = note.id + '-note-container'
@@ -1057,7 +1084,7 @@ function renderNote(context, noteId, searchTerm) {
         noteContainer.appendChild(textElement)
 
         // noteous em versões anteriores: se nota tivesse menos de 300 caracteres, o conteúdo seria adicionado por inteiro. Se tivesse mais de 300 carateceres, iria testar cada caractere até chegar no 300º e exibir 'VER MAIS'. Isso levava em conta somente o texto dela, para previnir que ficasse muito longo, mas não levava em conta o espaço que o elemento ocupava.
-        // noteous preview 1.7.1: caracteres da nota são contados sempre. Agora, há 3 listas de prioridade e o espaço que uma nota ocupa é muito mais importante. Assim, ao renderizar uma nota, cada caractere dela é contado para que, se alcançar 200 caracteres ou alcançar 200px de altura, o que chegar primeiro, seja exibido 'VER MAIS'. Isso previne que notas muito longas ocupem espaço demais.
+        // noteous 1.9: caracteres da nota são contados sempre. Agora, há 3 listas de prioridade e o espaço que uma nota ocupa é muito mais importante. Assim, ao renderizar uma nota, cada caractere dela é contado para que, se alcançar 200 caracteres ou alcançar 200px de altura, o que chegar primeiro, seja exibido 'VER MAIS'. Isso previne que notas muito longas ocupem espaço demais.
 
         let noteChar = note.text
         let count = 0
@@ -1142,14 +1169,6 @@ function renderNote(context, noteId, searchTerm) {
         let noteContainer = document.createElement('div')
         noteContainer.id = note.id + '-note-container'
         noteContainer.classList.add('note-container')
-        
-        //noteous preview 1.7.1
-        //Visualização por Listas de Prioridade
-        //Após criar as notas, irá sorteá-las de acordo com a prioridade
-
-        //Caso alguma tenha alguma nota com prioridade solid,
-        //Adiciona lista ao container de listas (readNotesContainer) caso seja a primeira nota
-        //Depois, adiciona a nota à lista
 
         if (note.priority == 'solid') {
           if (!readNotesContainer.querySelector('#read-notes-list-solid')) {
@@ -1202,7 +1221,7 @@ function renderNote(context, noteId, searchTerm) {
         noteContainer.appendChild(textElement)
 
         // noteous em versões anteriores: se nota tivesse menos de 300 caracteres, o conteúdo seria adicionado por inteiro. Se tivesse mais de 300 carateceres, iria testar cada caractere até chegar no 300º e exibir 'VER MAIS'. Isso levava em conta somente o texto dela, para previnir que ficasse muito longo, mas não levava em conta o espaço que o elemento ocupava.
-        // noteous preview 1.7.1: caracteres da nota são contados sempre. Agora, há 3 listas de prioridade e o espaço que uma nota ocupa é muito mais importante. Assim, ao renderizar uma nota, cada caractere dela é contado para que, se alcançar 200 caracteres ou alcançar 200px de altura, o que chegar primeiro, seja exibido 'VER MAIS'. Isso previne que notas muito longas ocupem espaço demais.
+        // noteous 1.9: caracteres da nota são contados sempre. Agora, há 3 listas de prioridade e o espaço que uma nota ocupa é muito mais importante. Assim, ao renderizar uma nota, cada caractere dela é contado para que, se alcançar 200 caracteres ou alcançar 200px de altura, o que chegar primeiro, seja exibido 'VER MAIS'. Isso previne que notas muito longas ocupem espaço demais.
 
         let noteChar = note.text
         let count = 0
@@ -1282,7 +1301,6 @@ function renderNote(context, noteId, searchTerm) {
   }
   orblendEngine('change')
 }
-
 
 function findMonth(number) {
   if (number == 0) {
@@ -1386,8 +1404,19 @@ writeInput.addEventListener('input', () => {
   orblendEngine('on-change-input')
 })
 
+// noteous 1.9.2: nova experiência ao sair sem salvar uma nota
+writeButtonDismiss.addEventListener('click', () => {
+  writeInput.value = ''
+  noteousSettings.input = ''
+  orblendEngine('on-change-input')
+  localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
+  writeButtonDismiss.classList.add('hidden-element')
+  writeInput.focus()
+})
+
 //////////
 
+//CONCLUIR NOTA
 let timeoutID
 function doneNote(noteId) {
   timeoutID = setTimeout(() => {
@@ -1442,7 +1471,7 @@ function doneNote(noteId) {
 }
 
 //////////
-
+//SHARE NOTE
 function shareNote(noteId) {
   for (let note of noteousMain) {
     if (note.id === noteId) {
@@ -1462,14 +1491,13 @@ function shareNote(noteId) {
   }
 }
 
-//////////
-
+//COPY NOTE
 function copyNote(noteId) {
   for (let note of noteousMain) {
     if (note.id === noteId) {
       navigator.clipboard.writeText(note.text)
         .then(() => {
-          
+          // Exibe feedback visual por 2s e depois restaura o texto
           const textElement = document.getElementById(noteId + '-text')
           const noteTextContainer = document.getElementById(noteId + '-text-container')
           if (!textElement || !noteTextContainer) return
@@ -1482,7 +1510,7 @@ function copyNote(noteId) {
 
           setTimeout(() => {
             textElement.innerHTML = originalNoteText
-            
+            // Não altera atributos originais do container; apenas remove o feedback ARIA
             noteTextContainer.ariaLive = undefined
           }, 1500)
         })
@@ -1493,7 +1521,7 @@ function copyNote(noteId) {
 
 //////////
 
-
+//OPEN NOTE
 function openNote(noteId) {
   editMode = true
   for (let note of noteousMain) {
@@ -1509,8 +1537,8 @@ function openNote(noteId) {
     writeInput.setAttribute('readonly', true)
     writeInput.focus()
     writeButtonCancelEdit.removeAttribute('hidden')
-    labelWrite.innerHTML = '📄 Veja aqui sua nota'
     editNote(noteId)
+    orblendEngine('', 'open-note')
 
     //Acessibilidade e Experiência do usuário: Quando o tamanho de tela é inferior a 600px, ao clicar em uma nota, a função openNote() torna readonly a caixa de texto (writeInput) para que o teclado não apareça e confunda a experiência. Ao dar um toque, a caixa é liberada para edição. PROBLEMA: Quando o recurso TalkBack (do Android) é utilizado, não é possível reconhecer o toque na caixa de texto (writeInput). Talvez isso ocorra porque a acessibilidade do Android desative o "clique" em uma caixa de texto readonly.
     //SOLUÇÃO: capturar posição do writeInput e da posição do mouse e verificar se o clique está dentro dessa área. Se estiver, desbloquear o input para edição.
@@ -1526,50 +1554,62 @@ function openNote(noteId) {
           && clickY > writeInputPosition.top && clickY < writeInputPosition.bottom
         ) {
           writeInputEdit()
+          orblendEngine('', 'edit-note')
         }
       }
     })
-
+   
   } else if (window.screen.width >= 601) {
     writeInput.focus()
     writeButtonCancelEdit.removeAttribute('hidden')
-    labelWrite.innerHTML = '📝 Edite aqui sua nota'
     editNote(noteId)
   }
 }
 
 //////////
 
+function toggleEditButtons(noteText) {
+  //Controla a exibição dos botões de edição (confirmar e cancelar) conforme o texto do input
+  if (editMode == true) {
+    if (writeInput.value == noteText) {
+      writeButtonEdit.setAttribute('hidden', 'true')
+      writeButtonCancelEdit.removeAttribute('hidden')
+      notePriority('retrievePriorityBlurInput', noteousSettings.priority)
+    } else if (writeInput.value != noteText) {
+      writeButtonEdit.removeAttribute('hidden')
+      writeButtonCancelEdit.removeAttribute('hidden')
+      notePriority('retrievePriority', noteousSettings.priority)
+    }
+  }
+}
+
 function editNote(noteId) {
   for (let note of noteousMain) {
     noteIdEdit = noteId
     if (note.id === noteId) {
-      //Entra no Modo de edição
       editMode = true
       writeOptions.classList.add('edit-mode')
       writeInput.classList.add('edit-mode')
-      readSection.classList.add('edit-mode') //coloca a seção de leitura das nota no modo de edição (que desabilita as ações das notas enquanto uma nota está sendo editada)
+      readSection.classList.add('edit-mode')
       writePanel.classList.add('edit-mode')
 
       infoPanel.innerHTML = ''
 
       writeButtonAdd.setAttribute('hidden', 'true')
 
-      writeInput.value = note.text //coloca o texto da nota dentro do campo de input
-
+      writeInput.value = note.text
+      
       writeInput.addEventListener('input', () => {
-        if (editMode == true) {
-          if (writeInput.value == note.text) {
-            writeButtonEdit.setAttribute('hidden', 'true')
-            writeButtonCancelEdit.removeAttribute('hidden')
-            notePriority('retrievePriorityBlurInput', noteousSettings.priority)
-          } else if (writeInput.value != note.text) {
-            writeButtonEdit.removeAttribute('hidden')
-            writeButtonCancelEdit.removeAttribute('hidden')
-            notePriority('retrievePriority', noteousSettings.priority)
-          }
-        }
+        toggleEditButtons(note.text)
       })
+
+      orblendEngine('', 'edit-note')
+      
+      //orblendEngine: Backup Inteligente de Nota: Edição: Configuração dos botões de edição 
+      if (noteousSettings.noteId != 0) {
+        orblendEngine('', 'continue-editing')
+        toggleEditButtons(noteousSettings.input)
+      }
 
       //Se durante Modo de edição clicar em "Confirmar edição"
       writeButtonEdit.addEventListener('click', () => {
@@ -1633,5 +1673,4 @@ function exitEditMode() {
   writeButtonAdd.disabled = true
   writeButtonEdit.setAttribute('hidden', 'true')
   writeButtonCancelEdit.setAttribute('hidden', 'true')
-  labelWrite.innerHTML = 'Qual o próximo passo?'
 }

@@ -24,6 +24,14 @@ if (noteousSettings == null || noteousSettings.noteousVersion < 1.6) {
 
 let aboutSettingsSection = document.querySelector('#about-settings')
 
+let aboutSurvey = document.querySelector('#about-survey')
+let aboutSurveyInfo = document.querySelector('#about-survey-info')
+let aboutButtonSurvey = document.querySelector('#about-button-survey')
+let surveyContainerInfo = document.querySelector('#survey-container-info')
+let surveyBonusLabel = document.querySelector('#survey-bonus-label')
+let surveyBonusInput = document.querySelector('#survey-bonus-input')
+let surveyBonusButton = document.querySelector('#survey-bonus-button')
+
 let baseRemOptionNormal = document.querySelector('#baserem-normal')
 let baseRemOptionBig = document.querySelector('#baserem-big')
 let baseRemOptionSmall = document.querySelector('#baserem-small')
@@ -36,6 +44,7 @@ let toggleActionButtonCopy = document.querySelector('#toggle-action-button-copy'
 
 let priorityContainer = document.querySelector('#priority-order-container')
 
+let doneNotesSettingContainer = document.querySelector('#done-notes-setting-container')
 let viewDoneNotesButton = document.querySelector('#view-done-notes')
 
 let buttonPolicies = document.querySelector('#about-button-policies')
@@ -125,6 +134,46 @@ function noteousTheme(context) {
   }
 }
 noteousTheme('retrieve-theme')
+///////
+
+///////
+
+// Pesquisa de Experiência do noteous
+
+let access = noteousSettings.noteousApp.firstAccess + 604800000
+
+if (noteousSettings.noteousApp.surveyStatus == false && noteousSettings.noteousApp.surveyPrompt < 5) {
+  if (access < Date.now()) {
+    aboutSurvey.classList.remove('hidden-element')
+    aboutSurveyInfo.innerHTML = 'Ajude nos próximos passos do noteous! Responda algumas perguntas sobre sua experiência no noteous <br><br> <strong>⏱️ Você vai levar aproximadamente menos de 4 minutos para responder</strong>'
+  } else {
+    aboutSurvey.classList.remove('hidden-element')
+    aboutSurveyInfo.innerHTML = '<strong>🗓️ Você precisa utilizar o noteous por pelo menos 1 semana para responder à Pesquisa de Experiência</strong>'
+    aboutButtonSurvey.classList.add('hidden-element')
+  }
+
+  aboutButtonSurvey.addEventListener('click', () => {
+    noteousSettings.noteousApp.surveyStatus = true
+    localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
+    window.location.assign(`https://evertonruan.com/noteous/survey?a=${access}`);
+  })
+} else if (noteousSettings.noteousApp.surveyStatus == true && noteousSettings.noteousApp.surveyBonus == null) {
+  aboutSurvey.classList.remove('hidden-element')
+  surveyBonusLabel.classList.remove('hidden-element')
+  surveyBonusInput.classList.remove('hidden-element')
+  surveyBonusButton.classList.remove('hidden-element')
+  aboutButtonSurvey.classList.add('hidden-element')
+  surveyBonusLabel.innerHTML = 'Se você respondeu à Pesquisa, insira aqui o código bônus:'
+
+  surveyBonusButton.addEventListener('click', () => {
+    noteousSettings.noteousApp.surveyBonus = surveyBonusInput.value
+    localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
+    alert('Obrigado por responder à Pesquisa. Seu bônus será usado quando a 2ª Geração do noteous for lançada')
+    window.location.reload()
+  })
+}
+
+
 ///////
 
 //VERIFICADOR DE OPÇÃO ATIVA ///////
@@ -397,7 +446,13 @@ copyCreateButton.addEventListener('click', () => {
 
     // Informação sobre quantidade de notas
     let notesInfo = document.createElement('p')
-    notesInfo.textContent = `Você tem ${noteousMain.length} nota${noteousMain.length !== 1 ? 's' : ''}`
+    
+    const doneNotesCount = noteousMain.filter(note => note.done === true).length
+    const doneNotesText = doneNotesCount > 0
+      ? `, incluindo ${doneNotesCount} nota${doneNotesCount !== 1 ? 's' : ''} concluída${doneNotesCount !== 1 ? 's' : ''}`
+      : ''
+
+    notesInfo.textContent = `Você tem ${noteousMain.length} nota${noteousMain.length !== 1 ? 's' : ''}${doneNotesText}`
 
     // Container para os botões
     let buttonsContainer = document.createElement('div')

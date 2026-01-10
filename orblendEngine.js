@@ -1,4 +1,4 @@
-function orblendEngine(context) {
+function orblendEngine(context, labelMessage) {
   let subcontext
 
   const getRandom = () => {
@@ -29,7 +29,15 @@ function orblendEngine(context) {
       infoText = 'Você ainda não tem anotações \n Adicione sua próxima tarefa!'
     } else if (subcontext == 'has-notes') {
       infoText = ''
+      if (noteousSettings.noteousApp.surveyStatus == false && noteousSettings.noteousApp.surveyPrompt < 5) {
+        if (noteousSettings.noteousApp.firstAccess + 604800000 < Date.now()) {
+          infoText = '🔎 Já respondeu a Pesquisa? \n Clique em Ajustes&Info para ver!'
+          noteousSettings.noteousApp.surveyPrompt++
+          localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
+      }
     }
+  }
+    
     let infoElementTip = document.createElement('p')
     infoElementTip.classList.add('info-element')
     let infoElementTipText = document.createTextNode(`${infoText}`)
@@ -45,43 +53,58 @@ function orblendEngine(context) {
     return infoElementTip
   }
 
+  if (context == '' && labelMessage != '') {
+    //Utiliza função setWriteLabel se não houver contexto mas houver mensagem de label 
+    setWriteLabel(labelMessage)
+  }
+  
+  function setWriteLabel(labelMessage) {
+    // noteous preview 1.9: writeLabel agora é controlado pelo Orblend Engine
+    if (labelMessage == 'continue-editing') {
+      writeLabel.innerHTML = '✏️ Continue escrevendo sua nota'
+    } else if (labelMessage == 'add-note'){
+      writeLabel.innerHTML = '📝 Adicione sua próxima nota'
+    } else if (labelMessage == 'edit-note') {
+      writeLabel.innerHTML = '✏️ Edite aqui sua nota'
+    } else if (labelMessage == 'open-note') {
+      writeLabel.innerHTML = '📃 Veja sua nota'
+    } else if (labelMessage == 'start-note') {
+      writeLabel.innerHTML = 'Qual o próximo passo?'
+    } else if (labelMessage == 'restore-note') {
+      writeLabel.innerHTML = '📝 Essa nota não foi adicionada'
+    }
+  }
+
   if (context == 'change') {
     //exibir/ocultar readOptions
-    if (noteousMain.length > 2) {
-      readOptions.classList.remove('hidden-element')
-    } else {
+    if (readNotesContainer.clientHeight < 30 && readOptionsSearchInput.value == '') {
       readOptions.classList.add('hidden-element')
+      subcontext = 'no-notes'
+    } else {
+      readOptions.classList.remove('hidden-element')
+      subcontext = 'has-notes'
     }
 
     //Configurar informações
-    if (noteousMain.length > 0) {
-      subcontext = 'has-notes'
-    } else {
-      subcontext = 'no-notes'
-    }
     infoPanel.innerHTML = ''
     infoPanel.append(dateElement(), infoElement(subcontext, getRandom()))
     // Ensure install button is present if eligible after info panel refresh
     placeInstallButton()
   } else if (context == 'load') {
+    
     //Backup Inteligente de Nota
-    //Verifica se há uma nota não salva
+    
     if (noteousSettings.input != '') {
+      //Há uma nota não salva
       if (noteousSettings.noteId != 0) {
-        if (confirm('Você estava editando uma nota, deseja recuperá-la?')) {
-          openNote(noteousSettings.noteId)
-          writeInput.value = noteousSettings.input
-        } else {
-          noteousSettings.input = ''
-          noteousSettings.noteId = 0
-        }
+        //Há uma nota em edição
+        openNote(noteousSettings.noteId)
+        writeInput.value = noteousSettings.input
       } else {
-        if (confirm('Há uma nota não salva. Deseja recuperá-la?')) {
-          writeInput.value = noteousSettings.input
-          writeInput.focus()
-        } else {
-          noteousSettings.input = ''
-        }
+        orblendEngine('', 'restore-note')
+        writeInput.value = noteousSettings.input
+        writeInput.focus() 
+        writeButtonDismiss.classList.remove('hidden-element')
       }
     }
 
@@ -89,9 +112,9 @@ function orblendEngine(context) {
 
     //exibir/ocultar readOptions
     if (noteousMain.length > 1) {
-      readOptions.classList.remove('hidden-element')
+      readOptionsSort.style.cssText = 'opacity: 1'
     } else {
-      readOptions.classList.add('hidden-element')
+      readOptionsSort.style.cssText = 'opacity: 0'
     }
 
     ////////////////////////////
@@ -109,9 +132,14 @@ function orblendEngine(context) {
   } else if (context == 'on-change-input') {
     //Habilitar/Desabilitar Botão Adicionar Nota
     if (writeInput.value === '') {
+      setWriteLabel('start-note')
+      writeButtonDismiss.classList.add('hidden-element')
       writeButtonAdd.disabled = true
       writeButtonAdd.setAttribute('aria-hidden', 'true')
     } else {
+      if (noteousSettings.input == '' && editMode == false) {
+        setWriteLabel('add-note')
+      } 
       writeButtonAdd.disabled = false
       writeButtonAdd.setAttribute('aria-hidden', 'false')
     }
