@@ -395,24 +395,22 @@ function welcomeToNoteous(context, subcontext) {
     } else if (subcontext == 'new-version') {
       greetingTitle1.append(document.createTextNode('Boas-vindas ao'))
       greetingTitle2.append(document.createTextNode('noteous preview'))
-      greetingDescriptionTitle.append(
-        document.createTextNode(
-          '✨ Atualização concluída! Veja os destaques do noteous preview 1.9. Você recebeu uma atualização com algumas melhorias adicionais.'
-        )
-      )
-
-      greetingDescription1.innerHTML = `<span class="greeting-description-intro">Buscar notas</span> <br>Agora ficou muito fácil encontrar as notas que você procura!`
-
-      greetingDescription2.innerHTML = `<span class="greeting-description-intro">Backup Inteligente de Nota</span>Saiu e esqueceu de adicionar? Sem problema: noteous usa o Orblend Engine para recuperar de forma automática sua nota`
-
-      greetingDescription3.innerHTML = `<span class="greeting-description-intro">Opções de Organização</span> <br>Com um visual renovado, as Opções de Visualização agora se chamam Opções de Organização!`
-
-      greetingDescription4.innerHTML = `<span class="greeting-description-intro">Atualização automática</span> <br>noteous recebe atualizações automáticas 🌐 Assim, seu aplicativo sempre está em dia.`
+      greetingDescriptionTitle.innerHTML = '✨ Atualização concluída! Estes são os destaques do noteous preview 1.9 <br> <br> Você recebeu uma atualização com algumas melhorias adicionais'
+        
       
-      greetingDescription1Image.setAttribute('src', './assets/images/greeting-search.webp')
-      greetingDescription2Image.setAttribute('src', './assets/images/greeting-usage.webp')
-      greetingDescription3Image.setAttribute('src', './assets/images/greeting-read-options.webp')
-      greetingDescription4Image.setAttribute('src', './assets/images/greeting-update.webp')
+
+      greetingDescription1.innerHTML = `<span class="greeting-description-intro">Backup Inteligente de Nota</span>Saiu e esqueceu de adicionar? Sem problema: noteous usa o Orblend Engine para recuperar de forma automática sua nota`
+
+      greetingDescription2.innerHTML = `<span class="greeting-description-intro">Opções de Organização</span> <br>Com um visual renovado, as Opções de Visualização agora se chamam Opções de Organização!`
+
+      greetingDescription3.innerHTML = `<span class="greeting-description-intro">Atualização automática</span> <br>noteous recebe atualizações automáticas 🌐 Assim, seu aplicativo sempre está em dia.`
+
+      greetingDescription4.innerHTML = `<span class="greeting-description-intro">Os próximos passos do noteous</span> <br> noteous 2ª Geração, disponível em breve, ainda no início do ano`
+      
+      greetingDescription1Image.setAttribute('src', './assets/images/greeting-usage.webp')
+      greetingDescription2Image.setAttribute('src', './assets/images/greeting-read-options.webp')
+      greetingDescription3Image.setAttribute('src', './assets/images/greeting-update.webp')
+      greetingDescription4Image.setAttribute('src', './assets/images/greeting-2ndgen.webp')
 
       greetingDescriptionContainer1.append(
         greetingDescription1Image,
@@ -680,6 +678,29 @@ function loadNoteous(context) {
   }
 
   if (context == 'set-settings') {
+    //Registro de primeiro acesso
+    let accessDate
+    let promptTimes
+    let doneSurvey
+    let bonusCode
+    if (noteousSettings == null) {
+      accessDate = Date.now()
+      promptTimes = 0
+      doneSurvey = false
+    } else {
+      if (noteousSettings?.noteousApp?.firstAccess == null) {
+        accessDate = Date.now()
+        accessDate = accessDate - 907200000
+        promptTimes = 0
+        doneSurvey = false
+      } else if (noteousSettings?.noteousApp?.firstAccess !== null) {
+        accessDate = noteousSettings.noteousApp.firstAccess
+        promptTimes = noteousSettings.noteousApp.surveyPrompt
+        doneSurvey = noteousSettings.noteousApp.surveyStatus
+        bonusCode = noteousSettings.noteousApp.surveyBonus
+      }
+    }
+
     //1.Limpar configurações (elimina propriedades de versões antigas, como :theme)
     noteousSettings = {}
     localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
@@ -687,8 +708,8 @@ function loadNoteous(context) {
     //2.Aplicar novas configurações
     //preview 1.8: sort agora é objeto com time e action
     noteousSettings = {
-      noteousApp: { noteousVersion: currentVersion, installPrompt: 0, acceptedTermsVersion: termsVersion },
-      sort: { time: 'recent', action: 'id' },
+      noteousApp: { noteousVersion: currentVersion, installPrompt: 0, acceptedTermsVersion: termsVersion, firstAccess: accessDate, surveyStatus: doneSurvey, surveyPrompt: promptTimes, surveyBonus: bonusCode },
+      sort: { time: 'recent', action: 'editedAt' },
       priority: 'solid',
       priorityOrder: ['solid', 'double', 'dotted'], // preview 1.8: ordem das listas de prioridade
       priorityOrientation: 'row',

@@ -41,6 +41,18 @@
     </header>
 
   <main>
+    <section id="about-survey" class="about-section">
+      <h2>Pesquisa de Experiência do noteous</h2>
+      <br>
+      <p id="about-survey-info"></p>
+      <br>
+      <button id="about-button-survey" class="option-point" type="button">Conferir Pesquisa</button>
+      <div id="survey-container-info">
+        <label id="survey-bonus-label" for="survey-bonus-input" class="hidden-element"></label>
+        <input type="text" name="survey-bonus" id="survey-bonus-input" class="hidden-element">
+        <input type="button" value="Salvar" id="survey-bonus-button" class="hidden-element">
+      </div>
+    </section>
     <section id="about-settings" class="about-section">
       <h2>🟠⚪AJUSTES</h2>
       <div class="settings-point">
@@ -91,7 +103,7 @@
           </div>
           <div id="copy-details-container"></div>
       </div>
-      <div class="settings-point">
+      <div id="done-notes-setting-container" class="settings-point">
         <h4>Notas Concluídas</h4>
         <button id="view-done-notes" class="option-point" type="button"><span class="material-icons">check_circle</span> Ver notas</button>
         <p class="settings-info">Visualize, restaure ou exclua permanentemente suas notas concluídas</p>
@@ -126,6 +138,10 @@
   <div id="about-section-dev-mail"><span class="material-icons">
     email
     </span> <a href="mailto:contato@evertonruan.com">contato@evertonruan.com</a></div>
+</section>
+
+<section id="about-section-2ndgen-info" class="about-section">
+  <img src="assets/images/greeting-2ndgen.webp" alt="2ª Geração do noteous: lançamento ainda no início do ano">
 </section>
 
 <section id="about-section-update">
@@ -167,6 +183,19 @@
   <div id="about-update-list">
 
     <div id="about-update-point-actual">
+          <div class="about-update-point-container">
+            <p class="about-update-point-version">noteous preview 1.9.5</p>
+            <p class="about-update-point-version-date">10/01/2026</p>
+          </div>
+          <p class="update-description">Adicionado anúncio sobre a 2ª Geração</p>
+          <p class="update-description">Adicionada seção para o acesso à Pesquisa de Experiência do noteous</p>
+          <p class="update-description">
+            <span class="update-type">CORREÇÃO</span>Alinhamento do ícone nos botões de edição</p>
+          <p class="update-description">
+            <span class="update-type">AJUSTE</span>Botão Notas Concluídas só vai aparecer quando houver notas concluídas</p>
+    </div>    
+
+    <div class="about-update-point">
           <div class="about-update-point-container">
             <p class="about-update-point-version">noteous preview 1.9.4</p>
             <p class="about-update-point-version-date">21/12/2025</p>
