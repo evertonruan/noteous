@@ -144,10 +144,8 @@ let access = noteousSettings.noteousApp.firstAccess + 604800000
 
 if (noteousSettings.noteousApp.surveyStatus == false && noteousSettings.noteousApp.surveyPrompt < 5) {
   if (access < Date.now()) {
-    aboutSurvey.classList.remove('hidden-element')
     aboutSurveyInfo.innerHTML = 'Ajude nos próximos passos do noteous! Responda algumas perguntas sobre sua experiência no noteous <br><br> <strong>⏱️ Você vai levar aproximadamente menos de 4 minutos para responder</strong>'
   } else {
-    aboutSurvey.classList.remove('hidden-element')
     aboutSurveyInfo.innerHTML = '<strong>🗓️ Você precisa utilizar o noteous por pelo menos 1 semana para responder à Pesquisa de Experiência</strong>'
     aboutButtonSurvey.classList.add('hidden-element')
   }
@@ -158,7 +156,6 @@ if (noteousSettings.noteousApp.surveyStatus == false && noteousSettings.noteousA
     window.location.assign(`https://evertonruan.com/noteous/survey?a=${access}`);
   })
 } else if (noteousSettings.noteousApp.surveyStatus == true && noteousSettings.noteousApp.surveyBonus == null) {
-  aboutSurvey.classList.remove('hidden-element')
   surveyBonusLabel.classList.remove('hidden-element')
   surveyBonusInput.classList.remove('hidden-element')
   surveyBonusButton.classList.remove('hidden-element')
@@ -171,6 +168,8 @@ if (noteousSettings.noteousApp.surveyStatus == false && noteousSettings.noteousA
     alert('Obrigado por responder à Pesquisa. Seu bônus será usado quando a 2ª Geração do noteous for lançada')
     window.location.reload()
   })
+} else if (noteousSettings.noteousApp.surveyBonus != null) {
+  aboutSurvey.classList.add('hidden-element')
 }
 
 
