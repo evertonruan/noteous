@@ -182,7 +182,6 @@ aboutButtonSurvey.addEventListener('click', () => {
     noteousSettings.noteousApp.surveyStatus = true
     localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
     window.location.assign(`https://evertonruan.com/noteous/survey?a=${access}`);
-    window.location.reload();
   })
 
 
