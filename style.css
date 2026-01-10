@@ -994,7 +994,7 @@ footer p span {
     color: transparent;
     -webkit-text-fill-color: transparent;
 
-    animation: about-survey-gradient 6s linear infinite;
+    animation: about-survey-gradient 10s linear infinite;
   }
 }
 
