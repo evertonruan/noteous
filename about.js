@@ -38,8 +38,12 @@ let baseRemOptionSmall = document.querySelector('#baserem-small')
 let optionLight = document.querySelector('#luminosity-light')
 let optionDark = document.querySelector('#luminosity-dark')
 
+let actionButtonsSettingsContainer = document.querySelector('#action-buttons-settings-container')
 let toggleActionButtonShare = document.querySelector('#toggle-action-button-share')
 let toggleActionButtonCopy = document.querySelector('#toggle-action-button-copy')
+
+let prioritySettingsContainer = document.querySelector('#priority-settings-container')
+let priorityContainer = document.querySelector('#priority-order-container')
 
 let doneNotesSettingContainer = document.querySelector('#done-notes-setting-container')
 let viewDoneNotesButton = document.querySelector('#view-done-notes')
@@ -59,7 +63,6 @@ let cupcakeOutline = document.querySelector('#cupcake-outline')
 let label = document.querySelector('#gen-child-2')
 
 // ELEMENTOS DO DRAG-DROP DE PRIORIDADE
-let priorityContainer = document.querySelector('#priority-order-container')
 
 ///////
 
@@ -84,43 +87,50 @@ ${noteousSettings.look.lumAccentContainer}`
 
 ///////
 
-let installButton = document.createElement('button')
-installButton.id = 'install-button'
-installButton.type = 'button'
-installButton.classList.add('write-buttons')
-installButton.append('Instalar noteous')
-let deferredInstallPrompt
+let deferredInstallPrompt = null
+let installNoteousButton = document.createElement('button')
 
-installButton.addEventListener('click', async () => {
-    try {
-      installButton.disabled = true
-      // Show the browser install prompt
-      deferredInstallPrompt.prompt()
-      const { outcome } = await deferredInstallPrompt.userChoice
-      // Clear the saved event regardless of outcome
-      deferredInstallPrompt = null
-      if (outcome === 'accepted') {
-        // Hide button; appinstalled event will also fire
-        const b = document.querySelector('#install-button')
-        if (b) b.remove()
-      } else {
-        // If dismissed, we can enable again to allow retry later
-        installButton.disabled = false
-      }
-    } catch (e) {
-      // On any error, allow retry later
-      installButton.disabled = false
-    }
-  })
-
-function renderInstallButton() {
+function showInstallButton() {
   window.addEventListener('beforeinstallprompt', (e) => {
     e.preventDefault()
     deferredInstallPrompt = e
-    aboutSettingsSection.prepend(installButton)
+      
+      if ((window.matchMedia && window.matchMedia('(display-mode: standalone)').matches
+    ) || (navigator.standalone === true) || !deferredInstallPrompt) {
+      if (installNoteousButton) installNoteousButton.remove()
+    } else {
+      installNoteousButton.classList.add('write-buttons')
+      installNoteousButton.innerHTML = '<span style="font-style: normal;">🧁</span> Instalar noteous preview'
+      aboutSettingsSection.append(installNoteousButton)
+      installNoteousButton.addEventListener('click', async () => {
+      try {
+        installNoteousButton.disabled = true
+        deferredInstallPrompt.prompt()
+        const { outcome } = await deferredInstallPrompt.userChoice
+        deferredInstallPrompt = null
+        if (outcome === 'accepted') {
+          installNoteousButton.remove()
+        } else {
+          installNoteousButton.disabled = false
+        }
+      } catch (e) {
+        installNoteousButton.disabled = false
+      }
+    })
+    }
+    
   })
 }
-renderInstallButton()
+
+showInstallButton()
+
+window.addEventListener('appinstalled', () => {
+  deferredInstallPrompt = null
+  if (installNoteousButton) installNoteousButton.remove()
+})
+
+///////
+
 
 // CONFIGURAÇÕES DE TEMA ////////////////////////////////////
 function noteousTheme(context) {
@@ -271,7 +281,14 @@ activeOptionVerifier()
 
 //////
 
+
+
 // SISTEMA DE DRAG-DROP PARA PRIORIDADES //////
+
+if (noteousMain.length == 0) {
+  prioritySettingsContainer.classList.add('hidden-element')
+}
+
 let draggedElement = null
 
 function initPriorityDragDrop() {
@@ -399,6 +416,10 @@ optionDark.addEventListener('click', () => {
 })
 
 // BOTÕES DE AÇÃO //////
+
+if (noteousMain.length == 0 || null) {
+  actionButtonsSettingsContainer.classList.add('hidden-element')
+}
 
 toggleActionButtonShare.addEventListener('change', () => {
     if (!noteousSettings.actionButtons.includes('share')) {

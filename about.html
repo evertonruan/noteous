@@ -55,7 +55,7 @@
     </section>
     <section id="about-settings" class="about-section">
       <h2>🟠⚪AJUSTES</h2>
-      <div class="settings-point">
+      <div id="action-buttons-settings-container" class="settings-point">
         <h4>Botões de Ação</h4>
         <div class="options-container-column">
           <p class="settings-info">Os Botões de Ação realizam funções úteis nas notas</p>
@@ -71,7 +71,7 @@
           </label>
         </div>
       </div>
-      <div class="settings-point">
+      <div id="priority-settings-container" class="settings-point">
         <h4>Listas de Prioridade</h4>
         <p class="settings-info">Ordene as Listas de Prioridade com sua preferência</p>
         <div id="priority-order-container">
@@ -106,7 +106,7 @@
       <div id="done-notes-setting-container" class="settings-point">
         <h4>Notas Concluídas</h4>
         <button id="view-done-notes" class="option-point" type="button"><span class="material-icons">check_circle</span> Ver notas</button>
-        <p class="settings-info">Visualize, restaure ou exclua permanentemente suas notas concluídas</p>
+        <p class="settings-info">Restaure ou apague notas concluídas</p>
       </div>
   </section>
 
@@ -181,6 +181,25 @@
   </span>
   
   <div id="about-update-list">
+
+    <div id="about-update-point-actual">
+          <div class="about-update-point-container">
+            <p class="about-update-point-version">noteous preview 1.9.6</p>
+            <p class="about-update-point-version-date">26/01/2026</p>
+          </div>
+          <p class="update-description">
+            <span class="update-type">CORREÇÃO</span>Ao adicionar uma nota, a Lista de Prioridade não estava sendo criada</p>
+          <p class="update-description">
+            <span class="update-type">CORREÇÃO</span>O botão Instalar noteous preview não estava sendo exibido</p>
+          <p class="update-description">
+            <span class="update-type">CORREÇÃO</span>O manifesto não estava sendo adicionado ao index.html</p>
+          <p class="update-description">
+          <p class="update-description">
+            <span class="update-type">AJUSTE</span>Alinhamento e tamanho melhorado do Botão de Prioridade</p>
+          <p class="update-description">
+            <span class="update-type">AJUSTE</span>As seções Botões de Ação e Listas de Prioridade em Ajustes&Info só vão aparecer se houver notas armazenadas</p>
+    </div>    
+
 
     <div id="about-update-point-actual">
           <div class="about-update-point-container">
@@ -775,7 +794,7 @@
     <script type="text/javascript" src="about.js"></script>
 
     <script>
-      if (noteousSettings != null && noteousSettings.noteousVersion >= 1.5) {
+      if (noteousSettings != null && noteousSettings?.noteousApp?.noteousVersion >= 1.5) {
         let link = document.createElement('link')
         link.setAttribute('rel', 'manifest')
         link.setAttribute('href', 'manifest.json')
@@ -791,7 +810,7 @@
         }
     </script>
     <script>
-      if (noteousSettings.noteousVersion >= 1.5) {
+      if (noteousSettings != null && noteousSettings?.noteousApp?.noteousVersion >= 1.5) {
         let script = document.createElement('script')
         script.setAttribute('defer', 'true')
         script.setAttribute('src', '/_vercel/insights/script.js')
@@ -806,7 +825,7 @@
         }
     </script>
     <script>
-      if (noteousSettings.noteousVersion >= 1.5) {
+      if (noteousSettings != null && noteousSettings?.noteousApp?.noteousVersion >= 1.5) {
         let script2 = document.createElement('script')
         script2.setAttribute('defer', 'true')
         script2.setAttribute('src', '/_vercel/speed-insights/script.js')

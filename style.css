@@ -169,6 +169,12 @@ html {
     gap: 0.3rem;
   }
 
+  #section-write #write-options {
+    right: 20px;
+    width: 2.5rem;
+    height: 2.5rem;
+  }
+
   #section-read #read-notes-container .note-container {
     max-width: 80vw;
   }
@@ -420,10 +426,10 @@ a {
 #write-options {
   position: absolute;
   top: 20px;
-  right: 20px;
+  right: 18px;
 
-  width: 2rem;
-  height: 2rem;
+  width: 2.2rem;
+  height: 2.2rem;
   border-radius: 50%;
   background-color: var(--base-buttons);
   border-color: var(--base-text);
@@ -1049,6 +1055,10 @@ footer p span {
   display: flex;
   align-items: center;
   gap: 0.3rem;
+}
+
+.option-point:hover {
+  border-width: 1.2px;
 }
 
 /* Priority Order Drag and Drop */

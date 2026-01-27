@@ -6,90 +6,6 @@ function serviceWorkerRegister() {
     }
 }
 
-
-// PWA INSTALL /////////////////////////////////
-// Holds the deferred prompt event provided by the browser
-let deferredInstallPrompt = null
-
-// Utility: check if app already installed (standalone or iOS PWA)
-function isAppInstalled() {
-  return (
-    window.matchMedia && window.matchMedia('(display-mode: standalone)').matches
-  ) || (navigator.standalone === true)
-}
-
-// Create or ensure the Install button exists inside #info-panel
-function placeInstallButton() {
-  const panel = document.querySelector('#info-panel')
-  if (!panel) return
-  // Only show when we have a deferred prompt and the app is not installed
-  if (!deferredInstallPrompt || isAppInstalled()) {
-    const maybeBtn = panel.querySelector('#install-button') || document.querySelector('#install-button')
-    if (maybeBtn) maybeBtn.remove()
-    return
-  }
-
-  // If infoPanel was re-rendered, we need to re-append the button
-  const existing = document.querySelector('#install-button')
-  if (existing) {
-    // Ensure it's visible and inside the current infoPanel
-    if (existing.parentElement !== panel) {
-      existing.remove()
-      panel.appendChild(existing)
-    }
-    existing.style.display = 'inline-block'
-    return
-  }
-
-  const installBtn = document.createElement('button')
-  installBtn.id = 'install-button'
-  // Reuse existing visual style for greeting buttons
-  installBtn.classList.add('write-buttons')
-  installBtn.innerHTML = '<span style="font-style: normal;">🧁</span> Instalar noteous'
-  installBtn.addEventListener('click', async () => {
-    try {
-      installBtn.disabled = true
-      // Show the browser install prompt
-      deferredInstallPrompt.prompt()
-      const { outcome } = await deferredInstallPrompt.userChoice
-      // Clear the saved event regardless of outcome
-      deferredInstallPrompt = null
-      if (outcome === 'accepted') {
-        // Hide button; appinstalled event will also fire
-        const b = document.querySelector('#install-button')
-        if (b) b.remove()
-      } else {
-        // If dismissed, we can enable again to allow retry later
-        installBtn.disabled = false
-      }
-    } catch (e) {
-      // On any error, allow retry later
-      installBtn.disabled = false
-    }
-  })
-
-  panel.appendChild(installBtn)
-}
-
-// Listen for the install prompt and show the button
-window.addEventListener('beforeinstallprompt', (e) => {
-  e.preventDefault()
-  deferredInstallPrompt = e
-  
-  if (noteousSettings?.noteousApp?.installPrompt <= 3) {
-    noteousSettings.noteousApp.installPrompt++
-    localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
-    placeInstallButton()
-  }
-})
-
-// When app is installed, remove the button
-window.addEventListener('appinstalled', () => {
-  deferredInstallPrompt = null
-  const btn = document.querySelector('#install-button')
-  if (btn) btn.remove()
-})
-
 // ELEMENTOS /////////////////////////////////////
 let body = document.querySelector('body')
 
@@ -726,6 +642,55 @@ function loadNoteous(context) {
   }
 }
 
+////
+
+let deferredInstallPrompt = null
+let installNoteousButton = document.createElement('button')
+
+function showInstallButton() {
+  window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault()
+    deferredInstallPrompt = e
+    
+    if (noteousSettings?.noteousApp?.installPrompt <= 6) {
+      noteousSettings.noteousApp.installPrompt++
+      localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
+      
+      if ((window.matchMedia && window.matchMedia('(display-mode: standalone)').matches
+    ) || (navigator.standalone === true) || !deferredInstallPrompt) {
+      if (installNoteousButton) installNoteousButton.remove()
+    } else {
+      installNoteousButton.classList.add('write-buttons')
+      installNoteousButton.innerHTML = '<span style="font-style: normal;">🧁</span> Instalar noteous preview'
+      infoPanel.appendChild(installNoteousButton)
+      installNoteousButton.addEventListener('click', async () => {
+      try {
+        installNoteousButton.disabled = true
+        deferredInstallPrompt.prompt()
+        const { outcome } = await deferredInstallPrompt.userChoice
+        deferredInstallPrompt = null
+        if (outcome === 'accepted') {
+          installNoteousButton.remove()
+        } else {
+          installNoteousButton.disabled = false
+        }
+      } catch (e) {
+        installNoteousButton.disabled = false
+      }
+    })
+    }
+    }
+  })
+}
+
+window.addEventListener('appinstalled', () => {
+  deferredInstallPrompt = null
+  if (installNoteousButton) installNoteousButton.remove()
+})
+
+
+////
+
 function notePriority(context, priority) {
   //context ==> (1) recuperarPrioridade, (2)recuperarPrioridadeAoDesfocarInput (ao tirar foco define opacidade = 0 de Opções da Nota. Mas, é necessário também definir junto a borda, pois ao contrário um sobrescreve o outro), (3) trocarPrioridade
   if (context == 'retrievePriority') {
@@ -1193,39 +1158,17 @@ function renderNote(context, noteId, searchTerm) {
   // ESSE CONTEXTO É USADO AO ADICIONAR NOTA, PARA RENDERIZÁ-LA
   
   else if (context == 'add') {
-    for (let note of noteousMain) {
-      if (note.id == noteId) {
-        let noteContainer = document.createElement('div')
-        noteContainer.id = note.id + '-note-container'
-        noteContainer.classList.add('note-container')
-        
-        //noteous preview 1.7.1
-        //Visualização por Listas de Prioridade
-        //Após criar as notas, irá sorteá-las de acordo com a prioridade
-
-        //Caso alguma tenha alguma nota com prioridade solid,
-        //Adiciona lista ao container de listas (readNotesContainer) caso seja a primeira nota
-        //Depois, adiciona a nota à lista
-
-        if (note.priority == 'solid') {
-          if (!readNotesContainer.querySelector('#read-notes-list-solid')) {
-            readNotesContainer.append(readNotesListSolid)
-          }
-          readNotesListSolid.append(noteContainer)  
-
-        } else if (note.priority == 'double') {
-          if (!readNotesContainer.querySelector('#read-notes-list-double')) {
-            readNotesContainer.append(readNotesListDouble)
-          }
-          readNotesListDouble.append(noteContainer)
-
-        } else if (note.priority == 'dotted') {
-          if (!readNotesContainer.querySelector('#read-notes-list-dotted')) {
-            readNotesContainer.append(readNotesListDotted)
-          }
-          readNotesListDotted.append(noteContainer)
-        }
-
+        for (let priority of noteousSettings.priorityOrder) {
+      for (let note of noteousMain) {
+        if (note.id == noteId) {
+        // Verifica se a nota atual pertence à lista de prioridade que está sendo criada. A ordem das notas dentro da lista é definida por sortNotes(). Ou seja: noteousMain já vem ordenado pelo sortNotes()
+        //noteous preview 1.9: ao renderizar todas as notas, se houver termo de busca, filtra as notas que contêm o termo (sem diferenciar maiúsculas e minúsculas)
+        if (note.priority == priority) {
+          let noteContainer = document.createElement('div')
+          noteContainer.id = note.id + '-note-container'
+          noteContainer.classList.add('note-container')
+          readNotesLists[priority].append(noteContainer)
+          
         //BORDER/PRIORITY
         if (note.priority == 'solid') {
           noteContainer.style.cssText = 'border-style: none;'
@@ -1236,22 +1179,52 @@ function renderNote(context, noteId, searchTerm) {
         }
 
         //ACTION BUTTONS
+
         let actionButtonsContainer = document.createElement('div')
         actionButtonsContainer.id = note.id + '-action-buttons-container'
         actionButtonsContainer.classList.add('action-buttons-container')
 
-        //done
-        let doneActionButton = document.createElement('a')
-        doneActionButton.classList.add('action-buttons', 'material-icons')
-        doneActionButton.setAttribute('onclick', `doneNote(${note.id})`)
-        doneActionButton.appendChild(document.createTextNode('check_circle'))
+        for (let actionButton of noteousSettings.actionButtons) {
+
+            readNotesActionButtons[actionButton] = document.createElement('button')
+            readNotesActionButtons[actionButton].classList.add('action-buttons', 'material-icons')
+            readNotesActionButtons[actionButton].setAttribute('onclick', `${actionButton}Note(${note.id})`)
+            readNotesActionButtons[actionButton].appendChild(document.createTextNode(readNotesActionButtonsIcons[actionButton]))
+
+            //ACESSIBILIDADE
+            readNotesActionButtons[actionButton].tabIndex = tabIndexCounter += 1
+            if (actionButton == 'done') {
+              readNotesActionButtons[actionButton].setAttribute('aria-label', 'Concluir nota')
+              readNotesActionButtons[actionButton].setAttribute(
+                'onkeyup',
+                `if (event.key === 'Enter') { doneNote(${note.id}); }`
+              )
+            } else if (actionButton == 'share') {
+              readNotesActionButtons[actionButton].setAttribute('aria-label', 'Compartilhar nota')
+              readNotesActionButtons[actionButton].setAttribute(
+                'onkeyup',
+                `if (event.key === 'Enter') { shareNote(${note.id}); }`
+              )
+            }
+            else if (actionButton == 'copy') {
+              readNotesActionButtons[actionButton].classList.add('action-button-copy')
+              readNotesActionButtons[actionButton].setAttribute('aria-label', 'Copiar nota')
+              readNotesActionButtons[actionButton].setAttribute(
+                'onkeyup',
+                `if (event.key === 'Enter') { copyNote(${note.id}); }`
+              )
+            }
+
+            actionButtonsContainer.appendChild(readNotesActionButtons[actionButton])
+        }
+        
 
         //NOTE TEXT
         let noteTextContainer = document.createElement('div')
         noteTextContainer.id = note.id + '-text-container'
         noteTextContainer.classList.add('note-text-container')
         noteTextContainer.setAttribute('onclick', `openNote(${note.id})`)
-        
+
         // --> adição de 'texto' ao id porque não pode haver ids iguais
         let textElement = document.createElement('p')
         textElement.id = note.id + '-text'
@@ -1266,8 +1239,7 @@ function renderNote(context, noteId, searchTerm) {
           textElement.appendChild(document.createTextNode(noteCharAt))
           count = count + 1
           
-          console.log(noteContainer.offsetHeight)
-          //"Ir escrevendo" cada caractere até chegar o 30º
+          //"Ir escrevendo" cada caractere até chegar o 30º ou até a altura da nota ser 200px
           if (count == 200 || noteContainer.offsetHeight >= 200){
             
             textElement.append(document.createTextNode(' ...'))
@@ -1277,6 +1249,7 @@ function renderNote(context, noteId, searchTerm) {
             break
           }
         }
+        
 
         //DATE
         let noteDateContainer = document.createElement('div')
@@ -1287,7 +1260,7 @@ function renderNote(context, noteId, searchTerm) {
         dateElement.id = note.id + '-date-element'
         dateElement.appendChild(
           document.createTextNode(
-            `Criado em: ${new Date(note.id).getDate()}/${findMonth(
+            `+ ${new Date(note.id).getDate()}/${findMonth(
               new Date(note.id).getMonth()
             )}/${new Date(note.id).getUTCFullYear()} às ${setTimeNumber(
               new Date(note.id).getHours()
@@ -1310,31 +1283,25 @@ function renderNote(context, noteId, searchTerm) {
         //ACESSIBILIDADE
 
         noteTextContainer.tabIndex = tabIndexCounter += 1
-        noteTextContainer.setAttribute('aria-label', 'Anotação')
+        noteTextContainer.setAttribute('aria-label', 'Anotação:' + note.text)
         noteTextContainer.setAttribute(
           'onkeyup',
           `if (event.key === 'Enter') { openNote(${note.id}); }`
         )
 
-        doneActionButton.tabIndex = tabIndexCounter += 1
-        doneActionButton.setAttribute('aria-label', 'Concluir nota')
-        doneActionButton.setAttribute(
-          'onkeyup',
-          `if (event.key === 'Enter') { doneNote(${note.id}); }`
-        )
+        
 
         //APPENDS
-        actionButtonsContainer.appendChild(doneActionButton)
         noteTextContainer.appendChild(textElement)
         noteDateContainer.appendChild(dateElement)
         noteTextContainer.appendChild(noteDateContainer)
 
         noteContainer.appendChild(actionButtonsContainer)
         noteContainer.appendChild(noteTextContainer)
-
-        readNotesContainer.prepend(noteContainer)
+        }
       }
-    }
+      }
+  }
   }
   orblendEngine('change')
 }
