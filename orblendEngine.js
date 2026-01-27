@@ -42,7 +42,7 @@ function orblendEngine(context, labelMessage) {
     let infoElementTipText = document.createTextNode(`${infoText}`)
     infoElementTip.append(infoElementTipText)
 
-    if (infoText == '') {
+    if (infoText == '' && noteousSettings?.noteousApp?.installPrompt >= 6) {
       infoElementTip.style.marginBottom = '0;'
       infoPanel.style.cssText = 'margin-bottom: 0;'
     } else {

@@ -1,7 +1,7 @@
 let noteousSettings = JSON.parse(localStorage.getItem('noteous-settings'))
 let noteousMain = JSON.parse(localStorage.getItem('noteous-main')) || []
 
-if (noteousSettings == null || noteousSettings.noteousVersion < 1.5) {
+if (noteousSettings == null || noteousSettings?.noteousApp?.noteousVersion < 1.6) {
   //Redireciona a página inicial se Termos não foram aceitos
   window.location.replace('./index.html')
 } else {

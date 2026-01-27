@@ -30,9 +30,11 @@ body.append(document.createTextNode(`• SOLUÇÃO DE PROBLEMAS`))
 br()
 br()
 
-body.append(document.createTextNode(`Versão atual: ${noteousVersion}. Versão instalada ${noteousSettings.noteousVersion}`))
+body.append(document.createTextNode(`Versão atual: ${noteousVersion}. Versão instalada ${noteousSettings.noteousApp.noteousVersion}`))
 
 br()
+
+let buttonUnregisterServiceWorker = document.createElement('button')
 
 if ('serviceWorker' in navigator) {
 
@@ -43,7 +45,7 @@ if ('serviceWorker' in navigator) {
   br()
   br()  
 
-  let buttonUnregisterServiceWorker = document.createElement('button')
+  
   buttonUnregisterServiceWorker.setAttribute('onclick','unRegisterServiceWorker()')
   buttonUnregisterServiceWorker.innerText = 'Remover Service Worker'
   body.append(buttonUnregisterServiceWorker)
