@@ -311,7 +311,7 @@ function welcomeToNoteous(context, subcontext) {
     } else if (subcontext == 'new-version') {
       greetingTitle1.append(document.createTextNode('Boas-vindas ao'))
       greetingTitle2.append(document.createTextNode('noteous preview'))
-      greetingDescriptionTitle.innerHTML = '✨ Atualização concluída! Estes são os destaques do noteous preview 1.9 <br> <br> Você recebeu uma atualização com algumas melhorias adicionais'
+      greetingDescriptionTitle.innerHTML = '✨ Atualização concluída com algumas correções. <br> <br> Confira destaques das últimas atualizações:'
         
       
 
