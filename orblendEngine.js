@@ -43,7 +43,7 @@ function orblendEngine(context, labelMessage) {
     let infoElementTipText = document.createTextNode(`${infoText}`)
     infoElementTip.append(infoElementTipText)
 
-    if (infoText == '') {
+    if (infoText == '' && noteousSettings?.noteousApp?.installPrompt >= 6) {
       infoElementTip.style.marginBottom = '0;'
       infoPanel.style.cssText = 'margin-bottom: 0;'
     } else {
@@ -88,8 +88,7 @@ function orblendEngine(context, labelMessage) {
     //Configurar informações
     infoPanel.innerHTML = ''
     infoPanel.append(dateElement(), infoElement(subcontext, getRandom()))
-    // Ensure install button is present if eligible after info panel refresh
-    placeInstallButton()
+    showInstallButton()
   } else if (context == 'load') {
     
     //Backup Inteligente de Nota
@@ -127,8 +126,7 @@ function orblendEngine(context, labelMessage) {
     }
     infoPanel.innerHTML = ''
     infoPanel.append(dateElement(), infoElement(subcontext, getRandom()))
-    // Ensure install button is present if eligible on first load
-    placeInstallButton()
+    showInstallButton()
   } else if (context == 'on-change-input') {
     //Habilitar/Desabilitar Botão Adicionar Nota
     if (writeInput.value === '') {

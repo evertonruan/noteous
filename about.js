@@ -1,7 +1,7 @@
 let noteousSettings = JSON.parse(localStorage.getItem('noteous-settings'))
 let noteousMain = JSON.parse(localStorage.getItem('noteous-main')) || []
 
-if (noteousSettings == null || noteousSettings.noteousVersion < 1.6) {
+if (noteousSettings == null || noteousSettings?.noteousApp?.noteousVersion < 1.6) {
   //Redireciona a página inicial se Termos não foram aceitos
   window.location.replace('./index.html')
 } else {
@@ -83,6 +83,51 @@ ${noteousSettings.look.lumAccentContainer}`
 }
 
 ///////
+
+let deferredInstallPrompt = null
+let installNoteousButton = document.createElement('button')
+
+function showInstallButton() {
+  window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault()
+    deferredInstallPrompt = e
+      
+      if ((window.matchMedia && window.matchMedia('(display-mode: standalone)').matches
+    ) || (navigator.standalone === true) || !deferredInstallPrompt) {
+      if (installNoteousButton) installNoteousButton.remove()
+    } else {
+      installNoteousButton.classList.add('write-buttons')
+      installNoteousButton.innerHTML = '<span style="font-style: normal;">🧁</span> Instalar noteous'
+      aboutSettingsSection.append(installNoteousButton)
+      installNoteousButton.addEventListener('click', async () => {
+      try {
+        installNoteousButton.disabled = true
+        deferredInstallPrompt.prompt()
+        const { outcome } = await deferredInstallPrompt.userChoice
+        deferredInstallPrompt = null
+        if (outcome === 'accepted') {
+          installNoteousButton.remove()
+        } else {
+          installNoteousButton.disabled = false
+        }
+      } catch (e) {
+        installNoteousButton.disabled = false
+      }
+    })
+    }
+    
+  })
+}
+
+showInstallButton()
+
+window.addEventListener('appinstalled', () => {
+  deferredInstallPrompt = null
+  if (installNoteousButton) installNoteousButton.remove()
+})
+
+///////
+
 
 // CONFIGURAÇÕES DE TEMA ////////////////////////////////////
 function noteousTheme(context) {
