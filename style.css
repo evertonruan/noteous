@@ -32,8 +32,6 @@ html {
   .read-notes-priority-container {
     max-height: 60vh;
   }
-
- 
 }
 
 @media (max-width: 1000px) {
@@ -276,7 +274,7 @@ a {
 }
 
 #logo {
-  font-family: 'DM Serif Text', serif;
+  font-family: "DM Serif Text", serif;
   color: var(--base-text);
   font-style: italic;
   font-weight: bold;
@@ -316,7 +314,7 @@ a {
   border: 1px solid var(--color-theme-container);
 
   background-color: var(--base-color);
-  font-family: 'Merriweather Sans', sans-serif;
+  font-family: "Merriweather Sans", sans-serif;
   font-size: 1rem;
   color: var(--base-text);
 
@@ -351,7 +349,7 @@ a {
 
 #index,
 #index #write-input {
-  font-family: 'Merriweather Sans', sans-serif;
+  font-family: "Merriweather Sans", sans-serif;
 }
 
 /*-----SECTION-WRITE-----*/
@@ -378,7 +376,7 @@ a {
   margin-left: 0.5rem;
   margin-bottom: 0.5rem;
 
-  font-family: 'DM Serif Text', serif;
+  font-family: "DM Serif Text", serif;
   font-style: italic;
   font-weight: bold;
   font-size: clamp(1rem, 5vw, 1.2rem);
@@ -496,7 +494,7 @@ a {
   border-style: none;
   border-radius: 1.3rem;
 
-  font-family: 'DM Serif Text', serif;
+  font-family: "DM Serif Text", serif;
   font-style: italic;
   font-size: 1.4rem;
   font-weight: 700;
@@ -596,7 +594,7 @@ a {
   border-radius: 8px;
   outline: none;
   font-size: 0.8rem;
-  font-family: 'Merriweather Sans', sans-serif;
+  font-family: "Merriweather Sans", sans-serif;
   color: var(--base-text);
   background-color: var(--base-color);
   transition: opacity 0.3s ease-in-out;
@@ -637,7 +635,7 @@ a {
 
 #read-notes-container {
   display: flex;
-  
+
   height: auto;
   padding-bottom: 1rem;
   overflow-x: auto;
@@ -786,7 +784,7 @@ footer {
 footer p span {
   font-size: 150%;
   font-style: italic;
-  font-family: 'DM Serif Text', serif;
+  font-family: "DM Serif Text", serif;
   padding-right: 0.2rem;
 }
 
@@ -832,8 +830,8 @@ footer p span {
 }
 
 .greeting-title2 {
-  font-size: clamp(2rem,10vw,3.5rem);
-  font-family: 'DM Serif Text', serif;
+  font-size: clamp(2rem, 10vw, 3.5rem);
+  font-family: "DM Serif Text", serif;
   padding-top: 0.25rem;
   padding-left: 0.6rem;
   font-style: italic;
@@ -880,7 +878,7 @@ footer p span {
 
 .greeting-description-intro {
   font-weight: bold;
-  font-family: 'DM Serif Text', serif;
+  font-family: "DM Serif Text", serif;
   font-style: italic;
   font-size: 1.6rem;
   font-weight: 700;
@@ -924,7 +922,7 @@ footer p span {
   border-style: none;
   border-radius: 1.3rem;
 
-  font-family: 'DM Serif Text', serif;
+  font-family: "DM Serif Text", serif;
   font-style: italic;
   font-size: 1.4rem;
   font-weight: 700;
@@ -944,7 +942,7 @@ footer p span {
 #about {
   display: flex;
   flex-direction: column;
-  font-family: 'Merriweather Sans', sans-serif;
+  font-family: "Merriweather Sans", sans-serif;
   background-color: var(--base-color);
   color: var(--base-text);
   -webkit-user-select: none;
@@ -969,11 +967,10 @@ footer p span {
 }
 
 #about-survey h2 {
-  font-family: 'DM Serif Text', serif;
+  font-family: "DM Serif Text", serif;
   font-style: italic;
   line-height: 1;
 
-  
   color: var(--base-text);
 }
 
@@ -1041,7 +1038,7 @@ footer p span {
   border-radius: 2rem;
 
   font-size: 1.1rem;
-  font-family: 'Merriweather Sans', sans-serif;
+  font-family: "Merriweather Sans", sans-serif;
   color: var(--base-text);
   background-color: var(--base-color);
 
@@ -1126,7 +1123,7 @@ footer p span {
   align-items: center;
   gap: 0.3rem;
   font-size: 1.1rem;
-  font-family: 'Merriweather Sans', sans-serif;
+  font-family: "Merriweather Sans", sans-serif;
 }
 
 .toggle-input {
@@ -1142,11 +1139,13 @@ footer p span {
   height: 1.4rem;
   background: var(--base-options-panel);
   border-radius: 999px;
-  transition: background 0.2s ease, box-shadow 0.2s ease;
+  transition:
+    background 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 .toggle-slider::after {
-  content: '';
+  content: "";
   position: absolute;
   top: 0.15rem;
   left: 0.15rem;
@@ -1180,7 +1179,7 @@ footer p span {
 
 #about-button-policies {
   margin-top: 2rem;
-  font-family: 'Merriweather Sans', sans-serif;
+  font-family: "Merriweather Sans", sans-serif;
   color: var(--base-text);
   background-color: var(--base-color);
 }
@@ -1205,7 +1204,7 @@ footer p span {
 }
 
 #about-dev-name {
-  font-family: 'DM Serif Text', serif;
+  font-family: "DM Serif Text", serif;
   color: var(--base-text);
   font-style: italic;
   font-weight: bold;
@@ -1235,7 +1234,7 @@ footer p span {
 }
 
 .logo-inline {
-  font-family: 'DM Serif Text', serif;
+  font-family: "DM Serif Text", serif;
   font-style: italic;
   font-weight: bold;
   font-size: 1.4rem;
@@ -1297,10 +1296,10 @@ footer p span {
 
 @keyframes rotate {
   0% {
-      transform: rotate(0deg);
+    transform: rotate(0deg);
   }
   100% {
-      transform: rotate(360deg);
+    transform: rotate(360deg);
   }
 }
 
@@ -1318,7 +1317,7 @@ footer p span {
 }
 
 #gen-child-1 {
-  font-family: 'DM Serif Text', serif;
+  font-family: "DM Serif Text", serif;
   font-style: italic;
   font-weight: bold;
   font-size: 2rem;
@@ -1345,21 +1344,24 @@ footer p span {
   display: flex;
   flex-direction: column;
   margin: 3rem 0;
+  padding: 0.5rem;
 
   border: 1px solid;
   border-color: var(--base-text);
   border-radius: 2rem;
 }
 
-
 #about-update-list {
   display: flex;
   flex-direction: row;
   max-width: 100%;
   overflow-x: auto;
-  padding: 0 1rem;
+  padding: 1rem 1rem;
   margin-bottom: 20px;
   gap: 30px;
+
+  scrollbar-color: var(--base-buttons) var(--base-color);
+  scrollbar-width: thin;
 }
 
 .about-update-point {
@@ -1371,6 +1373,9 @@ footer p span {
 
   border: 1px solid var(--base-text);
   border-radius: 20px;
+
+  scrollbar-color: var(--base-buttons) var(--base-color);
+  scrollbar-width: thin;
 }
 
 .update-description {
