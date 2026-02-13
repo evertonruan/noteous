@@ -25,6 +25,7 @@ function orblendEngine(context, labelMessage) {
 
   let infoElement = function makeInfoElement(subcontext, random) {
     let infoText
+
     if (subcontext == 'no-notes') {
       infoText = 'Você ainda não tem anotações \n Adicione sua próxima tarefa!'
     } else if (subcontext == 'has-notes') {
@@ -34,15 +35,16 @@ function orblendEngine(context, labelMessage) {
           infoText = '🔎 Já respondeu a Pesquisa? \n Acesse Ajustes&Info para ver!'
           noteousSettings.noteousApp.surveyPrompt++
           localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
+        }
       }
     }
-    }
+    
     let infoElementTip = document.createElement('p')
     infoElementTip.classList.add('info-element')
     let infoElementTipText = document.createTextNode(`${infoText}`)
     infoElementTip.append(infoElementTipText)
 
-    if (infoText == '' && noteousSettings?.noteousApp?.installPrompt >= 6) {
+    if (infoText == '') {
       infoElementTip.style.marginBottom = '0;'
       infoPanel.style.cssText = 'margin-bottom: 0;'
     } else {
@@ -87,11 +89,10 @@ function orblendEngine(context, labelMessage) {
     //Configurar informações
     infoPanel.innerHTML = ''
     infoPanel.append(dateElement(), infoElement(subcontext, getRandom()))
-    // Ensure install button is present if eligible after info panel refresh
     showInstallButton()
   } else if (context == 'load') {
     
-    //Backup Inteligente de Nota
+    //✨ Backup Inteligente de Nota
     
     if (noteousSettings.input != '') {
       //Há uma nota não salva
@@ -126,7 +127,7 @@ function orblendEngine(context, labelMessage) {
     }
     infoPanel.innerHTML = ''
     infoPanel.append(dateElement(), infoElement(subcontext, getRandom()))
-    // Ensure install button is present if eligible on first load
+    
     showInstallButton()
   } else if (context == 'on-change-input') {
     //Habilitar/Desabilitar Botão Adicionar Nota
@@ -143,7 +144,7 @@ function orblendEngine(context, labelMessage) {
       writeButtonAdd.setAttribute('aria-hidden', 'false')
     }
 
-    //Backup Inteligente de Nota
+    //✨ Backup Inteligente de Nota
     if (editMode == false) {
       noteousSettings.input = writeInput.value
       localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
@@ -153,8 +154,8 @@ function orblendEngine(context, labelMessage) {
       localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
     }
 
-    //Redimensionamento Inteligente do Campo de Input
-    //Verifica quantas linhas há no Campo de Input
+    //✨ Redimensionamento Inteligente do Campo de Nota
+    //Verifica quantas linhas há no Campo de Nota
     let input = noteousSettings.input
     let newLines
     if (input.match(/\n/g) == null) {

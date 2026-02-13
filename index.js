@@ -311,22 +311,20 @@ function welcomeToNoteous(context, subcontext) {
     } else if (subcontext == 'new-version') {
       greetingTitle1.append(document.createTextNode('Boas-vindas ao'))
       greetingTitle2.append(document.createTextNode('noteous preview'))
-      greetingDescriptionTitle.innerHTML = '✨ Atualização concluída com algumas correções. <br> <br> Confira destaques das últimas atualizações:'
+      greetingDescriptionTitle.innerHTML = '✨ Atualização concluída com algumas correções'
         
       
 
-      greetingDescription1.innerHTML = `<span class="greeting-description-intro">Backup Inteligente de Nota</span>Saiu e esqueceu de adicionar? Sem problema: noteous usa o Orblend Engine para recuperar de forma automática sua nota`
+      greetingDescription1.innerHTML = `<span class="greeting-description-intro">Atualização automática</span> <br>noteous recebe atualizações automáticas 🌐 Assim, seu aplicativo sempre está em dia.`
 
-      greetingDescription2.innerHTML = `<span class="greeting-description-intro">Opções de Organização</span> <br>Com um visual renovado, as Opções de Visualização agora se chamam Opções de Organização!`
+      greetingDescription2.innerHTML = `<span class="greeting-description-intro">Os próximos passos do noteous</span> <br> noteous 2ª Geração, disponível em breve, ainda no início do ano`
 
-      greetingDescription3.innerHTML = `<span class="greeting-description-intro">Atualização automática</span> <br>noteous recebe atualizações automáticas 🌐 Assim, seu aplicativo sempre está em dia.`
-
-      greetingDescription4.innerHTML = `<span class="greeting-description-intro">Os próximos passos do noteous</span> <br> noteous 2ª Geração, disponível em breve, ainda no início do ano`
+      if (noteousSettings?.noteousApp?.surveyStatus == false) {
+        greetingDescription3.innerHTML = `<span class="greeting-description-intro">🔎 Pesquisa de Experiência</span> <br>Você pode ajudar nos próximos passos do noteous respondendo à Pesquisa de Experiência! Acesse <strong>Ajustes&Info</strong> para conferir`
+      }
       
-      greetingDescription1Image.setAttribute('src', './assets/images/greeting-usage.webp')
-      greetingDescription2Image.setAttribute('src', './assets/images/greeting-read-options.webp')
-      greetingDescription3Image.setAttribute('src', './assets/images/greeting-update.webp')
-      greetingDescription4Image.setAttribute('src', './assets/images/greeting-2ndgen.webp')
+      greetingDescription1Image.setAttribute('src', './assets/images/greeting-update.webp')
+      greetingDescription2Image.setAttribute('src', './assets/images/greeting-2ndgen.webp')
 
       greetingDescriptionContainer1.append(
         greetingDescription1Image,
@@ -337,19 +335,13 @@ function welcomeToNoteous(context, subcontext) {
         greetingDescription2
       )
       greetingDescriptionContainer3.append(
-        greetingDescription3Image,
         greetingDescription3
-      )
-      greetingDescriptionContainer4.append(
-        greetingDescription4Image,
-        greetingDescription4
       )
 
       greetingDescriptionContainerAll.append(
         greetingDescriptionContainer1,
         greetingDescriptionContainer2,
-        greetingDescriptionContainer3,
-        greetingDescriptionContainer4
+        greetingDescriptionContainer3
       )
     }
   } else if (context == 'render-policies') {
@@ -558,8 +550,6 @@ function loadNoteous(context) {
         
         //Aplica última ordenação
         sortNotes('retrieveSort') // preview 1.8 --> Correção: como sortNotes() agora ordena de verdade (pelo JS, não mais pelo CSS), é necessário chamar antes de renderNote()
-        
-        renderNote('render-all')
 
         //Aplica última orientação de listas de prioridade
         priorityListsOrientation('retrieveOrientation')
@@ -661,6 +651,7 @@ function showInstallButton() {
       if (installNoteousButton) installNoteousButton.remove()
     } else {
       installNoteousButton.classList.add('write-buttons')
+      installNoteousButton.style.cssText = 'margin-bottom: 2rem;'
       installNoteousButton.innerHTML = '<span style="font-style: normal;">🧁</span> Instalar noteous preview'
       infoPanel.appendChild(installNoteousButton)
       installNoteousButton.addEventListener('click', async () => {
@@ -692,6 +683,7 @@ window.addEventListener('appinstalled', () => {
 ////
 
 function notePriority(context, priority) {
+
   //context ==> (1) recuperarPrioridade, (2)recuperarPrioridadeAoDesfocarInput (ao tirar foco define opacidade = 0 de Opções da Nota. Mas, é necessário também definir junto a borda, pois ao contrário um sobrescreve o outro), (3) trocarPrioridade
   if (context == 'retrievePriority') {
     if (priority == 'solid') {
@@ -1167,7 +1159,7 @@ function renderNote(context, noteId, searchTerm) {
           let noteContainer = document.createElement('div')
           noteContainer.id = note.id + '-note-container'
           noteContainer.classList.add('note-container')
-          readNotesLists[priority].append(noteContainer)
+          readNotesLists[priority].prepend(noteContainer)
           
         //BORDER/PRIORITY
         if (note.priority == 'solid') {
@@ -1438,7 +1430,7 @@ function doneNote(noteId) {
       localStorage.setItem('noteous-main', JSON.stringify(noteousMain))
       orblendEngine('change')
     }, 100)
-  }, 5000)
+  }, 2000)
 
   let noteTextContainer = document.getElementById(noteId + '-text-container')
   let textElement = document.getElementById(noteId + '-text')

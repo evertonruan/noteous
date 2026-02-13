@@ -1372,9 +1372,13 @@ footer p span {
   flex-direction: row;
   max-width: 100%;
   overflow-x: auto;
-  padding: 0 1rem;
   margin-bottom: 20px;
   gap: 30px;
+
+  /*https://github.com/evertonruan/noteous/pull/57#issue-3865124101*/
+  padding: 1rem 1rem;
+  scrollbar-color: var(--base-buttons) var(--base-color);
+  scrollbar-width: thin;
 }
 
 .about-update-point {
@@ -1386,6 +1390,10 @@ footer p span {
 
   border: 1px solid var(--base-text);
   border-radius: 20px;
+
+  /*https://github.com/evertonruan/noteous/pull/57#issue-3865124101*/
+  scrollbar-color: var(--base-buttons) var(--base-color);
+  scrollbar-width: thin;
 }
 
 .update-description {
@@ -1414,7 +1422,7 @@ footer p span {
 }
 
 #about-update-point-actual {
-  min-width: 300px;
+  min-width: 250px;
   max-height: 400px;
   overflow-y: auto;
   word-wrap: break-word;
