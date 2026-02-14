@@ -169,6 +169,12 @@ html {
     gap: 0.3rem;
   }
 
+  #section-write #write-options {
+    right: 20px;
+    width: 2.5rem;
+    height: 2.5rem;
+  }
+
   #section-read #read-notes-container .note-container {
     max-width: 80vw;
   }
@@ -420,10 +426,10 @@ a {
 #write-options {
   position: absolute;
   top: 20px;
-  right: 20px;
+  right: 18px;
 
-  width: 2rem;
-  height: 2rem;
+  width: 2.2rem;
+  height: 2.2rem;
   border-radius: 50%;
   background-color: var(--base-buttons);
   border-color: var(--base-text);
@@ -1357,9 +1363,13 @@ footer p span {
   flex-direction: row;
   max-width: 100%;
   overflow-x: auto;
-  padding: 0 1rem;
   margin-bottom: 20px;
   gap: 30px;
+
+  /*https://github.com/evertonruan/noteous/pull/57#issue-3865124101*/
+  padding: 1rem 1rem;
+  scrollbar-color: var(--base-buttons) var(--base-color);
+  scrollbar-width: thin;
 }
 
 .about-update-point {
@@ -1371,6 +1381,10 @@ footer p span {
 
   border: 1px solid var(--base-text);
   border-radius: 20px;
+
+  /*https://github.com/evertonruan/noteous/pull/57#issue-3865124101*/
+  scrollbar-color: var(--base-buttons) var(--base-color);
+  scrollbar-width: thin;
 }
 
 .update-description {
@@ -1399,7 +1413,7 @@ footer p span {
 }
 
 #about-update-point-actual {
-  min-width: 300px;
+  min-width: 250px;
   max-height: 400px;
   overflow-y: auto;
   word-wrap: break-word;

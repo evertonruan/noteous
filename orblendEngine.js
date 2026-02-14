@@ -25,6 +25,7 @@ function orblendEngine(context, labelMessage) {
 
   let infoElement = function makeInfoElement(subcontext, random) {
     let infoText
+
     if (subcontext == 'no-notes') {
       infoText = 'Você ainda não tem anotações \n Adicione sua próxima tarefa!'
     } else if (subcontext == 'has-notes') {
@@ -43,7 +44,7 @@ function orblendEngine(context, labelMessage) {
     let infoElementTipText = document.createTextNode(`${infoText}`)
     infoElementTip.append(infoElementTipText)
 
-    if (infoText == '' && noteousSettings?.noteousApp?.installPrompt >= 6) {
+    if (infoText == '') {
       infoElementTip.style.marginBottom = '0;'
       infoPanel.style.cssText = 'margin-bottom: 0;'
     } else {
@@ -91,7 +92,7 @@ function orblendEngine(context, labelMessage) {
     showInstallButton()
   } else if (context == 'load') {
     
-    //Backup Inteligente de Nota
+    //✨ Backup Inteligente de Nota
     
     if (noteousSettings.input != '') {
       //Há uma nota não salva
@@ -142,7 +143,7 @@ function orblendEngine(context, labelMessage) {
       writeButtonAdd.setAttribute('aria-hidden', 'false')
     }
 
-    //Backup Inteligente de Nota
+    //✨ Backup Inteligente de Nota
     if (editMode == false) {
       noteousSettings.input = writeInput.value
       localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
@@ -152,7 +153,7 @@ function orblendEngine(context, labelMessage) {
       localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
     }
 
-    //Redimensionamento Inteligente do Campo de Input
+    //✨ Redimensionamento Inteligente do Campo de Input
     //Verifica quantas linhas há no Campo de Input
     let input = noteousSettings.input
     let newLines
