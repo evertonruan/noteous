@@ -313,10 +313,6 @@ function welcomeToNoteous(context, subcontext) {
       greetingDescription1.innerHTML = `<span class="greeting-description-intro">Atualização automática</span> <br>noteous recebe atualizações automáticas 🌐 Assim, seu aplicativo sempre está em dia.`
 
       greetingDescription2.innerHTML = `<span class="greeting-description-intro">Os próximos passos do noteous</span> <br> noteous 2ª Geração, disponível em breve, ainda no início do ano`
-
-      if (noteousSettings?.noteousApp?.surveyStatus == false) {
-        greetingDescription3.innerHTML = `<span class="greeting-description-intro">🔎 Pesquisa de Experiência</span> <br>Você pode ajudar nos próximos passos do noteous respondendo à Pesquisa de Experiência! Acesse <strong>Ajustes&Info</strong> para conferir`
-      }
       
       greetingDescription1Image.setAttribute('src', './assets/images/greeting-update.webp')
       greetingDescription2Image.setAttribute('src', './assets/images/greeting-2ndgen.webp')
@@ -329,14 +325,10 @@ function welcomeToNoteous(context, subcontext) {
         greetingDescription2Image,
         greetingDescription2
       )
-      greetingDescriptionContainer3.append(
-        greetingDescription3
-      )
 
       greetingDescriptionContainerAll.append(
         greetingDescriptionContainer1,
-        greetingDescriptionContainer2,
-        greetingDescriptionContainer3
+        greetingDescriptionContainer2
       )
     }
   } else if (context == 'render-policies') {
