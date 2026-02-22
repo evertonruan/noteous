@@ -9,7 +9,6 @@ function serviceWorkerRegister() {
 // ELEMENTOS /////////////////////////////////////
 let body = document.querySelector('body')
 
-let themeButton = document.querySelector('#theme-container')
 let noteousVersionLabel = document.querySelector('#noteous-version-label')
 
 //WRITE-SECTION
@@ -515,10 +514,6 @@ function noteousTheme(context) {
     injectCSSOnRoot()
   }
 }
-
-themeButton.addEventListener('click', () => {
-  noteousTheme('change-theme')
-})
 
 //////////
 
