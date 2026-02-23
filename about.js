@@ -1106,34 +1106,3 @@ function importNotes(notes) {
   alert('Notas importadas com sucesso!')
   window.location.reload()
 }
-
-//FUNÇÃO PARA RESTAURAR NOTA
-function restoreNote(noteId) {
-  for (let note of noteousMain) {
-    if (note.id === noteId) {
-      note.done = false
-      break
-    }
-  }
-  localStorage.setItem('noteous-main', JSON.stringify(noteousMain))
-  
-  // Fecha o modal e recarrega a página
-  const modal = document.querySelector('#modal')
-  if (modal && modal.parentElement) {
-    document.body.removeChild(modal.parentElement)
-  }
-  
-  alert('Nota restaurada')
-}
-
-//FUNÇÃO PARA EXCLUIR NOTA PERMANENTEMENTE
-function deleteNotePermanently(noteId) {
-  noteousMain = noteousMain.filter(note => note.id !== noteId)
-  localStorage.setItem('noteous-main', JSON.stringify(noteousMain))
-  
-  // Fecha o modal e recarrega a página
-  const modal = document.querySelector('#modal')
-  if (modal && modal.parentElement) {
-    document.body.removeChild(modal.parentElement)
-  }
-}
