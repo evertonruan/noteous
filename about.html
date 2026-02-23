@@ -27,22 +27,23 @@
       </nav>
     </header>
 
-  <main>
-    <section id="about-settings" class="about-section">
-      <h2>🟠⚪AJUSTES</h2>
-      <div id="action-buttons-settings-container" class="settings-point">
+<main>
+  <section id="about-settings" class="about-section">
+    <h2>🟠⚪AJUSTES</h2>
+    <div class="about-section-horizontal">
+        <div id="action-buttons-settings-container" class="settings-point">
         <h4>Botões de Ação</h4>
-        <div class="options-container-column">
+        <div class="options-container">
           <p class="settings-info">Os Botões de Ação realizam funções úteis nas notas</p>
           <label class="toggle" for="toggle-action-button-share">
             <input id="toggle-action-button-share" class="toggle-input" type="checkbox" />
             <span class="toggle-slider" aria-hidden="true"></span>
-            <span class="toggle-text"><span class="material-icons">shortcut</span> Compartilhar</span>
+            <span class="toggle-text">Compartilhar</span>
           </label>
           <label class="toggle" for="toggle-action-button-copy">
             <input id="toggle-action-button-copy" class="toggle-input" type="checkbox" />
             <span class="toggle-slider" aria-hidden="true"></span>
-            <span class="toggle-text"><span class="material-icons">content_copy</span> Copiar texto</span>
+            <span class="toggle-text">Copiar texto</span>
           </label>
         </div>
       </div>
@@ -72,17 +73,14 @@
       </div>
       <div id="copy-container" class="settings-point">
         <h4>Cópias de Notas</h4>
-          <div class="options-container">
+          <div class="options-container-row">
             <button id="copy-create" class="option-point" type="button">Criar Cópia</button>
             <button id="copy-open" class="option-point" type="button">Abrir Cópia</button>
           </div>
           <div id="copy-details-container"></div>
       </div>
-      <div id="done-notes-setting-container" class="settings-point">
-        <h4>Notas Concluídas</h4>
-        <button id="view-done-notes" class="option-point" type="button"><span class="material-icons">check_circle</span> Ver notas</button>
-        <p class="settings-info">Restaure ou apague notas concluídas</p>
-      </div>
+    </div>
+    
   </section>
 
   <section id="about-section-policies" class="about-section">
@@ -101,7 +99,6 @@
 
 <section id="about-section-dev" class="about-section">
   <div>
-    <img id="about-section-dev-image" src="./assets/images/social-link.webp" alt="Imagem do desenvolvedor e logotipo do noteous">
         <p id="about-dev-name">Desenvolvido por Éverton Ruan</p>
         <p class="about-dev-description">
           <span class="logo-inline">noteous</span> é um projeto de código aberto, <a href="https://github.com/evertonruan/noteous">disponível no GitHub →</a>
@@ -113,10 +110,6 @@
   <div id="about-section-dev-mail"><span class="material-icons">
     email
     </span> <a href="mailto:contato@evertonruan.com">contato@evertonruan.com</a></div>
-</section>
-
-<section id="about-section-2ndgen-info" class="about-section">
-  <img src="assets/images/greeting-2ndgen.webp" alt="2ª Geração do noteous: lançamento ainda no início do ano">
 </section>
 </main>
 

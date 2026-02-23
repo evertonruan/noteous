@@ -37,9 +37,6 @@ let toggleActionButtonCopy = document.querySelector('#toggle-action-button-copy'
 let prioritySettingsContainer = document.querySelector('#priority-settings-container')
 let priorityContainer = document.querySelector('#priority-order-container')
 
-let doneNotesSettingContainer = document.querySelector('#done-notes-setting-container')
-let viewDoneNotesButton = document.querySelector('#view-done-notes')
-
 let buttonPolicies = document.querySelector('#about-button-policies')
 let policiesContainerData = document.querySelector('#policies-container-data')
 let policiesSwitchVar = 0
@@ -398,11 +395,6 @@ toggleActionButtonCopy.addEventListener('change', () => {
 
 noteousTheme('retrieve-theme')
 
-//BOTÃO VER NOTAS CONCLUÍDAS
-viewDoneNotesButton.addEventListener('click', () => {
-  showDoneNotesModal()
-})
-
 //BOTÃO DE POLICIES
 buttonPolicies.addEventListener('click', () => {
   if (policiesSwitchVar == 0) {
@@ -701,36 +693,6 @@ copyOpenButton.addEventListener('click', () => {
 })
 
 /////////////////////////
-
-// BOTÃO NOTAS CONCLUÍDAS
-
-function toggleDoneNotesButton() {
-  const doneNotes = noteousMain.filter(note => note.done === true)
-  
-  if (doneNotes.length === 0) {
-    doneNotesSettingContainer.classList.add('hidden-element')
-  } else {
-    viewDoneNotesButton.addEventListener('click', () => {
-      showDoneNotesModal()
-    })
-  }
-}
-
-toggleDoneNotesButton()
-
-//FUNÇÃO PARA EXIBIR MODAL COM NOTAS CONCLUÍDAS
-function showDoneNotesModal() {
-  // Filtra apenas as notas concluídas
-  const doneNotes = noteousMain.filter(note => note.done === true)
-
-  // Usa a mesma estrutura do modal de cópias de notas
-  const notesData = {
-    notes: doneNotes,
-    totalNotes: doneNotes.length
-  }
-
-  showNotesModal(notesData, 'done-notes')
-}
 
 
 //FUNÇÃO PARA EXIBIR MODAL COM AS NOTAS DA CÓPIA
