@@ -5,7 +5,7 @@
 
 ### Esse é o noteous preview (branch main-preview), que recebe recursos antecipados ao noteous (branch main). Ele pode ter instabilidades. Assim, para uma experiência estável, é recomendado utilizar o noteous.
 
-### 🧁 Ele é tão recheado de pequenos recursos interessantes que você vai amar conhecer melhor!
+### 🍩 Ele é tão recheado de pequenos recursos interessantes que você vai amar conhecer melhor!
 
 - 📃 Fique à vontade para explorar o código
 - ✨ Veja os próximos passos do noteous em Issues e Milestones

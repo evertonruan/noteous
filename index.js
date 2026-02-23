@@ -187,14 +187,14 @@ function welcomeToNoteous(context, subcontext) {
     let greetingTitle1 = document.createElement('p')
     greetingTitle1.classList.add('greeting-title1')
 
-    let greetingTitleIcon = document.createElement('img')
-    greetingTitleIcon.setAttribute('src', './assets/icons/maskable-icon-preview-192.png')
-    greetingTitleIcon.classList.add('greeting-title-icon')
-
-    greetingTitle2 = document.createElement('p')
+    let greetingTitle2 = document.createElement('p')
     greetingTitle2.classList.add('greeting-title2')
-    greetingTitleContainer.append(greetingTitleIcon, greetingTitle2)
+    greetingTitleContainer.append(greetingTitle2)
 
+    let greetingTitle3 = document.createElement('p')
+    greetingTitle3.classList.add('greeting-title3')
+    greetingTitleContainer.append(greetingTitle3)
+    
     //greetingDescriptions
 
     let greetingDescriptionTitle = document.createElement('p')
@@ -316,30 +316,9 @@ function welcomeToNoteous(context, subcontext) {
     } else if (subcontext == 'new-version') {
       greetingTitle1.append(document.createTextNode('Boas-vindas ao'))
       greetingTitle2.append(document.createTextNode('noteous preview'))
-      greetingDescriptionTitle.innerHTML = '✨ Atualização concluída com algumas correções'
+      greetingTitle3.append(document.createTextNode('2ª Geração'))
+      greetingDescriptionTitle.innerHTML = ''
         
-      
-
-      greetingDescription1.innerHTML = `<span class="greeting-description-intro">Atualização automática</span> <br>noteous recebe atualizações automáticas 🌐 Assim, seu aplicativo sempre está em dia.`
-
-      greetingDescription2.innerHTML = `<span class="greeting-description-intro">Os próximos passos do noteous</span> <br> noteous 2ª Geração, disponível em breve, ainda no início do ano`
-      
-      greetingDescription1Image.setAttribute('src', './assets/images/greeting-update.webp')
-      greetingDescription2Image.setAttribute('src', './assets/images/greeting-2ndgen.webp')
-
-      greetingDescriptionContainer1.append(
-        greetingDescription1Image,
-        greetingDescription1
-      )
-      greetingDescriptionContainer2.append(
-        greetingDescription2Image,
-        greetingDescription2
-      )
-
-      greetingDescriptionContainerAll.append(
-        greetingDescriptionContainer1,
-        greetingDescriptionContainer2
-      )
     }
   } else if (context == 'render-policies') {
     let greetingPanel = document.querySelector('.greeting-panel')
@@ -647,7 +626,7 @@ function showInstallButton() {
     } else {
       installNoteousButton.classList.add('write-buttons')
       installNoteousButton.style.cssText = 'margin-bottom: 2rem;'
-      installNoteousButton.innerHTML = '<span style="font-style: normal;">🧁</span> Instalar noteous preview'
+      installNoteousButton.innerHTML = '<span style="font-style: normal;"></span> Instalar noteous preview'
       infoPanel.appendChild(installNoteousButton)
       installNoteousButton.addEventListener('click', async () => {
       try {
