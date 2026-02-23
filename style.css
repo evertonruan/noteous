@@ -145,6 +145,12 @@ html {
     height: 2.5rem;
   }
 
+  #index #orbs-panel {
+    flex-direction: row;
+    justify-content: center;
+    margin: 10px 0;
+  }
+
   #section-read {
     flex-direction: column;
     min-height: 100vh;
@@ -466,6 +472,10 @@ a {
   transition: all 0.5s cubic-bezier(0.075, 0.82, 0.165, 1);
 }
 
+#write-input.orb-done {
+  background-color: var(--base-color);
+}
+
 #write-input.edit-mode {
   width: 80%;
   flex: 1;
@@ -575,6 +585,38 @@ a {
   padding-left: 12px;
   padding-right: 12px;
   background-color: transparent;
+}
+
+/*-----ORBS-----*/
+
+#orbs-panel {
+  display: flex;
+  flex-direction: column;
+  height: fit-content;
+}
+
+.orb-button {
+  width: 50px;
+  height: 50px;
+  margin: 5px;
+  border-radius: 50%;
+  background-color: var(--base-accent-color);
+
+  transition: all 0.2s cubic-bezier(0.075, 0.82, 0.165, 1);
+}
+
+.orb-button:hover {
+  cursor: pointer;
+  filter: brightness(90%);
+}
+
+.orb-button.selected-orb {
+  box-shadow: 0px 0px 20px var(--base-accent-color);
+}
+
+#done-orb-button {
+  background-color: var(--base-color);
+  border: 3px solid var(--base-accent-color);
 }
 
 /*-----SECTION-READ-----*/

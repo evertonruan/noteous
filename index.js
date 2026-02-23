@@ -27,6 +27,8 @@ let writeButtonDismiss = document.querySelector('#write-button-dismiss')
 let writeButtonEdit = document.querySelector('#write-button-edit')
 let writeButtonCancelEdit = document.querySelector('#write-button-cancel')
 
+let orbsPanel = document.querySelector('#orbs-panel')
+
 //READ-SECTION
 let readSection = document.querySelector('#section-read')
 let readPanel = document.querySelector('#read-panel')
@@ -88,6 +90,7 @@ let editMode = false
 let tabIndexCounter = 10
 let sortActionSelection = ''
 let labelTimeoutId = null // Para controlar o timeout da label
+let selectedOrb = 'donutdough'
 
 //função em variável para 'desbloquear' writeInput se tela é pequena
 //usado em openNote() e exitEditMode()
@@ -533,12 +536,12 @@ function loadNoteous(context) {
 
         
         //Aplica última ordenação
-        sortNotes('retrieveSort') // preview 1.8 --> Correção: como sortNotes() agora ordena de verdade (pelo JS, não mais pelo CSS), é necessário chamar antes de renderNote()
+        orblendEngine('load')
+        sortNotes('retrieveSort', selectedOrb) // preview 1.8 --> Correção: como sortNotes() agora ordena de verdade (pelo JS, não mais pelo CSS), é necessário chamar antes de renderNote()
 
         //Aplica última orientação de listas de prioridade
         priorityListsOrientation('retrieveOrientation')
 
-        orblendEngine('load')
         orblendEngine('on-change-input')
 
         
@@ -599,6 +602,8 @@ function loadNoteous(context) {
     //preview 1.8: sort agora é objeto com time e action
     noteousSettings = {
       noteousApp: { noteousVersion: currentVersion, installPrompt: 0, acceptedTermsVersion: termsVersion, firstAccess: accessDate, surveyStatus: doneSurvey, surveyPrompt: promptTimes, surveyBonus: bonusCode },
+      orbsIndex: ['done', 'donutdough'],
+      selectedOrb: 'donutdough',
       sort: { time: 'recent', action: 'editedAt' },
       priority: 'solid',
       priorityOrder: ['solid', 'double', 'dotted'], // preview 1.8: ordem das listas de prioridade
@@ -972,7 +977,7 @@ readOptionsSortActionButton.addEventListener('click', () => {
 
 //////////
 
-function renderNote(context, noteId, searchTerm) {
+function renderNote(context, noteId, orb, searchTerm) {
 
   //ESSE CONTEXTO É USADO AO CARREGAR A PÁGINA, RENDERIZANDO TODAS AS NOTAS
 
@@ -992,6 +997,7 @@ function renderNote(context, noteId, searchTerm) {
 
     //noteous preview 1.8: personalização de ordem de Listas de Prioridade. Revisão do código para criar as listas na ordem definida pelo usuário. Agora, renderNote() primeiro verifica a ordem das listas e depois, adiciona a nota em sua respectiva lista.
 
+
     for (let priority of noteousSettings.priorityOrder) {
       if (!readNotesContainer.querySelector(`#read-notes-list-${priority}`)) { //Se não há lista com essa prioridade, cria
         readNotesContainer.append(readNotesLists[priority])
@@ -1000,7 +1006,7 @@ function renderNote(context, noteId, searchTerm) {
       for (let note of noteousMain) {
         // Verifica se a nota atual pertence à lista de prioridade que está sendo criada. A ordem das notas dentro da lista é definida por sortNotes(). Ou seja: noteousMain já vem ordenado pelo sortNotes()
         //noteous preview 1.9: ao renderizar todas as notas, se houver termo de busca, filtra as notas que contêm o termo (sem diferenciar maiúsculas e minúsculas)
-        if (note.priority == priority && note.done != true && (searchTerm == undefined || note.text.toLowerCase().includes(searchTerm.toLowerCase()))) {
+        if (note.priority == priority && orblendEngine('check-selected-orb', '', note, orb) && (searchTerm == undefined || note.text.toLowerCase().includes(searchTerm.toLowerCase()))) {
           let noteContainer = document.createElement('div')
           noteContainer.id = note.id + '-note-container'
           noteContainer.classList.add('note-container')
