@@ -128,12 +128,16 @@ function orblendEngine(context, labelMessage) {
       setWriteLabel('start-note')
       writeButtonDismiss.classList.add('hidden-element')
       writeButtonAdd.disabled = true
+      writeButtonsContainer.classList.add('hidden-buttons')
+      writeInput.classList.add('rounded-bottom')
       writeButtonAdd.setAttribute('aria-hidden', 'true')
     } else {
       if (noteousSettings.input == '' && editMode == false) {
         setWriteLabel('add-note')
       } 
       writeButtonAdd.disabled = false
+      writeButtonsContainer.classList.remove('hidden-buttons')
+      writeInput.classList.remove('rounded-bottom')
       writeButtonAdd.setAttribute('aria-hidden', 'false')
     }
 

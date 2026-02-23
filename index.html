@@ -35,6 +35,19 @@
         <div id="info-panel"></div>
         <div id="write-panel">
           <label id="write-label" for="write-input"></label>
+          <button
+            id="write-options"
+            type="button"
+            tabindex="2"
+            aria-label="Botão alterar prioridade da nota"
+          ></button>
+          <textarea
+            id="write-input"
+            type="text"
+            autofocus
+            tabindex="1"
+            placeholder="✏️ Anote aqui"
+          ></textarea>
           <div class="write-buttons-container">
             <button
               id="write-button-edit"
@@ -57,20 +70,6 @@
               <span class="material-icons"> close </span>
             </button>
           </div>
-
-          <button
-            id="write-options"
-            type="button"
-            tabindex="2"
-            aria-label="Botão alterar prioridade da nota"
-          ></button>
-          <textarea
-            id="write-input"
-            type="text"
-            autofocus
-            tabindex="1"
-            placeholder="✔ Sua próxima tarefa ou lembrete"
-          ></textarea>
           <div id="write-buttons-container">
             <button
               id="write-button-add"
@@ -79,7 +78,7 @@
               aria-label="Adicionar nota"
               tabindex="3"
             >
-              + adicionar nota
+              +
             </button>
             <button
             id="write-button-dismiss"
