@@ -522,7 +522,7 @@ function loadNoteous(context) {
         
         //Aplica última ordenação
         orblendEngine('load')
-        sortNotes('retrieveSort', selectedOrb) // preview 1.8 --> Correção: como sortNotes() agora ordena de verdade (pelo JS, não mais pelo CSS), é necessário chamar antes de renderNote()
+        sortNotes('set-sort', selectedOrb)
 
         //Aplica última orientação de listas de prioridade
         priorityListsOrientation('retrieveOrientation')
@@ -852,23 +852,34 @@ readOptionsOrientationButton.addEventListener('click', () => {
   priorityListsOrientation('change-orientation')
 })
 
-function readOptionsSortActionButtonText() {
-  if (noteousSettings.sort.action == 'editedAt') {
-    readOptionsSortActionButton.innerHTML = ''
-    readOptionsSortActionButton.append(document.createTextNode('edit_note'))
-  } else if (noteousSettings.sort.action == 'id') {
-    readOptionsSortActionButton.innerHTML = ''
-    readOptionsSortActionButton.append(document.createTextNode('post_add'))
+function readOptionsSortButtonText(context) {
+  if (context == 'sort-action') {
+    if (noteousSettings.sort.action == 'editedAt') {
+      readOptionsSortActionButton.innerHTML = ''
+      readOptionsSortActionButton.append(document.createTextNode('edit_note'))
+    } else if (noteousSettings.sort.action == 'id') {
+      readOptionsSortActionButton.innerHTML = ''
+      readOptionsSortActionButton.append(document.createTextNode('post_add'))
+    }
+  } else if (context == 'sort-time') {
+    if (noteousSettings.sort.time == 'recent') {
+      readOptionsSort.innerHTML = ''
+      readOptionsSort.append(document.createTextNode('arrow_downward'))
+    } else if (noteousSettings.sort.time == 'old') {
+      readOptionsSort.innerHTML = ''
+      readOptionsSort.append(document.createTextNode('arrow_upward'))
+    }
   }
 }
 
 function sortNotes(context, subcontext) {
 
-  // noteous em versões anteriores: Antes, apenas dava a 'sensação' de que as notas foram ordenadas, apenas usando flex-reverse.
-  // noteous preview 1.7.1: função sortNotes() revisada. Agora, faz uma inversão de verdade, ordenando o array de notas.
-  // noteous preview 1.8: função sortNotes() revisada. Agora, há dois critérios de ordenação: (1) tempo (recente ou antigo primeiro) e (2) ação (ordem pela criação ou pela edição). Assim, o usuário pode escolher se quer ver as notas mais recentes primeiro ou as mais antigas primeiro, e também se quer que a ordenação seja feita pela data de criação ou pela data de edição.
+  // previous noteous version: notes were ordened by flex-reverse. It was not real ordering.
+  // noteous preview 1.7.1: updated sortNotes(). Now, it performs a real inversion, sorting the array of notes.
+  // noteous preview 1.8: updated sortNotes() revisada. Now, there are two sorting criteria: (1) time (recent or old first) and (2) action (order by creation or by edition). User can choose whether to see the most recent notes first or the oldest first, and also whether the sorting should be done by creation date or by edition date.
+  // noteous preview 2.0.1: refactored sortNotes() to simplify code and improve efficiency. Sorting logic is now handled by the 'set-sort' context.
 
-  if (context == 'retrieveSort') {
+  if (context == 'set-sort') {
     const getSortValue = (note) => {
       if (noteousSettings.sort.action === 'editedAt') {
         return note.editedAt ?? note.id
@@ -878,79 +889,44 @@ function sortNotes(context, subcontext) {
 
     if (noteousSettings.sort.time == 'recent') {
       noteousMain.sort((a, b) => getSortValue(b) - getSortValue(a))
-      
-      readOptionsSort.innerHTML = ''
-      readOptionsSort.append(document.createTextNode('arrow_downward'))
-      readOptionsSortActionButtonText()
-
-
     } else if (noteousSettings.sort.time == 'old') {
       noteousMain.sort((a, b) => getSortValue(a) - getSortValue(b))
-      
-      readOptionsSort.innerHTML = ''
-      readOptionsSort.append(document.createTextNode('arrow_upward'))
-      readOptionsSortActionButtonText()
     }
-
+    
+    readOptionsSortButtonText('sort-time')
+    readOptionsSortButtonText('sort-action')
     renderNote('render-all', '', `${subcontext}`)
 
   } else if (context == 'change-sort-action') {
       if (noteousSettings.sort.action == 'editedAt') {
-          noteousSettings.sort.action = 'id' // Troca ordem de notas pela Criação
-          localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
-          readOptionsMessage('Ordenar por: Criação')
+        noteousSettings.sort.action = 'id' // Change to sort by creation date
+        localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
+        readOptionsMessage('Ordenar por: Criação')
         
       } else if (noteousSettings.sort.action == 'id') {
-          noteousSettings.sort.action = 'editedAt' // Troca ordem de notas pela Edição
-          localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
-          readOptionsMessage('Ordenar por: Edição')
+        noteousSettings.sort.action = 'editedAt' // Change to sort by edited date
+        localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
+        readOptionsMessage('Ordenar por: Edição')
       }
-      sortNotes('retrieveSort')
+      sortNotes('set-sort', `${selectedOrb}`)
 
   } else if (context == 'change-sort-time') {
-    const getSortValue = (note) => {
-      if (noteousSettings.sort.action === 'editedAt') {
-        return note.editedAt ?? note.id
-      }
-      return note.id
-    }
-
-    //Se o tempo era recente, troca para antigo
     if (noteousSettings.sort.time == 'recent') {
-      noteousSettings.sort.time = 'old'
+      noteousSettings.sort.time = 'old' // Change to old notes first
       localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
-
-      readOptionsSortActionButtonText()
-
       readOptionsSort.innerHTML = ''
       readOptionsSort.append(
         document.createTextNode('arrow_upward')
       )
-      
       readOptionsMessage('Ordem: Mais antigas primeiro')
-      
-      // Ordem: Antigo para recente
-      noteousMain.sort((a, b) => getSortValue(a) - getSortValue(b))
-
-      renderNote('render-all')
-
-      //Se o tempo era antigo, troca para recente
     } else if (noteousSettings.sort.time == 'old') {
-      noteousSettings.sort.time = 'recent'
+      noteousSettings.sort.time = 'recent' // Change to recent notes first
       localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
-
-      readOptionsSortActionButtonText()
-
       readOptionsSort.innerHTML = ''
       readOptionsSort.append(document.createTextNode('arrow_downward'))
-      
       readOptionsMessage('Ordem: Mais recentes primeiro')
-      
-      // Ordem: Recente para antigo
-      noteousMain.sort((a, b) => getSortValue(b) - getSortValue(a))
-
-      renderNote('render-all')
     }
+    sortNotes('set-sort', `${selectedOrb}`)
   }
 }
 readOptionsSort.addEventListener('click', () => {
@@ -1668,7 +1644,7 @@ function editNote(noteId) {
             }
           }
 
-          sortNotes('retrieveSort')
+          sortNotes('set-sort', `${selectedOrb}`)
 
           exitEditMode()
         }
