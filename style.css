@@ -551,11 +551,6 @@ a {
   border-width: 7px;
 }
 
-.write-button-edit {
-  margin: 1rem 0.5rem;
-  padding: 0.8rem 1.8rem;
-}
-
 .write-buttons:active:enabled {
   transform: scale(0.8);
 }
@@ -810,6 +805,22 @@ a {
   resize: none;
   outline: none;
   transition: all 0.4s cubic-bezier(0.075, 0.82, 0.165, 1);
+}
+
+.editing-buttons-container {
+  display: flex;
+  flex-direction: row;
+  position: sticky;
+  top: 0px;
+  margin-right: auto;
+  z-index: 2;
+  padding: 0.3rem 0.5rem;
+  align-items: center;
+  gap: 30px;
+  border-radius: 0 0 20px 0;
+  -webkit-backdrop-filter: blur(3px);
+  backdrop-filter: blur(3px);
+  box-shadow: 0px 5px 10px var(--base-accent-color);
 }
 
 .action-buttons-container {

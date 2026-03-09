@@ -24,8 +24,6 @@ let writeInput = document.querySelector('#write-input')
 let writeButtonsContainer = document.querySelector('#write-buttons-container')
 let writeButtonAdd = document.querySelector('#write-button-add')
 let writeButtonDismiss = document.querySelector('#write-button-dismiss')
-let writeButtonEdit = document.querySelector('#write-button-edit')
-let writeButtonCancelEdit = document.querySelector('#write-button-cancel')
 
 let orbsPanel = document.querySelector('#orbs-panel')
 
@@ -726,15 +724,12 @@ function notePriority(context, priority) {
 }
 
 writeInput.addEventListener('focus', () => {
-  if (editMode == false) {
     writeButtonAdd.classList.add('focus-input')
     writeButtonsContainer.classList.add('focus-input')
     notePriority('retrievePriority', noteousSettings.priority)
-  }
 })
 
 writeInput.addEventListener('blur', () => {
-  if (editMode == false) {
     writeButtonAdd.classList.remove('focus-input')
     writeButtonsContainer.classList.remove('focus-input')
 
@@ -749,7 +744,6 @@ writeInput.addEventListener('blur', () => {
       )
         notePriority('retrievePriorityBlurInput', noteousSettings.priority)
     }, 500)
-  }
 })
 
 writeOptions.addEventListener('click', () => {
@@ -986,6 +980,23 @@ function renderNote(context, noteId, orb, searchTerm) {
           noteContainer.style.cssText = 'border-style: dotted;'
         }
 
+        //EDITING BUTTONS
+        const editingButtonsContainer = document.createElement('div')
+        editingButtonsContainer.id = note.id + '-editing-buttons-container'
+        editingButtonsContainer.classList.add('editing-buttons-container', 'hidden-element')
+
+        const acceptEditingButton = document.createElement('button')
+        acceptEditingButton.id = note.id + '-accept-editing-button'
+        acceptEditingButton.classList.add('action-buttons', 'material-icons')
+        acceptEditingButton.appendChild(document.createTextNode('check'))
+
+        const discardEditingButton = document.createElement('button')
+        discardEditingButton.id = note.id + '-discard-editing-button'
+        discardEditingButton.classList.add('action-buttons', 'material-icons')
+        discardEditingButton.appendChild(document.createTextNode('close'))
+
+        editingButtonsContainer.append(acceptEditingButton, discardEditingButton)
+
         //ACTION BUTTONS
 
         let actionButtonsContainer = document.createElement('div')
@@ -1053,8 +1064,8 @@ function renderNote(context, noteId, orb, searchTerm) {
         noteTextContainer.id = note.id + '-text-container'
         noteTextContainer.classList.add('note-text-container')
         noteTextContainer.setAttribute('readonly', true)
-        noteTextContainer.setAttribute('onclick', `handleNote(${note.id})`)
-        noteTextContainer.value = `\n \n ${note.text}`
+        noteTextContainer.setAttribute('onclick', `editNote(${note.id})`)
+        noteTextContainer.value = `\n\n${note.text}`
 
         //DATE
         let noteDateContainer = document.createElement('div')
@@ -1091,7 +1102,7 @@ function renderNote(context, noteId, orb, searchTerm) {
         noteTextContainer.setAttribute('aria-label', 'Anotação:' + note.text)
         noteTextContainer.setAttribute(
           'onkeyup',
-          `if (event.key === 'Enter') { handleNote(${note.id}); }`
+          `if (event.key === 'Enter' && this.hasAttribute('readonly')) { editNote(${note.id}); }`
         )
 
         
@@ -1099,7 +1110,7 @@ function renderNote(context, noteId, orb, searchTerm) {
         //APPENDS
         noteDateContainer.appendChild(dateElement)
         noteTextContainer.appendChild(noteDateContainer)
-
+        noteContainer.appendChild(editingButtonsContainer)
         noteContainer.appendChild(actionButtonsContainer)
         noteContainer.appendChild(noteTextContainer)
         }
@@ -1140,6 +1151,23 @@ function renderNote(context, noteId, orb, searchTerm) {
           } else if (note.priority == 'dotted') {
             noteContainer.style.cssText = 'border-style: dotted;'
           }
+
+          //EDITING BUTTONS
+          const editingButtonsContainer = document.createElement('div')
+          editingButtonsContainer.id = note.id + '-editing-buttons-container'
+          editingButtonsContainer.classList.add('editing-buttons-container', 'hidden-element')
+
+          const acceptEditingButton = document.createElement('button')
+          acceptEditingButton.id = note.id + '-accept-editing-button'
+          acceptEditingButton.classList.add('action-buttons', 'material-icons')
+          acceptEditingButton.appendChild(document.createTextNode('check'))
+
+          const discardEditingButton = document.createElement('button')
+          discardEditingButton.id = note.id + '-discard-editing-button'
+          discardEditingButton.classList.add('action-buttons', 'material-icons')
+          discardEditingButton.appendChild(document.createTextNode('close'))
+
+          editingButtonsContainer.append(acceptEditingButton, discardEditingButton)
 
           //ACTION BUTTONS
 
@@ -1207,7 +1235,7 @@ function renderNote(context, noteId, orb, searchTerm) {
           noteTextContainer.id = note.id + '-text-container'
           noteTextContainer.classList.add('note-text-container')
           noteTextContainer.setAttribute('readonly', true)
-          noteTextContainer.setAttribute('onclick', `handleNote(${note.id})`)
+          noteTextContainer.setAttribute('onclick', `editNote(${note.id})`)
           noteTextContainer.value = `\n \n ${note.text}`
 
           //DATE
@@ -1245,14 +1273,14 @@ function renderNote(context, noteId, orb, searchTerm) {
           noteTextContainer.setAttribute('aria-label', 'Anotação:' + note.text)
           noteTextContainer.setAttribute(
             'onkeyup',
-            `if (event.key === 'Enter') { handleNote(${note.id}); }`
+            `if (event.key === 'Enter' && this.hasAttribute('readonly')) { editNote(${note.id}); }`
           )
 
           //APPENDS
 
           noteDateContainer.appendChild(dateElement)
           noteTextContainer.appendChild(noteDateContainer)
-
+          noteContainer.appendChild(editingButtonsContainer)
           noteContainer.appendChild(actionButtonsContainer)
           noteContainer.appendChild(noteTextContainer)
           }  
@@ -1498,200 +1526,79 @@ function copyNote(noteId) {
 
 //////////
 
-//HANDLE NOTE
-
-function handleNote(noteId) {
-  for (let note of noteousMain) {
-    if (note.id === noteId) {
-      const actionButtonsContainer = document.getElementById(noteId + '-action-buttons-container')
-      actionButtonsContainer.innerHTML = ''
-      const acceptEditButton = document.createElement('button')
-      acceptEditButton.classList.add('action-buttons', 'material-icons')
-      acceptEditButton.appendChild(document.createTextNode('check'))
-      
-      actionButtonsContainer.appendChild(acceptEditButton)
-
-      const discardEditButton = document.createElement('button')
-      discardEditButton.classList.add('action-buttons', 'material-icons')
-      discardEditButton.appendChild(document.createTextNode('close'))
-      discardEditButton.setAttribute('onclick', 'location.reload()')
-      actionButtonsContainer.appendChild(discardEditButton)
-
-
-      const noteTextContainer = document.getElementById(noteId + '-text-container')
-      let editedNoteText = note.text
-      noteTextContainer.removeAttribute('readonly')
-      noteTextContainer.addEventListener('input', () => {
-        editedNoteText = noteTextContainer.value.startsWith('\n \n') ? noteTextContainer.value.slice(2) : noteTextContainer.value
-        console.log(editedNoteText)
-      })
-
-
-      acceptEditButton.addEventListener('click', () => {
-        if (noteTextContainer.value != '' && noteTextContainer.value != null) {
-          note.text = editedNoteText
-          note.editedAt = Date.now()
-          note.priority = noteousSettings.priority
-          localStorage.setItem('noteous-main', JSON.stringify(noteousMain))
-        }
-        location.reload()
-      })
-    }
-  }
-}
-
-//////////
-
-//OPEN NOTE
-function openNote(noteId) {
-  editMode = true
-  for (let note of noteousMain) {
-    if (note.id === noteId) {
-      notePriority('retrievePriority', note.priority)
-      notePriority('retrievePriorityBlurInput', note.priority)
-      noteousSettings.priority = note.priority
-      localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
-    }
-  }
-  if (window.screen.width <= 600) {
-    //Se for dispositivo móvel, ao abrir uma nota o teclado não irá aparecer imediatamente (readonly), mas ao tocar no campo de input o teclado aparecerá (readonly remove)
-    writeInput.setAttribute('readonly', true)
-    writeInput.focus()
-    writeButtonCancelEdit.removeAttribute('hidden')
-    editNote(noteId)
-    orblendEngine('', 'open-note')
-
-    //Acessibilidade e Experiência do usuário: Quando o tamanho de tela é inferior a 600px, ao clicar em uma nota, a função openNote() torna readonly a caixa de texto (writeInput) para que o teclado não apareça e confunda a experiência. Ao dar um toque, a caixa é liberada para edição. PROBLEMA: Quando o recurso TalkBack (do Android) é utilizado, não é possível reconhecer o toque na caixa de texto (writeInput). Talvez isso ocorra porque a acessibilidade do Android desative o "clique" em uma caixa de texto readonly.
-    //SOLUÇÃO: capturar posição do writeInput e da posição do mouse e verificar se o clique está dentro dessa área. Se estiver, desbloquear o input para edição.
-
-    window.addEventListener('click', function(event) {
-      if (editMode == true) {
-        let clickX = event.clientX;
-        let clickY = event.clientY;
-
-        let writeInputPosition = writeInput.getBoundingClientRect()
-  
-        if (clickX > writeInputPosition.left && clickX < writeInputPosition.right
-          && clickY > writeInputPosition.top && clickY < writeInputPosition.bottom
-        ) {
-          writeInputEdit()
-          orblendEngine('', 'edit-note')
-        }
-      }
-    })
-   
-  } else if (window.screen.width >= 601) {
-    writeInput.focus()
-    writeButtonCancelEdit.removeAttribute('hidden')
-    editNote(noteId)
-  }
-}
-
-//////////
-
-function toggleEditButtons(noteText) {
-  //Controla a exibição dos botões de edição (confirmar e cancelar) conforme o texto do input
-  if (editMode == true) {
-    if (writeInput.value == noteText) {
-      writeButtonEdit.setAttribute('hidden', 'true')
-      writeButtonCancelEdit.removeAttribute('hidden')
-      notePriority('retrievePriorityBlurInput', noteousSettings.priority)
-    } else if (writeInput.value != noteText) {
-      writeButtonEdit.removeAttribute('hidden')
-      writeButtonCancelEdit.removeAttribute('hidden')
-      notePriority('retrievePriority', noteousSettings.priority)
-    }
+function setEditMode(context) {
+  if (context == 'edit-mode-on') {
+    editMode = true
+    writeOptions.classList.add('edit-mode')
+    writeLabel.style.opacity = 0
+    writeInput.classList.add('orb-done')
+    writeInput.placeholder = ''
+    writeInput.disabled = true
+    writeButtonAdd.setAttribute('hidden', 'true')
+  } else if (context == 'edit-mode-off') {
+    editMode = false
+    writeOptions.classList.remove('edit-mode')
+    writeLabel.style.opacity = 1
+    writeInput.classList.remove('orb-done')
+    writeInput.placeholder = 'Escreva sua nota...'
+    writeInput.disabled = false
+    writeButtonAdd.removeAttribute('hidden')
   }
 }
 
 function editNote(noteId) {
   for (let note of noteousMain) {
-    noteIdEdit = noteId
     if (note.id === noteId) {
-      editMode = true
-      writeOptions.classList.add('edit-mode')
-      writeInput.classList.add('edit-mode')
-      readSection.classList.add('edit-mode')
-      writePanel.classList.add('edit-mode')
-
-      infoPanel.innerHTML = ''
-
-      writeButtonAdd.setAttribute('hidden', 'true')
-
-      writeInput.value = note.text
+      const editingButtonsContainer = document.getElementById(noteId + '-editing-buttons-container')
+      const acceptEditingButton = document.getElementById(noteId + '-accept-editing-button')
+      const discardEditingButton = document.getElementById(noteId + '-discard-editing-button')
+      const actionButtonsContainer = document.getElementById(noteId + '-action-buttons-container')
+      const noteTextContainer = document.getElementById(noteId + '-text-container')
       
-      writeInput.addEventListener('input', () => {
-        toggleEditButtons(note.text)
-      })
-
-      orblendEngine('', 'edit-note')
+      let isEditing = false
+      let editedNoteText = note.text
       
-      //orblendEngine: Backup Inteligente de Nota: Edição: Configuração dos botões de edição 
-      if (noteousSettings.noteId != 0) {
-        orblendEngine('', 'continue-editing')
-        toggleEditButtons(noteousSettings.input)
+      noteTextContainer.removeAttribute('onclick')
+      noteTextContainer.removeAttribute('readonly')
+      noteTextContainer.oninput = () => {
+        editedNoteText = noteTextContainer.value
+        isEditing = true
+        if (isEditing) {
+          setEditMode('edit-mode-on')
+          actionButtonsContainer.classList.add('hidden-element')
+          editingButtonsContainer.classList.remove('hidden-element')
+        }
       }
 
-      //Se durante Modo de edição clicar em "Confirmar edição"
-      writeButtonEdit.addEventListener('click', () => {
-        if (writeInput.value != '' && writeInput.value != null) {
-          for (let note of noteousMain) {
-            if (note.id === noteIdEdit) {
-              note.text = writeInput.value
-              note.editedAt = Date.now()
-              note.priority = noteousSettings.priority
-              localStorage.setItem('noteous-main', JSON.stringify(noteousMain))
-            }
-          }
-
-          sortNotes('set-sort', `${selectedOrb}`)
-
-          exitEditMode()
+      noteTextContainer.onblur = () => {
+        if (isEditing && editedNoteText == note.text) {
+          isEditing = false
+          actionButtonsContainer.classList.remove('hidden-element')
+          editingButtonsContainer.classList.add('hidden-element')
+          setEditMode('edit-mode-off')
         }
-      })
+      }
 
-      //Se durante Modo de edição clicar em "Cancelar"
-      writeButtonCancelEdit.addEventListener('click', exitEditMode)
+      acceptEditingButton.onclick = () => {
+        if (noteTextContainer.value != '' && noteTextContainer.value != null) {
+          note.text = editedNoteText.startsWith('\n\n')
+            ? editedNoteText.slice(2)
+            : editedNoteText.startsWith('\n')
+              ? editedNoteText.slice(1)
+              : editedNoteText
+          note.editedAt = Date.now()
+          note.priority = noteousSettings.priority
+          localStorage.setItem('noteous-main', JSON.stringify(noteousMain))
+        }
+        renderNote('render-all', '', `${selectedOrb}`)
+      }
+
+      discardEditingButton.onclick = () => {
+        noteTextContainer.value = `\n\n${note.text}`
+        actionButtonsContainer.classList.remove('hidden-element')
+        editingButtonsContainer.classList.add('hidden-element')
+        setEditMode('edit-mode-off')
+      }
     }
   }
-}
-
-function exitEditMode() {
-  //Remove informações do Backup Inteligente de Nota
-  writeInput.value = ''
-  noteIdEdit = 0
-  orblendEngine('on-change-input')
-
-  editMode = false
-
-  writeOptions.classList.remove('edit-mode')
-  writePanel.classList.remove('edit-mode')
-  readSection.classList.remove('edit-mode')
-
-  writeInput.classList.remove('edit-mode')
-  writeInput.value = ''
-  writeInput.removeAttribute('readonly')
-  writeInput.removeEventListener('click', writeInputEdit, false)
-
-  //se tela é mobile, write-input não recebe foco após sair do modo de edição. Motivo: ao estar no celular e sair do modo de edição, o teclado aparece por cima e oculta as notas, isso dificulta a usabilidade.
-  //Se tela é acima de mobile, write-input recebe foco após sair do modo de edição
-  if (window.screen.width <= 600) {
-    writeOptions.style.cssText =
-      'border-style: solid; opacity: 0; transition: none;'
-    writeInput.style.cssText = 'border-style: solid;'
-  } else {
-    writeInput.focus()
-    writeOptions.style.cssText = 'border-style: solid;'
-    writeInput.style.cssText = 'border-style: solid;'
-  }
-
-  noteousSettings.priority = 'solid'
-  localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
-
-  orblendEngine('change')
-
-  writeButtonAdd.removeAttribute('hidden')
-  writeButtonAdd.disabled = true
-  writeButtonEdit.setAttribute('hidden', 'true')
-  writeButtonCancelEdit.setAttribute('hidden', 'true')
 }

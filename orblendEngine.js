@@ -145,7 +145,7 @@ function orblendEngine(context, labelMessage, note, orb) {
       writeInput.classList.add('rounded-bottom')
       writeButtonAdd.setAttribute('aria-hidden', 'true')
     } else {
-      if (noteousSettings.input == '' && editMode == false) {
+      if (noteousSettings.input == '') {
         setWriteLabel('add-note')
       } 
       writeButtonAdd.disabled = false
