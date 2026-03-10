@@ -1407,61 +1407,33 @@ writeButtonDismiss.addEventListener('click', () => {
 //CONCLUIR NOTA
 let timeoutID
 function doneNote(noteId) {
-  timeoutID = setTimeout(() => {
+  setTimeout(() => {
     let noteContainer = document.getElementById(noteId + '-note-container')
-    noteContainer.style.cssText = 'opacity: 0;  transform: scale(80%);'
-
+    noteContainer.style.cssText = 'opacity: 0;  transform: scale(70%);'
     setTimeout(() => {
       noteContainer.remove()
-      for (let note of noteousMain) {
-        if (note.id === noteId) {
-          note.done = true
-        }
+    for (let note of noteousMain) {
+      if (note.id === noteId) {
+        note.done = true
       }
-
+    }
       localStorage.setItem('noteous-main', JSON.stringify(noteousMain))
       orblendEngine('change')
     }, 100)
-  }, 2000)
-
-  let noteTextContainer = document.getElementById(noteId + '-text-container')
-  let textElement = document.getElementById(noteId + '-text')
-  let actionButtonsContainer = document.getElementById(
-    noteId + '-action-buttons-container'
-  )
-  let noteDateContainer = document.getElementById(
-    noteId + '-note-date-container'
-  )
-
-  noteTextContainer.removeAttribute('onclick')
-  noteTextContainer.removeAttribute('onkeyup')
-  noteTextContainer.addEventListener('click', () => {
-    clearTimeout(timeoutID)
-    renderNote('render-all')
-  })
-  noteTextContainer.focus()
-  noteTextContainer.setAttribute(
-    'onkeydown',
-    `clearTimeout(timeoutID)
-    renderNote('render-all')`
-  )
-  textElement.innerHTML = '✔ Concluído <br> <strong>DESFAZER<strong>'
-
-  textElement.setAttribute(
-    'aria-label',
-    `Nota concluída. Enter ou clique para desfazer`
-  )
-
-  noteTextContainer.ariaLive = 'assertive'
-
-  actionButtonsContainer.style.cssText = 'opacity: 0;'
-  noteDateContainer.style.cssText = 'opacity: 0;'
+  }, 100)
 }
 
 function deleteNote(noteId) {
-  noteousMain = noteousMain.filter(note => note.id !== noteId)
-  localStorage.setItem('noteous-main', JSON.stringify(noteousMain))
-  location.reload()
+  setTimeout(() => {
+    let noteContainer = document.getElementById(noteId + '-note-container')
+    noteContainer.style.cssText = 'opacity: 0;  transform: scale(70%);'
+    setTimeout(() => {
+      noteContainer.remove()
+      noteousMain = noteousMain.filter(note => note.id !== noteId)
+      localStorage.setItem('noteous-main', JSON.stringify(noteousMain))
+      orblendEngine('change')
+    }, 100)
+  }, 100)
 }
 
 function restoreNote(noteId) {
@@ -1486,7 +1458,18 @@ function shareNote(noteId) {
             title: 'Anotação do Noteous',
             text: note.text
           })
-          .then(() => console.log('Successful share'))
+          .then(() => {
+            const messageAction = document.createElement('p')
+            messageAction.classList.add('message-action')
+            messageAction.appendChild(document.createTextNode('Compartilhando nota...'))
+            const actionButtonsContainer = document.getElementById(noteId + '-action-buttons-container')
+            actionButtonsContainer.querySelectorAll('.action-buttons').forEach(button => button.classList.add('hidden-element'))
+            actionButtonsContainer.appendChild(messageAction)
+                setTimeout(() => {
+                actionButtonsContainer.removeChild(messageAction)
+                actionButtonsContainer.querySelectorAll('.action-buttons').forEach(button => button.classList.remove('hidden-element'))
+              }, 1500)
+            })
           .catch((error) => console.log('Error sharing', error))
       } else {
         // fallback
@@ -1502,22 +1485,19 @@ function copyNote(noteId) {
     if (note.id === noteId) {
       navigator.clipboard.writeText(note.text)
         .then(() => {
-          // Exibe feedback visual por 2s e depois restaura o texto
-          const textElement = document.getElementById(noteId + '-text')
-          const noteTextContainer = document.getElementById(noteId + '-text-container')
-          if (!textElement || !noteTextContainer) return
-
-          const originalNoteText = textElement.innerHTML
-
-          textElement.innerHTML = '<strong>✓ Texto da nota copiado</strong>'
-          textElement.setAttribute('aria-label', 'Texto da nota copiado')
-          noteTextContainer.ariaLive = 'assertive'
-
-          setTimeout(() => {
-            textElement.innerHTML = originalNoteText
-            // Não altera atributos originais do container; apenas remove o feedback ARIA
-            noteTextContainer.ariaLive = undefined
-          }, 2000)
+          const messageAction = document.createElement('p')
+          messageAction.classList.add('message-action')
+          messageAction.appendChild(document.createTextNode('Texto da nota copiado'))
+          const actionButtonsContainer = document.getElementById(noteId + '-action-buttons-container')
+          actionButtonsContainer.querySelectorAll('.action-buttons').forEach(button => button.classList.add('hidden-element'))
+          actionButtonsContainer.appendChild(messageAction)
+          actionButtonsContainer.setAttribute('aria-label', 'Texto da nota copiado')
+          actionButtonsContainer.ariaLive = 'assertive'
+              setTimeout(() => {
+              actionButtonsContainer.removeChild(messageAction)
+              actionButtonsContainer.querySelectorAll('.action-buttons').forEach(button => button.classList.remove('hidden-element'))
+              actionButtonsContainer.ariaLive = undefined
+            }, 1500)
         })
         .catch((error) => console.log('Erro ao copiar nota', error))
     }
