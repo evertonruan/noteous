@@ -64,10 +64,12 @@ function orblendEngine(context, labelMessage, note, orb) {
 
   if (context == 'change') {
     //exibir/ocultar readOptions
-    if (readNotesContainer.clientHeight < 30 && readOptionsSearchInput.value == '') {
+    if (noteousMain.length == 0) {
+      orbsPanel.querySelectorAll('[id*="orb"]').forEach(element => {element.classList.add('hidden-element')})
       readOptions.classList.add('hidden-element')
       subcontext = 'no-notes'
     } else {
+      orbsPanel.querySelectorAll('[id*="orb"]').forEach(element => {element.classList.remove('hidden-element')})
       readOptions.classList.remove('hidden-element')
       subcontext = 'has-notes'
     }
@@ -135,6 +137,7 @@ function orblendEngine(context, labelMessage, note, orb) {
     infoPanel.append(dateElement(), infoElement(subcontext))
     
     showInstallButton()
+    orblendEngine('change')
   } else if (context == 'on-change-input') {
     //Habilitar/Desabilitar Botão Adicionar Nota
     if (writeInput.value === '') {
