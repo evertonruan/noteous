@@ -729,6 +729,8 @@ writeInput.addEventListener('focus', () => {
     notePriority('retrievePriority', noteousSettings.priority)
 })
 
+writeInput.focus()
+
 writeInput.addEventListener('blur', () => {
     writeButtonAdd.classList.remove('focus-input')
     writeButtonsContainer.classList.remove('focus-input')

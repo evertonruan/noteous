@@ -200,6 +200,8 @@ function orblendEngine(context, labelMessage, note, orb) {
       writeInput.placeholder = ''
       writeInput.disabled = true
       writeInput.classList.add('orb-done')
+      writeInput.classList.add('rounded-bottom')
+      writeButtonsContainer.classList.add('hidden-buttons')
       
       return note?.done === true
     } else if (orb == 'donutdough' && selectedOrb == 'donutdough') {
@@ -215,6 +217,10 @@ function orblendEngine(context, labelMessage, note, orb) {
         writeInput.placeholder = '✏️ Anote aqui'
         writeInput.disabled = false
         writeInput.classList.remove('orb-done')
+        if (writeInput.classList.contains('rounded-bottom') && writeInput.value != '') {
+          writeInput.classList.remove('rounded-bottom')
+          writeButtonsContainer.classList.remove('hidden-buttons')
+        }
       }
 
       return note?.done !== true
