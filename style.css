@@ -159,16 +159,6 @@ html {
     font-size: 80%;
   }
 
-  #index #theme-container {
-    transform: scale(0.8);
-    gap: 0.3rem;
-  }
-
-  #index #theme-container:active {
-    transform: scale(0.7);
-    gap: 0.3rem;
-  }
-
   #section-write #write-options {
     right: 20px;
     width: 2.5rem;
