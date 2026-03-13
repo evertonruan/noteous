@@ -30,13 +30,6 @@ function orblendEngine(context, labelMessage) {
       infoText = 'Você ainda não tem anotações \n Adicione sua próxima tarefa!'
     } else if (subcontext == 'has-notes') {
       infoText = ''
-      if (noteousSettings.noteousApp.surveyStatus == false && noteousSettings.noteousApp.surveyPrompt < 20) {
-        if (noteousSettings.noteousApp.firstAccess + 604800000 < Date.now()) {
-          infoText = '🔎 Já respondeu a Pesquisa? \n Clique em Ajustes&Info para ver!'
-          noteousSettings.noteousApp.surveyPrompt++
-          localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
-      }
-    }
   }
     
     let infoElementTip = document.createElement('p')

@@ -928,53 +928,6 @@ footer p span {
   border-radius: 2rem;
 }
 
-#about-survey {
-  text-align: center;
-  align-items: center;
-}
-
-#about-survey h2 {
-  font-family: 'DM Serif Text', serif;
-  font-style: italic;
-  line-height: 1;
-
-  
-  color: var(--base-text);
-}
-
-@supports ((-webkit-background-clip: text) or (background-clip: text)) {
-  #about-survey h2 {
-    background-image: linear-gradient(
-      90deg,
-      var(--base-text),
-      var(--base-buttons),
-      var(--color-theme-container),
-      var(--base-text)
-    );
-    background-size: 300% 100%;
-    background-position: 0% 50%;
-
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-    -webkit-text-fill-color: transparent;
-
-    animation: about-survey-gradient 10s linear infinite;
-  }
-}
-
-@keyframes about-survey-gradient {
-  0% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
-  100% {
-    background-position: 0% 50%;
-  }
-}
-
 #about a {
   color: var(--base-text);
 }

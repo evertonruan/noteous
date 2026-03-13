@@ -24,14 +24,6 @@ if (noteousSettings == null || noteousSettings?.noteousApp?.noteousVersion < 1.6
 
 let aboutSettingsSection = document.querySelector('#about-settings')
 
-let aboutSurvey = document.querySelector('#about-survey')
-let aboutSurveyInfo = document.querySelector('#about-survey-info')
-let aboutButtonSurvey = document.querySelector('#about-button-survey')
-let surveyContainerInfo = document.querySelector('#survey-container-info')
-let surveyBonusLabel = document.querySelector('#survey-bonus-label')
-let surveyBonusInput = document.querySelector('#survey-bonus-input')
-let surveyBonusButton = document.querySelector('#survey-bonus-button')
-
 let baseRemOptionNormal = document.querySelector('#baserem-normal')
 let baseRemOptionBig = document.querySelector('#baserem-big')
 let baseRemOptionSmall = document.querySelector('#baserem-small')
@@ -179,49 +171,6 @@ function noteousTheme(context) {
   }
 }
 noteousTheme('retrieve-theme')
-///////
-
-///////
-
-// Pesquisa de Experiência do noteous
-
-let access = noteousSettings.noteousApp.firstAccess + 604800000
-aboutButtonSurvey.addEventListener('click', () => {
-  noteousSettings.noteousApp.surveyStatus = true
-  localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
-  window.location.assign(`https://evertonruan.com/noteous/survey?a=${access}`);
-})
-
-// Se ainda não respondeu à pesquisa
-if (noteousSettings.noteousApp.surveyStatus == false) {
-  if (access < Date.now()) {
-    aboutSurveyInfo.innerHTML = 'Ajude nos próximos passos do noteous! Responda algumas perguntas sobre sua experiência no noteous <br><br> <strong>⏱️ Você vai levar aproximadamente menos de 4 minutos para responder</strong>'
-  } else {
-    aboutSurveyInfo.innerHTML = '<strong>🗓️ Você precisa utilizar o noteous por pelo menos 1 semana para responder à Pesquisa de Experiência</strong>'
-    aboutButtonSurvey.classList.add('hidden-element')
-  }
-} else if (noteousSettings.noteousApp.surveyStatus == true && noteousSettings.noteousApp.surveyBonus == null) {
-  // Se já respondeu, mas não inseriu o código bônus
-  surveyBonusLabel.classList.remove('hidden-element')
-  surveyBonusInput.classList.remove('hidden-element')
-  surveyBonusButton.classList.remove('hidden-element')
-  aboutSurveyInfo.innerHTML = 'Ajude nos próximos passos do noteous! Responda algumas perguntas sobre sua experiência no noteous</strong>'
-  aboutButtonSurvey.textContent = 'Você já acessou a Pesquisa'
-  surveyBonusLabel.innerHTML = '<br> <strong>Você respondeu à Pesquisa? Insira aqui o código bônus:</strong>'
-
-  surveyBonusButton.addEventListener('click', () => {
-    if (surveyBonusInput.value != '') {
-      noteousSettings.noteousApp.surveyBonus = surveyBonusInput.value
-      localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
-      alert('Obrigado por responder à Pesquisa. Seu bônus será usado quando a 2ª Geração do noteous for lançada')
-      window.location.reload()
-    }
-  })
-} else if (noteousSettings.noteousApp.surveyBonus != null) {
-  // Se já respondeu e inseriu o código bônus
-  aboutSurvey.classList.add('hidden-element')
-}
-
 
 ///////
 
