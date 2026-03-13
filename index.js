@@ -25,7 +25,11 @@ let writeButtonsContainer = document.querySelector('#write-buttons-container')
 let writeButtonAdd = document.querySelector('#write-button-add')
 let writeButtonDismiss = document.querySelector('#write-button-dismiss')
 
-let orbsPanel = document.querySelector('#orbs-panel')
+let orbsList = document.querySelector('#orbs-list')
+let orbPanel = document.querySelector('#orb-panel')
+let orbInfo = document.querySelector('#orb-panel')
+let orbInfoLabel = document.querySelector('#orb-panel-label')
+let orbInfoCount = document.querySelector('#orb-panel-count')
 
 //READ-SECTION
 let readSection = document.querySelector('#section-read')
@@ -1412,6 +1416,7 @@ function doneNote(noteId) {
   setTimeout(() => {
     let noteContainer = document.getElementById(noteId + '-note-container')
     noteContainer.style.cssText = 'opacity: 0;  transform: scale(70%);'
+    orblendEngine('orb-animation', '', '', 'done')
     setTimeout(() => {
       noteContainer.remove()
     for (let note of noteousMain) {

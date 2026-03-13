@@ -62,14 +62,24 @@ function orblendEngine(context, labelMessage, note, orb) {
     }
   }
 
+  function updateOrbInfo() {
+    if (selectedOrb == 'done') {
+      orbInfoLabel.innerHTML = 'Notas Concluídas'
+      orbInfoCount.innerHTML = `${noteousMain.filter(note => note.done === true).length === 1 ? '1 Nota concluída' : `${noteousMain.filter(note => note.done === true).length} Notas concluídas`}`
+    } else {
+      orbInfoLabel.innerHTML = 'Notas'
+      orbInfoCount.innerHTML = `${noteousMain.filter(note => note.done !== true).length === 1 ? '1 Nota adicionada' : `${noteousMain.filter(note => note.done !== true).length} Notas adicionadas`}`
+    }
+  }
+
   if (context == 'change') {
     //exibir/ocultar readOptions
     if (noteousMain.length == 0) {
-      orbsPanel.querySelectorAll('[id*="orb"]').forEach(element => {element.classList.add('hidden-element')})
+      orbsList.querySelectorAll('[id*="orb"]').forEach(element => {element.classList.add('hidden-element')})
       readOptions.classList.add('hidden-element')
       subcontext = 'no-notes'
     } else {
-      orbsPanel.querySelectorAll('[id*="orb"]').forEach(element => {element.classList.remove('hidden-element')})
+      orbsList.querySelectorAll('[id*="orb"]').forEach(element => {element.classList.remove('hidden-element')})
       readOptions.classList.remove('hidden-element')
       subcontext = 'has-notes'
     }
@@ -79,8 +89,9 @@ function orblendEngine(context, labelMessage, note, orb) {
     infoPanel.append(dateElement(), infoElement(subcontext))
     showInstallButton()
   } else if (context == 'load') {
-    
-      orbsPanel.innerHTML = ''
+
+
+
       for (let orb of noteousSettings.orbsIndex) {
       let orbButton = document.createElement('button')
       orbButton.classList.add('orb-button', 'material-icons')
@@ -89,15 +100,20 @@ function orblendEngine(context, labelMessage, note, orb) {
       if (orb == 'done') {
         orbButton.innerHTML = 'check'
       }
-
+      if (orb == 'donutdough') {
+        orbButton.innerHTML = 'article'
+      }
+      
       orbButton.addEventListener('click', () => {
         selectedOrb = orb
         noteousSettings.selectedOrb = selectedOrb
         localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
+        updateOrbInfo()
         renderNote('render-all','', orb)
       })
-      orbsPanel.appendChild(orbButton)
+      orbsList.appendChild(orbButton)
     }
+    updateOrbInfo()
 
     //✨ Backup Inteligente de Nota
     
@@ -225,5 +241,15 @@ function orblendEngine(context, labelMessage, note, orb) {
 
       return note?.done !== true
     }
+  } else if (context == 'orb-animation') {
+      if (orb == 'done') {
+        setTimeout(() => {
+          document.getElementById(`done-orb-button`).classList.add('get-note')
+        }, 100)
+        setTimeout(() => {
+          document.getElementById(`done-orb-button`).classList.remove('get-note')
+        }, 500)
+      }
+
   }
 }
