@@ -19,11 +19,11 @@
   <body id="about">
     <header>
       <nav>
-        <div>
-        <a href="index.html" tabindex="1"><h1 id="logo">noteous</h1></a>
-        <h2>Ajustes&Info</h2>
-      </div>
-          <a id="nav-link" onclick="navLink()" tabindex="3">← Voltar para notas</a>
+        <div id="nav-container">
+          <a href="index.html" tabindex="1"><h1 id="logo">noteous</h1></a>
+          <h2>Ajustes&Info</h2>
+          <a id="nav-link" onclick="navLink()" tabindex="3">← Voltar</a>
+        </div>
       </nav>
     </header>
 
@@ -38,12 +38,12 @@
           <label class="toggle" for="toggle-action-button-share">
             <input id="toggle-action-button-share" class="toggle-input" type="checkbox" />
             <span class="toggle-slider" aria-hidden="true"></span>
-            <span class="toggle-text">Compartilhar</span>
+            <span class="toggle-text"><span class='material-icons'>shortcut</span>Compartilhar</span>
           </label>
           <label class="toggle" for="toggle-action-button-copy">
             <input id="toggle-action-button-copy" class="toggle-input" type="checkbox" />
             <span class="toggle-slider" aria-hidden="true"></span>
-            <span class="toggle-text">Copiar texto</span>
+            <span class="toggle-text"><span class='material-icons'>content_copy</span>Copiar texto</span>
           </label>
         </div>
       </div>
@@ -80,7 +80,21 @@
           <div id="copy-details-container"></div>
       </div>
     </div>
-    
+  </section>
+
+  <section id="about-section-orbs" class="about-section">
+    <div id='about-orbs-list'>
+      <div class='about-orb-button'></div>
+      <div class='about-orb-button'></div>
+      <div class='about-orb-button'></div>
+      <div class='about-orb-button'></div>
+      <div class='about-orb-button'></div>
+    </div>
+    <div id=donut-container>
+      <img id='donut' src="assets/images/donut.webp" alt="Imagem do noteous donut">
+      <p id="noteous-name">noteous donut</p>
+      <p id="noteous-gen">2ª Geração</p>
+    </div>
   </section>
 
   <section id="about-section-policies" class="about-section">
