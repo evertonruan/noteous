@@ -40,6 +40,18 @@
     </header>
 
   <main>
+    <section id="about-survey" class="about-section">
+      <h2>Pesquisa de Experiência do noteous</h2>
+      <br>
+      <p id="about-survey-info"></p>
+      <br>
+      <button id="about-button-survey" class="option-point" type="button">Conferir Pesquisa</button>
+      <div id="survey-container-info">
+        <label id="survey-bonus-label" for="survey-bonus-input" class="hidden-element"></label>
+        <input type="text" name="survey-bonus" id="survey-bonus-input" class="hidden-element">
+        <input type="button" value="Salvar" id="survey-bonus-button" class="hidden-element">
+      </div>
+    </section>
     <section id="about-settings" class="about-section">
       <h2>🟠⚪AJUSTES</h2>
       <div class="settings-point">
@@ -60,11 +72,11 @@
       </div>
       <div class="settings-point">
         <h4>Listas de Prioridade</h4>
-        <p class="settings-info">Ordene as Listas de Prioridade com sua preferência</p>
+        <p class="settings-info">Arraste para ordenar as Listas de Prioridade com sua preferência</p>
         <div id="priority-order-container">
-          <div class="priority-item" data-priority="solid" draggable="true">1</div>
-          <div class="priority-item" data-priority="double" draggable="true">2</div>
-          <div class="priority-item" data-priority="dotted" draggable="true">3</div>
+          <div class="priority-item" data-priority="solid" draggable="true"></div>
+          <div class="priority-item" data-priority="double" draggable="true"></div>
+          <div class="priority-item" data-priority="dotted" draggable="true"></div>
         </div>
       </div>
       <div class="settings-point">
@@ -144,12 +156,14 @@
   
   <span class="update-advanced">
   <div id="about-update-orblend">
-    <p>Versão Orblend Engine: <strong>1.1</strong></p>
-    <p>Funcionalidades disponíveis:</p>
-      <p>→ Backup Inteligente de Nota: as notas são automaticamente salvas para evitar perda de dados: se sair do noteous enquanto criar ou editar uma nota, é possível recuperá-la</p>
-      <p>→ Redimensionamento Inteligente do Campo de Entrada de Nota, dependendo de quanto conteúdo há.</p>
-      <p>→ Exibe a Data do dia</p>
-      <p>→ Quando não há notas armazenadas, exibe uma mensagem e oculta as Opções de Visualização (readOptions)</p>
+    <p>Versão Orblend Engine: <strong>1.2</strong></p>
+    <br>
+    <p><strong>Recursos Inteligentes:</strong></p>
+      <p>✨ Backup Inteligente de Nota: as notas são automaticamente salvas para evitar perda de dados: ao sair do noteous enquanto adiciona ou edita uma nota, é possível recuperá-la</p>
+      <p>↕️ Redimensionamento Inteligente do Campo de Entrada de Nota, dependendo da quantidade de texto</p>
+      <p>📅 Exibe a Data do dia</p>
+      <p>💬 Exibe mensagens acima do Campo de Nota, dependendo de sua ação</p>
+      <p>📃 Se não há notas adicionadas, exibe uma mensagem e oculta as Opções de Organização</p>
   
   </div>
   </span>
@@ -160,7 +174,77 @@
 
     <div id="about-update-point-actual">
       <div class="about-update-point-container">
-        <p class="about-update-point-version">noteous cupcake 1.9.1</p>
+        <p class="about-update-point-version">noteous cupcake 1.9.4</p>
+        <p class="about-update-point-version-date">13/02/2026</p> 
+      </div>
+      <p class="update-description">
+        <span class="update-type">MELHORIA</span>Barras de rolagem do Histórico de Atualizações foram customizadas para combinar com o noteous <span class="update-advanced"><a href="https://github.com/evertonruan/noteous/pull/57#issue-3865124101">Contribuição no GitHub↗</a></span></p>
+      <p class="update-description">
+        <span class="update-type">CORREÇÃO</span>Renderização mais rápida de notas <span class="update-advanced">Devido a uma chamada adicional à função renderNote(), as notas estavam demorando mais tempo para renderizar</span></p>          
+      <p class="update-description">
+        <span class="update-type">CORREÇÃO</span>Espaçamento incorreto no Painel de Informações</p>                      
+      <p class="update-description">
+        <span class="update-type">AJUSTE</span>Ao adicionar uma nota, ela aparece sempre em cima, para melhor visualização</p>  
+      <p class="update-description">
+        <span class="update-type">AJUSTE</span>Alinhamento e tamanho melhorado do Botão de Prioridade</p> 
+      <p class="update-description">
+        • Na tela de boas-vindas, há um incentivo para responder à Pesquisa, caso não tenha sido acessada</p>
+    </div>
+      
+      <div class="about-update-point">
+      <div class="about-update-point-container">
+        <p class="about-update-point-version">1.9.3</p>
+        <p class="about-update-point-version-date">26/01/2026</p> 
+    </div>
+      <p class="update-description">
+        <span class="update-type">CORREÇÃO</span>Ao adicionar uma nota, a Lista de Prioridade não estava sendo criada</p>
+      <p class="update-description">
+        <span class="update-type">CORREÇÃO</span>O botão Instalar noteous não estava sendo exibido</p>
+      <p class="update-description">
+        <span class="update-type">CORREÇÃO</span>O manifesto não estava sendo adicionado ao index.html</p>
+      <p class="update-description">
+        <span class="update-type">AJUSTE</span>Revisão no código de instalação do aplicativo</p>      
+    </div>
+
+    <div class="about-update-point">
+      <div class="about-update-point-container">
+        <p class="about-update-point-version">1.9.2</p>
+        <p class="about-update-point-version-date">09/01/2026</p> 
+    </div>
+    <p class="update-description">
+      <p class="update-description">Adicionado anúncio sobre a 2ª Geração</p>
+      <p class="update-description">Adicionada seção para o acesso à Pesquisa de Experiência do noteous</p>
+        <span class="update-type">Orblend Engine 1.2</span>
+        <br>  • Todas as mensagens acima do Campo de Nota são controladas pelo Orblend Engine
+        <br>  • Novas mensagens inteligentes acima do Campo de nota
+    </p>
+      <p class="update-description">
+        <span class="update-type">MELHORIA</span>Backup Inteligente de Nota agora oferece uma experiência integrada</p>
+      </p>
+      <p class="update-description">
+        <span class="update-type">MELHORIA</span>Se o aplicativo não for instalado, o botão "Instalar noteous" só aparecerá até 3 vezes. É possível sempre Instalar o noteous facilmente acessando Ajustes&Info (quando compatível)</p>
+      <p class="update-description">
+        <span class="update-type">CORREÇÃO</span>Etiqueta de número da versão agora exibe corretamente a versão do noteous (Veja Informações avançadas) <span class="update-advanced">A etiqueta de número da versão exibido no footer não exibia corretamente quando a versão tivesse mais de 3 dígitos. Por exemplo: se a versão fosse 1.9.1, aparecia 1.91. Agora uma função verifica quantos caracteres há na variável noteousVersion e aplica a modificação necessária</span></p>
+      <p class="update-description">
+        <span class="update-type">AJUSTE</span>A opção padrão para ordem das notas agora é por Edição</p>
+      <p class="update-description">
+        <span class="update-type">AJUSTE</span>Agora, a tela de boas-vindas informa uma atualização que é mensal (Por exemplo: Essa é a atualização de Janeiro de 2026) </p>
+      <p class="update-description">
+        <span class="update-type">AJUSTE</span>Quando há uma atualização, agora os Termos só irão aparecer se houver uma nova versão deles. Isso melhora a experiência de boas-vindas. Sempre que quiser conferir os Termos de Uso e Política de Privacidade, acesse Ajustes&Info</p>
+      <p class="update-description"><span class="update-type">AJUSTE</span>A legenda em Criar cópia agora exibe informações mais específicas sobre notas salvas (por exemplo: 5 notas, incluindo 2 concluídas)</p>
+      <p class="update-description">
+        <span class="update-type">AJUSTE</span>Alguns detalhes foram revisados (Veja Informações avançadas)</p>
+        <span class="update-advanced">
+          • Adicionado apple-touch-icon
+          • Div #read-notes agora é #read-notes-container para melhor compreensão
+          • Corrigido alinhamento dos botões de edição
+        </span>
+      </p>
+    </div>
+    
+    <div class="about-update-point">
+      <div class="about-update-point-container">
+        <p class="about-update-point-version">1.9.1</p>
         <p class="about-update-point-version-date">11/12/2025</p> 
     </div>
       <p class="update-description">
@@ -187,7 +271,7 @@
 
     <div class="about-update-point">
       <div class="about-update-point-container">
-        <p class="about-update-point-version">noteous cupcake 1.8</p>
+        <p class="about-update-point-version">1.8</p>
         <p class="about-update-point-version-date">01/11/2025</p> 
     </div>
     <p class="update-description">
@@ -611,6 +695,15 @@
     <script type="text/javascript" src="about.js"></script>
 
     <script>
+      if (noteousSettings != null && noteousSettings?.noteousApp?.noteousVersion >= 1.5) {
+        let link = document.createElement('link')
+        link.setAttribute('rel', 'manifest')
+        link.setAttribute('href', 'manifest.json')
+        document.getElementsByTagName('head')[0].appendChild(link)
+      }
+    </script>
+
+    <script>
       window.va =
         window.va ||
         function () {
@@ -618,7 +711,7 @@
         }
     </script>
     <script>
-      if (noteousSettings.noteousVersion >= 1.5) {
+      if (noteousSettings != null && noteousSettings?.noteousApp?.noteousVersion >= 1.5) {
         let script = document.createElement('script')
         script.setAttribute('defer', 'true')
         script.setAttribute('src', '/_vercel/insights/script.js')
@@ -633,7 +726,7 @@
         }
     </script>
     <script>
-      if (noteousSettings.noteousVersion >= 1.5) {
+      if (noteousSettings != null && noteousSettings?.noteousApp?.noteousVersion >= 1.5) {
         let script2 = document.createElement('script')
         script2.setAttribute('defer', 'true')
         script2.setAttribute('src', '/_vercel/speed-insights/script.js')

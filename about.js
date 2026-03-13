@@ -1,7 +1,7 @@
 let noteousSettings = JSON.parse(localStorage.getItem('noteous-settings'))
 let noteousMain = JSON.parse(localStorage.getItem('noteous-main')) || []
 
-if (noteousSettings == null || noteousSettings.noteousVersion < 1.6) {
+if (noteousSettings == null || noteousSettings?.noteousApp?.noteousVersion < 1.6) {
   //Redireciona a página inicial se Termos não foram aceitos
   window.location.replace('./index.html')
 } else {
@@ -24,6 +24,14 @@ if (noteousSettings == null || noteousSettings.noteousVersion < 1.6) {
 
 let aboutSettingsSection = document.querySelector('#about-settings')
 
+let aboutSurvey = document.querySelector('#about-survey')
+let aboutSurveyInfo = document.querySelector('#about-survey-info')
+let aboutButtonSurvey = document.querySelector('#about-button-survey')
+let surveyContainerInfo = document.querySelector('#survey-container-info')
+let surveyBonusLabel = document.querySelector('#survey-bonus-label')
+let surveyBonusInput = document.querySelector('#survey-bonus-input')
+let surveyBonusButton = document.querySelector('#survey-bonus-button')
+
 let baseRemOptionNormal = document.querySelector('#baserem-normal')
 let baseRemOptionBig = document.querySelector('#baserem-big')
 let baseRemOptionSmall = document.querySelector('#baserem-small')
@@ -36,6 +44,7 @@ let toggleActionButtonCopy = document.querySelector('#toggle-action-button-copy'
 
 let priorityContainer = document.querySelector('#priority-order-container')
 
+let doneNotesSettingContainer = document.querySelector('#done-notes-setting-container')
 let viewDoneNotesButton = document.querySelector('#view-done-notes')
 
 let buttonPolicies = document.querySelector('#about-button-policies')
@@ -74,6 +83,51 @@ ${noteousSettings.look.lumAccentContainer}`
 }
 
 ///////
+
+let deferredInstallPrompt = null
+let installNoteousButton = document.createElement('button')
+
+function showInstallButton() {
+  window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault()
+    deferredInstallPrompt = e
+      
+      if ((window.matchMedia && window.matchMedia('(display-mode: standalone)').matches
+    ) || (navigator.standalone === true) || !deferredInstallPrompt) {
+      if (installNoteousButton) installNoteousButton.remove()
+    } else {
+      installNoteousButton.classList.add('write-buttons')
+      installNoteousButton.innerHTML = '<span style="font-style: normal;">🧁</span> Instalar noteous'
+      aboutSettingsSection.append(installNoteousButton)
+      installNoteousButton.addEventListener('click', async () => {
+      try {
+        installNoteousButton.disabled = true
+        deferredInstallPrompt.prompt()
+        const { outcome } = await deferredInstallPrompt.userChoice
+        deferredInstallPrompt = null
+        if (outcome === 'accepted') {
+          installNoteousButton.remove()
+        } else {
+          installNoteousButton.disabled = false
+        }
+      } catch (e) {
+        installNoteousButton.disabled = false
+      }
+    })
+    }
+    
+  })
+}
+
+showInstallButton()
+
+window.addEventListener('appinstalled', () => {
+  deferredInstallPrompt = null
+  if (installNoteousButton) installNoteousButton.remove()
+})
+
+///////
+
 
 // CONFIGURAÇÕES DE TEMA ////////////////////////////////////
 function noteousTheme(context) {
@@ -125,6 +179,50 @@ function noteousTheme(context) {
   }
 }
 noteousTheme('retrieve-theme')
+///////
+
+///////
+
+// Pesquisa de Experiência do noteous
+
+let access = noteousSettings.noteousApp.firstAccess + 604800000
+aboutButtonSurvey.addEventListener('click', () => {
+  noteousSettings.noteousApp.surveyStatus = true
+  localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
+  window.location.assign(`https://evertonruan.com/noteous/survey?a=${access}`);
+})
+
+// Se ainda não respondeu à pesquisa
+if (noteousSettings.noteousApp.surveyStatus == false) {
+  if (access < Date.now()) {
+    aboutSurveyInfo.innerHTML = 'Ajude nos próximos passos do noteous! Responda algumas perguntas sobre sua experiência no noteous <br><br> <strong>⏱️ Você vai levar aproximadamente menos de 4 minutos para responder</strong>'
+  } else {
+    aboutSurveyInfo.innerHTML = '<strong>🗓️ Você precisa utilizar o noteous por pelo menos 1 semana para responder à Pesquisa de Experiência</strong>'
+    aboutButtonSurvey.classList.add('hidden-element')
+  }
+} else if (noteousSettings.noteousApp.surveyStatus == true && noteousSettings.noteousApp.surveyBonus == null) {
+  // Se já respondeu, mas não inseriu o código bônus
+  surveyBonusLabel.classList.remove('hidden-element')
+  surveyBonusInput.classList.remove('hidden-element')
+  surveyBonusButton.classList.remove('hidden-element')
+  aboutSurveyInfo.innerHTML = 'Ajude nos próximos passos do noteous! Responda algumas perguntas sobre sua experiência no noteous</strong>'
+  aboutButtonSurvey.textContent = 'Você já acessou a Pesquisa'
+  surveyBonusLabel.innerHTML = '<br> <strong>Você respondeu à Pesquisa? Insira aqui o código bônus:</strong>'
+
+  surveyBonusButton.addEventListener('click', () => {
+    if (surveyBonusInput.value != '') {
+      noteousSettings.noteousApp.surveyBonus = surveyBonusInput.value
+      localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
+      alert('Obrigado por responder à Pesquisa. Seu bônus será usado quando a 2ª Geração do noteous for lançada')
+      window.location.reload()
+    }
+  })
+} else if (noteousSettings.noteousApp.surveyBonus != null) {
+  // Se já respondeu e inseriu o código bônus
+  aboutSurvey.classList.add('hidden-element')
+}
+
+
 ///////
 
 //VERIFICADOR DE OPÇÃO ATIVA ///////
@@ -397,7 +495,13 @@ copyCreateButton.addEventListener('click', () => {
 
     // Informação sobre quantidade de notas
     let notesInfo = document.createElement('p')
-    notesInfo.textContent = `Você tem ${noteousMain.length} nota${noteousMain.length !== 1 ? 's' : ''}`
+    
+    const doneNotesCount = noteousMain.filter(note => note.done === true).length
+    const doneNotesText = doneNotesCount > 0
+      ? `, incluindo ${doneNotesCount} nota${doneNotesCount !== 1 ? 's' : ''} concluída${doneNotesCount !== 1 ? 's' : ''}`
+      : ''
+
+    notesInfo.textContent = `Você tem ${noteousMain.length} nota${noteousMain.length !== 1 ? 's' : ''}${doneNotesText}`
 
     // Container para os botões
     let buttonsContainer = document.createElement('div')
