@@ -49,10 +49,6 @@ let copyCreateButton = document.querySelector('#copy-create')
 let copyOpenButton = document.querySelector('#copy-open')
 let copyDetailsContainer = document.querySelector('#copy-details-container')
 let copyDetailsSwitchVar = 0
-
-let cupcake = document.querySelector('#cupcake')
-let cupcakeOutline = document.querySelector('#cupcake-outline')
-let label = document.querySelector('#gen-child-2')
 ///////
 
 function navLink() {
