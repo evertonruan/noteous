@@ -217,7 +217,7 @@ html {
     0.7
   );
   --base-text: hsla(var(--hue), var(--saturation), var(--lum-front), 1);
-  --base-buttons: hsla(
+  --base-accent-color: hsla(
     var(--hue),
     var(--accent-saturation),
     calc(10% + var(--lum-mid)),
@@ -403,7 +403,7 @@ a {
 
 #write-label {
   text-align: center;
-  font-weight: 700;
+  font-weight: 800;
   font-size: 1.3rem;
   letter-spacing: -0.05em;
   color: var(--base-text);
@@ -414,12 +414,13 @@ a {
 #write-options {
   position: absolute;
   top: 20px;
-  right: 18px;
+  left: 20px;
 
   width: 2.2rem;
   height: 2.2rem;
+  z-index: 3;
   border-radius: 50%;
-  background-color: var(--base-buttons);
+  background-color: var(--base-accent-color);
   border-color: var(--base-text);
   border-width: 5px;
   box-shadow: 0px 3px 5px black;
@@ -429,9 +430,15 @@ a {
   transition: all 0.2s cubic-bezier(0.075, 0.82, 0.165, 1);
 }
 
+#write-options.blur {
+   opacity: 0;
+   transform: scale(60%);
+   pointer-events: none;
+}
+
 #write-options.edit-mode {
   transition: none;
-  top: 100px;
+  top: 20px;
 }
 
 #write-input {
@@ -439,8 +446,9 @@ a {
   height: 6rem;
   max-height: 60vh;
   width: 65%;
-  margin: 4px 10px 4px 10px;
-  padding: 10px 20px 10px 10px;
+  z-index: 2;
+  margin: 4px 10px 0 10px;
+  padding: 10px 10px 10px 20px;
 
   resize: none;
 
@@ -451,9 +459,9 @@ a {
   color: var(--base-text);
   background-color: var(--base-write-input-inside);
 
-  border-width: 3px;
-  border-radius: 20px;
-  border-color: var(--base-write-input-outside);
+  border-width: 3px 3px 0 3px;
+  border-radius: 20px 20px 0 0;
+  border-color: var(--base-accent-color);
 
   transition: all 0.5s cubic-bezier(0.075, 0.82, 0.165, 1);
 }
@@ -468,8 +476,18 @@ a {
   width: 80%;
   height: 7rem;
   outline: 0;
+  border-width: 7px 7px 0 7px;
+  box-shadow: 0 0 30px var(--base-accent-color);
+}
+
+#write-input.rounded-bottom {
+  border-width: 3px;
+  border-radius: 20px;
+}
+
+#write-input:focus.rounded-bottom {
   border-width: 7px;
-  box-shadow: 0 0 30px var(--base-write-input-outside);
+  border-radius: 20px;
 }
 
 #write-input::placeholder {
@@ -478,19 +496,38 @@ a {
 
 #write-buttons-container {
   display: flex;
+  width: 65%;
+  z-index: 1;
+  transform: translateY(-2px);
   flex-direction: row;
   align-items: center;
   gap: 0.5rem;
-  padding: 1rem;
+  
+  background: var(--base-accent-color);
+  border-width: 0 3px 3px 3px;
+  border-color: var(--base-note-action-container);
+  border-radius: 0 0 20px 20px;
+
+  transition: all 0.5s cubic-bezier(0.075, 0.82, 0.165, 1);
+}
+
+#section-write #write-buttons-container.focus-input {
+  width: 80%;
+  border-width: 0 7px 7px 7px;
+}
+
+#section-write #write-buttons-container.hidden-buttons {
+
+  transform: translateY(-45px);
+  filter: blur(20px);
+  opacity: 0;
 }
 
 .write-buttons {
   color: var(--base-text);
-  background: var(--base-buttons);
   padding: 0.8rem 1.8rem;
 
   border-style: none;
-  border-radius: 1.3rem;
 
   font-family: 'DM Serif Text', serif;
   font-style: italic;
@@ -504,10 +541,19 @@ a {
   user-select: none;
 }
 
-#index .write-button-edit {
+#write-button-add {
+  flex: 1;
+  background-color: transparent;
+}
+
+#section-write #write-button-add.focus-input {
+  width: 100%;
+  border-width: 7px;
+}
+
+.write-button-edit {
   margin: 1rem 0.5rem;
   padding: 0.8rem 1.8rem;
-  line-height: 0;
 }
 
 .write-buttons:active:enabled {
@@ -521,13 +567,14 @@ a {
 
 .write-buttons:disabled {
   filter: opacity(30%);
-  transform: scale(0.95);
 }
 
 #write-button-dismiss {
+  flex: 1;
   line-height: 0;
   padding-left: 12px;
   padding-right: 12px;
+  background-color: transparent;
 }
 
 /*-----SECTION-READ-----*/
@@ -588,7 +635,7 @@ a {
   margin-left: auto;
   max-width: 400px;
   padding: 0.2rem 0.5rem;
-  border: 2px solid var(--base-buttons);
+  border: 2px solid var(--base-accent-color);
   border-radius: 8px;
   outline: none;
   font-size: 0.8rem;
@@ -624,7 +671,7 @@ a {
 }
 
 #index .active-button {
-  background-color: var(--base-buttons);
+  background-color: var(--base-accent-color);
 }
 
 #read-options-search {
@@ -661,7 +708,7 @@ a {
 }
 
 .read-notes-priority-container::-webkit-scrollbar-thumb {
-  background: var(--base-buttons);
+  background: var(--base-accent-color);
   border-radius: 10px;
   transition: all 0.3s ease;
 }
@@ -672,7 +719,7 @@ a {
 
 @supports (scrollbar-color: auto) {
   .read-notes-priority-container {
-    scrollbar-color: var(--base-buttons) var(--base-color);
+    scrollbar-color: var(--base-accent-color) var(--base-color);
     scrollbar-width: thin;
   }
 }
@@ -1109,7 +1156,7 @@ footer p span {
 }
 
 .toggle-input:checked + .toggle-slider {
-  background: var(--base-buttons);
+  background: var(--base-accent-color);
 }
 
 .toggle-input:checked + .toggle-slider::after {

@@ -21,6 +21,7 @@ let writeOptions = document.querySelector('#write-options')
 
 let writeLabel = document.querySelector('#write-label')
 let writeInput = document.querySelector('#write-input')
+let writeButtonsContainer = document.querySelector('#write-buttons-container')
 let writeButtonAdd = document.querySelector('#write-button-add')
 let writeButtonDismiss = document.querySelector('#write-button-dismiss')
 let writeButtonEdit = document.querySelector('#write-button-edit')
@@ -652,58 +653,68 @@ window.addEventListener('appinstalled', () => {
 ////
 
 function notePriority(context, priority) {
+
   //context ==> (1) recuperarPrioridade, (2)recuperarPrioridadeAoDesfocarInput (ao tirar foco define opacidade = 0 de Opções da Nota. Mas, é necessário também definir junto a borda, pois ao contrário um sobrescreve o outro), (3) trocarPrioridade
   if (context == 'retrievePriority') {
     if (priority == 'solid') {
-      writeOptions.removeAttribute('hidden')
+      writeOptions.disabled = false
+      writeOptions.classList.remove('blur')
       writeOptions.style.cssText = 'border-style: solid;'
       writeInput.style.cssText = 'border-style: solid;'
+      writeButtonsContainer.style.cssText = 'border-style: solid;'
       noteousSettings.priority = 'solid'
     } else if (priority == 'double') {
-      writeOptions.removeAttribute('hidden')
+      writeOptions.disabled = false
+      writeOptions.classList.remove('blur')
       writeOptions.style.cssText = 'border-style: double;'
       writeInput.style.cssText = 'border-style: double;'
+      writeButtonsContainer.style.cssText = 'border-style: double;'
       noteousSettings.priority = 'double'
     } else if (priority == 'dotted') {
-      writeOptions.removeAttribute('hidden')
+      writeOptions.disabled = false
+      writeOptions.classList.remove('blur')
       writeOptions.style.cssText = 'border-style: dotted;'
       writeInput.style.cssText = 'border-style: dotted;'
+      writeButtonsContainer.style.cssText = 'border-style: dotted;'
       noteousSettings.priority = 'dotted'
     }
   } else if (context == 'retrievePriorityBlurInput') {
     if (priority == 'solid') {
-      writeOptions.style.cssText =
-        'border-style: solid; opacity: 0; transform: scale(60%); pointer-events: none;'
+      writeOptions.classList.add('blur')
+      writeOptions.style.cssText = 'border-style: solid;'
       setTimeout(() => {
-        writeOptions.setAttribute('hidden', 'true')
+        writeOptions.disabled = true
       }, 100)
     } else if (priority == 'double') {
-      writeOptions.style.cssText =
-        'border-style: double;  opacity: 0; transform: scale(60%); pointer-events: none;'
+      writeOptions.classList.add('blur')
+      writeOptions.style.cssText = 'border-style: double;'
       setTimeout(() => {
-        writeOptions.setAttribute('hidden', 'true')
+        writeOptions.disabled = true
       }, 100)
     } else if (priority == 'dotted') {
-      writeOptions.style.cssText =
-        'border-style: dotted;  opacity: 0; transform: scale(60%); pointer-events: none;'
+      writeOptions.classList.add('blur')
+      writeOptions.style.cssText = 'border-style: dotted;'
       setTimeout(() => {
-        writeOptions.setAttribute('hidden', 'true')
+        writeOptions.disabled = true
       }, 100)
     }
   } else if (context == 'changePriority') {
     if (priority == 'solid') {
       writeOptions.style.cssText = 'border-style: double;'
       writeInput.style.cssText = 'border-style: double;'
+      writeButtonsContainer.style.cssText = 'border-style: double;'
       noteousSettings.priority = 'double'
       localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
     } else if (priority == 'double') {
       writeOptions.style.cssText = 'border-style: dotted;'
       writeInput.style.cssText = 'border-style: dotted;'
+      writeButtonsContainer.style.cssText = 'border-style: dotted;'
       noteousSettings.priority = 'dotted'
       localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
     } else if (priority == 'dotted') {
       writeOptions.style.cssText = 'border-style: solid;'
       writeInput.style.cssText = 'border-style: solid;'
+      writeButtonsContainer.style.cssText = 'border-style: solid;'
       noteousSettings.priority = 'solid'
       localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
     }
@@ -712,12 +723,18 @@ function notePriority(context, priority) {
 
 writeInput.addEventListener('focus', () => {
   if (editMode == false) {
+    writeButtonAdd.classList.add('focus-input')
+    writeButtonsContainer.classList.add('focus-input')
     notePriority('retrievePriority', noteousSettings.priority)
   }
 })
 
 writeInput.addEventListener('blur', () => {
   if (editMode == false) {
+    writeButtonAdd.classList.remove('focus-input')
+    writeButtonsContainer.classList.remove('focus-input')
+
+    
     //Ao clicar no botão para trocar Prioridade, write-input perde o foco --> botão de Prioridade desaparece.
     //Esse teste verifica primeiro se write-input perde o foco. Se está sem foco --> desaparecer botão Prioridade
     //1.5 --> Ao adicionar tabindex e focalizar botão de prioridade ele desaparece (pois o foco sai de write-input). Agora o teste inclui se write-options também está focalizado. Se está, ele não desaparece.
