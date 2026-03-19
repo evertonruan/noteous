@@ -133,30 +133,30 @@ function noteousTheme(context) {
     }
   } else if (context == 'set-theme-light') {
     noteousSettings.look.luminosity = 'light'
-    noteousSettings.look.hue = '--hue: 30;'
-    noteousSettings.look.saturation = '--saturation: 90%;'
-    noteousSettings.look.lumBack = '--lum-back: 90%;'
-    noteousSettings.look.lumMid = '--lum-mid: 60%;'
-    noteousSettings.look.lumFront = '--lum-front: 10%;'
+    noteousSettings.look.hue = '--hue: 45;'
+    noteousSettings.look.saturation = '--saturation: 20%;'
+    noteousSettings.look.lumBack = '--lum-back: 95%;'
+    noteousSettings.look.lumMid = '--lum-mid: 70%;'
+    noteousSettings.look.lumFront = '--lum-front: 15%;'
     noteousSettings.look.lumFrontInverse = '--lum-front-inverse: 95%;'
-    noteousSettings.look.accentSaturation = '--accent-saturation: 90%;'
+    noteousSettings.look.accentSaturation = '--accent-saturation: 20%;'
     noteousSettings.look.accentLum = '--accent-lum: 60%;'
-    noteousSettings.look.lumAccentContainer = '--lum-accent-container: 50%;'
+    noteousSettings.look.lumAccentContainer = '--lum-accent-container: 65%;'
 
     localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
     noteousSettings = JSON.parse(localStorage.getItem('noteous-settings'))
     injectCSSOnRoot()
   } else if (context == 'set-theme-dark') {
     noteousSettings.look.luminosity = 'dark'
-    noteousSettings.look.hue = '--hue: 30;'
-    noteousSettings.look.saturation = '--saturation: 40%;'
-    noteousSettings.look.lumBack = '--lum-back: 8%;'
+    noteousSettings.look.hue = '--hue: 45;'
+    noteousSettings.look.saturation = '--saturation: 20%;'
+    noteousSettings.look.lumBack = '--lum-back: 4%;'
     noteousSettings.look.lumMid = '--lum-mid: 30%;'
     noteousSettings.look.lumFront = '--lum-front: 90%;'
     noteousSettings.look.lumFrontInverse = '--lum-front-inverse: 15%;'
-    noteousSettings.look.accentSaturation = '--accent-saturation: 90%;'
+    noteousSettings.look.accentSaturation = '--accent-saturation: 10%;'
     noteousSettings.look.accentLum = '--accent-lum: 60%;'
-    noteousSettings.look.lumAccentContainer = '--lum-accent-container: 50%;'
+    noteousSettings.look.lumAccentContainer = '--lum-accent-container: 32%;'
 
     localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
     noteousSettings = JSON.parse(localStorage.getItem('noteous-settings'))
