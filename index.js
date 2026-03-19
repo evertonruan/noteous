@@ -72,12 +72,16 @@ const readNotesLists = {
 let doneActionButton
 let shareActionButton
 let copyActionButton
+let deleteActionButton
+let restoreActionButton
 
 // Objeto usado em renderNote para retornar a variável conforme a chamada ao construir a lista
 const readNotesActionButtons = {
   done: doneActionButton,
   share: shareActionButton,
-  copy: copyActionButton
+  copy: copyActionButton,
+  delete: deleteActionButton,
+  restore: restoreActionButton
 }
 
 const readNotesActionButtonsIcons = {
@@ -600,7 +604,7 @@ function loadNoteous(context) {
       priority: 'solid',
       priorityOrder: ['solid', 'double', 'dotted'],
       priorityOrientation: 'row',
-      actionButtons: ['done', 'share'],
+      actionButtons: ['done', 'share', 'delete', 'restore'],
       input: '',
       noteId: 0,
       fileId: 0,
@@ -898,7 +902,7 @@ function sortNotes(context, subcontext) {
       readOptionsSortActionButtonText()
     }
 
-    renderNote('render-all')
+    renderNote('render-all', '', `${subcontext}`)
 
   } else if (context == 'change-sort-action') {
       if (noteousSettings.sort.action == 'editedAt') {
@@ -974,36 +978,40 @@ function renderNote(context, noteId, orb, searchTerm) {
 
   if (context == 'render-all') {
     readNotesContainer.innerHTML = ''
-    if (readNotesListSolid) {
-      readNotesListSolid.innerHTML = ''
-    }
-    if (readNotesListDouble) {
-      readNotesListDouble.innerHTML = ''
-    }
-    if (readNotesListDotted) {
-      readNotesListDotted.innerHTML = ''
-    }
+    readNotesListSolid.innerHTML = ''
+    readNotesListDouble.innerHTML = ''
+    readNotesListDotted.innerHTML = ''
 
     // noteous 1.9: Listas de Prioridade. renderNote() primeiro verifica a ordem das listas e as adiciona. Depois, adiciona a nota em sua respectiva lista
 
     const priorities = noteousSettings.priorityOrder || ['solid', 'double', 'dotted']
     for (let priority of priorities) {
       if (!readNotesContainer.querySelector(`#read-notes-list-${priority}`)) { //Se não há lista com essa prioridade, cria
+        readNotesLists[priority].classList.add('hidden-element')
         readNotesContainer.append(readNotesLists[priority])
       }
 
       for (let note of noteousMain) {
         //noteous 1.9: Verifica se a nota atual pertence à lista de prioridade que está sendo criada. A ordem das notas dentro da lista é definida por sortNotes(). Ou seja: noteousMain já vem ordenado pelo sortNotes()
         //Ao renderizar todas as notas, se houver termo de busca, filtra as notas que contêm o termo (sem diferenciar maiúsculas e minúsculas)
+        //noteous preview 2.0: ao renderizar todas as notas, verifica qual orb está selecionada
         if (note.priority == priority && orblendEngine('check-selected-orb', '', note, orb) && (searchTerm == undefined || note.text.toLowerCase().includes(searchTerm.toLowerCase()))) {
           let noteContainer = document.createElement('div')
           noteContainer.id = note.id + '-note-container'
           noteContainer.classList.add('note-container')
+          if (!noteContainer.classList.contains('row-orientation') && noteousSettings.priorityOrientation == 'row') {
+            noteContainer.classList.add('row-orientation')
+          } else if (!noteContainer.classList.contains('column-orientation') && noteousSettings.priorityOrientation == 'column') {
+            noteContainer.classList.add('column-orientation')
+          }
+          if (readNotesLists[priority].classList.contains('hidden-element')) { //se Lista de Prioridade tem uma nota, então remove a classe hidden-element
+            readNotesLists[priority].classList.remove('hidden-element')  
+          } 
           readNotesLists[priority].append(noteContainer)
           
         //BORDER/PRIORITY
         if (note.priority == 'solid') {
-          noteContainer.style.cssText = 'border-style: none;'
+          noteContainer.style.cssText = 'border-style: solid;'
         } else if (note.priority == 'double') {
           noteContainer.style.cssText = 'border-style: double;'
         } else if (note.priority == 'dotted') {
@@ -1016,7 +1024,14 @@ function renderNote(context, noteId, orb, searchTerm) {
         actionButtonsContainer.id = note.id + '-action-buttons-container'
         actionButtonsContainer.classList.add('action-buttons-container')
 
-        for (let actionButton of noteousSettings.actionButtons) {
+        const actionButtonsToRender =
+          selectedOrb === 'done'
+            ? ['delete', 'restore']
+            : noteousSettings.actionButtons.filter(
+                (b) => b !== 'delete' && b !== 'restore'
+              )
+
+        for (let actionButton of actionButtonsToRender) {
 
             readNotesActionButtons[actionButton] = document.createElement('button')
             readNotesActionButtons[actionButton].classList.add('action-buttons', 'material-icons')
@@ -1046,42 +1061,31 @@ function renderNote(context, noteId, orb, searchTerm) {
                 `if (event.key === 'Enter') { copyNote(${note.id}); }`
               )
             }
+            else if (actionButton == 'delete') {
+              readNotesActionButtons[actionButton].setAttribute('aria-label', 'Apagar nota')
+              readNotesActionButtons[actionButton].setAttribute(
+                'onkeyup',
+                `if (event.key === 'Enter') { deleteNote(${note.id}); }`
+              )
+            }
+            else if (actionButton == 'restore') {
+              readNotesActionButtons[actionButton].setAttribute('aria-label', 'Restaurar nota')
+              readNotesActionButtons[actionButton].setAttribute(
+                'onkeyup',
+                `if (event.key === 'Enter') { restoreNote(${note.id}); }`
+              )
+            }
 
             actionButtonsContainer.appendChild(readNotesActionButtons[actionButton])
         }
-        
 
         //NOTE TEXT
-        let noteTextContainer = document.createElement('div')
+        let noteTextContainer = document.createElement('textarea')
         noteTextContainer.id = note.id + '-text-container'
         noteTextContainer.classList.add('note-text-container')
-        noteTextContainer.setAttribute('onclick', `openNote(${note.id})`)
-
-        // --> adição de 'texto' ao id porque não pode haver ids iguais
-        let textElement = document.createElement('p')
-        textElement.id = note.id + '-text'
-        noteContainer.appendChild(textElement)
-
-        // noteous em versões anteriores: se nota tivesse menos de 300 caracteres, o conteúdo seria adicionado por inteiro. Se tivesse mais de 300 carateceres, iria testar cada caractere até chegar no 300º e exibir 'VER MAIS'. Isso levava em conta somente o texto dela, para previnir que ficasse muito longo, mas não levava em conta o espaço que o elemento ocupava.
-        // noteous 1.9: caracteres da nota são contados sempre. Agora, há 3 listas de prioridade e o espaço que uma nota ocupa é muito mais importante. Assim, ao renderizar uma nota, cada caractere dela é contado para que, se alcançar 200 caracteres ou alcançar 200px de altura, o que chegar primeiro, seja exibido 'VER MAIS'. Isso previne que notas muito longas ocupem espaço demais.
-
-        let noteChar = note.text
-        let count = 0
-        for (let noteCharAt of noteChar) {
-          textElement.appendChild(document.createTextNode(noteCharAt))
-          count = count + 1
-          
-          //"Ir escrevendo" cada caractere até chegar o 30º ou até a altura da nota ser 200px
-          if (count == 200 || noteContainer.offsetHeight >= 200){
-            
-            textElement.append(document.createTextNode(' ...'))
-            textElement.append(document.createElement('br'))
-            textElement.append(document.createTextNode('[VER MAIS]'))
-
-            break
-          }
-        }
-        
+        noteTextContainer.setAttribute('readonly', true)
+        noteTextContainer.setAttribute('onclick', `handleNote(${note.id})`)
+        noteTextContainer.value = `\n \n ${note.text}`
 
         //DATE
         let noteDateContainer = document.createElement('div')
@@ -1113,18 +1117,16 @@ function renderNote(context, noteId, orb, searchTerm) {
         }
 
         //ACESSIBILIDADE
-
         noteTextContainer.tabIndex = tabIndexCounter += 1
         noteTextContainer.setAttribute('aria-label', 'Anotação:' + note.text)
         noteTextContainer.setAttribute(
           'onkeyup',
-          `if (event.key === 'Enter') { openNote(${note.id}); }`
+          `if (event.key === 'Enter') { handleNote(${note.id}); }`
         )
 
         
 
         //APPENDS
-        noteTextContainer.appendChild(textElement)
         noteDateContainer.appendChild(dateElement)
         noteTextContainer.appendChild(noteDateContainer)
 
@@ -1146,17 +1148,23 @@ function renderNote(context, noteId, orb, searchTerm) {
     for (let priority of noteousSettings.priorityOrder) {
       for (let note of noteousMain) {
     if (note.id == noteId) {
-      // Verifica se a nota atual pertence à lista de prioridade que está sendo criada. A ordem das notas dentro da lista é definida por sortNotes(). Ou seja: noteousMain já vem ordenado pelo sortNotes()
-      //noteous preview 1.9: ao renderizar todas as notas, se houver termo de busca, filtra as notas que contêm o termo (sem diferenciar maiúsculas e minúsculas)
       if (note.priority == priority) {
         let noteContainer = document.createElement('div')
         noteContainer.id = note.id + '-note-container'
         noteContainer.classList.add('note-container')
+        if (!noteContainer.classList.contains('row-orientation') && noteousSettings.priorityOrientation == 'row') {
+          noteContainer.classList.add('row-orientation')
+        } else if (!noteContainer.classList.contains('column-orientation') && noteousSettings.priorityOrientation == 'column') {
+          noteContainer.classList.add('column-orientation')
+        }
+        if (readNotesLists[priority].classList.contains('hidden-element')) { //se Lista de Prioridade tem uma nota, então remove a classe hidden-element
+          readNotesLists[priority].classList.remove('hidden-element')  
+        } 
         readNotesLists[priority].prepend(noteContainer)
         
       //BORDER/PRIORITY
       if (note.priority == 'solid') {
-        noteContainer.style.cssText = 'border-style: none;'
+        noteContainer.style.cssText = 'border-style: solid;'
       } else if (note.priority == 'double') {
         noteContainer.style.cssText = 'border-style: double;'
       } else if (note.priority == 'dotted') {
@@ -1169,7 +1177,14 @@ function renderNote(context, noteId, orb, searchTerm) {
       actionButtonsContainer.id = note.id + '-action-buttons-container'
       actionButtonsContainer.classList.add('action-buttons-container')
 
-      for (let actionButton of noteousSettings.actionButtons) {
+      const actionButtonsToRender =
+        selectedOrb === 'done'
+          ? ['delete', 'restore']
+          : noteousSettings.actionButtons.filter(
+              (b) => b !== 'delete' && b !== 'restore'
+            )
+
+      for (let actionButton of actionButtonsToRender) {
         readNotesActionButtons[actionButton] = document.createElement('button')
         readNotesActionButtons[actionButton].classList.add('action-buttons', 'material-icons')
         readNotesActionButtons[actionButton].setAttribute('onclick', `${actionButton}Note(${note.id})`)
@@ -1198,42 +1213,32 @@ function renderNote(context, noteId, orb, searchTerm) {
             `if (event.key === 'Enter') { copyNote(${note.id}); }`
           )
         }
+        else if (actionButton == 'delete') {
+          readNotesActionButtons[actionButton].setAttribute('aria-label', 'Apagar nota')
+          readNotesActionButtons[actionButton].setAttribute(
+            'onkeyup',
+            `if (event.key === 'Enter') { deleteNote(${note.id}); }`
+          )
+        }
+        else if (actionButton == 'restore') {
+          readNotesActionButtons[actionButton].setAttribute('aria-label', 'Restaurar nota')
+          readNotesActionButtons[actionButton].setAttribute(
+            'onkeyup',
+            `if (event.key === 'Enter') { restoreNote(${note.id}); }`
+          )
+        }
 
         actionButtonsContainer.appendChild(readNotesActionButtons[actionButton])
       }
       
 
       //NOTE TEXT
-      let noteTextContainer = document.createElement('div')
+      let noteTextContainer = document.createElement('textarea')
       noteTextContainer.id = note.id + '-text-container'
       noteTextContainer.classList.add('note-text-container')
-      noteTextContainer.setAttribute('onclick', `openNote(${note.id})`)
-
-      // --> adição de 'texto' ao id porque não pode haver ids iguais
-      let textElement = document.createElement('p')
-      textElement.id = note.id + '-text'
-      noteContainer.appendChild(textElement)
-
-      // noteous em versões anteriores: se nota tivesse menos de 300 caracteres, o conteúdo seria adicionado por inteiro. Se tivesse mais de 300 carateceres, iria testar cada caractere até chegar no 300º e exibir 'VER MAIS'. Isso levava em conta somente o texto dela, para previnir que ficasse muito longo, mas não levava em conta o espaço que o elemento ocupava.
-      // noteous preview 1.7.1: caracteres da nota são contados sempre. Agora, há 3 listas de prioridade e o espaço que uma nota ocupa é muito mais importante. Assim, ao renderizar uma nota, cada caractere dela é contado para que, se alcançar 200 caracteres ou alcançar 200px de altura, o que chegar primeiro, seja exibido 'VER MAIS'. Isso previne que notas muito longas ocupem espaço demais.
-
-      let noteChar = note.text
-      let count = 0
-      for (let noteCharAt of noteChar) {
-        textElement.appendChild(document.createTextNode(noteCharAt))
-        count = count + 1
-        
-        //"Ir escrevendo" cada caractere até chegar o 30º ou até a altura da nota ser 200px
-        if (count == 200 || noteContainer.offsetHeight >= 200){
-          
-          textElement.append(document.createTextNode(' ...'))
-          textElement.append(document.createElement('br'))
-          textElement.append(document.createTextNode('[VER MAIS]'))
-
-          break
-        }
-      }
-      
+      noteTextContainer.setAttribute('readonly', true)
+      noteTextContainer.setAttribute('onclick', `handleNote(${note.id})`)
+      noteTextContainer.value = `\n \n ${note.text}`
 
       //DATE
       let noteDateContainer = document.createElement('div')
@@ -1270,13 +1275,12 @@ function renderNote(context, noteId, orb, searchTerm) {
       noteTextContainer.setAttribute('aria-label', 'Anotação:' + note.text)
       noteTextContainer.setAttribute(
         'onkeyup',
-        `if (event.key === 'Enter') { openNote(${note.id}); }`
+        `if (event.key === 'Enter') { handleNote(${note.id}); }`
       )
 
       
 
       //APPENDS
-      noteTextContainer.appendChild(textElement)
       noteDateContainer.appendChild(dateElement)
       noteTextContainer.appendChild(noteDateContainer)
 
@@ -1287,7 +1291,6 @@ function renderNote(context, noteId, orb, searchTerm) {
   }
   }
   }
-  orblendEngine('change')
 }
 
 function findMonth(number) {
@@ -1458,6 +1461,24 @@ function doneNote(noteId) {
   noteDateContainer.style.cssText = 'opacity: 0;'
 }
 
+
+function deleteNote(noteId) {
+  noteousMain = noteousMain.filter(note => note.id !== noteId)
+  localStorage.setItem('noteous-main', JSON.stringify(noteousMain))
+  location.reload()
+}
+
+function restoreNote(noteId) {
+  for (let note of noteousMain) {
+    if (note.id === noteId) {
+      note.done = false
+      break
+    }
+  }
+  localStorage.setItem('noteous-main', JSON.stringify(noteousMain))
+  location.reload()
+}
+
 //////////
 //SHARE NOTE
 function shareNote(noteId) {
@@ -1503,6 +1524,51 @@ function copyNote(noteId) {
           }, 1500)
         })
         .catch((error) => console.log('Erro ao copiar nota', error))
+    }
+  }
+}
+
+
+//////////
+
+//HANDLE NOTE
+
+function handleNote(noteId) {
+  for (let note of noteousMain) {
+    if (note.id === noteId) {
+      const actionButtonsContainer = document.getElementById(noteId + '-action-buttons-container')
+      actionButtonsContainer.innerHTML = ''
+      const acceptEditButton = document.createElement('button')
+      acceptEditButton.classList.add('action-buttons', 'material-icons')
+      acceptEditButton.appendChild(document.createTextNode('check'))
+      
+      actionButtonsContainer.appendChild(acceptEditButton)
+
+      const discardEditButton = document.createElement('button')
+      discardEditButton.classList.add('action-buttons', 'material-icons')
+      discardEditButton.appendChild(document.createTextNode('close'))
+      discardEditButton.setAttribute('onclick', 'location.reload()')
+      actionButtonsContainer.appendChild(discardEditButton)
+
+
+      const noteTextContainer = document.getElementById(noteId + '-text-container')
+      let editedNoteText = note.text
+      noteTextContainer.removeAttribute('readonly')
+      noteTextContainer.addEventListener('input', () => {
+        editedNoteText = noteTextContainer.value.startsWith('\n \n') ? noteTextContainer.value.slice(2) : noteTextContainer.value
+        console.log(editedNoteText)
+      })
+
+
+      acceptEditButton.addEventListener('click', () => {
+        if (noteTextContainer.value != '' && noteTextContainer.value != null) {
+          note.text = editedNoteText
+          note.editedAt = Date.now()
+          note.priority = noteousSettings.priority
+          localStorage.setItem('noteous-main', JSON.stringify(noteousMain))
+        }
+        location.reload()
+      })
     }
   }
 }
