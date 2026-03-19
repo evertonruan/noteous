@@ -1,14 +1,7 @@
-function orblendEngine(context, labelMessage) {
-  let subcontext
+//✨ ORBLEND ENGINE 2.0
 
-  const getRandom = () => {
-    let math = Math.random()
-    if (math < 0.5) {
-      return false
-    } else {
-      return true
-    }
-  }
+function orblendEngine(context, labelMessage, note, orb) {
+  let subcontext
 
   let dateElement = function makeDateElement() {
     let dateNow = new Date()
@@ -23,11 +16,11 @@ function orblendEngine(context, labelMessage) {
     return infoElementDate
   }
 
-  let infoElement = function makeInfoElement(subcontext, random) {
+  let infoElement = function makeInfoElement(subcontext) {
     let infoText
 
     if (subcontext == 'no-notes') {
-      infoText = 'Você ainda não tem anotações \n Adicione sua próxima tarefa!'
+      infoText = 'Você ainda não tem anotações \n Escreva sua primeira nota ✏️'
     } else if (subcontext == 'has-notes') {
       infoText = ''
   }
@@ -57,34 +50,68 @@ function orblendEngine(context, labelMessage) {
     if (labelMessage == 'continue-editing') {
       writeLabel.innerHTML = '✏️ Continue escrevendo sua nota'
     } else if (labelMessage == 'add-note'){
-      writeLabel.innerHTML = '📝 Adicione sua próxima nota'
+      writeLabel.innerHTML = 'Adicione sua próxima nota'
     } else if (labelMessage == 'edit-note') {
       writeLabel.innerHTML = '✏️ Edite aqui sua nota'
     } else if (labelMessage == 'open-note') {
       writeLabel.innerHTML = '📃 Veja sua nota'
     } else if (labelMessage == 'start-note') {
-      writeLabel.innerHTML = 'Qual o próximo passo?'
+      writeLabel.innerHTML = 'Escreva sua próxima anotação'
     } else if (labelMessage == 'restore-note') {
       writeLabel.innerHTML = '📝 Essa nota não foi adicionada'
     }
   }
 
+  function updateOrbInfo() {
+    if (selectedOrb == 'done') {
+      orbInfoLabel.innerHTML = 'Notas Concluídas'
+      orbInfoCount.innerHTML = `${noteousMain.filter(note => note.done === true).length === 1 ? '1 Nota concluída' : `${noteousMain.filter(note => note.done === true).length} Notas concluídas`}`
+    } else {
+      orbInfoLabel.innerHTML = 'Notas'
+      orbInfoCount.innerHTML = `${noteousMain.filter(note => note.done !== true).length === 1 ? '1 Nota adicionada' : `${noteousMain.filter(note => note.done !== true).length} Notas adicionadas`}`
+    }
+  }
+
   if (context == 'change') {
     //exibir/ocultar readOptions
-    if (readNotesContainer.clientHeight < 30 && readOptionsSearchInput.value == '') {
+    if (noteousMain.length == 0) {
+      orbsList.querySelectorAll('[id*="orb"]').forEach(element => {element.classList.add('hidden-element')})
       readOptions.classList.add('hidden-element')
       subcontext = 'no-notes'
     } else {
+      orbsList.querySelectorAll('[id*="orb"]').forEach(element => {element.classList.remove('hidden-element')})
       readOptions.classList.remove('hidden-element')
       subcontext = 'has-notes'
     }
 
     //Configurar informações
     infoPanel.innerHTML = ''
-    infoPanel.append(dateElement(), infoElement(subcontext, getRandom()))
+    infoPanel.append(dateElement(), infoElement(subcontext))
     showInstallButton()
   } else if (context == 'load') {
-    
+    for (let orb of noteousSettings.orbsIndex) {
+      let orbButton = document.createElement('button')
+      orbButton.classList.add('orb-button', 'material-icons')
+      orbButton.id = `${orb}-orb-button`
+
+      if (orb == 'done') {
+        orbButton.innerHTML = 'check'
+      }
+      if (orb == 'donutdough') {
+        orbButton.innerHTML = 'article'
+      }
+
+      orbButton.addEventListener('click', () => {
+        selectedOrb = orb
+        noteousSettings.selectedOrb = selectedOrb
+        localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
+        updateOrbInfo()
+        renderNote('render-all','', orb)
+      })
+      orbsList.appendChild(orbButton)
+    }
+  updateOrbInfo()
+
     //✨ Backup Inteligente de Nota
     
     if (noteousSettings.input != '') {
@@ -96,7 +123,8 @@ function orblendEngine(context, labelMessage) {
       } else {
         orblendEngine('', 'restore-note')
         writeInput.value = noteousSettings.input
-        writeInput.focus() 
+        writeInput.focus()
+        writeButtonsContainer.classList.add('focus-input') 
         writeButtonDismiss.classList.remove('hidden-element')
       }
     }
@@ -119,7 +147,7 @@ function orblendEngine(context, labelMessage) {
       subcontext = 'no-notes'
     }
     infoPanel.innerHTML = ''
-    infoPanel.append(dateElement(), infoElement(subcontext, getRandom()))
+    infoPanel.append(dateElement(), infoElement(subcontext))
     showInstallButton()
   } else if (context == 'on-change-input') {
     //Habilitar/Desabilitar Botão Adicionar Nota
@@ -171,5 +199,44 @@ function orblendEngine(context, labelMessage) {
         writePanel.classList.remove('edit-mode')
       }
     }
-  }
+  } else if (context == 'check-selected-orb') {
+      if (orb == 'done' && selectedOrb == 'done') {
+        let orbButtonElement = document.getElementById(`done-orb-button`)
+        if (!orbButtonElement.classList.contains('selected-orb')) {
+          orbButtonElement.classList.add('selected-orb')
+          document.getElementById(`donutdough-orb-button`).classList.remove('selected-orb')
+        }
+        
+        writeLabel.style.opacity = 0
+        writeInput.placeholder = ''
+        writeInput.disabled = true
+        writeInput.classList.add('orb-done')
+        
+        return note?.done === true
+    } else if (orb == 'donutdough' && selectedOrb == 'donutdough') {
+        let orbButtonElement = document.getElementById(`donutdough-orb-button`)
+        if (!orbButtonElement.classList.contains('selected-orb')) {
+          orbButtonElement.classList.add('selected-orb')
+          document.getElementById(`done-orb-button`).classList.remove('selected-orb')
+        }
+
+        if (writeInput.disabled == true && writeInput.classList.contains('orb-done')) {
+          writeLabel.style.opacity = 100
+          writeInput.placeholder = '✏️ Anote aqui'
+          writeInput.disabled = false
+          writeInput.classList.remove('orb-done')
+        }
+
+        return note?.done !== true
+      } else if (context == 'orb-animation') {
+          if (orb == 'done') {
+            setTimeout(() => {
+              document.getElementById(`done-orb-button`).classList.add('get-note')
+            }, 100)
+            setTimeout(() => {
+              document.getElementById(`done-orb-button`).classList.remove('get-note')
+            }, 500)
+          }
+      }
+    }
 }

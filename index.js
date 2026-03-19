@@ -27,6 +27,12 @@ let writeButtonDismiss = document.querySelector('#write-button-dismiss')
 let writeButtonEdit = document.querySelector('#write-button-edit')
 let writeButtonCancelEdit = document.querySelector('#write-button-cancel')
 
+let orbsList = document.querySelector('#orbs-list')
+let orbPanel = document.querySelector('#orb-panel')
+let orbInfo = document.querySelector('#orb-panel')
+let orbInfoLabel = document.querySelector('#orb-panel-label')
+let orbInfoCount = document.querySelector('#orb-panel-count')
+
 //READ-SECTION
 let readSection = document.querySelector('#section-read')
 let readPanel = document.querySelector('#read-panel')
@@ -89,6 +95,7 @@ let editMode = false
 let tabIndexCounter = 10
 let sortActionSelection = ''
 let labelTimeoutId = null // Para controlar o timeout da label
+let selectedOrb = 'donutdough'
 
 //função em variável para 'desbloquear' writeInput se tela é pequena
 //usado em openNote() e exitEditMode()
@@ -528,10 +535,11 @@ function loadNoteous(context) {
           welcomeToNoteous('render-welcome', 'new-version')
         }
         
-        sortNotes('retrieveSort')
-        priorityListsOrientation('retrieveOrientation')
         orblendEngine('load')
+        sortNotes('retrieveSort', selectedOrb)
+        priorityListsOrientation('retrieveOrientation')
         orblendEngine('on-change-input')
+
         noteousTheme('retrieve-theme')
         noteousSettings.priority = 'solid'
         localStorage.setItem(
@@ -586,6 +594,8 @@ function loadNoteous(context) {
     //2.Aplicar novas configurações
     noteousSettings = {
       noteousApp: { noteousVersion: currentVersion, installPrompt: 0, acceptedTermsVersion: termsVersion, firstAccess: accessDate, surveyStatus: doneSurvey, surveyPrompt: promptTimes, surveyBonus: bonusCode },
+      orbsIndex: ['done', 'donutdough'],
+      selectedOrb: 'donutdough',
       sort: { time: 'recent', action: 'editedAt' },
       priority: 'solid',
       priorityOrder: ['solid', 'double', 'dotted'],
@@ -958,7 +968,7 @@ readOptionsSortActionButton.addEventListener('click', () => {
 
 //////////
 
-function renderNote(context, noteId, searchTerm) {
+function renderNote(context, noteId, orb, searchTerm) {
 
   //ESSE CONTEXTO É USADO AO CARREGAR A PÁGINA, RENDERIZANDO TODAS AS NOTAS
 
@@ -985,7 +995,7 @@ function renderNote(context, noteId, searchTerm) {
       for (let note of noteousMain) {
         //noteous 1.9: Verifica se a nota atual pertence à lista de prioridade que está sendo criada. A ordem das notas dentro da lista é definida por sortNotes(). Ou seja: noteousMain já vem ordenado pelo sortNotes()
         //Ao renderizar todas as notas, se houver termo de busca, filtra as notas que contêm o termo (sem diferenciar maiúsculas e minúsculas)
-        if (note.priority == priority && note.done != true && (searchTerm == undefined || note.text.toLowerCase().includes(searchTerm.toLowerCase()))) {
+        if (note.priority == priority && orblendEngine('check-selected-orb', '', note, orb) && (searchTerm == undefined || note.text.toLowerCase().includes(searchTerm.toLowerCase()))) {
           let noteContainer = document.createElement('div')
           noteContainer.id = note.id + '-note-container'
           noteContainer.classList.add('note-container')
@@ -1400,7 +1410,7 @@ function doneNote(noteId) {
   timeoutID = setTimeout(() => {
     let noteContainer = document.getElementById(noteId + '-note-container')
     noteContainer.style.cssText = 'opacity: 0;  transform: scale(80%);'
-
+    orblendEngine('orb-animation', '', '', 'done')
     setTimeout(() => {
       noteContainer.remove()
       for (let note of noteousMain) {
