@@ -129,7 +129,7 @@ html {
   }
 
   #section-write #write-options {
-    right: 40px;
+    left: 34px;
     width: 2.5rem;
     height: 2.5rem;
   }
@@ -168,6 +168,12 @@ html {
   }
 }
 
+@media (max-width: 500px) {
+  #section-write #write-options {
+    left: 26px;
+  }
+}
+
 @media (max-width: 450px) {
   .greeting-policies-container {
     margin: 0 5%;
@@ -182,7 +188,7 @@ html {
   }
 
   #section-write #write-options {
-    right: 20px;
+    left: 22px;
     width: 2.5rem;
     height: 2.5rem;
   }
@@ -193,6 +199,12 @@ html {
 
   #about #about-dev-name {
     font-size: 1.2rem;
+  }
+}
+
+@media (max-width: 380px) {
+  #section-write #write-options {
+    left: 14px;
   }
 }
 
@@ -407,7 +419,7 @@ a {
 
 #write-options {
   position: absolute;
-  top: 20px;
+  top: 22px;
   left: 20px;
 
   width: 2.2rem;
@@ -441,14 +453,14 @@ a {
   max-height: 60vh;
   width: 65%;
   z-index: 2;
-  margin: 4px 10px 0 10px;
+  margin: 6px 10px 0 10px;
   padding: 10px 10px 10px 20px;
 
   resize: none;
 
   font-family: 'Source Sans 3', sans-serif;
   letter-spacing: -0.01em;
-  font-size: 1rem;
+  font-size: 1.2rem;
 
   color: var(--base-text);
   background-color: var(--base-write-input-inside);
@@ -830,8 +842,7 @@ a {
   cursor: pointer;
 }
 
-#section-read .note-text-container,
-#modal .note-text-container {
+#section-read .note-text-container {
   height: 100%;
   width: 100%;
   padding: 0.5rem 1rem 0.3rem 1rem;
@@ -840,7 +851,7 @@ a {
   background-color: var(--base-color);
   
   font-family: 'Source Sans 3', sans-serif;
-  font-size: 1.1rem;
+  font-size: 1.2rem;
   letter-spacing: -0.01em;
 
   resize: none;
