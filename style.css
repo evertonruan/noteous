@@ -174,11 +174,11 @@ html {
   }
 
   #index #logo {
-    font-size: 2rem;
+    display: none;
   }
 
-  #index #nav-options {
-    font-size: 80%;
+  #index nav {
+    justify-content: flex-end;
   }
 
   #section-write #write-options {
