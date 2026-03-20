@@ -121,7 +121,6 @@ function orblendEngine(context, labelMessage, note, orb) {
       //Há uma nota não salva
       if (noteousSettings.noteId != 0) {
         //Há uma nota em edição
-        openNote(noteousSettings.noteId)
         writeInput.value = noteousSettings.input
       } else {
         orblendEngine('', 'restore-note')
