@@ -886,6 +886,7 @@ a {
   align-items: center;
   gap: 30px;
   border-radius: 0 0 0 20px;
+  color: var(--base-text);
   -webkit-backdrop-filter: blur(3px);
   backdrop-filter: blur(3px);
   box-shadow: 0px 5px 10px var(--base-accent-color);
