@@ -118,7 +118,6 @@ function orblendEngine(context, labelMessage, note, orb) {
       //Há uma nota não salva
       if (noteousSettings.noteId != 0) {
         //Há uma nota em edição
-        openNote(noteousSettings.noteId)
         writeInput.value = noteousSettings.input
       } else {
         orblendEngine('', 'restore-note')
@@ -149,6 +148,7 @@ function orblendEngine(context, labelMessage, note, orb) {
     infoPanel.innerHTML = ''
     infoPanel.append(dateElement(), infoElement(subcontext))
     showInstallButton()
+    orblendEngine('change')
   } else if (context == 'on-change-input') {
     //Habilitar/Desabilitar Botão Adicionar Nota
     if (writeInput.value === '') {
@@ -174,7 +174,6 @@ function orblendEngine(context, labelMessage, note, orb) {
       localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
     } else if (editMode == true) {
       noteousSettings.input = writeInput.value
-      noteousSettings.noteId = noteIdEdit
       localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
     }
 
@@ -211,6 +210,8 @@ function orblendEngine(context, labelMessage, note, orb) {
         writeInput.placeholder = ''
         writeInput.disabled = true
         writeInput.classList.add('orb-done')
+        writeInput.classList.add('rounded-bottom')
+        writeButtonsContainer.classList.add('hidden-buttons')
         
         return note?.done === true
     } else if (orb == 'donutdough' && selectedOrb == 'donutdough') {
@@ -225,6 +226,10 @@ function orblendEngine(context, labelMessage, note, orb) {
           writeInput.placeholder = '✏️ Anote aqui'
           writeInput.disabled = false
           writeInput.classList.remove('orb-done')
+          if (writeInput.classList.contains('rounded-bottom') && writeInput.value != '') {
+            writeInput.classList.remove('rounded-bottom')
+            writeButtonsContainer.classList.remove('hidden-buttons')
+        }
         }
 
         return note?.done !== true

@@ -85,7 +85,9 @@ const readNotesActionButtons = {
 const readNotesActionButtonsIcons = {
   done: 'check_circle',
   share: 'shortcut',
-  copy: 'content_copy'
+  copy: 'content_copy',
+  delete: 'close',
+  restore: 'undo'
 }
 
 
@@ -738,6 +740,8 @@ writeInput.addEventListener('focus', () => {
     writeButtonsContainer.classList.add('focus-input')
     notePriority('retrievePriority', noteousSettings.priority)
 })
+
+writeInput.focus()
 
 writeInput.addEventListener('blur', () => {
     writeButtonAdd.classList.remove('focus-input')
@@ -1419,6 +1423,7 @@ function doneNote(noteId) {
   setTimeout(() => {
     let noteContainer = document.getElementById(noteId + '-note-container')
     noteContainer.style.cssText = 'opacity: 0;  transform: scale(70%);'
+    orblendEngine('orb-animation', '', '', 'done')
     setTimeout(() => {
       noteContainer.remove()
     for (let note of noteousMain) {
@@ -1586,6 +1591,7 @@ function editNote(noteId) {
           note.priority = noteousSettings.priority
           localStorage.setItem('noteous-main', JSON.stringify(noteousMain))
         }
+        setEditMode('edit-mode-off')
         renderNote('render-all', '', `${selectedOrb}`)
       }
 
