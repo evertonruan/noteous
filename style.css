@@ -532,7 +532,7 @@ a {
 }
 
 #section-write #write-buttons-container.hidden-buttons {
-
+  pointer-events: none;
   transform: translateY(-45px);
   filter: blur(20px);
   opacity: 0;
