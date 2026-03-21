@@ -42,6 +42,12 @@ html {
 }
 
 @media (max-width: 2000px) {
+  #index .greeting-description-container-all {
+    display: flex;
+    align-items: center;
+    grid-template-columns: repeat(2, 1fr);
+  }
+
   .greeting-policies-container {
     margin: 0 30%;
   }
@@ -62,6 +68,8 @@ html {
 
 @media (max-width: 1000px) {
   #index .greeting-description-container-all {
+    display: flex;
+    align-items: center;
     grid-template-columns: repeat(2, 1fr);
   }
 
@@ -988,13 +996,17 @@ footer p span {
   padding: 1rem;
   padding-top: 3rem;
 
-  background-color: hsl(32, 80%, 85%);
-  animation: greeting-panel-bg-fade 5s ease-in-out infinite;
+  color: hsl(30, 20%, 20%);
+  background-color: hsl(45, 20%, 90%);
 
   filter: brightness(90%);
-  border-radius: 15px;
   -webkit-user-select: none;
   user-select: none;
+}
+
+.greeting-panel.orbs-glow {
+  animation: greeting-panel-bg-fade 10s ease-in-out infinite;
+  color: hsl(30, 20%, 65%);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -1008,6 +1020,10 @@ footer p span {
   flex-direction: column;
   align-items: center;
   justify-content: center;
+}
+
+.greeting-title-container.row-direction {
+  flex-direction: row;
 }
 
 .greeting-title1 {
@@ -1026,6 +1042,7 @@ footer p span {
   font-family: 'DM Serif Text', serif;
   padding-top: 0.25rem;
   padding-left: 0.6rem;
+  margin-bottom: 1rem;
   font-style: italic;
   font-weight: bold;
   line-height: 2rem;

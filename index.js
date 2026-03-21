@@ -272,8 +272,10 @@ function welcomeToNoteous(context, subcontext) {
     ////////////////////////////////////////////////
 
     if (subcontext == 'first-access') {
+      greetingPanel.classList.add('orbs-glow')
       greetingTitle1.append(document.createTextNode('Boas-vindas ao'))
       greetingTitle2.append(document.createTextNode('noteous preview'))
+      greetingTitle3.append(document.createTextNode('2ª Geração'))
       greetingDescriptionTitle.append(
         document.createTextNode(
           'Suas notas sempre à mão'
@@ -282,52 +284,38 @@ function welcomeToNoteous(context, subcontext) {
 
       greetingDescription1.innerHTML = `<span class="greeting-description-intro">Teste os novos recursos</span>Acessando o noteous preview você pode testar agora novos recursos que chegarão no futuro ao noteous ✨`
 
-      greetingDescription2.innerHTML = `<span class="greeting-description-intro">Cópias de notas</span>Esse novo recurso abre novas possibilidades para o noteous! Agora, você pode Criar e Baixar uma cópia das suas notas para Abrir em outro celular ou computador que você usa o noteous preview`
-
-      greetingDescription3.innerHTML = `<span class="greeting-description-intro">Listas de Prioridade</span> <br>Sua organização subiu de nível. Cada prioridade que você salvar sua nota será exibida em uma lista separada para que você possa ver o que é mais importante mais rápido`
-
-      greetingDescription4.innerHTML = `<span class="greeting-description-intro">Sempre em dia</span>noteous preview está em constante melhoria. Quando tiver uma 🌐 nova versão, chegará automaticamente para você ✅`
-
-      greetingDescription2Image.setAttribute('src', './assets/images/greeting-copy.webp')
-      greetingDescription3Image.setAttribute('src', './assets/images/greeting-priority-button.webp')
-      greetingDescription4Image.setAttribute('src', './assets/images/greeting-update.webp')
-
       greetingDescriptionContainer1.append(
-        greetingDescription1Image,
         greetingDescription1
-      )
-      greetingDescriptionContainer2.append(
-        greetingDescription2Image,
-        greetingDescription2
-      )
-      greetingDescriptionContainer3.append(
-        greetingDescription3Image,
-        greetingDescription3
-      )
-      greetingDescriptionContainer4.append(
-        greetingDescription4Image,
-        greetingDescription4
       )
 
       greetingDescriptionContainerAll.append(
-        greetingDescriptionContainer1,
-        greetingDescriptionContainer2,
-        greetingDescriptionContainer3,
-        greetingDescriptionContainer4
+        greetingDescriptionContainer1
       )
     } else if (subcontext == 'new-version') {
+      greetingPanel.classList.add('orbs-glow')
       greetingTitle1.append(document.createTextNode('Boas-vindas ao'))
       greetingTitle2.append(document.createTextNode('noteous preview'))
       greetingTitle3.append(document.createTextNode('2ª Geração'))
       greetingDescriptionTitle.innerHTML = ''
-        
+      
+      greetingDescription1.innerHTML = `<span class="greeting-description-intro">Você recebeu uma atualização com algumas correções</span>`
+
+      greetingDescriptionContainer1.append(
+        greetingDescription1
+      )
+
+      greetingDescriptionContainerAll.append(
+        greetingDescriptionContainer1
+      )
+
     }
   } else if (context == 'render-policies') {
     let greetingPanel = document.querySelector('.greeting-panel')
     greetingPanel.innerHTML = ''
+    greetingPanel.classList.remove('orbs-glow')
 
     let greetingTitleContainer = document.createElement('div')
-    greetingTitleContainer.classList.add('greeting-title-container')
+    greetingTitleContainer.classList.add('greeting-title-container', 'row-direction')
 
     let greetingTitle1 = document.createElement('p')
     greetingTitle1.classList.add('greeting-title1')
