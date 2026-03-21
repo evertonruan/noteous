@@ -1389,6 +1389,7 @@ function addNote() {
       writeInput.focus()
     }
     orblendEngine('on-change-input')
+    orblendEngine('update-orb-info')
   }
 }
 
