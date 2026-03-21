@@ -1,5 +1,5 @@
-//noteous SW version = 260213
-
+//noteous 2.0 SW version
+//20260320
 /*
 When the user accepts the terms, the Service Worker is installed and adds resources to the cache.
 Once they are cached, noteous will use only this local content and will no longer connect to the server to update content.
@@ -40,7 +40,8 @@ const noteousResources = [
   'assets/fonts/dm-serif-text-italic.woff2',
   'assets/fonts/source-sans-3-500.woff2',
   '/assets/icons/favicon.png',
-  '/assets/images/social-link.webp']
+  '/assets/images/social-link.webp',
+  '/assets/images/donut.webp']
 
 //ACTIVATION
 //Limpeza de cache

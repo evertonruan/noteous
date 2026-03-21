@@ -148,11 +148,7 @@ function navLink() {
 ////
 
 function renderNoteousVersionLabel() {
-  if (noteousVersion.toString().length == 3) {
-    noteousVersionLabel.innerHTML = `<span>noteous</span> ${noteousVersion}`
-  } else if (noteousVersion.toString().length == 4) {
-    noteousVersionLabel.innerHTML = `<span>noteous</span> ${noteousVersion.toString().slice(0,3)}.${noteousVersion.toString().slice(3)}`
-  }
+  noteousVersionLabel.innerHTML = `<span>noteous</span> 2ª Geração`
 }
 renderNoteousVersionLabel()
 
