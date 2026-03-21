@@ -201,7 +201,11 @@ function welcomeToNoteous(context, subcontext) {
 
     greetingTitle2 = document.createElement('p')
     greetingTitle2.classList.add('greeting-title2')
-    greetingTitleContainer.append(greetingTitleIcon, greetingTitle2)
+    greetingTitleContainer.append(greetingTitle2)
+
+    let greetingTitle3 = document.createElement('p')
+    greetingTitle3.classList.add('greeting-title3')
+    greetingTitleContainer.append(greetingTitle3)
 
     //greetingDescriptions
 
@@ -278,82 +282,49 @@ function welcomeToNoteous(context, subcontext) {
     ////////////////////////////////////////////////
 
     if (subcontext == 'first-access') {
+      greetingPanel.classList.add('orbs-glow')
       greetingTitle1.append(document.createTextNode('Boas-vindas ao'))
       greetingTitle2.append(document.createTextNode('noteous'))
+      greetingTitle3.append(document.createTextNode('2ª Geração'))
       greetingDescriptionTitle.append(
         document.createTextNode(
           'Suas notas sempre à mão'
         )
       )
 
-      greetingDescription1.innerHTML = `<span class="greeting-description-intro">Temas</span>🎨 Personalize sua experiência com o brilhante tema claro ou com o elegante tema escuro`
-
-      greetingDescription2.innerHTML = `<span class="greeting-description-intro">Personalize as notas</span>Clique no círculo ⭕ para trocar entre diferentes bordas`
-
-      greetingDescription3.innerHTML = `<span class="greeting-description-intro">Design incrível</span>noteous possui um design inovador que convida você a fazer anotações. <br><br>📅 Veja a data de hoje <br>📋 Escreva sua próxima tarefa<br>💡 Registre algo para não esquecer `
-
-      greetingDescription4.innerHTML = `<span class="greeting-description-intro">Sempre em dia</span>noteous está em constante melhoria. Quando tiver uma 🌐 nova versão, chegará automaticamente para você ✅`
-
-      greetingDescription1Image.setAttribute('src', './assets/images/greeting-theme.webp')
-      greetingDescription2Image.setAttribute('src', './assets/images/greeting-priority-button.webp')
-      greetingDescription3Image.setAttribute('src', './assets/images/greeting-usage.webp')
-      greetingDescription4Image.setAttribute('src', './assets/images/greeting-update.webp')
+      greetingDescription1.innerHTML = `<span class="greeting-description-intro">Essa é a 2ª Geração do noteous</span>`
 
       greetingDescriptionContainer1.append(
-        greetingDescription1Image,
         greetingDescription1
-      )
-      greetingDescriptionContainer2.append(
-        greetingDescription2Image,
-        greetingDescription2
-      )
-      greetingDescriptionContainer3.append(
-        greetingDescription3Image,
-        greetingDescription3
-      )
-      greetingDescriptionContainer4.append(
-        greetingDescription4Image,
-        greetingDescription4
       )
 
       greetingDescriptionContainerAll.append(
-        greetingDescriptionContainer1,
-        greetingDescriptionContainer2,
-        greetingDescriptionContainer3,
-        greetingDescriptionContainer4
+        greetingDescriptionContainer1
       )
     } else if (subcontext == 'new-version') {
+      greetingPanel.classList.add('orbs-glow')
       greetingTitle1.append(document.createTextNode('Boas-vindas ao'))
       greetingTitle2.append(document.createTextNode('noteous'))
-      greetingDescriptionTitle.innerHTML = `✨Você recebeu a atualização de Fevereiro de 2026 do noteous`
+      greetingTitle3.append(document.createTextNode('2ª Geração'))
+      greetingDescriptionTitle.innerHTML = `✨ Você recebeu a atualização de Março de 2026 do noteous`
 
-      greetingDescription1.innerHTML = `<span class="greeting-description-intro">Atualização automática</span> <br>noteous recebe atualizações automáticas 🌐 Assim, seu aplicativo sempre está em dia.`
-
-      greetingDescription2.innerHTML = `<span class="greeting-description-intro">Os próximos passos do noteous</span> <br> noteous 2ª Geração, disponível em breve, ainda no início do ano`
-      
-      greetingDescription1Image.setAttribute('src', './assets/images/greeting-update.webp')
-      greetingDescription2Image.setAttribute('src', './assets/images/greeting-2ndgen.webp')
+      greetingDescription1.innerHTML = `<span class="greeting-description-intro">Esse é o noteous 2ª Geração</span>Recheado de novidades 🍩`
 
       greetingDescriptionContainer1.append(
-        greetingDescription1Image,
         greetingDescription1
-      )
-      greetingDescriptionContainer2.append(
-        greetingDescription2Image,
-        greetingDescription2
       )
 
       greetingDescriptionContainerAll.append(
-        greetingDescriptionContainer1,
-        greetingDescriptionContainer2
+        greetingDescriptionContainer1
       )
     }
   } else if (context == 'render-policies') {
     let greetingPanel = document.querySelector('.greeting-panel')
     greetingPanel.innerHTML = ''
+    greetingPanel.classList.remove('orbs-glow')
 
     let greetingTitleContainer = document.createElement('div')
-    greetingTitleContainer.classList.add('greeting-title-container')
+    greetingTitleContainer.classList.add('greeting-title-container', 'row-direction')
 
     let greetingTitle1 = document.createElement('p')
     greetingTitle1.classList.add('greeting-title1')
@@ -364,7 +335,7 @@ function welcomeToNoteous(context, subcontext) {
 
     greetingTitle2 = document.createElement('p')
     greetingTitle2.classList.add('greeting-title2')
-    greetingTitleContainer.append(greetingTitleIcon, greetingTitle2)
+    greetingTitleContainer.append(greetingTitle2)
 
     greetingTitle1.append(document.createTextNode('Boas-vindas ao'))
     greetingTitle2.append(document.createTextNode('noteous'))

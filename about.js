@@ -40,12 +40,16 @@ let buttonPolicies = document.querySelector('#about-button-policies')
 let policiesContainerData = document.querySelector('#policies-container-data')
 let policiesSwitchVar = 0
 
+let aboutOrbsList = document.querySelector('#about-orbs-list')
+
 //1.6 --> Cópias de Notas
 let copyContainer = document.querySelector('#copy-container')
 let copyCreateButton = document.querySelector('#copy-create')
 let copyOpenButton = document.querySelector('#copy-open')
 let copyDetailsContainer = document.querySelector('#copy-details-container')
 let copyDetailsSwitchVar = 0
+
+
 ///////
 
 function navLink() {
@@ -1025,3 +1029,7 @@ function importNotes(notes) {
   alert('Notas importadas com sucesso!')
   window.location.reload()
 }
+
+aboutOrbsList.addEventListener('click', () => {
+  alert('Em atualizações futuras, será possível desbloquear novas cores de orbs')
+})

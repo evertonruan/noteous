@@ -42,6 +42,12 @@ html {
 }
 
 @media (max-width: 2000px) {
+  #index .greeting-description-container-all {
+    display: flex;
+    align-items: center;
+    grid-template-columns: repeat(2, 1fr);
+  }
+
   .greeting-policies-container {
     margin: 0 30%;
   }
@@ -62,6 +68,8 @@ html {
 
 @media (max-width: 1000px) {
   #index .greeting-description-container-all {
+    display: flex;
+    align-items: center;
     grid-template-columns: repeat(2, 1fr);
   }
 
@@ -951,6 +959,21 @@ footer p span {
   flex-grow: 1;
 }
 
+@keyframes greeting-panel-bg-fade {
+  0% {
+    background-color: hsl(45, 80%, 80%);
+  }
+  33% {
+    background-color: hsl(145, 86%, 80%);
+  }
+  66% {
+    background-color: hsl(203, 86%, 80%);
+  }
+  100% {
+    background-color: hsl(45, 80%, 80%);
+  }
+}
+
 .greeting-panel {
   display: flex;
   flex: 1;
@@ -963,16 +986,27 @@ footer p span {
   padding: 1rem;
   padding-top: 3rem;
 
-  background-color: hsl(32, 80%, 85%);
+  color: hsl(30, 20%, 20%);
+  background-color: hsl(45, 20%, 90%);
 
   filter: brightness(90%);
-  border-radius: 15px;
   -webkit-user-select: none;
   user-select: none;
 }
 
+.greeting-panel.orbs-glow {
+  animation: greeting-panel-bg-fade 10s ease-in-out infinite;
+}
+
 .greeting-title-container {
   display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.greeting-title-container.row-direction {
+  flex-direction: row;
 }
 
 .greeting-title1 {
@@ -990,10 +1024,19 @@ footer p span {
   font-size: clamp(2rem,10vw,3.5rem);
   font-family: 'DM Serif Text', serif;
   padding-top: 0.25rem;
-  padding-left: 0.6rem;
+  margin-bottom: 0.5rem;
   font-style: italic;
   font-weight: bold;
   line-height: 2rem;
+}
+
+.greeting-title3{
+  font-family: 'DM Sans', sans-serif;
+  font-size: clamp(1rem,10vw,1.3rem);
+  margin-top: 8px;
+  padding: 5px 20px;
+  border: 2px solid hsl(30, 20%, 20%);
+  border-radius: 20px;
 }
 
 .greeting-description-title {
@@ -1001,7 +1044,6 @@ footer p span {
   text-align: center;
   font-weight: bold;
   font-size: 1.5rem;
-  text-decoration: 2px underline;
 }
 
 .greeting-description-container-all {
@@ -1011,7 +1053,7 @@ footer p span {
 }
 
 .greeting-description-container {
-  background-color: hsl(32, 70%, 80%);
+  background-color: hsla(0, 0%, 10%, 0.05);
   display: flex;
   flex-direction: column;
   margin: 1rem;
@@ -1037,7 +1079,7 @@ footer p span {
   font-weight: bold;
   font-family: 'DM Serif Text', serif;
   font-style: italic;
-  font-size: 1.6rem;
+  font-size: 1.4rem;
   font-weight: 700;
 }
 .greeting-policies-container {
@@ -1072,11 +1114,11 @@ footer p span {
 }
 
 .greeting-buttons {
-  background: #e4b686;
   margin: 30px 0;
   padding: 1.5rem 1.8rem;
-
-  border-style: none;
+  color: hsl(30, 20%, 20%);
+  background-color: transparent;
+  border: 2px solid hsl(30, 20%, 20%);
   border-radius: 1.3rem;
 
   font-family: 'DM Serif Text', serif;
@@ -1342,6 +1384,10 @@ footer p span {
   margin-top: 1rem;
 }
 
+#about-section-2ndgen-info img {
+  border-radius: 20px;
+}
+
 .logo-inline {
   font-family: 'DM Serif Text', serif;
   font-style: italic;
@@ -1352,4 +1398,49 @@ footer p span {
 
 #about-update-preview {
   margin: 1rem;
+}
+
+#donut-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+#about-orbs-list {
+  display: flex;
+  gap: 10px;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.about-orb-button {
+  width: 50px;
+  height: 50px;
+  margin: 5px;
+  border-radius: 50%;
+  background-color: var(--base-accent-color);
+  color: var(--base-text);
+  transition: all 0.2s cubic-bezier(0.075, 0.82, 0.165, 1);
+}
+
+#donut {
+  height: auto;
+  width: 200px;
+}
+
+#noteous-name {
+  font-family: 'DM Serif Text', serif;
+  font-style: italic;
+  font-weight: bold;
+  font-size: 1.8rem;
+}
+
+#noteous-gen {
+  font-size: 0.9rem;
+  padding: 2px 10px;
+  border: 1px solid var(--base-text);
+  border-radius: 10px;
 }
