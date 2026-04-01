@@ -1,2 +1,2 @@
-let noteousVersion = 2.01
+let noteousVersion = 2.1
 let termsVersion = 2509
