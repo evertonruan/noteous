@@ -62,7 +62,7 @@ function orblendEngine(context, labelMessage, note, orb) {
     }
   }
 
-  function updateOrbInfo() {
+  if (context == 'update-orb-info') {
     if (selectedOrb == 'done') {
       orbInfoLabel.innerHTML = 'Notas Concluídas'
       orbInfoCount.innerHTML = `${noteousMain.filter(note => note.done === true).length === 1 ? '1 Nota concluída' : `${noteousMain.filter(note => note.done === true).length} Notas concluídas`}`
@@ -108,12 +108,12 @@ function orblendEngine(context, labelMessage, note, orb) {
         selectedOrb = orb
         noteousSettings.selectedOrb = selectedOrb
         localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
-        updateOrbInfo()
+        orblendEngine('update-orb-info')
         renderNote('render-all','', orb)
       })
       orbsList.appendChild(orbButton)
     }
-    updateOrbInfo()
+    orblendEngine('update-orb-info')
 
     //✨ Backup Inteligente de Nota
     
@@ -121,7 +121,6 @@ function orblendEngine(context, labelMessage, note, orb) {
       //Há uma nota não salva
       if (noteousSettings.noteId != 0) {
         //Há uma nota em edição
-        openNote(noteousSettings.noteId)
         writeInput.value = noteousSettings.input
       } else {
         orblendEngine('', 'restore-note')

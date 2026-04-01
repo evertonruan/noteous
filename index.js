@@ -273,8 +273,10 @@ function welcomeToNoteous(context, subcontext) {
 
     if (subcontext == 'first-access') {
       greetingPanel.classList.add('orbs-glow')
+      greetingPanel.classList.add('orbs-glow')
       greetingTitle1.append(document.createTextNode('Boas-vindas ao'))
       greetingTitle2.append(document.createTextNode('noteous preview'))
+      greetingTitle3.append(document.createTextNode('2ª Geração'))
       greetingTitle3.append(document.createTextNode('2ª Geração'))
       greetingDescriptionTitle.append(
         document.createTextNode(
@@ -295,29 +297,14 @@ function welcomeToNoteous(context, subcontext) {
       greetingDescription4Image.setAttribute('src', './assets/images/greeting-update.webp')
 
       greetingDescriptionContainer1.append(
-        greetingDescription1Image,
         greetingDescription1
-      )
-      greetingDescriptionContainer2.append(
-        greetingDescription2Image,
-        greetingDescription2
-      )
-      greetingDescriptionContainer3.append(
-        greetingDescription3Image,
-        greetingDescription3
-      )
-      greetingDescriptionContainer4.append(
-        greetingDescription4Image,
-        greetingDescription4
       )
 
       greetingDescriptionContainerAll.append(
-        greetingDescriptionContainer1,
-        greetingDescriptionContainer2,
-        greetingDescriptionContainer3,
-        greetingDescriptionContainer4
+        greetingDescriptionContainer1
       )
     } else if (subcontext == 'new-version') {
+      greetingPanel.classList.add('orbs-glow')
       greetingPanel.classList.add('orbs-glow')
       greetingTitle1.append(document.createTextNode('Boas-vindas ao'))
       greetingTitle2.append(document.createTextNode('noteous preview'))
@@ -371,9 +358,10 @@ function welcomeToNoteous(context, subcontext) {
     let greetingPanel = document.querySelector('.greeting-panel')
     greetingPanel.classList.remove('orbs-glow')
     greetingPanel.innerHTML = ''
+    greetingPanel.classList.remove('orbs-glow')
 
     let greetingTitleContainer = document.createElement('div')
-    greetingTitleContainer.classList.add('greeting-title-container')
+    greetingTitleContainer.classList.add('greeting-title-container', 'row-direction')
 
     let greetingTitle1 = document.createElement('p')
     greetingTitle1.classList.add('greeting-title1')
@@ -1431,6 +1419,7 @@ function addNote() {
       writeInput.focus()
     }
     orblendEngine('on-change-input')
+    orblendEngine('update-orb-info')
   }
 }
 
@@ -1561,17 +1550,19 @@ function setEditMode(context) {
     writeOptions.classList.add('edit-mode')
     writeLabel.style.opacity = 0
     writeInput.classList.add('orb-done')
+    writeInput.classList.add('rounded-bottom')
+    writeButtonsContainer.classList.add('hidden-buttons')
     writeInput.placeholder = ''
     writeInput.disabled = true
-    writeButtonAdd.setAttribute('hidden', 'true')
   } else if (context == 'edit-mode-off') {
     editMode = false
     writeOptions.classList.remove('edit-mode')
     writeLabel.style.opacity = 1
     writeInput.classList.remove('orb-done')
-    writeInput.placeholder = 'Escreva sua nota...'
+    writeInput.value != '' ? writeInput.classList.remove('rounded-bottom') : null
+    writeInput.value != '' ? writeButtonsContainer.classList.remove('hidden-buttons') : null
+    writeInput.placeholder = '✏️ Anote aqui'
     writeInput.disabled = false
-    writeButtonAdd.removeAttribute('hidden')
   }
 }
 
