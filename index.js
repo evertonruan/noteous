@@ -272,24 +272,26 @@ function welcomeToNoteous(context, subcontext) {
     ////////////////////////////////////////////////
 
     if (subcontext == 'first-access') {
+      greetingPanel.classList.add('orbs-glow')
       greetingTitle1.append(document.createTextNode('Boas-vindas ao'))
       greetingTitle2.append(document.createTextNode('noteous preview'))
+      greetingTitle3.append(document.createTextNode('2ª Geração'))
       greetingDescriptionTitle.append(
         document.createTextNode(
           'Suas notas sempre à mão'
         )
       )
+      greetingDescription1.classList.add('no-image')
+      greetingDescription1.innerHTML = `<span class="greeting-description-intro">Teste os novos recursos</span>Você está no noteous preview. Aqui você tem acesso antecipado aos novos recursos que chegarão no futuro ao noteous ✨`
 
-      greetingDescription1.innerHTML = `<span class="greeting-description-intro">Teste os novos recursos</span>Acessando o noteous preview você pode testar agora novos recursos que chegarão no futuro ao noteous ✨`
+      greetingDescription2.innerHTML = `<span class="greeting-description-intro">Suas notas sempre à mão</span><br>noteous é totalmente privado e pessoal 📝 Você não precisa de internet para acessar suas notas (*em navegadores compatíveis)`
 
-      greetingDescription2.innerHTML = `<span class="greeting-description-intro">Cópias de notas</span>Esse novo recurso abre novas possibilidades para o noteous! Agora, você pode Criar e Baixar uma cópia das suas notas para Abrir em outro celular ou computador que você usa o noteous preview`
+      greetingDescription3.innerHTML = `<span class="greeting-description-intro">Design incrível</span> <br>noteous tem um design inovador: você nunca viu nada igual ✨ Além disso, a inteligência do <strong>orblend engine</strong> pode recuperar uma nota que você esqueceu de salvar`
 
-      greetingDescription3.innerHTML = `<span class="greeting-description-intro">Listas de Prioridade</span> <br>Sua organização subiu de nível. Cada prioridade que você salvar sua nota será exibida em uma lista separada para que você possa ver o que é mais importante mais rápido`
+      greetingDescription4.innerHTML = `<span class="greeting-description-intro">Sempre em dia</span><br>noteous preview está em constante melhoria 🍩 As atualizações da 2ª Geração chegam de forma instantânea e gratuita`
 
-      greetingDescription4.innerHTML = `<span class="greeting-description-intro">Sempre em dia</span>noteous preview está em constante melhoria. Quando tiver uma 🌐 nova versão, chegará automaticamente para você ✅`
-
-      greetingDescription2Image.setAttribute('src', './assets/images/greeting-copy.webp')
-      greetingDescription3Image.setAttribute('src', './assets/images/greeting-priority-button.webp')
+      greetingDescription2Image.setAttribute('src', './assets/images/greeting-highlights.webp')
+      greetingDescription3Image.setAttribute('src', './assets/images/greeting-usage.webp')
       greetingDescription4Image.setAttribute('src', './assets/images/greeting-update.webp')
 
       greetingDescriptionContainer1.append(
@@ -316,14 +318,58 @@ function welcomeToNoteous(context, subcontext) {
         greetingDescriptionContainer4
       )
     } else if (subcontext == 'new-version') {
+      greetingPanel.classList.add('orbs-glow')
       greetingTitle1.append(document.createTextNode('Boas-vindas ao'))
       greetingTitle2.append(document.createTextNode('noteous preview'))
       greetingTitle3.append(document.createTextNode('2ª Geração'))
-      greetingDescriptionTitle.innerHTML = ''
+      greetingDescriptionTitle.append(
+        document.createTextNode(
+          'Atualização concluída: este é o noteous preview 2.1. Confira os destaques da 2º Geração'
+        )
+      )
         
+      greetingDescription1.innerHTML = `<span class="greeting-description-intro">Design incrível</span>Esta é a 2ª Geração do noteous preview, e seu design foi completamente reimaginado, como você nunca viu! <br>🍩 Agora, o <strong>donut design</strong> traz experiências incríveis para sua anotação`
+
+      greetingDescription2.innerHTML = `<span class="greeting-description-intro">Apresentando Orbs do noteous</span><strong>Orbs</strong> são uma novidade disruptiva da 2ª Geração do noteous. Com eles você organiza suas notas de uma forma única. E em próximas atualizações, você até mesmo poderá trocar as cores dos Orbs`
+
+      greetingDescription3.innerHTML = `Por trás do noteous está a inteligência do <strong>orblend engine</strong><br>✨São recursos muito úteis. Por exemplo, se você esquecer de salvar uma nota, ele recupera automaticamente para você. 🟠 Além disso, os <strong>Orbs</strong> estão profundamente integrados ao orblend engine`
+
+      greetingDescription4.innerHTML = `<span class="greeting-description-intro">Sempre em dia</span>noteous preview está em constante melhoria 🍩 As atualizações da 2ª Geração chegam de forma instantânea e gratuita`
+
+      greetingDescription1Image.setAttribute('src', './assets/images/greeting-donut.webp')
+      greetingDescription2Image.setAttribute('src', './assets/images/greeting-orbs.webp')
+      greetingDescription3Image.setAttribute('src', './assets/images/greeting-orblend-engine.webp')
+      greetingDescription4Image.setAttribute('src', './assets/images/greeting-update.webp')
+
+      greetingDescriptionContainer1.append(
+        greetingDescription1Image,
+        greetingDescription1
+      )
+      greetingDescriptionContainer2.append(
+        greetingDescription2Image,
+        greetingDescription2
+      )
+      greetingDescriptionContainer3.append(
+        greetingDescription3Image,
+        greetingDescription3
+      )
+      greetingDescriptionContainer4.append(
+        greetingDescription4Image,
+        greetingDescription4
+      )
+
+      greetingDescriptionContainerAll.append(
+        greetingDescriptionContainer1,
+        greetingDescriptionContainer2,
+        greetingDescriptionContainer3,
+        greetingDescriptionContainer4
+      )
+
+
     }
   } else if (context == 'render-policies') {
     let greetingPanel = document.querySelector('.greeting-panel')
+    greetingPanel.classList.remove('orbs-glow')
     greetingPanel.innerHTML = ''
 
     let greetingTitleContainer = document.createElement('div')
@@ -332,13 +378,9 @@ function welcomeToNoteous(context, subcontext) {
     let greetingTitle1 = document.createElement('p')
     greetingTitle1.classList.add('greeting-title1')
 
-    let greetingTitleIcon = document.createElement('img')
-    greetingTitleIcon.setAttribute('src', './assets/icons/maskable-icon-preview-192.png')
-    greetingTitleIcon.classList.add('greeting-title-icon')
-
     greetingTitle2 = document.createElement('p')
     greetingTitle2.classList.add('greeting-title2')
-    greetingTitleContainer.append(greetingTitleIcon, greetingTitle2)
+    greetingTitleContainer.append(greetingTitle2)
 
     greetingTitle1.append(document.createTextNode('Boas-vindas ao'))
     greetingTitle2.append(document.createTextNode('noteous preview'))

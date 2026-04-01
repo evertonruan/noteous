@@ -176,6 +176,10 @@ html {
 }
 
 @media (max-width: 450px) {
+  .greeting-panel .greeting-title2 {
+    margin-bottom: 0.5rem;
+  }
+
   .greeting-policies-container {
     margin: 0 5%;
   }
@@ -976,6 +980,21 @@ footer p span {
   }
 }
 
+@keyframes greeting-text-fade {
+  0% {
+    color: hsl(45, 80%, 15%);
+  }
+  33% {
+    color: hsl(145, 86%, 15%);
+  }
+  66% {
+    color: hsl(203, 86%, 15%);
+  }
+  100% {
+    color: hsl(45, 80%, 15%);
+  }
+}
+
 .greeting-panel {
   display: flex;
   flex: 1;
@@ -986,21 +1005,17 @@ footer p span {
   justify-content: center;
 
   padding: 1rem;
-  padding-top: 3rem;
 
-  background-color: hsl(32, 80%, 85%);
-  animation: greeting-panel-bg-fade 5s ease-in-out infinite;
+  color: hsl(30, 20%, 80%);
+  background-color: hsl(45, 20%, 4%);
 
   filter: brightness(90%);
-  border-radius: 15px;
   -webkit-user-select: none;
   user-select: none;
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .greeting-panel {
-    animation: none;
-  }
+.greeting-panel.orbs-glow {
+  animation: greeting-panel-bg-fade 15s ease-in-out infinite;
 }
 
 .greeting-title-container {
@@ -1008,6 +1023,10 @@ footer p span {
   flex-direction: column;
   align-items: center;
   justify-content: center;
+}
+
+.greeting-title-container.row-direction {
+  flex-direction: row;
 }
 
 .greeting-title1 {
@@ -1025,30 +1044,31 @@ footer p span {
   font-size: clamp(2rem,10vw,3.5rem);
   font-family: 'DM Serif Text', serif;
   padding-top: 0.25rem;
-  padding-left: 0.6rem;
+  margin-bottom: 1rem;
   font-style: italic;
   font-weight: bold;
   line-height: 2rem;
-  text-align: center;
-  color: hsl(30, 20%, 65%);
 }
 
 .greeting-title3{
   font-family: 'DM Sans', sans-serif;
   font-size: clamp(1rem,10vw,1.3rem);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  background-color: hsl(30, 20%, 85%);
+  color: hsl(45, 80%, 15%);
+  animation: greeting-text-fade 15s ease-in-out infinite;
   margin-top: 8px;
   padding: 5px 20px;
-  border: 2px solid hsl(32, 80%, 85%);
   border-radius: 20px;
-  color: hsl(30, 20%, 65%);
 }
 
 .greeting-description-title {
-  margin: 2rem;
+  margin: 2rem 0;
   text-align: center;
   font-weight: bold;
   font-size: 1.5rem;
-  text-decoration: 2px underline;
+  letter-spacing: -0.03em;
 }
 
 .greeting-description-container-all {
@@ -1058,7 +1078,7 @@ footer p span {
 }
 
 .greeting-description-container {
-  background-color: hsla(32, 70%, 80%, 0.1);
+  background-color: hsla(0, 0%, 10%, 0.4);
   display: flex;
   flex-direction: column;
   margin: 1rem;
@@ -1070,23 +1090,33 @@ footer p span {
   border-top-right-radius: 1rem;
 }
 
-.greeting-description-point {
+.greeting-panel .no-image {
   display: flex;
-  flex-grow: 1;
   flex-direction: column;
-  justify-content: space-evenly;
+  justify-content: center;
+}
+
+.greeting-description-point {
+  display: block;
+  flex-grow: 1;
   margin: 1rem;
-  font-size: 1.1rem;
+  font-size: 1.3rem;
   text-align: center;
+  letter-spacing: -0.03em;
+  line-height: 1.2;
 }
 
 .greeting-description-intro {
+  display: flex;
+  margin-bottom: 10px;
+  justify-content: center;
   font-weight: bold;
   font-family: 'DM Serif Text', serif;
   font-style: italic;
   font-size: 1.6rem;
   font-weight: 700;
-  background-color: none;
+  line-height: 1;
+  letter-spacing: normal;
 }
 .greeting-policies-container {
   display: flex;
@@ -1115,24 +1145,25 @@ footer p span {
   padding: 2rem;
   font-size: 110%;
 
-  border: 1px solid black;
+  border: 1px solid hsl(45, 80%, 50%);
   border-radius: 10px;
 }
 
 .greeting-buttons {
-  background-color: transparent;
   margin: 30px 0;
   padding: 1.5rem 1.8rem;
-  border: 2px solid hsl(30, 20%, 65%);
+  color: hsl(30, 20%, 85%);
+  background-color: transparent;
+  border: 2px solid hsl(30, 20%, 85%);
   border-radius: 1.3rem;
-  color: hsl(30, 20%, 65%);
+
   font-family: 'DM Serif Text', serif;
   font-style: italic;
   font-size: 1.4rem;
   font-weight: 700;
 
   line-height: 0px;
-  
+
   transition: all 0.2s cubic-bezier(0.075, 0.82, 0.165, 1);
   -webkit-user-select: none;
   user-select: none;
