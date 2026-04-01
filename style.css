@@ -1180,7 +1180,8 @@ footer p span {
   cursor: default;
 }
 
-#about header {
+#about header,
+#gallery header {
   position: sticky;
   top: 0px;
   z-index: 2;
@@ -1210,7 +1211,8 @@ footer p span {
   color: var(--base-text);
 }
 
-#about h2 {
+#about h2,
+#gallery h2 {
   font-size: clamp(0.8rem, 4vw, 1.2rem);
 }
 
@@ -1549,4 +1551,21 @@ footer p span {
   padding: 2px 10px;
   border: 1px solid var(--base-text);
   border-radius: 10px;
+}
+
+#gallery {
+  display: flex;
+  flex-direction: column;
+  font-family: 'DM Sans', sans-serif;
+  background-color: var(--base-color);
+  color: var(--base-text);
+  -webkit-user-select: none;
+  user-select: none;
+  cursor: default;
+}
+
+#gallery p {
+  font-size: 1.1rem;
+  text-align: center;
+  font-family: 'DM Sans', sans-serif;
 }
