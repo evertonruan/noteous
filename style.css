@@ -42,12 +42,6 @@ html {
 }
 
 @media (max-width: 2000px) {
-  #index .greeting-description-container-all {
-    display: flex;
-    align-items: center;
-    grid-template-columns: repeat(2, 1fr);
-  }
-
   .greeting-policies-container {
     margin: 0 30%;
   }
@@ -68,8 +62,6 @@ html {
 
 @media (max-width: 1000px) {
   #index .greeting-description-container-all {
-    display: flex;
-    align-items: center;
     grid-template-columns: repeat(2, 1fr);
   }
 
