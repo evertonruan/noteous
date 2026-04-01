@@ -27,11 +27,10 @@ const noteousResources = [
   '/',
   'noteousParams.js',
   'fileLoad.js',
-  'noteousUpdate.json',
   'index.html',
   'index.js',
-  'about.html',
-  'about.js',
+  'hub.html',
+  'hub.js',
   'debug.html',
   'debug.js',
   'style.css',
@@ -43,7 +42,6 @@ const noteousResources = [
   'assets/fonts/dm-serif-text-italic.woff2',
   'assets/fonts/source-sans-3-500.woff2',
   '/assets/icons/favicon.png',
-  '/assets/images/social-link.webp',
   '/assets/images/donut.webp',]
 
 //ACTIVATION
@@ -106,8 +104,8 @@ async function handlePostRequest(event) {
           const content = await readFile(file);
           lastUploadedFileContent = content;
 
-          // Redireciona para about.html
-          return Response.redirect('/about.html', 303);
+          // Redirects to hub.html
+          return Response.redirect('/hub.html', 303);
         } else {
           console.warn('Tipo de arquivo não suportado:', file.type);
         }
