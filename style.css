@@ -111,11 +111,6 @@ html {
     margin: 0 10%;
   }
 
-  #index header,
-  #about header {
-    margin: 1rem 1.5rem;
-  }
-
   #index main {
     flex-direction: column;
   }
@@ -173,6 +168,11 @@ html {
   #section-write #write-options {
     left: 26px;
   }
+
+  #about #logo {
+    font-size: 1.4rem;
+    padding-top: 2px;
+  }
 }
 
 @media (max-width: 450px) {
@@ -186,11 +186,6 @@ html {
 
   #index #logo {
     display: none;
-  }
-
-  #about #logo {
-    font-size: 1.5rem;
-    padding-bottom: 0;
   }
 
   #index nav {
@@ -294,8 +289,8 @@ header {
   display: flex;
   flex-direction: row;
   align-items: center;
-
-  margin: 1rem 1rem 0 2rem;
+  width: 100%;
+  padding: 8px 20px;
   -webkit-user-select: none;
   user-select: none;
 }
@@ -1191,7 +1186,6 @@ footer p span {
   z-index: 2;
   -webkit-backdrop-filter: blur(5px);
   backdrop-filter: blur(5px);
-  padding: 10px 0;
   border-bottom: 1px dotted var(--base-text);
 }
 
@@ -1217,7 +1211,7 @@ footer p span {
 }
 
 #about h2 {
-  font-size: 1.2rem;
+  font-size: clamp(0.8rem, 4vw, 1.2rem);
 }
 
 #about h4 {
@@ -1227,9 +1221,10 @@ footer p span {
 #nav-container {
   display: flex;
   width: 100%;
-  gap: 1rem;
+  gap: 8px;
   align-items: center;
   justify-content: space-between;
+
 }
 
 .about-section {
