@@ -30,8 +30,8 @@ const noteousResources = [
   'noteousParams.js',
   'index.html',
   'index.js',
-  'about.html',
-  'about.js',
+  'hub.html',
+  'hub.js',
   'style.css',
   'reset.css',
   'policies.json',
@@ -103,8 +103,8 @@ async function handlePostRequest(event) {
           const content = await readFile(file);
           lastUploadedFileContent = content;
 
-          // Redireciona para about.html
-          return Response.redirect('/about.html', 303);
+          // Redireciona para hub.html
+          return Response.redirect('/hub.html', 303);
         } else {
           console.warn('Tipo de arquivo não suportado:', file.type);
         }

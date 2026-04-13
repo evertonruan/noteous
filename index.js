@@ -142,7 +142,7 @@ function readOptionsMessage(message) {
 ////////
 
 function navLink() {
-  window.location.replace('./about.html')
+  window.location.replace('./hub.html')
 }
 
 ////
