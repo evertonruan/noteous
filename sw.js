@@ -40,7 +40,6 @@ const noteousResources = [
   'assets/fonts/dm-serif-text-italic.woff2',
   'assets/fonts/source-sans-3-500.woff2',
   '/assets/icons/favicon.png',
-  '/assets/images/social-link.webp',
   '/assets/images/donut.webp']
 
 //ACTIVATION
