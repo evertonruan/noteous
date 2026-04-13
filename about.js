@@ -31,9 +31,11 @@ let baseRemOptionSmall = document.querySelector('#baserem-small')
 let optionLight = document.querySelector('#luminosity-light')
 let optionDark = document.querySelector('#luminosity-dark')
 
+let actionButtonsSettingsContainer = document.querySelector('#action-buttons-settings-container')
 let toggleActionButtonShare = document.querySelector('#toggle-action-button-share')
 let toggleActionButtonCopy = document.querySelector('#toggle-action-button-copy')
 
+let prioritySettingsContainer = document.querySelector('#priority-settings-container')
 let priorityContainer = document.querySelector('#priority-order-container')
 
 let buttonPolicies = document.querySelector('#about-button-policies')
@@ -213,6 +215,10 @@ activeOptionVerifier()
 
 //////
 
+if (noteousMain.length == 0) {
+  prioritySettingsContainer.classList.add('hidden-element')
+}
+
 let draggedElement = null
 
 function initPriorityDragDrop() {
@@ -306,6 +312,10 @@ function loadPriorityOrder() {
 }
 
 // 1.6 --> BOTÕES DE AÇÃO //////
+
+if (noteousMain.length == 0 || null) {
+  actionButtonsSettingsContainer.classList.add('hidden-element')
+}
 
 toggleActionButtonShare.addEventListener('change', (toggle) => {
     if (!noteousSettings.actionButtons.includes('share')) {
@@ -1031,5 +1041,5 @@ function importNotes(notes) {
 }
 
 aboutOrbsList.addEventListener('click', () => {
-  alert('Em atualizações futuras, será possível desbloquear novas cores de orbs')
+  alert('Em atualizações futuras, será possível desbloquear novas cores de Orbs')
 })
