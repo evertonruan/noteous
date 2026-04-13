@@ -332,13 +332,13 @@ function welcomeToNoteous(context, subcontext) {
         )
       )
 
-      greetingDescription1.innerHTML = `<span class="greeting-description-intro">Design incrível</span>Esta é a 2ª Geração do noteous preview, e seu design foi completamente reimaginado, como você nunca viu! <br>🍩 Agora, o <strong>donut design</strong> traz experiências incríveis para sua anotação`
+      greetingDescription1.innerHTML = `<span class="greeting-description-intro">Design incrível</span>Esta é a 2ª Geração do noteous, e seu design foi completamente reimaginado, como você nunca viu! <br>🍩 Agora, o <strong>donut design</strong> traz experiências incríveis para sua anotação`
 
       greetingDescription2.innerHTML = `<span class="greeting-description-intro">Apresentando Orbs do noteous</span><strong>Orbs</strong> são uma novidade disruptiva da 2ª Geração do noteous. Com eles você organiza suas notas de uma forma única. E em próximas atualizações, você até mesmo poderá trocar as cores dos Orbs`
 
-      greetingDescription3.innerHTML = `Por trás do noteous está a inteligência do <strong>orblend engine</strong><br>✨São recursos muito úteis. Por exemplo, se você esquecer de salvar uma nota, ele recupera automaticamente para você. 🟠 Além disso, os <strong>Orbs</strong> estão profundamente integrados ao orblend engine`
+      greetingDescription3.innerHTML = `<span class="greeting-description-intro">Recursos úteis</span>Por trás do noteous está a inteligência do <strong>orblend engine</strong><br>São recursos muito úteis ✨ Por exemplo, se você esquecer de salvar uma nota, ele recupera automaticamente para você. 🟠 Além disso, os <strong>Orbs</strong> estão profundamente integrados ao orblend engine`
 
-      greetingDescription4.innerHTML = `<span class="greeting-description-intro">Sempre em dia</span>noteous preview está em constante melhoria 🍩 As atualizações da 2ª Geração chegam de forma instantânea e gratuita`
+      greetingDescription4.innerHTML = `<span class="greeting-description-intro">Sempre em dia</span>noteous está em constante melhoria 🍩 As atualizações da 2ª Geração chegam de forma instantânea e gratuita`
 
       greetingDescription1Image.setAttribute('src', './assets/images/greeting-donut.webp')
       greetingDescription2Image.setAttribute('src', './assets/images/greeting-orbs.webp')
@@ -660,7 +660,7 @@ function showInstallButton() {
     } else {
       installNoteousButton.classList.add('write-buttons')
       installNoteousButton.style.cssText = 'margin-bottom: 2rem;'
-      installNoteousButton.innerHTML = '<span style="font-style: normal;">🧁</span> Instalar noteous'
+      installNoteousButton.innerHTML = '<span style="font-style: normal;">🍩</span> Instalar noteous'
       infoPanel.appendChild(installNoteousButton)
       installNoteousButton.addEventListener('click', async () => {
       try {

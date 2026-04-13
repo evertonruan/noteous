@@ -88,7 +88,7 @@ function showInstallButton() {
       if (installNoteousButton) installNoteousButton.remove()
     } else {
       installNoteousButton.classList.add('write-buttons')
-      installNoteousButton.innerHTML = '<span style="font-style: normal;">🧁</span> Instalar noteous'
+      installNoteousButton.innerHTML = '<span style="font-style: normal;">🍩</span> Instalar noteous'
       aboutSettingsSection.append(installNoteousButton)
       installNoteousButton.addEventListener('click', async () => {
       try {
