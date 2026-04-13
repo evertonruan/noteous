@@ -288,30 +288,86 @@ function welcomeToNoteous(context, subcontext) {
         )
       )
 
-      greetingDescription1.innerHTML = `<span class="greeting-description-intro">Essa é a 2ª Geração do noteous</span>`
+      greetingDescription1.innerHTML = `<span class="greeting-description-intro">Suas notas sempre à mão</span><br>noteous é totalmente privado e pessoal 📝 Você não precisa de internet para acessar suas notas (*em navegadores compatíveis)`
+      greetingDescription2.innerHTML = `<span class="greeting-description-intro">Design incrível</span> <br>noteous tem um design inovador: você nunca viu nada igual`
+      greetingDescription3.innerHTML = `<span class="greeting-description-intro">Recursos úteis</span>✨ Vários recursos ajudam em sua anotação. Por exemplo, a inteligência do <strong>orblend engine</strong> pode recuperar uma nota que você esqueceu de salvar`
+      greetingDescription4.innerHTML = `<span class="greeting-description-intro">Sempre em dia</span><br>noteous está em constante melhoria 🍩 As atualizações da 2ª Geração chegam de forma instantânea e gratuita`
+
+      greetingDescription1Image.setAttribute('src', './assets/images/greeting-highlights.webp')
+      greetingDescription2Image.setAttribute('src', './assets/images/greeting-usage.webp')
+      greetingDescription3Image.setAttribute('src', './assets/images/greeting-orblend-engine.webp')
+      greetingDescription4Image.setAttribute('src', './assets/images/greeting-update.webp')
 
       greetingDescriptionContainer1.append(
+        greetingDescription1Image,
         greetingDescription1
+      )
+      greetingDescriptionContainer2.append(
+        greetingDescription2Image,
+        greetingDescription2
+      )
+      greetingDescriptionContainer3.append(
+        greetingDescription3Image,
+        greetingDescription3
+      )
+      greetingDescriptionContainer4.append(
+        greetingDescription4Image,
+        greetingDescription4
       )
 
       greetingDescriptionContainerAll.append(
-        greetingDescriptionContainer1
+        greetingDescriptionContainer1,
+        greetingDescriptionContainer2,
+        greetingDescriptionContainer3,
+        greetingDescriptionContainer4
       )
     } else if (subcontext == 'new-version') {
       greetingPanel.classList.add('orbs-glow')
       greetingTitle1.append(document.createTextNode('Boas-vindas ao'))
       greetingTitle2.append(document.createTextNode('noteous'))
       greetingTitle3.append(document.createTextNode('2ª Geração'))
-      greetingDescriptionTitle.innerHTML = `✨ Você recebeu a atualização de Março de 2026 do noteous`
+      greetingDescriptionTitle.append(
+        document.createTextNode(
+          '✨ Você recebeu a atualização de Abril de 2026 do noteous'
+        )
+      )
 
-      greetingDescription1.innerHTML = `<span class="greeting-description-intro">Esse é o noteous 2ª Geração</span>Recheado de novidades 🍩`
+      greetingDescription1.innerHTML = `<span class="greeting-description-intro">Design incrível</span>Esta é a 2ª Geração do noteous preview, e seu design foi completamente reimaginado, como você nunca viu! <br>🍩 Agora, o <strong>donut design</strong> traz experiências incríveis para sua anotação`
+
+      greetingDescription2.innerHTML = `<span class="greeting-description-intro">Apresentando Orbs do noteous</span><strong>Orbs</strong> são uma novidade disruptiva da 2ª Geração do noteous. Com eles você organiza suas notas de uma forma única. E em próximas atualizações, você até mesmo poderá trocar as cores dos Orbs`
+
+      greetingDescription3.innerHTML = `Por trás do noteous está a inteligência do <strong>orblend engine</strong><br>✨São recursos muito úteis. Por exemplo, se você esquecer de salvar uma nota, ele recupera automaticamente para você. 🟠 Além disso, os <strong>Orbs</strong> estão profundamente integrados ao orblend engine`
+
+      greetingDescription4.innerHTML = `<span class="greeting-description-intro">Sempre em dia</span>noteous preview está em constante melhoria 🍩 As atualizações da 2ª Geração chegam de forma instantânea e gratuita`
+
+      greetingDescription1Image.setAttribute('src', './assets/images/greeting-donut.webp')
+      greetingDescription2Image.setAttribute('src', './assets/images/greeting-orbs.webp')
+      greetingDescription3Image.setAttribute('src', './assets/images/greeting-orbs-orblend-engine.webp')
+      greetingDescription4Image.setAttribute('src', './assets/images/greeting-update.webp')
 
       greetingDescriptionContainer1.append(
+        greetingDescription1Image,
         greetingDescription1
+      )
+      greetingDescriptionContainer2.append(
+        greetingDescription2Image,
+        greetingDescription2
+      )
+      greetingDescriptionContainer3.append(
+        greetingDescription3Image,
+        greetingDescription3
+      )
+      greetingDescriptionContainer4.append(
+        greetingDescription4Image,
+        greetingDescription4
       )
 
       greetingDescriptionContainerAll.append(
-        greetingDescriptionContainer1
+        greetingDescriptionContainer1,
+        greetingDescriptionContainer2,
+        greetingDescriptionContainer3,
+        greetingDescriptionContainer4
+
       )
     }
   } else if (context == 'render-policies') {

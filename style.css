@@ -42,12 +42,6 @@ html {
 }
 
 @media (max-width: 2000px) {
-  #index .greeting-description-container-all {
-    display: flex;
-    align-items: center;
-    grid-template-columns: repeat(2, 1fr);
-  }
-
   .greeting-policies-container {
     margin: 0 30%;
   }
@@ -68,8 +62,6 @@ html {
 
 @media (max-width: 1000px) {
   #index .greeting-description-container-all {
-    display: flex;
-    align-items: center;
     grid-template-columns: repeat(2, 1fr);
   }
 
@@ -974,6 +966,21 @@ footer p span {
   }
 }
 
+@keyframes greeting-text-fade {
+  0% {
+    color: hsl(45, 80%, 80%);
+  }
+  33% {
+    color: hsl(145, 86%, 80%);
+  }
+  66% {
+    color: hsl(203, 86%, 80%);
+  }
+  100% {
+    color: hsl(45, 80%, 80%);
+  }
+}
+
 .greeting-panel {
   display: flex;
   flex: 1;
@@ -984,10 +991,9 @@ footer p span {
   justify-content: center;
 
   padding: 1rem;
-  padding-top: 3rem;
 
   color: hsl(30, 20%, 20%);
-  background-color: hsl(45, 20%, 90%);
+  background-color: hsl(45, 20%, 80%);
 
   filter: brightness(90%);
   -webkit-user-select: none;
@@ -995,7 +1001,7 @@ footer p span {
 }
 
 .greeting-panel.orbs-glow {
-  animation: greeting-panel-bg-fade 10s ease-in-out infinite;
+  animation: greeting-panel-bg-fade 15s ease-in-out infinite;
 }
 
 .greeting-title-container {
@@ -1003,6 +1009,10 @@ footer p span {
   flex-direction: column;
   align-items: center;
   justify-content: center;
+}
+
+.greeting-title-container.row-direction {
+  flex-direction: row;
 }
 
 .greeting-title-container.row-direction {
@@ -1024,7 +1034,7 @@ footer p span {
   font-size: clamp(2rem,10vw,3.5rem);
   font-family: 'DM Serif Text', serif;
   padding-top: 0.25rem;
-  margin-bottom: 0.5rem;
+  margin-bottom: 1rem;
   font-style: italic;
   font-weight: bold;
   line-height: 2rem;
@@ -1033,17 +1043,22 @@ footer p span {
 .greeting-title3{
   font-family: 'DM Sans', sans-serif;
   font-size: clamp(1rem,10vw,1.3rem);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  background-color: hsl(30, 20%, 20%);
+  color: hsl(45, 80%, 80%);
+  animation: greeting-text-fade 15s ease-in-out infinite;
   margin-top: 8px;
   padding: 5px 20px;
-  border: 2px solid hsl(30, 20%, 20%);
   border-radius: 20px;
 }
 
 .greeting-description-title {
-  margin: 2rem;
+  margin: 2rem 0;
   text-align: center;
   font-weight: bold;
   font-size: 1.5rem;
+  letter-spacing: -0.03em;
 }
 
 .greeting-description-container-all {
@@ -1053,7 +1068,7 @@ footer p span {
 }
 
 .greeting-description-container {
-  background-color: hsla(0, 0%, 10%, 0.05);
+  background-color: hsla(0, 0%, 10%, 0.1);
   display: flex;
   flex-direction: column;
   margin: 1rem;
@@ -1065,22 +1080,33 @@ footer p span {
   border-top-right-radius: 1rem;
 }
 
-.greeting-description-point {
+.greeting-panel .no-image {
   display: flex;
-  flex-grow: 1;
   flex-direction: column;
-  justify-content: space-evenly;
+  justify-content: center;
+}
+
+.greeting-description-point {
+  display: block;
+  flex-grow: 1;
   margin: 1rem;
-  font-size: 1.1rem;
+  font-size: 1.3rem;
   text-align: center;
+  letter-spacing: -0.03em;
+  line-height: 1.2;
 }
 
 .greeting-description-intro {
+  display: flex;
+  margin-bottom: 10px;
+  justify-content: center;
   font-weight: bold;
   font-family: 'DM Serif Text', serif;
   font-style: italic;
-  font-size: 1.4rem;
+  font-size: 1.6rem;
   font-weight: 700;
+  line-height: 1;
+  letter-spacing: normal;
 }
 .greeting-policies-container {
   display: flex;
@@ -1109,7 +1135,7 @@ footer p span {
   padding: 2rem;
   font-size: 110%;
 
-  border: 1px solid black;
+  border: 1px solid hsl(45, 80%, 30%);
   border-radius: 10px;
 }
 
