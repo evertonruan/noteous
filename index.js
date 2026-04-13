@@ -1419,6 +1419,7 @@ function addNote() {
       writeInput.focus()
     }
     orblendEngine('on-change-input')
+    orblendEngine('update-orb-info')
   }
 }
 
@@ -1556,17 +1557,19 @@ function setEditMode(context) {
     writeOptions.classList.add('edit-mode')
     writeLabel.style.opacity = 0
     writeInput.classList.add('orb-done')
+    writeInput.classList.add('rounded-bottom')
+    writeButtonsContainer.classList.add('hidden-buttons')
     writeInput.placeholder = ''
     writeInput.disabled = true
-    writeButtonAdd.setAttribute('hidden', 'true')
   } else if (context == 'edit-mode-off') {
     editMode = false
     writeOptions.classList.remove('edit-mode')
     writeLabel.style.opacity = 1
     writeInput.classList.remove('orb-done')
-    writeInput.placeholder = 'Escreva sua nota...'
+    writeInput.value != '' ? writeInput.classList.remove('rounded-bottom') : null
+    writeInput.value != '' ? writeButtonsContainer.classList.remove('hidden-buttons') : null
+    writeInput.placeholder = '✏️ Anote aqui'
     writeInput.disabled = false
-    writeButtonAdd.removeAttribute('hidden')
   }
 }
 
