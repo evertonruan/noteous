@@ -7,6 +7,8 @@
 
 html {
   scroll-behavior: smooth;
+  scrollbar-color: var(--base-accent-color) var(--base-color);
+  scrollbar-width: thin;
 }
 
 @font-face {
@@ -356,6 +358,8 @@ a {
 
 #read-panel {
   min-width: 0;
+  scrollbar-color: var(--base-accent-color) var(--base-color);
+  scrollbar-width: thin;
 }
 
 /*-----SECTION-WRITE-----*/
@@ -663,6 +667,8 @@ a {
   flex-direction: column;
   max-height: 90vh;
   overflow-y: auto;
+  scrollbar-color: var(--base-accent-color) var(--base-color);
+  scrollbar-width: thin;
 }
 
 #section-read.edit-mode {
