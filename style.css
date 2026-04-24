@@ -924,10 +924,25 @@ a {
   outline: 0;
 }
 
+#section-read .note-date-container,
+#modal .note-date-container {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  padding: 0.3rem 0.8rem;
+  pointer-events: none;
+  z-index: 1;
+  text-align: right;
+  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
+  border-radius: 0 0 14px 14px;
+  color: var(--base-text);
+}
+
 #section-read .note-date-container p,
 #modal .note-date-container p {
   font-style: italic;
-  margin-top: 1rem;
   font-size: 65%;
 }
 

@@ -1113,7 +1113,7 @@ function renderNote(context, noteId, orb, searchTerm) {
         noteTextContainer.classList.add('note-text-container')
         noteTextContainer.setAttribute('readonly', true)
         noteTextContainer.setAttribute('onclick', `editNote(${note.id})`)
-        noteTextContainer.value = `\n\n${note.text}`
+        noteTextContainer.value = `\n\n${note.text}\n`
 
         //DATE
         let noteDateContainer = document.createElement('div')
@@ -1157,10 +1157,10 @@ function renderNote(context, noteId, orb, searchTerm) {
 
         //APPENDS
         noteDateContainer.appendChild(dateElement)
-        noteTextContainer.appendChild(noteDateContainer)
         noteContainer.appendChild(editingButtonsContainer)
         noteContainer.appendChild(actionButtonsContainer)
         noteContainer.appendChild(noteTextContainer)
+        noteContainer.appendChild(noteDateContainer)
         }
       }
   }
@@ -1284,7 +1284,7 @@ function renderNote(context, noteId, orb, searchTerm) {
           noteTextContainer.classList.add('note-text-container')
           noteTextContainer.setAttribute('readonly', true)
           noteTextContainer.setAttribute('onclick', `editNote(${note.id})`)
-          noteTextContainer.value = `\n \n ${note.text}`
+          noteTextContainer.value = `\n \n ${note.text}\n`
 
           //DATE
           let noteDateContainer = document.createElement('div')
@@ -1327,10 +1327,10 @@ function renderNote(context, noteId, orb, searchTerm) {
           //APPENDS
 
           noteDateContainer.appendChild(dateElement)
-          noteTextContainer.appendChild(noteDateContainer)
           noteContainer.appendChild(editingButtonsContainer)
           noteContainer.appendChild(actionButtonsContainer)
           noteContainer.appendChild(noteTextContainer)
+          noteContainer.appendChild(noteDateContainer)
           }  
         }
       }    
