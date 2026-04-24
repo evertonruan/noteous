@@ -453,8 +453,9 @@ a {
 
 #write-input {
   display: flex;
-  height: 6rem;
+  min-height: 6rem;
   max-height: 60vh;
+  overflow-y: hidden;
   width: 65%;
   z-index: 2;
   margin: 6px 10px 0 10px;
@@ -482,13 +483,11 @@ a {
 
 #write-input.edit-mode {
   width: 80%;
-  flex: 1;
-  height: auto;
 }
 
 #write-input:focus {
   width: 80%;
-  height: 7rem;
+  min-height: 7rem;
   outline: 0;
   border-width: 7px 7px 0 7px;
   box-shadow: 0 0 30px var(--base-accent-color);

@@ -122,10 +122,18 @@ function orblendEngine(context, labelMessage, note, orb) {
       if (noteousSettings.noteId != 0) {
         //Há uma nota em edição
         writeInput.value = noteousSettings.input
+        requestAnimationFrame(() => {
+          writeInput.style.height = 'auto'
+          writeInput.style.height = writeInput.scrollHeight + 'px'
+        })
       } else {
         orblendEngine('', 'restore-note')
         writeInput.value = noteousSettings.input
         writeInput.focus()
+        requestAnimationFrame(() => {
+          writeInput.style.height = 'auto'
+          writeInput.style.height = writeInput.scrollHeight + 'px'
+        })
         writeButtonsContainer.classList.add('focus-input') 
         writeButtonDismiss.classList.remove('hidden-element')
       }
@@ -183,26 +191,9 @@ function orblendEngine(context, labelMessage, note, orb) {
     }
 
     //✨ Redimensionamento Inteligente do Campo de Nota
-    //Verifica quantas linhas há no Campo de Nota
-    let input = noteousSettings.input
-    let newLines
-    if (input.match(/\n/g) == null) {
-      //se não houver novas linhas (/n) --> esvazia variável newLines que indica quantidade de linhas
-      newLines = ['']
-    } else {
-      newLines = input.match(/\n/g) //se houver linhas, informa quantidade na variável newLines
-    }
+    writeInput.style.height = 'auto'
+    writeInput.style.height = writeInput.scrollHeight + 'px'
 
-    //Aplica novo tamanho se tiver 2 linhas OU mais de 120 caracteres
-    if (editMode == false) {
-      if (newLines.length > 2 || writeInput.value.length > 120) {
-        writeInput.classList.add('edit-mode')
-        writePanel.classList.add('edit-mode')
-      } else if (newLines.length < 2 || writeInput.value.length < 120) {
-        writeInput.classList.remove('edit-mode')
-        writePanel.classList.remove('edit-mode')
-      }
-    }
   } else if (context == 'check-selected-orb') {
       if (orb == 'done' && selectedOrb == 'done') {
       let orbButtonElement = document.getElementById(`done-orb-button`)
