@@ -1509,15 +1509,22 @@ function shareNote(noteId) {
             text: note.text
           })
           .then(() => {
-            const messageAction = document.createElement('p')
-            messageAction.classList.add('message-action')
-            messageAction.appendChild(document.createTextNode('Compartilhando nota...'))
+            const actionMessage = document.createElement('p')
+            actionMessage.classList.add('action-message')
+            actionMessage.appendChild(document.createTextNode('Compartilhando nota...'))
             const actionButtonsContainer = document.getElementById(noteId + '-action-buttons-container')
-            actionButtonsContainer.querySelectorAll('.action-buttons').forEach(button => button.classList.add('hidden-element'))
-            actionButtonsContainer.appendChild(messageAction)
+            actionButtonsContainer.querySelectorAll('.action-buttons').forEach(button => button.classList.add('invisible-element'))
+            setTimeout(() => {
+              actionButtonsContainer.classList.add('expanded')
+              actionButtonsContainer.appendChild(actionMessage)
+            }, 200)
                 setTimeout(() => {
-                actionButtonsContainer.removeChild(messageAction)
-                actionButtonsContainer.querySelectorAll('.action-buttons').forEach(button => button.classList.remove('hidden-element'))
+                actionMessage.style.opacity = '0'
+                setTimeout(() => {
+                  actionButtonsContainer.removeChild(actionMessage)
+                  actionButtonsContainer.classList.remove('expanded')
+                  actionButtonsContainer.querySelectorAll('.action-buttons').forEach(button => button.classList.remove('invisible-element'))
+                }, 200)
               }, 1500)
             })
           .catch((error) => console.log('Error sharing', error))
@@ -1535,18 +1542,25 @@ function copyNote(noteId) {
     if (note.id === noteId) {
       navigator.clipboard.writeText(note.text)
         .then(() => {
-          const messageAction = document.createElement('p')
-          messageAction.classList.add('message-action')
-          messageAction.appendChild(document.createTextNode('Texto da nota copiado'))
+          const actionMessage = document.createElement('p')
+          actionMessage.classList.add('action-message')
+          actionMessage.appendChild(document.createTextNode('Texto da nota copiado'))
           const actionButtonsContainer = document.getElementById(noteId + '-action-buttons-container')
-          actionButtonsContainer.querySelectorAll('.action-buttons').forEach(button => button.classList.add('hidden-element'))
-          actionButtonsContainer.appendChild(messageAction)
+          actionButtonsContainer.querySelectorAll('.action-buttons').forEach(button => button.classList.add('invisible-element'))
+          setTimeout(() => {
+            actionButtonsContainer.classList.add('expanded')
+            actionButtonsContainer.appendChild(actionMessage)
+          }, 200)
           actionButtonsContainer.setAttribute('aria-label', 'Texto da nota copiado')
           actionButtonsContainer.ariaLive = 'assertive'
               setTimeout(() => {
-              actionButtonsContainer.removeChild(messageAction)
-              actionButtonsContainer.querySelectorAll('.action-buttons').forEach(button => button.classList.remove('hidden-element'))
-              actionButtonsContainer.ariaLive = undefined
+              actionMessage.style.opacity = '0'
+              setTimeout(() => {
+                actionButtonsContainer.removeChild(actionMessage)
+                actionButtonsContainer.classList.remove('expanded')
+                actionButtonsContainer.querySelectorAll('.action-buttons').forEach(button => button.classList.remove('invisible-element'))
+                actionButtonsContainer.ariaLive = undefined
+              }, 200)
             }, 1500)
         })
         .catch((error) => console.log('Erro ao copiar nota', error))
