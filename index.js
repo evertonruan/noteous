@@ -1036,8 +1036,8 @@ function renderNote(context, noteId, orb, searchTerm) {
 
         const acceptEditingButton = document.createElement('button')
         acceptEditingButton.id = note.id + '-accept-editing-button'
-        acceptEditingButton.classList.add('action-buttons', 'material-icons')
-        acceptEditingButton.appendChild(document.createTextNode('check'))
+        acceptEditingButton.classList.add('action-buttons', 'accept-editing-button')
+        acceptEditingButton.appendChild(document.createTextNode('Salvar edição'))
 
         const discardEditingButton = document.createElement('button')
         discardEditingButton.id = note.id + '-discard-editing-button'
@@ -1208,8 +1208,8 @@ function renderNote(context, noteId, orb, searchTerm) {
 
           const acceptEditingButton = document.createElement('button')
           acceptEditingButton.id = note.id + '-accept-editing-button'
-          acceptEditingButton.classList.add('action-buttons', 'material-icons')
-          acceptEditingButton.appendChild(document.createTextNode('check'))
+          acceptEditingButton.classList.add('action-buttons')
+          acceptEditingButton.appendChild(document.createTextNode('Aceitar edição'))
 
           const discardEditingButton = document.createElement('button')
           discardEditingButton.id = note.id + '-discard-editing-button'
