@@ -740,11 +740,11 @@ a {
   width: 100%;
   margin-left: auto;
   max-width: 400px;
-  padding: 0.2rem 0.5rem;
+  padding: 0 0.5rem;
   border: 2px solid var(--base-accent-color);
   border-radius: 8px;
   outline: none;
-  font-size: 0.8rem;
+  font-size: 0.9rem;
   font-family: 'DM Sans', sans-serif;
   color: var(--base-text);
   background-color: var(--base-color);
