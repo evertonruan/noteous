@@ -1,4 +1,4 @@
-//✨ ORBLEND ENGINE 2.1
+//✨ ORBLEND ENGINE 2.1.1
 
 function orblendEngine(context, labelMessage, note, orb) {
   let subcontext
@@ -63,12 +63,17 @@ function orblendEngine(context, labelMessage, note, orb) {
   }
 
   if (context == 'update-orb-info') {
-    if (selectedOrb == 'done') {
-      orbInfoLabel.innerHTML = 'Notas Concluídas'
-      orbInfoCount.innerHTML = `${noteousMain.filter(note => note.done === true).length === 1 ? '1 Nota concluída' : `${noteousMain.filter(note => note.done === true).length} Notas concluídas`}`
+    if (noteousMain.length == 0) {
+      readHeader.classList.add('invisible-element')
     } else {
-      orbInfoLabel.innerHTML = 'Notas'
-      orbInfoCount.innerHTML = `${noteousMain.filter(note => note.done !== true).length === 1 ? '1 Nota adicionada' : `${noteousMain.filter(note => note.done !== true).length} Notas adicionadas`}`
+      readHeader.classList.remove('invisible-element')
+        if (selectedOrb == 'done') {
+        orbInfoLabel.innerHTML = 'Notas Concluídas'
+        orbInfoCount.innerHTML = `${noteousMain.filter(note => note.done === true).length === 1 ? '1 Nota concluída' : `${noteousMain.filter(note => note.done === true).length} Notas concluídas`}`
+      } else {
+        orbInfoLabel.innerHTML = 'Notas'
+        orbInfoCount.innerHTML = `${noteousMain.filter(note => note.done !== true).length === 1 ? '1 Nota adicionada' : `${noteousMain.filter(note => note.done !== true).length} Notas adicionadas`}`
+      }
     }
   }
 
@@ -89,9 +94,6 @@ function orblendEngine(context, labelMessage, note, orb) {
     infoPanel.append(dateElement(), infoElement(subcontext))
     showInstallButton()
   } else if (context == 'load') {
-
-
-
       for (let orb of noteousSettings.orbsIndex) {
       let orbButton = document.createElement('button')
       orbButton.classList.add('orb-button', 'material-icons')

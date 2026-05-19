@@ -33,6 +33,7 @@ let orbInfoCount = document.querySelector('#orb-panel-count')
 
 //READ-SECTION
 let readSection = document.querySelector('#section-read')
+let readHeader = document.querySelector('#read-header')
 let readPanel = document.querySelector('#read-panel')
 let readOptions = document.querySelector('#read-options')
 let readOptionsContainer = document.querySelector('#read-options-container')
