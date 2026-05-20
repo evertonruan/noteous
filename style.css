@@ -848,7 +848,6 @@ a {
 }
 
 #section-read .note-container:hover {
-  filter: brightness(105%);
   cursor: pointer;
 }
 
