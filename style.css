@@ -1237,7 +1237,7 @@ footer p span {
   transform: scale(1.05);
 }
 
-/* PÁGINA SAIBA MAIS///////////////////////////*/
+/* CENTRAL DE RECURSOS///////////////////////////*/
 #about {
   display: flex;
   flex-direction: column;
@@ -1265,17 +1265,6 @@ footer p span {
   align-items: center;
 }
 
-.about-section {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  margin: 3rem 0;
-  padding: 1rem;
-  border: 1px solid;
-  border-color: var(--base-text);
-  border-radius: 2rem;
-}
-
 #about a {
   color: var(--base-text);
 }
@@ -1298,23 +1287,43 @@ footer p span {
 
 }
 
-.about-section {
+.hub-section {
   display: flex;
   flex-direction: column;
+  position: relative;
   width: 100%;
-  margin: 1rem 0;
-  padding: 1rem;
-  border: 1px solid;
-  border-color: var(--base-text);
+  margin: 50px 0;
+  padding: 15px;
+  border: 3px solid;
+  border-color: var(--base-accent-color);
   border-radius: 2rem;
+  clip-path: inset(0 round 2rem);
 }
 
-.about-section-horizontal {
+.hub-section-title {
+  display: flex;
+  flex-direction: row;
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  padding: 0.5rem 2rem;
+  align-items: center;
+  border-radius: 0 0 20px 0;
+  font-family: 'DM Sans', sans-serif;
+  font-weight: bold;
+  font-size: 1.2rem;
+  letter-spacing: -0.03em;
+  color: var(--base-text);
+  box-shadow: -2px 6px 15px var(--base-accent-color);
+}
+
+.hub-section-horizontal {
   display: flex;
   flex-direction: row;
   overflow-y: hidden;
   overflow-x: auto;
-  gap: 40px;
+  gap: 50px;
+  margin-top: 20px;
 }
 
 
@@ -1364,13 +1373,14 @@ footer p span {
 /* Priority Order Drag and Drop */
 #priority-order-container {
   display: flex;
+  height: 100%;
   gap: 1rem;
   margin: 1rem 0;
 }
 
 .priority-item {
   width: 40px;
-  height: 40px;
+  height: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1378,21 +1388,21 @@ footer p span {
   font-weight: bold;
   cursor: grab;
   transition: all 0.2s ease;
-  font-size: 1.1rem;
+  font-size: 1.4rem;
 }
 
 .priority-item[data-priority="solid"] {
-  border: 3px solid var(--base-text);
+  border: 5px solid var(--base-text);
   background: var(--base-color);
 }
 
 .priority-item[data-priority="double"] {
-  border: 3px double var(--base-text);
+  border: 5px double var(--base-text);
   background: var(--base-color);
 }
 
 .priority-item[data-priority="dotted"] {
-  border: 3px dotted var(--base-text);
+  border: 5px dotted var(--base-text);
   background: var(--base-color);
 }
 
@@ -1407,7 +1417,7 @@ footer p span {
 
 .priority-item.dragging {
   opacity: 0.5;
-  transform: scale(1.1);
+  transform: scale(0.9);
 }
 
 .priority-item.drag-over {
@@ -1481,6 +1491,10 @@ footer p span {
   opacity: 0.8;
 }
 
+#about #luminosity-settings-container {
+  min-width: 150px;
+}
+
 #copy-details-container {
   display: flex;
   flex-direction: column;
@@ -1490,7 +1504,7 @@ footer p span {
 
 
 #about-button-policies {
-  margin-top: 2rem;
+  margin-top: 60px;
   font-family: 'DM Sans', sans-serif;
   color: var(--base-text);
   background-color: var(--base-color);
@@ -1568,22 +1582,13 @@ footer p span {
   flex-direction: column;
 }
 
-#about-orbs-title {
-  font-family: 'DM Sans', sans-serif;
-  font-size: 1.3rem;
-  font-weight: 800;
-  letter-spacing: -0.05em;
-  color: var(--base-text);
-  
-}
-
 #about-orbs-list {
   display: flex;
   gap: 10px;
   flex-direction: row;
   align-items: center;
   justify-content: center;
-  margin-bottom: 20px;
+  margin: 40px 0 20px 0;
 }
 
 .about-orb-button {
@@ -1620,6 +1625,7 @@ footer p span {
   padding: 2px 10px;
   border: 1px solid var(--base-text);
   border-radius: 10px;
+  background-color: var(--base-accent-color);
 }
 
 #gallery {
