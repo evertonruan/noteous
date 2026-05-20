@@ -295,7 +295,7 @@ function reorderPriorityItems() {
 
 function updatePriorityNumbers() {
   const items = priorityContainer.querySelectorAll('.priority-item')
-  items.forEach((item, index) => item.textContent = index + 1)
+  items.forEach((item, index) => item.textContent = index + 1 + "º")
 }
 
 // Inicializa o sistema
