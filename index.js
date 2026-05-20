@@ -626,7 +626,7 @@ function loadNoteous(context) {
       sort: { time: 'recent', action: 'editedAt' },
       priority: 'solid',
       priorityOrder: ['solid', 'double', 'dotted'],
-      priorityOrientation: 'row',
+      priorityOrientation: 'column',
       actionButtons: ['done', 'share', 'delete', 'restore'],
       input: '',
       noteId: 0,
