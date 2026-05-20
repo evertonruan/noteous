@@ -1497,20 +1497,24 @@ function shareNote(noteId) {
             text: note.text
           })
           .then(() => {
-            const messageAction = document.createElement('p')
-            messageAction.classList.add('message-action')
-            messageAction.appendChild(document.createTextNode('Texto da nota copiado'))
+            const actionMessage = document.createElement('p')
+            actionMessage.classList.add('action-message')
+            actionMessage.appendChild(document.createTextNode('Compartilhando nota...'))
             const actionButtonsContainer = document.getElementById(noteId + '-action-buttons-container')
-            actionButtonsContainer.querySelectorAll('.action-buttons').forEach(button => button.classList.add('hidden-element'))
-            actionButtonsContainer.appendChild(messageAction)
-            actionButtonsContainer.setAttribute('aria-label', 'Texto da nota copiado')
-            actionButtonsContainer.ariaLive = 'assertive'
+            actionButtonsContainer.querySelectorAll('.action-buttons').forEach(button => button.classList.add('invisible-element'))
             setTimeout(() => {
-              actionButtonsContainer.removeChild(messageAction)
-              actionButtonsContainer.querySelectorAll('.action-buttons').forEach(button => button.classList.remove('hidden-element'))
-              actionButtonsContainer.ariaLive = undefined
-            }, 1500)
-          })
+              actionButtonsContainer.classList.add('expanded')
+              actionButtonsContainer.appendChild(actionMessage)
+            }, 200)
+                setTimeout(() => {
+                actionMessage.style.opacity = '0'
+                setTimeout(() => {
+                  actionButtonsContainer.removeChild(actionMessage)
+                  actionButtonsContainer.classList.remove('expanded')
+                  actionButtonsContainer.querySelectorAll('.action-buttons').forEach(button => button.classList.remove('invisible-element'))
+                }, 200)
+              }, 1500)
+            })
           .catch((error) => console.log('Error sharing', error))
       } else {
         // fallback
@@ -1526,22 +1530,26 @@ function copyNote(noteId) {
     if (note.id === noteId) {
       navigator.clipboard.writeText(note.text)
         .then(() => {
-          // Exibe feedback visual por 2s e depois restaura o texto
-          const textElement = document.getElementById(noteId + '-text')
-          const noteTextContainer = document.getElementById(noteId + '-text-container')
-          if (!textElement || !noteTextContainer) return
-
-          const originalNoteText = textElement.innerHTML
-
-          textElement.innerHTML = '<strong>✓ Texto da nota copiado</strong>'
-          textElement.setAttribute('aria-label', 'Texto da nota copiado')
-          noteTextContainer.ariaLive = 'assertive'
-
+          const actionMessage = document.createElement('p')
+          actionMessage.classList.add('action-message')
+          actionMessage.appendChild(document.createTextNode('Texto da nota copiado'))
+          const actionButtonsContainer = document.getElementById(noteId + '-action-buttons-container')
+          actionButtonsContainer.querySelectorAll('.action-buttons').forEach(button => button.classList.add('invisible-element'))
           setTimeout(() => {
-            textElement.innerHTML = originalNoteText
-            // Não altera atributos originais do container; apenas remove o feedback ARIA
-            noteTextContainer.ariaLive = undefined
-          }, 1500)
+            actionButtonsContainer.classList.add('expanded')
+            actionButtonsContainer.appendChild(actionMessage)
+          }, 200)
+          actionButtonsContainer.setAttribute('aria-label', 'Texto da nota copiado')
+          actionButtonsContainer.ariaLive = 'assertive'
+              setTimeout(() => {
+              actionMessage.style.opacity = '0'
+              setTimeout(() => {
+                actionButtonsContainer.removeChild(actionMessage)
+                actionButtonsContainer.classList.remove('expanded')
+                actionButtonsContainer.querySelectorAll('.action-buttons').forEach(button => button.classList.remove('invisible-element'))
+                actionButtonsContainer.ariaLive = undefined
+              }, 200)
+            }, 1500)
         })
         .catch((error) => console.log('Erro ao copiar nota', error))
     }
