@@ -235,6 +235,18 @@ html {
     calc(10% + var(--lum-mid)),
     1
   );
+  --base-accent-color-soft: hsla(
+    var(--hue),
+    var(--accent-saturation),
+    calc(10% + var(--lum-mid)),
+    0.4
+  );
+  --base-accent-shadow: hsla(
+    var(--hue),
+    var(--accent-saturation),
+    calc(10% + var(--lum-mid)),
+    0.22
+  );
   --color-theme-container: hsla(
     var(--hue),
     var(--accent-saturation),
@@ -548,6 +560,69 @@ a {
 
 #write-input-render .placeholder {
   color: var(--base-write-input-placeholder);
+}
+
+.orblend-highlight-math {
+  background-color: var(--base-accent-color-soft);
+  border-radius: 0.25em;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+  overflow-wrap: anywhere;
+}
+
+#orblend-pop-container {
+  position: fixed;
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  max-width: calc(100vw - 1rem);
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.85rem;
+  -webkit-backdrop-filter: blur(5px);
+  backdrop-filter: blur(5px);
+  background-color: var(--base-color-transparent);
+  color: var(--base-text);
+  box-shadow: 0 14px 34px var(--base-accent-shadow);
+  opacity: 0;
+  filter: blur(10px);
+  transform: translateY(8px);
+  pointer-events: none;
+  -webkit-user-select: none;
+  user-select: none;
+  z-index: 20;
+  transition:
+    opacity 0.5s cubic-bezier(0.22, 1, 0.36, 1),
+    filter 0.5s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+#orblend-pop-container.orblend-pop-visible {
+  opacity: 1;
+  filter: blur(0);
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+#orblend-pop-container.orblend-pop-exit {
+  opacity: 0;
+  filter: blur(10px);
+  transform: translateY(-8px);
+  pointer-events: none;
+}
+
+#orblend-pop-icon {
+  display: block;
+  width: 16px;
+  height: 16px;
+  object-fit: contain;
+}
+
+#orblend-pop-text {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 1.1rem;
+  font-weight: 800;
+  line-height: 1.1;
+  white-space: nowrap;
 }
 
 #write-buttons-container {

@@ -114,6 +114,9 @@ let writeInputEdit = function (event) {
 
 function syncWriteInputRenderText() {
   const inputValue = writeInput?.value || ''
+
+  orblendEngine('hide-smart-calc-popup')
+
   if (inputValue === '') {
     if (writeInputRender) {
       writeInputRender.innerHTML = `<span class="placeholder">${writeInput.placeholder}</span>`
@@ -121,13 +124,12 @@ function syncWriteInputRenderText() {
     return
   }
 
-  const escapedInputValue = inputValue
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-
   if (writeInputRender) {
-    writeInputRender.innerHTML = escapedInputValue.replace(/\n/g, '<br>')
+    writeInputRender.innerHTML = orblendEngine(
+      'render-smart-calc',
+      '',
+      inputValue
+    )
   }
 }
 
@@ -201,6 +203,7 @@ let noteousSettings = JSON.parse(localStorage.getItem('noteous-settings'))
 
 serviceWorkerRegister()
 loadNoteous('check-settings')
+orblendEngine('enable-smart-calc')
 syncWriteInputRender()
 
 /////////////////////////////////////////////////////////////
