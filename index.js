@@ -21,6 +21,8 @@ let writeOptions = document.querySelector('#write-options')
 
 let writeLabel = document.querySelector('#write-label')
 let writeInput = document.querySelector('#write-input')
+let writeInputWrapper = document.querySelector('#write-input-wrapper')
+let writeInputRender = document.querySelector('#write-input-render')
 let writeButtonsContainer = document.querySelector('#write-buttons-container')
 let writeButtonAdd = document.querySelector('#write-button-add')
 let writeButtonDismiss = document.querySelector('#write-button-dismiss')
@@ -108,6 +110,47 @@ let writeInputEdit = function (event) {
   writeInput.focus()
 }
 
+/////
+
+function syncWriteInputRenderText() {
+  const inputValue = writeInput?.value || ''
+  if (inputValue === '') {
+    if (writeInputRender) {
+      writeInputRender.innerHTML = `<span class="placeholder">${writeInput.placeholder}</span>`
+    }
+    return
+  }
+
+  const escapedInputValue = inputValue
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+
+  if (writeInputRender) {
+    writeInputRender.innerHTML = escapedInputValue.replace(/\n/g, '<br>')
+  }
+}
+
+function syncWriteInputRenderScroll() {
+  if (!writeInput || !writeInputRender) return
+
+  const inputPaddingRight =
+    parseFloat(getComputedStyle(writeInput).paddingRight) || 0
+  const scrollbarWidth = Math.max(writeInput.offsetWidth - writeInput.clientWidth, 0)
+
+  writeInputRender.style.paddingRight =
+    inputPaddingRight + scrollbarWidth + 'px'
+  writeInputRender.style.transform = `translate(${-writeInput.scrollLeft}px, -${writeInput.scrollTop}px)`
+}
+
+function syncWriteInputRender() {
+  syncWriteInputRenderText()
+  orblendEngine('smart-input-resize')
+  syncWriteInputRenderScroll()
+}
+
+/////
+
 // Função para mostrar temporariamente uma mensagem no read-options-label
 function readOptionsMessage(message) {
   // Limpa qualquer timeout anterior
@@ -158,6 +201,7 @@ let noteousSettings = JSON.parse(localStorage.getItem('noteous-settings'))
 
 serviceWorkerRegister()
 loadNoteous('check-settings')
+syncWriteInputRender()
 
 /////////////////////////////////////////////////////////////
 
@@ -709,21 +753,21 @@ function notePriority(context, priority) {
       writeOptions.disabled = false
       writeOptions.classList.remove('blur')
       writeOptions.style.cssText = 'border-style: solid;'
-      writeInput.style.cssText = 'border-style: solid;'
+      writeInputWrapper.style.cssText = 'border-style: solid;'
       writeButtonsContainer.style.cssText = 'border-style: solid;'
       noteousSettings.priority = 'solid'
     } else if (priority == 'double') {
       writeOptions.disabled = false
       writeOptions.classList.remove('blur')
       writeOptions.style.cssText = 'border-style: double;'
-      writeInput.style.cssText = 'border-style: double;'
+      writeInputWrapper.style.cssText = 'border-style: double;'
       writeButtonsContainer.style.cssText = 'border-style: double;'
       noteousSettings.priority = 'double'
     } else if (priority == 'dotted') {
       writeOptions.disabled = false
       writeOptions.classList.remove('blur')
       writeOptions.style.cssText = 'border-style: dotted;'
-      writeInput.style.cssText = 'border-style: dotted;'
+      writeInputWrapper.style.cssText = 'border-style: dotted;'
       writeButtonsContainer.style.cssText = 'border-style: dotted;'
       noteousSettings.priority = 'dotted'
     }
@@ -750,19 +794,19 @@ function notePriority(context, priority) {
   } else if (context == 'changePriority') {
     if (priority == 'solid') {
       writeOptions.style.cssText = 'border-style: double;'
-      writeInput.style.cssText = 'border-style: double;'
+      writeInputWrapper.style.cssText = 'border-style: double;'
       writeButtonsContainer.style.cssText = 'border-style: double;'
       noteousSettings.priority = 'double'
       localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
     } else if (priority == 'double') {
       writeOptions.style.cssText = 'border-style: dotted;'
-      writeInput.style.cssText = 'border-style: dotted;'
+      writeInputWrapper.style.cssText = 'border-style: dotted;'
       writeButtonsContainer.style.cssText = 'border-style: dotted;'
       noteousSettings.priority = 'dotted'
       localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
     } else if (priority == 'dotted') {
       writeOptions.style.cssText = 'border-style: solid;'
-      writeInput.style.cssText = 'border-style: solid;'
+      writeInputWrapper.style.cssText = 'border-style: solid;'
       writeButtonsContainer.style.cssText = 'border-style: solid;'
       noteousSettings.priority = 'solid'
       localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
@@ -777,6 +821,10 @@ writeInput.addEventListener('focus', () => {
 })
 
 writeInput.focus()
+
+writeInput.addEventListener('scroll', () => {
+  syncWriteInputRenderScroll()
+})
 
 writeInput.addEventListener('blur', () => {
     writeButtonAdd.classList.remove('focus-input')
@@ -1166,6 +1214,8 @@ function renderNote(context, noteId, orb, searchTerm) {
       }
   }
 
+    syncWriteInputRender()
+
     setTimeout(() => {
       //css inicia em 0. Após renderizar, altera para 1
       readPanel.style.cssText = 'opacity: 1; transform: translateY(-10px);'
@@ -1432,6 +1482,7 @@ function addNote() {
       writeInput.focus()
     }
     orblendEngine('on-change-input')
+    syncWriteInputRender()
     orblendEngine('update-orb-info')
   }
 }
@@ -1440,6 +1491,7 @@ writeButtonAdd.addEventListener('click', addNote)
 
 writeInput.addEventListener('input', () => {
   orblendEngine('on-change-input')
+  syncWriteInputRender()
 })
 
 // noteous preview 1.9: nova experiência ao sair sem salvar uma nota
@@ -1447,6 +1499,7 @@ writeButtonDismiss.addEventListener('click', () => {
   writeInput.value = ''
   noteousSettings.input = ''
   orblendEngine('on-change-input')
+  syncWriteInputRender()
   localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
   writeButtonDismiss.classList.add('hidden-element')
   writeInput.focus()
@@ -1576,20 +1629,22 @@ function setEditMode(context) {
     editMode = true
     writeOptions.classList.add('edit-mode')
     writeLabel.style.opacity = 0
-    writeInput.classList.add('orb-done')
-    writeInput.classList.add('rounded-bottom')
+    writeInputWrapper.classList.add('orb-done')
+    writeInputWrapper.classList.add('rounded-bottom')
     writeButtonsContainer.classList.add('hidden-buttons')
     writeInput.placeholder = ''
     writeInput.disabled = true
+    syncWriteInputRender()
   } else if (context == 'edit-mode-off') {
     editMode = false
     writeOptions.classList.remove('edit-mode')
     writeLabel.style.opacity = 1
-    writeInput.classList.remove('orb-done')
-    writeInput.value != '' ? writeInput.classList.remove('rounded-bottom') : null
+    writeInputWrapper.classList.remove('orb-done')
+    writeInput.value != '' ? writeInputWrapper.classList.remove('rounded-bottom') : null
     writeInput.value != '' ? writeButtonsContainer.classList.remove('hidden-buttons') : null
     writeInput.placeholder = '✏️ Anote aqui'
     writeInput.disabled = false
+    syncWriteInputRender()
   }
 }
 
@@ -1649,3 +1704,4 @@ function editNote(noteId) {
     }
   }
 }
+

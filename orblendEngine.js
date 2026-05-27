@@ -1,4 +1,4 @@
-//✨ ORBLEND ENGINE 2.1.1
+//✨ ORBLEND ENGINE 2.1.2
 
 function orblendEngine(context, labelMessage, note, orb) {
   let subcontext
@@ -60,6 +60,28 @@ function orblendEngine(context, labelMessage, note, orb) {
     } else if (labelMessage == 'restore-note') {
       writeLabel.innerHTML = '📝 Essa nota não foi adicionada'
     }
+  }
+
+  // ✨ Smart Input Resize
+  if (context == 'smart-input-resize') {
+    if (!writeInput || !writeInputWrapper) return
+
+    writeInput.style.height = 'auto'
+    const contentHeight = writeInput.scrollHeight
+    const maxInputHeight =
+      parseFloat(getComputedStyle(writeInputWrapper).maxHeight) ||
+      window.innerHeight * 0.6
+
+    if (contentHeight > maxInputHeight) {
+      writeInput.style.height = maxInputHeight + 'px'
+      writeInput.style.overflowY = 'auto'
+    } else {
+      writeInput.style.height = contentHeight + 'px'
+      writeInput.style.overflowY = 'hidden'
+      writeInput.scrollTop = 0
+    }
+
+    return
   }
 
   if (context == 'update-orb-info') {
@@ -124,18 +146,10 @@ function orblendEngine(context, labelMessage, note, orb) {
       if (noteousSettings.noteId != 0) {
         //Há uma nota em edição
         writeInput.value = noteousSettings.input
-        requestAnimationFrame(() => {
-          writeInput.style.height = 'auto'
-          writeInput.style.height = writeInput.scrollHeight + 'px'
-        })
       } else {
         orblendEngine('', 'restore-note')
         writeInput.value = noteousSettings.input
         writeInput.focus()
-        requestAnimationFrame(() => {
-          writeInput.style.height = 'auto'
-          writeInput.style.height = writeInput.scrollHeight + 'px'
-        })
         writeButtonsContainer.classList.add('focus-input') 
         writeButtonDismiss.classList.remove('hidden-element')
       }
@@ -170,7 +184,7 @@ function orblendEngine(context, labelMessage, note, orb) {
       writeButtonDismiss.classList.add('hidden-element')
       writeButtonAdd.disabled = true
       writeButtonsContainer.classList.add('hidden-buttons')
-      writeInput.classList.add('rounded-bottom')
+      writeInputWrapper.classList.add('rounded-bottom')
       writeButtonAdd.setAttribute('aria-hidden', 'true')
     } else {
       if (noteousSettings.input == '') {
@@ -178,7 +192,7 @@ function orblendEngine(context, labelMessage, note, orb) {
       } 
       writeButtonAdd.disabled = false
       writeButtonsContainer.classList.remove('hidden-buttons')
-      writeInput.classList.remove('rounded-bottom')
+      writeInputWrapper.classList.remove('rounded-bottom')
       writeButtonAdd.setAttribute('aria-hidden', 'false')
     }
 
@@ -192,10 +206,6 @@ function orblendEngine(context, labelMessage, note, orb) {
       localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
     }
 
-    //✨ Redimensionamento Inteligente do Campo de Nota
-    writeInput.style.height = 'auto'
-    writeInput.style.height = writeInput.scrollHeight + 'px'
-
   } else if (context == 'check-selected-orb') {
       if (orb == 'done' && selectedOrb == 'done') {
       let orbButtonElement = document.getElementById(`done-orb-button`)
@@ -207,8 +217,8 @@ function orblendEngine(context, labelMessage, note, orb) {
       writeLabel.style.opacity = 0
       writeInput.placeholder = ''
       writeInput.disabled = true
-      writeInput.classList.add('orb-done')
-      writeInput.classList.add('rounded-bottom')
+      writeInputWrapper.classList.add('orb-done')
+      writeInputWrapper.classList.add('rounded-bottom')
       writeButtonsContainer.classList.add('hidden-buttons')
       
       return note?.done === true
@@ -220,13 +230,13 @@ function orblendEngine(context, labelMessage, note, orb) {
         document.getElementById(`done-orb-button`).classList.remove('selected-orb')
       }
 
-      if (writeInput.disabled == true && writeInput.classList.contains('orb-done')) {
+      if (writeInput.disabled == true && writeInputWrapper.classList.contains('orb-done')) {
         writeLabel.style.opacity = 100
         writeInput.placeholder = '✏️ Anote aqui'
         writeInput.disabled = false
-        writeInput.classList.remove('orb-done')
-        if (writeInput.classList.contains('rounded-bottom') && writeInput.value != '') {
-          writeInput.classList.remove('rounded-bottom')
+        writeInputWrapper.classList.remove('orb-done')
+        if (writeInputWrapper.classList.contains('rounded-bottom') && writeInput.value != '') {
+          writeInputWrapper.classList.remove('rounded-bottom')
           writeButtonsContainer.classList.remove('hidden-buttons')
         }
       }

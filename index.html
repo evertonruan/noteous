@@ -41,12 +41,15 @@
             tabindex="2"
             aria-label="Botão alterar prioridade da nota"
           ></button>
-          <textarea
-            id="write-input"
-            type="text"
-            tabindex="1"
-            placeholder="✏️ Anote aqui"
-          ></textarea>
+          <div id="write-input-wrapper">
+            <div id="write-input-render"></div>
+            <textarea
+              id="write-input"
+              type="text"
+              tabindex="1"
+              placeholder="✏️ Anote aqui"
+            ></textarea>
+          </div>
           <div id="write-buttons-container">
             <button
               id="write-button-add"

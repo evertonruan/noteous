@@ -465,41 +465,33 @@ a {
   top: 20px;
 }
 
-#write-input {
-  display: flex;
+/* write input wrapper: handles size, border and background */
+#write-input-wrapper {
+  position: relative;
   min-height: 6rem;
   max-height: 60vh;
-  overflow-y: hidden;
   width: 65%;
-  z-index: 2;
+  z-index: 1;
   margin: 6px 10px 0 10px;
-  padding: 10px 10px 10px 20px;
-
-  resize: none;
-
-  font-family: 'Source Sans 3', sans-serif;
-  letter-spacing: -0.01em;
-  font-size: 1.2rem;
-
-  color: var(--base-text);
   background-color: var(--base-write-input-inside);
-
+  border-style: solid;
   border-width: 3px 3px 0 3px;
   border-radius: 20px 20px 0 0;
   border-color: var(--base-accent-color);
-
   transition: all 0.5s cubic-bezier(0.075, 0.82, 0.165, 1);
+  overflow: hidden;
 }
 
-#write-input.orb-done {
+#write-input-wrapper.orb-done {
   background-color: var(--base-color);
 }
 
-#write-input.edit-mode {
+#write-input-wrapper.edit-mode {
   width: 80%;
 }
 
-#write-input:focus {
+/* focus styles follow the contained textarea state */
+#write-input-wrapper:focus-within {
   width: 80%;
   min-height: 7rem;
   outline: 0;
@@ -507,24 +499,60 @@ a {
   box-shadow: 0 0 30px var(--base-accent-color);
 }
 
-#write-input.rounded-bottom {
+#write-input-wrapper.rounded-bottom {
   border-width: 3px;
   border-radius: 20px;
 }
 
-#write-input:focus.rounded-bottom {
+#write-input-wrapper:focus-within.rounded-bottom {
   border-width: 7px;
   border-radius: 20px;
 }
 
-#write-input::placeholder {
+/* textarea itself becomes an invisible text receiver (caret only) */
+#write-input {
+  display: block;
+  min-height: 6rem;
+  max-height: 60vh;
+  overflow-y: hidden;
+  width: 100%;
+  margin: 0;
+  padding: 10px 10px 10px 20px;
+  resize: none;
+  font-family: 'Source Sans 3', sans-serif;
+  letter-spacing: -0.01em;
+  font-size: 1.2rem;
+  color: transparent;
+  caret-color: var(--base-accent-color);
+  background: transparent;
+  border: none;
+  outline: none;
+  z-index: 3;
+  box-sizing: border-box;
+}
+
+/* render surface: visible formatted text sits here */
+#write-input-render {
+  position: absolute;
+  inset: 0;
+  padding: 10px 10px 10px 20px;
+  pointer-events: none;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  font-family: 'Source Sans 3', sans-serif;
+  letter-spacing: -0.01em;
+  font-size: 1.2rem;
+  color: var(--base-text);
+  z-index: 2;
+}
+
+#write-input-render .placeholder {
   color: var(--base-write-input-placeholder);
 }
 
 #write-buttons-container {
   display: flex;
   width: 65%;
-  z-index: 1;
   transform: translateY(-2px);
   flex-direction: row;
   align-items: center;
