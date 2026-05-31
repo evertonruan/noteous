@@ -1,4 +1,4 @@
-//✨ ORBLEND ENGINE 2.2.1
+//✨ ORBLEND ENGINE 2.3
 
 const smartCalcExpressionPattern =
   /\d+(?:[.,]\d+)?(?:\s*[+\-*/]\s*\d+(?:[.,]\d+)?)+/g
@@ -444,6 +444,12 @@ function enableSmartCalcEvents() {
 
   smartCalcEventsBound = true
 }
+ 
+function hasLink(text) {
+  if (!text) return false
+  const urlPattern = /(?:https?:\/\/|www\.)\S+/i
+  return urlPattern.test(text)
+}
 
 function orblendEngine(context, labelMessage, note, orb) {
   let subcontext
@@ -516,6 +522,10 @@ function orblendEngine(context, labelMessage, note, orb) {
     return buildSmartCalcRenderHtml(note || '')
   }
 
+  if (context == 'has-link') {
+    return hasLink(note || labelMessage || '')
+  }
+
   if (context == 'hide-smart-calc-popup') {
     hideSmartCalcPopup()
     return
@@ -564,12 +574,17 @@ function orblendEngine(context, labelMessage, note, orb) {
     } else {
       const doneNotesCount = noteousMain.filter(note => note.done === true).length
       const activeNotesCount = noteousMain.filter(note => note.done !== true).length
+      const linkNotesCount = noteousMain.filter(note => note.link === true && note.done !== true).length 
 
       readHeader.classList.remove('invisible-element')
       if (selectedOrb == 'done') {
         orbInfoLabel.textContent = 'Notas Concluídas'
         orbInfoCount.setAttribute('aria-label', doneNotesCount == 1 ? '1 nota concluída' : `${doneNotesCount} notas concluídas`)
         orbInfoCount.innerHTML = `<span class="orb-panel-count-number">${doneNotesCount}</span>`
+      } else if (selectedOrb == 'link') {
+        orbInfoLabel.textContent = 'Links'
+        orbInfoCount.setAttribute('aria-label', linkNotesCount == 1 ? '1 nota com link' : `${linkNotesCount} notas com links`)
+        orbInfoCount.innerHTML = `<span class="orb-panel-count-number">${linkNotesCount}</span>`
       } else {
         orbInfoLabel.textContent = 'Notas'
         orbInfoCount.setAttribute('aria-label', activeNotesCount == 1 ? '1 nota adicionada' : `${activeNotesCount} notas adicionadas`)
@@ -605,6 +620,16 @@ function orblendEngine(context, labelMessage, note, orb) {
     infoPanel.append(dateElement(), infoElement(subcontext))
     showInstallButton()
   } else if (context == 'load') {
+    const hasActiveLinkNotes = noteousMain.some(
+      note => note.link === true && note.done !== true
+    )
+
+    if (!hasActiveLinkNotes && noteousSettings.orbsIndex.includes('link')) {
+      noteousSettings.orbsIndex = noteousSettings.orbsIndex.filter(
+        orb => orb != 'link'
+      )}    
+    // Rebuild orb buttons from current settings
+    if (orbsList) orbsList.innerHTML = ''
       for (let orb of noteousSettings.orbsIndex) {
       let orbButton = document.createElement('button')
       orbButton.classList.add('orb-button', 'material-icons')
@@ -624,6 +649,9 @@ function orblendEngine(context, labelMessage, note, orb) {
       }
       if (orb == 'donutdough') {
         orbButton.innerHTML = 'article'
+      }
+      if (orb == 'link') {
+        orbButton.innerHTML = 'link'
       }
       
       orbButton.addEventListener('click', () => {
@@ -746,6 +774,29 @@ function orblendEngine(context, labelMessage, note, orb) {
       }
 
       return note?.done !== true
+    }
+    else if (orb == 'link' && selectedOrb == 'link') {
+      let orbButtonElement = document.getElementById(`link-orb-button`)
+      if (!orbButtonElement.classList.contains('selected-orb')) {
+        orbButtonElement.classList.add('selected-orb')
+        const dd = document.getElementById(`donutdough-orb-button`)
+        if (dd) dd.classList.remove('selected-orb')
+        const doneBtn = document.getElementById(`done-orb-button`)
+        if (doneBtn) doneBtn.classList.remove('selected-orb')
+      }
+
+      if (writeInput.disabled == true && writeInputWrapper.classList.contains('orb-done')) {
+        writeLabel.style.opacity = 100
+        writeInput.placeholder = '✏️ Anote aqui'
+        writeInput.disabled = false
+        writeInputWrapper.classList.remove('orb-done')
+        if (writeInputWrapper.classList.contains('rounded-bottom') && writeInput.value != '') {
+          writeInputWrapper.classList.remove('rounded-bottom')
+          writeButtonsContainer.classList.remove('hidden-buttons')
+        }
+      }
+
+      return note?.link === true && note?.done !== true
     }
   } else if (context == 'orb-animation') {
       if (orb == 'done') {

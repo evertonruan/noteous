@@ -1957,12 +1957,20 @@ function addNote() {
     let objNote = {
       id: Date.now(),
       text: writeInput.value,
-      priority: noteousSettings.priority
+      priority: noteousSettings.priority,
+      link: orblendEngine('has-link', '', writeInput.value)
     }
 
     noteousMain.unshift(objNote)
 
     localStorage.setItem('noteous-main', JSON.stringify(noteousMain))
+
+    // If this note contains a link, ensure the 'link' orb is available
+    if (objNote.link && !noteousSettings.orbsIndex.includes('link')) {
+      noteousSettings.orbsIndex.push('link')
+      localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
+      orblendEngine('load')
+    }
 
     renderNote('add', objNote.id)
     writeInput.value = ''
@@ -2186,7 +2194,17 @@ function editNote(noteId) {
               : editedNoteText
           note.editedAt = Date.now()
           note.priority = noteousSettings.priority
+          // Update link flag for this note
+          note.link = orblendEngine('has-link', '', note.text)
+
           localStorage.setItem('noteous-main', JSON.stringify(noteousMain))
+
+          // If this note contains a link, ensure the 'link' orb is available
+          if (note.link && !noteousSettings.orbsIndex.includes('link')) {
+            noteousSettings.orbsIndex.push('link')
+            localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
+            orblendEngine('load')
+          }
         }
         renderNote('render-all', '', `${selectedOrb}`)
       }
