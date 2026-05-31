@@ -71,29 +71,31 @@
         </div>
       </section>
       <div id="orbs-list-container">
-        <p id="orbs-list-label">ORBS</p>
         <div id="orbs-list"></div>
+        <p id="orbs-list-label">ORBS</p>
       </div>
       <section id="section-read">
         <div id="read-header">
-          <div id="orb-panel">
-            <p id="orb-panel-label"></p>
-            <p id="orb-panel-count"></p>
-        </div>
         <div id="read-options">
           <div id="read-options-container">
             <p id="read-options-label">Opções de organização</p>
-            <input type="search" name="read-options-search-input" id="read-options-search-input" class="hidden-element"
+            <div id="read-options-actions-area">
+              <div id="read-options-buttons-container">
+              <button id="read-options-orientation" class="material-icons-outlined read-options-buttons" type="button" tabindex="6"></button>
+              <button id="read-options-sort-action" class="material-icons read-options-buttons" type="button" tabindex="7"></button>
+              <button id="read-options-sort" class="material-icons read-options-buttons" type="button" tabindex="8"></button>
+            </div>
+              <div id="read-options-menu" aria-live="polite"></div>
+            </div>
+          </div>
+          <input type="search" name="read-options-search-input" id="read-options-search-input"
             placeholder="Buscar notas" tabindex="4"/>
-          </div>
-          <div id="read-options-buttons-container">
-            <button id="read-options-search" class="material-icons read-options-buttons" type="button" tabindex="5">search</button>
-            <button id="read-options-orientation" class="material-icons-outlined read-options-buttons" type="button" tabindex="6"></button>
-            <button id="read-options-sort-action" class="material-icons read-options-buttons" type="button" tabindex="7"></button>
-            <button id="read-options-sort" class="material-icons read-options-buttons" type="button" tabindex="8"></button>
-          </div>
-          
         </div>
+          <div id="orb-panel">
+            <p id="orb-panel-count"></p>
+            <p id="orb-panel-label"></p>
+            <button id="read-options-toggle" class="material-icons-outlined" type="button" aria-label="Mostrar ou ocultar opções de leitura" tabindex="9">manage_search</button>
+          </div>
         </div>
         <div id="read-panel">
           <div id="read-notes-container"></div>

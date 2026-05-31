@@ -27,7 +27,9 @@ let writeButtonsContainer = document.querySelector('#write-buttons-container')
 let writeButtonAdd = document.querySelector('#write-button-add')
 let writeButtonDismiss = document.querySelector('#write-button-dismiss')
 
+let orbsListContainer = document.querySelector('#orbs-list-container')
 let orbsList = document.querySelector('#orbs-list')
+let orbsListLabel = document.querySelector('#orbs-list-label')
 let orbPanel = document.querySelector('#orb-panel')
 let orbInfo = document.querySelector('#orb-panel')
 let orbInfoLabel = document.querySelector('#orb-panel-label')
@@ -38,10 +40,11 @@ let readSection = document.querySelector('#section-read')
 let readHeader = document.querySelector('#read-header')
 let readPanel = document.querySelector('#read-panel')
 let readOptions = document.querySelector('#read-options')
-let readOptionsContainer = document.querySelector('#read-options-container')
 let readOptionsLabel = document.querySelector('#read-options-label')
+let readOptionsButtonsContainer = document.querySelector('#read-options-buttons-container')
 let readOptionsSearchInput = document.querySelector('#read-options-search-input')
-let readOptionsSearch = document.querySelector('#read-options-search')
+let readOptionsMenu = document.querySelector('#read-options-menu')
+let readOptionsToggleButton = document.querySelector('#read-options-toggle')
 let readOptionsSort = document.querySelector('#read-options-sort')
 let readOptionsSortActionButton = document.querySelector('#read-options-sort-action')
 let readOptionsOrientationButton = document.querySelector('#read-options-orientation')
@@ -65,6 +68,269 @@ const readNotesLists = {
   solid: readNotesListSolid,
   double: readNotesListDouble,
   dotted: readNotesListDotted
+}
+
+let pendingPriorityListsOrbAnimation = null
+let priorityListsOrbAnimationFrame = null
+const loadSequenceDurations = {
+  writePanel: 520,
+  orbButtons: 460,
+  orbButtonStagger: 90
+}
+const doneNoteFlightDuration = 500
+let hasPendingInitialLoadSequence = false
+
+function waitForAnimationEnd(element, fallbackDuration) {
+  return new Promise(resolve => {
+    if (element == null) {
+      resolve()
+      return
+    }
+
+    let hasResolved = false
+
+    const finish = () => {
+      if (hasResolved) {
+        return
+      }
+
+      hasResolved = true
+      element.removeEventListener('animationend', onAnimationEnd)
+      window.clearTimeout(fallbackTimeoutId)
+      resolve()
+    }
+
+    const onAnimationEnd = (event) => {
+      if (event.target === element) {
+        finish()
+      }
+    }
+
+    const fallbackTimeoutId = window.setTimeout(finish, fallbackDuration)
+    element.addEventListener('animationend', onAnimationEnd)
+  })
+}
+
+function prepareInitialLoadSequence() {
+  if (!writePanel || !orbsListContainer || !readSection) {
+    return
+  }
+
+  hasPendingInitialLoadSequence = true
+  writePanel.classList.add('load-stage-hidden')
+  orbsListContainer.classList.add('load-stage-hidden')
+  readSection.classList.add('load-stage-hidden')
+}
+
+async function playWritePanelLoadSequence() {
+  if (!writePanel || !writePanel.classList.contains('load-stage-hidden')) {
+    return
+  }
+
+  const animationEnded = waitForAnimationEnd(writePanel, loadSequenceDurations.writePanel)
+
+  requestAnimationFrame(() => {
+    writePanel.classList.remove('load-stage-hidden')
+    writePanel.classList.add('write-panel-load-enter')
+  })
+
+  await animationEnded
+  writePanel.classList.remove('write-panel-load-enter')
+}
+
+async function playOrbButtonsLoadSequence() {
+  if (!orbsListContainer) {
+    return
+  }
+
+  const visibleOrbButtons = Array.from(orbsList.querySelectorAll('.orb-button')).filter(orbButton => {
+    return !orbButton.classList.contains('hidden-element')
+  })
+
+  requestAnimationFrame(() => {
+    orbsListContainer.classList.remove('load-stage-hidden')
+  })
+
+  if (visibleOrbButtons.length == 0) {
+    return
+  }
+
+  const lastOrbButton = visibleOrbButtons[visibleOrbButtons.length - 1]
+  const animationEnded = waitForAnimationEnd(
+    lastOrbButton,
+    loadSequenceDurations.orbButtons + ((visibleOrbButtons.length - 1) * loadSequenceDurations.orbButtonStagger)
+  )
+
+  requestAnimationFrame(() => {
+    for (let [index, orbButton] of visibleOrbButtons.entries()) {
+      orbButton.style.setProperty('--orb-button-load-delay', `${index * loadSequenceDurations.orbButtonStagger}ms`)
+      orbButton.classList.add('orb-button-load-enter')
+    }
+  })
+
+  await animationEnded
+}
+
+async function runInitialLoadSequence() {
+  if (!hasPendingInitialLoadSequence) {
+    sortNotes('set-sort', `${selectedOrb}`)
+    return
+  }
+
+  hasPendingInitialLoadSequence = false
+
+  await playWritePanelLoadSequence()
+  await playOrbButtonsLoadSequence()
+
+  if (readSection) {
+    readSection.classList.remove('load-stage-hidden')
+  }
+
+  if (typeof queuePriorityListsOrbAnimation == 'function') {
+    queuePriorityListsOrbAnimation(document.getElementById(`${selectedOrb}-orb-button`))
+  }
+
+  sortNotes('set-sort', `${selectedOrb}`)
+}
+
+function queuePriorityListsOrbAnimation(orbButton) {
+  if (orbButton == null) {
+    pendingPriorityListsOrbAnimation = null
+    return
+  }
+
+  const orbButtonRect = orbButton.getBoundingClientRect()
+  pendingPriorityListsOrbAnimation = {
+    centerX: orbButtonRect.left + orbButtonRect.width / 2,
+    centerY: orbButtonRect.top + orbButtonRect.height / 2
+  }
+}
+
+function playPriorityListsOrbAnimation() {
+  if (pendingPriorityListsOrbAnimation == null) {
+    return
+  }
+
+  const animationOrigin = pendingPriorityListsOrbAnimation
+  pendingPriorityListsOrbAnimation = null
+
+  if (priorityListsOrbAnimationFrame != null) {
+    cancelAnimationFrame(priorityListsOrbAnimationFrame)
+  }
+
+  priorityListsOrbAnimationFrame = requestAnimationFrame(() => {
+    const visiblePriorityLists = Array.from(readNotesContainer.querySelectorAll('.read-notes-priority-container')).filter(priorityList => {
+      return !priorityList.classList.contains('hidden-element')
+    })
+
+    for (let [index, priorityList] of visiblePriorityLists.entries()) {
+      const priorityListRect = priorityList.getBoundingClientRect()
+      const offsetX = animationOrigin.centerX - (priorityListRect.left + priorityListRect.width / 2)
+      const offsetY = animationOrigin.centerY - (priorityListRect.top + priorityListRect.height / 2)
+
+      priorityList.classList.remove('priority-list-orb-enter')
+      priorityList.style.setProperty('--priority-list-orb-offset-x', `${offsetX}px`)
+      priorityList.style.setProperty('--priority-list-orb-offset-y', `${offsetY}px`)
+      priorityList.style.setProperty('--priority-list-orb-delay', `${index * 95}ms`)
+      void priorityList.offsetWidth
+      priorityList.classList.add('priority-list-orb-enter')
+    }
+
+    priorityListsOrbAnimationFrame = null
+  })
+}
+
+function animateNoteIntoDoneOrb(noteContainer) {
+  const doneOrbButton = document.getElementById('done-orb-button')
+
+  if (noteContainer == null || doneOrbButton == null) {
+    orblendEngine('orb-animation', '', '', 'done')
+    return Promise.resolve()
+  }
+
+  const noteRect = noteContainer.getBoundingClientRect()
+  const orbRect = doneOrbButton.getBoundingClientRect()
+  const noteComputedStyle = window.getComputedStyle(noteContainer)
+  const flightClone = noteContainer.cloneNode(true)
+  const translateX = (orbRect.left + (orbRect.width / 2)) - (noteRect.left + (noteRect.width / 2))
+  const translateY = (orbRect.top + (orbRect.height / 2)) - (noteRect.top + (noteRect.height / 2))
+  const finalScale = Math.min(orbRect.width / noteRect.width, orbRect.height / noteRect.height) * 0.92
+  const midScale = Math.max(finalScale * 2.6, 0.54)
+
+  flightClone.removeAttribute('id')
+  for (let cloneElement of flightClone.querySelectorAll('[id]')) {
+    cloneElement.removeAttribute('id')
+  }
+
+  const clonedNoteTextContainer = flightClone.querySelector('.note-text-container')
+  if (clonedNoteTextContainer != null) {
+    const flightTextSurface = document.createElement('div')
+    flightTextSurface.classList.add('note-text-flight-surface')
+    flightTextSurface.textContent = clonedNoteTextContainer.value?.trim() ?? ''
+    clonedNoteTextContainer.replaceWith(flightTextSurface)
+  }
+
+  flightClone.classList.add('done-note-flight')
+  flightClone.style.left = `${noteRect.left}px`
+  flightClone.style.top = `${noteRect.top}px`
+  flightClone.style.width = `${noteRect.width}px`
+  flightClone.style.height = `${noteRect.height}px`
+  flightClone.style.borderWidth = noteComputedStyle.borderWidth
+  flightClone.style.borderStyle = noteComputedStyle.borderStyle
+  flightClone.style.borderColor = noteComputedStyle.borderColor
+  flightClone.style.backgroundColor = noteComputedStyle.backgroundColor
+  flightClone.style.borderRadius = noteComputedStyle.borderRadius
+  flightClone.style.boxSizing = noteComputedStyle.boxSizing
+
+  document.body.appendChild(flightClone)
+  noteContainer.classList.add('done-note-origin-hidden')
+  noteContainer.dataset.doneAnimating = 'true'
+
+  const cleanup = () => {
+    flightClone.remove()
+  }
+
+  window.setTimeout(() => {
+    orblendEngine('orb-animation', '', '', 'done')
+  }, Math.round(doneNoteFlightDuration * 0.72))
+
+  if (typeof flightClone.animate != 'function') {
+    return new Promise(resolve => {
+      window.setTimeout(() => {
+        cleanup()
+        resolve()
+      }, doneNoteFlightDuration)
+    })
+  }
+
+  const animation = flightClone.animate([
+    {
+      transform: 'translate(0px, 0px) scale(1)',
+      borderRadius: '20px',
+      opacity: 1,
+      filter: 'blur(0px)'
+    },
+    {
+      transform: `translate(${translateX * 0.58}px, ${translateY * 0.58}px) scale(${midScale})`,
+      borderRadius: '48px',
+      opacity: 0.96,
+      filter: 'blur(2px)'
+    },
+    {
+      transform: `translate(${translateX}px, ${translateY}px) scale(${finalScale})`,
+      borderRadius: '999px',
+      opacity: 0.2,
+      filter: 'blur(12px)'
+    }
+  ], {
+    duration: doneNoteFlightDuration,
+    easing: 'cubic-bezier(0.16, 1, 0.3, 1)',
+    fill: 'forwards'
+  })
+
+  return animation.finished.catch(() => undefined).then(() => {
+    cleanup()
+  })
 }
 
 // noteous preview 1.8: Personalização de Botões de Ação
@@ -101,7 +367,12 @@ let editMode = false
 let tabIndexCounter = 10
 let sortActionSelection = ''
 let labelTimeoutId = null // Para controlar o timeout da label
+let readOptionsLabelSwapTimeoutId = null
 let selectedOrb = 'donutdough'
+let readOptionsVisible = false
+
+const defaultReadOptionsLabel = 'Opções de organização'
+let activeReadOptionsMenu = null
 
 //função em variável para 'desbloquear' writeInput se tela é pequena
 //usado em openNote() e exitEditMode()
@@ -159,6 +430,10 @@ function readOptionsMessage(message) {
   if (labelTimeoutId) {
     clearTimeout(labelTimeoutId)
   }
+  if (readOptionsLabelSwapTimeoutId) {
+    clearTimeout(readOptionsLabelSwapTimeoutId)
+    readOptionsLabelSwapTimeoutId = null
+  }
   
   // Fade out
   readOptionsLabel.style.opacity = '0'
@@ -175,12 +450,52 @@ function readOptionsMessage(message) {
       readOptionsLabel.style.opacity = '0'
       
       setTimeout(() => {
-        readOptionsLabel.textContent = 'Opções de organização'
+        readOptionsLabel.textContent = defaultReadOptionsLabel
         readOptionsLabel.style.opacity = '0.6'
         labelTimeoutId = null
       }, 200)
     }, 1500)
   }, 200)
+}
+
+function setReadOptionsLabelText(text) {
+  if (labelTimeoutId) {
+    clearTimeout(labelTimeoutId)
+    labelTimeoutId = null
+  }
+  if (readOptionsLabelSwapTimeoutId) {
+    clearTimeout(readOptionsLabelSwapTimeoutId)
+  }
+
+  readOptionsLabel.style.opacity = '0'
+
+  readOptionsLabelSwapTimeoutId = setTimeout(() => {
+    readOptionsLabel.textContent = text
+    readOptionsLabel.style.opacity = '0.6'
+    readOptionsLabelSwapTimeoutId = null
+  }, 180)
+}
+
+function syncReadOptionsVisibility() {
+  if (!readOptions || !readOptionsToggleButton) {
+    return
+  }
+
+  const hasNotes = Array.isArray(noteousMain) && noteousMain.length > 0
+
+  if (!hasNotes) {
+    readOptions.classList.add('hidden-element')
+    readOptions.classList.remove('read-options-collapsed')
+  } else {
+    readOptions.classList.remove('hidden-element')
+    readOptions.classList.toggle('read-options-collapsed', !readOptionsVisible)
+  }
+
+  readOptionsToggleButton.classList.toggle('read-options-toggle-active', hasNotes && readOptionsVisible)
+  readOptionsToggleButton.setAttribute(
+    'aria-label',
+    readOptionsVisible ? 'Ocultar opções de leitura' : 'Mostrar opções de leitura'
+  )
 }
 
 ////////
@@ -611,19 +926,18 @@ function loadNoteous(context) {
       } else {
         //SE NÃO HÁ NOVA VERSÃO
 
-        
-        //Aplica última ordenação
-        orblendEngine('load')
-        sortNotes('set-sort', selectedOrb)
+        prepareInitialLoadSequence()
+
+        //Aplica último tema
+        noteousTheme('retrieve-theme')
 
         //Aplica última orientação de listas de prioridade
         priorityListsOrientation('retrieveOrientation')
 
+        orblendEngine('load')
+
         orblendEngine('on-change-input')
 
-        
-        //Aplica último tema
-        noteousTheme('retrieve-theme')
         //Aplica borda como solid
         noteousSettings.priority = 'solid'
         localStorage.setItem(
@@ -631,6 +945,8 @@ function loadNoteous(context) {
           JSON.stringify(noteousSettings)
         )
         notePriority('retrievePriority', noteousSettings.priority)
+
+        runInitialLoadSequence()
       }
     } else if (noteousSettings == null) {
       //NÃO HÁ CONFIGURAÇÕES --> PRIMEIRO ACESSO AO NOTEOUS
@@ -853,71 +1169,207 @@ writeOptions.addEventListener('click', () => {
 
 //////////
 
-//noteous preview 1.9: Elemento Buscar
-function toggleReadOptionsSearch() {
-  if (readOptionsSearchInput.classList.contains('hidden-element')) {
-    // Fade out label
-    if (readOptionsContainer.offsetWidth <= 570) {
-      readOptionsLabel.style.opacity = '0'
-    }
-    readOptionsSearch.classList.add('active-button')
-
-    setTimeout(() => {
-      readOptionsSearchInput.classList.remove('hidden-element')
-      if (readOptionsContainer.offsetWidth <= 570) {
-        readOptionsLabel.classList.add('hidden-element')
-      }
-      // Inicia o search input com opacity 0 e depois fade in
-      readOptionsSearchInput.style.opacity = '0'
-      setTimeout(() => {
-        readOptionsSearchInput.style.opacity = '1'
-      }, 10)
-    }, 200)
-  } else {
-    // Fade out search input
-      readOptionsSearchInput.style.opacity = '0'
-    readOptionsSearch.classList.remove('active-button')
-    
-    setTimeout(() => {
-      readOptionsSearchInput.classList.add('hidden-element')
-      if (readOptionsContainer.offsetWidth <= 570) {
-        readOptionsLabel.classList.remove('hidden-element')
-      }
-      // Inicia o label com opacity 0 e depois fade in
-      if (readOptionsContainer.offsetWidth <= 570) {
-      readOptionsLabel.style.opacity = '0'
-      setTimeout(() => {
-        readOptionsLabel.style.opacity = '0.6'
-      }, 10)
-    }
-    }, 200)
-  }
-}
-
-readOptionsSearch.addEventListener('click', () => {
-  toggleReadOptionsSearch()
-})
-
 readOptionsSearchInput.addEventListener('input', () => {
   renderNote('render-all', '', readOptionsSearchInput.value)
 })
 
+readOptionsSearchInput.addEventListener('focus', () => {
+  closeReadOptionsMenu()
+})
+
+readOptionsToggleButton.addEventListener('click', () => {
+  if (readHeader.classList.contains('invisible-element')) {
+    return
+  }
+
+  closeReadOptionsMenu()
+  readOptionsVisible = !readOptionsVisible
+  syncReadOptionsVisibility()
+})
+
+syncReadOptionsVisibility()
+
 //////////
+
+const readOptionsMenus = {
+  orientation: {
+    label: 'Listas de Prioridade',
+    getActiveValue: () => noteousSettings.priorityOrientation,
+    options: [
+      { value: 'row', label: 'Listas Horizontais', icon: 'view_agenda' },
+      { value: 'column', label: 'Listas Verticais', icon: 'view_agenda' }
+    ],
+    onSelect: (value) => {
+      setPriorityListsOrientation(value)
+    }
+  },
+  sortAction: {
+    label: 'Critério de Ordenação',
+    getActiveValue: () => noteousSettings.sort.action,
+    options: [
+      { value: 'editedAt', label: 'Ordenar por Edição', icon: 'edit_note' },
+      { value: 'id', label: 'Ordenar por Criação', icon: 'post_add' }
+    ],
+    onSelect: (value) => {
+      setSortAction(value)
+    }
+  },
+  sortTime: {
+    label: 'Ordem das Notas',
+    getActiveValue: () => noteousSettings.sort.time,
+    options: [
+      { value: 'recent', label: 'Mais Recentes', icon: 'arrow_downward' },
+      { value: 'old', label: 'Mais Antigas', icon: 'arrow_upward' }
+    ],
+    onSelect: (value) => {
+      setSortTime(value)
+    }
+  }
+}
+
+function splitReadOptionsMenuLabel(label) {
+  const labelWords = label.trim().split(/\s+/)
+
+  if (labelWords.length <= 1) {
+    return [label]
+  }
+
+  const splitIndex = Math.ceil(labelWords.length / 2)
+
+  return [
+    labelWords.slice(0, splitIndex).join(' '),
+    labelWords.slice(splitIndex).join(' ')
+  ]
+}
+
+function getPriorityOrientationIcon(orientation) {
+  if (orientation == 'row') {
+    return 'view_agenda'
+  }
+
+  if (orientation == 'column') {
+    return 'view_agenda'
+  }
+
+  return 'view_agenda'
+}
+
+function getPriorityOrientationTransform(orientation) {
+  if (orientation == 'row') {
+    return 'rotate(90deg)'
+  }
+
+  return 'rotate(0deg)'
+}
+
+function renderReadOptionsMenu(menuKey) {
+  const menuConfig = readOptionsMenus[menuKey]
+
+  if (!menuConfig || !readOptionsMenu) {
+    return
+  }
+
+  const activeValue = menuConfig.getActiveValue()
+  const orderedOptions = [...menuConfig.options].sort((leftOption, rightOption) => {
+    if (leftOption.value === activeValue) {
+      return -1
+    }
+    if (rightOption.value === activeValue) {
+      return 1
+    }
+    return 0
+  })
+
+  readOptionsMenu.innerHTML = ''
+
+  for (let option of orderedOptions) {
+    const optionButton = document.createElement('button')
+    optionButton.type = 'button'
+    optionButton.classList.add('read-options-menu-button')
+
+    const optionButtonContent = document.createElement('span')
+    optionButtonContent.classList.add('read-options-menu-button-content')
+
+    const optionIconElement = document.createElement('span')
+    optionIconElement.classList.add('read-options-menu-icon', 'material-icons-outlined')
+    optionIconElement.setAttribute('aria-hidden', 'true')
+    optionIconElement.textContent = option.icon
+
+    if (menuKey == 'orientation') {
+      optionIconElement.style.display = 'inline-block'
+      optionIconElement.style.transform = getPriorityOrientationTransform(option.value)
+    }
+
+    optionButtonContent.append(optionIconElement)
+
+    const optionTextElement = document.createElement('span')
+    optionTextElement.classList.add('read-options-menu-text')
+
+    for (let labelLine of splitReadOptionsMenuLabel(option.label)) {
+      const labelLineElement = document.createElement('span')
+      labelLineElement.classList.add('read-options-menu-line')
+      labelLineElement.textContent = labelLine
+      optionTextElement.append(labelLineElement)
+    }
+
+    optionButtonContent.append(optionTextElement)
+    optionButton.append(optionButtonContent)
+
+    if (option.value === activeValue) {
+      optionButton.classList.add('active-option')
+    }
+
+    optionButton.addEventListener('click', () => {
+      menuConfig.onSelect(option.value)
+      closeReadOptionsMenu()
+    })
+
+    readOptionsMenu.append(optionButton)
+  }
+}
+
+function openReadOptionsMenu(menuKey) {
+  const menuConfig = readOptionsMenus[menuKey]
+
+  if (!menuConfig || !readOptionsButtonsContainer || !readOptionsMenu) {
+    return
+  }
+
+  activeReadOptionsMenu = menuKey
+  renderReadOptionsMenu(menuKey)
+  setReadOptionsLabelText(menuConfig.label)
+  readOptionsButtonsContainer.classList.add('menu-hidden')
+
+  requestAnimationFrame(() => {
+    readOptionsMenu.classList.add('menu-visible')
+  })
+}
+
+function closeReadOptionsMenu() {
+  if (!activeReadOptionsMenu || !readOptionsButtonsContainer || !readOptionsMenu) {
+    return
+  }
+
+  activeReadOptionsMenu = null
+  readOptionsMenu.classList.remove('menu-visible')
+  readOptionsButtonsContainer.classList.remove('menu-hidden')
+  setReadOptionsLabelText(defaultReadOptionsLabel)
+}
 
 function priorityListsOrientation(context) {
   if (context == 'retrieveOrientation') {
+    const orientationIcon = getPriorityOrientationIcon(noteousSettings.priorityOrientation)
+
+    readOptionsOrientationButton.innerHTML = ''
+    readOptionsOrientationButton.append(document.createTextNode(orientationIcon))
+    readOptionsOrientationButton.style.transform = getPriorityOrientationTransform(noteousSettings.priorityOrientation)
+
     if (noteousSettings.priorityOrientation == 'row') {
-      readOptionsOrientationButton.innerHTML = ''
-      readOptionsOrientationButton.append(document.createTextNode('view_agenda'))
-  readOptionsOrientationButton.style.transform = 'rotate(90deg)'
       readNotesContainer.style.cssText = 'flex-direction: row;'
       for (let priorityList of readNotesContainer.querySelectorAll('.read-notes-priority-container')) {
         priorityList.style.cssText = 'flex-direction: column;  min-width: fit-content;'
       }
     } else if (noteousSettings.priorityOrientation == 'column') {
-      readOptionsOrientationButton.innerHTML = ''
-      readOptionsOrientationButton.append(document.createTextNode('view_agenda'))
-  readOptionsOrientationButton.style.transform = 'rotate(0deg)'
       readNotesContainer.style.cssText = 'flex-direction: column;'
       for (let priorityList of readNotesContainer.querySelectorAll('.read-notes-priority-container')) {
         priorityList.style.cssText = 'flex-direction: row;'
@@ -942,8 +1394,17 @@ function priorityListsOrientation(context) {
   }
 }
 
+function setPriorityListsOrientation(orientation) {
+  if (noteousSettings.priorityOrientation != orientation) {
+    noteousSettings.priorityOrientation = orientation
+    localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
+  }
+
+  priorityListsOrientation('retrieveOrientation')
+}
+
 readOptionsOrientationButton.addEventListener('click', () => {
-  priorityListsOrientation('change-orientation')
+  openReadOptionsMenu('orientation')
 })
 
 function readOptionsSortButtonText(context) {
@@ -1023,11 +1484,30 @@ function sortNotes(context, subcontext) {
     sortNotes('set-sort', `${selectedOrb}`)
   }
 }
+
+function setSortAction(action) {
+  if (noteousSettings.sort.action != action) {
+    noteousSettings.sort.action = action
+    localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
+  }
+
+  sortNotes('set-sort', `${selectedOrb}`)
+}
+
+function setSortTime(time) {
+  if (noteousSettings.sort.time != time) {
+    noteousSettings.sort.time = time
+    localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
+  }
+
+  sortNotes('set-sort', `${selectedOrb}`)
+}
+
 readOptionsSort.addEventListener('click', () => {
-  sortNotes('change-sort-time')
+  openReadOptionsMenu('sortTime')
 })
 readOptionsSortActionButton.addEventListener('click', () => {
-  sortNotes('change-sort-action')
+  openReadOptionsMenu('sortAction')
 })
 
 //////////
@@ -1218,6 +1698,11 @@ function renderNote(context, noteId, orb, searchTerm) {
   }
 
     syncWriteInputRender()
+
+    if (typeof priorityListsOrientation == 'function') {
+      priorityListsOrientation('retrieveOrientation')
+    }
+    playPriorityListsOrbAnimation()
 
     setTimeout(() => {
       //css inicia em 0. Após renderizar, altera para 1
@@ -1487,6 +1972,7 @@ function addNote() {
     orblendEngine('on-change-input')
     syncWriteInputRender()
     orblendEngine('update-orb-info')
+    syncReadOptionsVisibility()
   }
 }
 
@@ -1512,22 +1998,28 @@ writeButtonDismiss.addEventListener('click', () => {
 
 //CONCLUIR NOTA
 let timeoutID
-function doneNote(noteId) {
-  setTimeout(() => {
-    let noteContainer = document.getElementById(noteId + '-note-container')
-    noteContainer.style.cssText = 'opacity: 0;  transform: scale(70%);'
-    orblendEngine('orb-animation', '', '', 'done')
-    setTimeout(() => {
-      noteContainer.remove()
-    for (let note of noteousMain) {
-      if (note.id === noteId) {
-        note.done = true
-      }
+async function doneNote(noteId) {
+  let noteContainer = document.getElementById(noteId + '-note-container')
+
+  if (noteContainer?.dataset.doneAnimating === 'true') {
+    return
+  }
+
+  await animateNoteIntoDoneOrb(noteContainer)
+
+  if (noteContainer != null) {
+    noteContainer.remove()
+  }
+
+  for (let note of noteousMain) {
+    if (note.id === noteId) {
+      note.done = true
     }
-      localStorage.setItem('noteous-main', JSON.stringify(noteousMain))
-      orblendEngine('change')
-    }, 100)
-  }, 100)
+  }
+
+  localStorage.setItem('noteous-main', JSON.stringify(noteousMain))
+  orblendEngine('change')
+  orblendEngine('update-orb-info')
 }
 
 function deleteNote(noteId) {
@@ -1539,6 +2031,7 @@ function deleteNote(noteId) {
       noteousMain = noteousMain.filter(note => note.id !== noteId)
       localStorage.setItem('noteous-main', JSON.stringify(noteousMain))
       orblendEngine('change')
+      orblendEngine('update-orb-info')
     }, 100)
   }, 100)
 }

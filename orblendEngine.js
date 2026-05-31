@@ -1,4 +1,4 @@
-//✨ ORBLEND ENGINE 2.2
+//✨ ORBLEND ENGINE 2.2.1
 
 const smartCalcExpressionPattern =
   /\d+(?:[.,]\d+)?(?:\s*[+\-*/]\s*\d+(?:[.,]\d+)?)+/g
@@ -562,13 +562,18 @@ function orblendEngine(context, labelMessage, note, orb) {
     if (noteousMain.length == 0) {
       readHeader.classList.add('invisible-element')
     } else {
+      const doneNotesCount = noteousMain.filter(note => note.done === true).length
+      const activeNotesCount = noteousMain.filter(note => note.done !== true).length
+
       readHeader.classList.remove('invisible-element')
-        if (selectedOrb == 'done') {
-        orbInfoLabel.innerHTML = 'Notas Concluídas'
-        orbInfoCount.innerHTML = `${noteousMain.filter(note => note.done === true).length === 1 ? '1 Nota concluída' : `${noteousMain.filter(note => note.done === true).length} Notas concluídas`}`
+      if (selectedOrb == 'done') {
+        orbInfoLabel.textContent = 'Notas Concluídas'
+        orbInfoCount.setAttribute('aria-label', doneNotesCount == 1 ? '1 nota concluída' : `${doneNotesCount} notas concluídas`)
+        orbInfoCount.innerHTML = `<span class="orb-panel-count-number">${doneNotesCount}</span>`
       } else {
-        orbInfoLabel.innerHTML = 'Notas'
-        orbInfoCount.innerHTML = `${noteousMain.filter(note => note.done !== true).length === 1 ? '1 Nota adicionada' : `${noteousMain.filter(note => note.done !== true).length} Notas adicionadas`}`
+        orbInfoLabel.textContent = 'Notas'
+        orbInfoCount.setAttribute('aria-label', activeNotesCount == 1 ? '1 nota adicionada' : `${activeNotesCount} notas adicionadas`)
+        orbInfoCount.innerHTML = `<span class="orb-panel-count-number">${activeNotesCount}</span>`
       }
     }
   }
@@ -577,11 +582,21 @@ function orblendEngine(context, labelMessage, note, orb) {
     //exibir/ocultar readOptions
     if (noteousMain.length == 0) {
       orbsList.querySelectorAll('[id*="orb"]').forEach(element => {element.classList.add('hidden-element')})
-      readOptions.classList.add('hidden-element')
+      orbsListLabel.classList.add('hidden-element')
+      if (typeof syncReadOptionsVisibility == 'function') {
+        syncReadOptionsVisibility()
+      } else {
+        readOptions.classList.add('hidden-element')
+      }
       subcontext = 'no-notes'
     } else {
       orbsList.querySelectorAll('[id*="orb"]').forEach(element => {element.classList.remove('hidden-element')})
-      readOptions.classList.remove('hidden-element')
+      orbsListLabel.classList.remove('hidden-element')
+      if (typeof syncReadOptionsVisibility == 'function') {
+        syncReadOptionsVisibility()
+      } else {
+        readOptions.classList.remove('hidden-element')
+      }
       subcontext = 'has-notes'
     }
 
@@ -595,6 +610,15 @@ function orblendEngine(context, labelMessage, note, orb) {
       orbButton.classList.add('orb-button', 'material-icons')
       orbButton.id = `${orb}-orb-button`
 
+      orbButton.addEventListener('animationend', () => {
+        orbButton.classList.remove('orb-button-load-enter')
+        orbButton.style.removeProperty('--orb-button-load-delay')
+      }, { once: true })
+
+      if (orb == selectedOrb) {
+        orbButton.classList.add('selected-orb')
+      }
+
       if (orb == 'done') {
         orbButton.innerHTML = 'check'
       }
@@ -606,6 +630,12 @@ function orblendEngine(context, labelMessage, note, orb) {
         selectedOrb = orb
         noteousSettings.selectedOrb = selectedOrb
         localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
+        if (typeof queuePriorityListsOrbAnimation == 'function') {
+          queuePriorityListsOrbAnimation(orbButton)
+        }
+        orbPanel.classList.remove('orb-panel-animate')
+        void orbPanel.offsetWidth
+        orbPanel.classList.add('orb-panel-animate')
         orblendEngine('update-orb-info')
         renderNote('render-all','', orb)
       })
