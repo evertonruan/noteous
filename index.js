@@ -17,7 +17,7 @@ let writePanel = document.querySelector('#write-panel')
 
 let infoPanel = document.querySelector('#info-panel')
 
-let writeOptions = document.querySelector('#write-options')
+let priorityButton = document.querySelector('#priority-button')
 
 let writeLabel = document.querySelector('#write-label')
 let writeInput = document.querySelector('#write-input')
@@ -938,8 +938,8 @@ function loadNoteous(context) {
 
         orblendEngine('on-change-input')
 
-        //Aplica borda como solid
-        noteousSettings.priority = 'solid'
+        //Aplica borda como double
+        noteousSettings.priority = noteousSettings.priorityOrder[0]
         localStorage.setItem(
           'noteous-settings',
           JSON.stringify(noteousSettings)
@@ -998,8 +998,8 @@ function loadNoteous(context) {
       orbsIndex: ['done', 'donutdough'],
       selectedOrb: 'donutdough',
       sort: { time: 'recent', action: 'editedAt' },
-      priority: 'solid',
-      priorityOrder: ['solid', 'double', 'dotted'], // preview 1.8: ordem das listas de prioridade
+      priority: 'double',
+      priorityOrder: ['double', 'solid', 'dotted'], // preview 1.8: ordem das listas de prioridade
       priorityOrientation: 'column',
       actionButtons: ['done', 'share', 'copy', 'delete', 'restore'],
       input: '',
@@ -1069,65 +1069,65 @@ function notePriority(context, priority) {
   //context ==> (1) recuperarPrioridade, (2)recuperarPrioridadeAoDesfocarInput (ao tirar foco define opacidade = 0 de Opções da Nota. Mas, é necessário também definir junto a borda, pois ao contrário um sobrescreve o outro), (3) trocarPrioridade
   if (context == 'retrievePriority') {
     if (priority == 'solid') {
-      writeOptions.disabled = false
-      writeOptions.classList.remove('blur')
-      writeOptions.style.cssText = 'border-style: solid;'
+      priorityButton.disabled = false
+      priorityButton.classList.remove('blur')
+      priorityButton.style.cssText = 'border-style: solid;'
       writeInputWrapper.style.cssText = 'border-style: solid;'
       writeButtonsContainer.style.cssText = 'border-style: solid;'
       noteousSettings.priority = 'solid'
     } else if (priority == 'double') {
-      writeOptions.disabled = false
-      writeOptions.classList.remove('blur')
-      writeOptions.style.cssText = 'border-style: double;'
+      priorityButton.disabled = false
+      priorityButton.classList.remove('blur')
+      priorityButton.style.cssText = 'border-style: double;'
       writeInputWrapper.style.cssText = 'border-style: double;'
       writeButtonsContainer.style.cssText = 'border-style: double;'
       noteousSettings.priority = 'double'
     } else if (priority == 'dotted') {
-      writeOptions.disabled = false
-      writeOptions.classList.remove('blur')
-      writeOptions.style.cssText = 'border-style: dotted;'
+      priorityButton.disabled = false
+      priorityButton.classList.remove('blur')
+      priorityButton.style.cssText = 'border-style: dotted;'
       writeInputWrapper.style.cssText = 'border-style: dotted;'
       writeButtonsContainer.style.cssText = 'border-style: dotted;'
       noteousSettings.priority = 'dotted'
     }
   } else if (context == 'retrievePriorityBlurInput') {
     if (priority == 'solid') {
-      writeOptions.classList.add('blur')
-      writeOptions.style.cssText = 'border-style: solid;'
+      priorityButton.classList.add('blur')
+      priorityButton.style.cssText = 'border-style: solid;'
       setTimeout(() => {
-        writeOptions.disabled = true
+        priorityButton.disabled = true
       }, 100)
     } else if (priority == 'double') {
-      writeOptions.classList.add('blur')
-      writeOptions.style.cssText = 'border-style: double;'
+      priorityButton.classList.add('blur')
+      priorityButton.style.cssText = 'border-style: double;'
       setTimeout(() => {
-        writeOptions.disabled = true
+        priorityButton.disabled = true
       }, 100)
     } else if (priority == 'dotted') {
-      writeOptions.classList.add('blur')
-      writeOptions.style.cssText = 'border-style: dotted;'
+      priorityButton.classList.add('blur')
+      priorityButton.style.cssText = 'border-style: dotted;'
       setTimeout(() => {
-        writeOptions.disabled = true
+        priorityButton.disabled = true
       }, 100)
     }
   } else if (context == 'changePriority') {
-    if (priority == 'solid') {
-      writeOptions.style.cssText = 'border-style: double;'
-      writeInputWrapper.style.cssText = 'border-style: double;'
-      writeButtonsContainer.style.cssText = 'border-style: double;'
-      noteousSettings.priority = 'double'
+    if (priority == 'double') {
+      priorityButton.style.cssText = 'border-style: solid;'
+      writeInputWrapper.style.cssText = 'border-style: solid;'
+      writeButtonsContainer.style.cssText = 'border-style: solid;'
+      noteousSettings.priority = 'solid'
       localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
-    } else if (priority == 'double') {
-      writeOptions.style.cssText = 'border-style: dotted;'
+    } else if (priority == 'solid') {
+      priorityButton.style.cssText = 'border-style: dotted;'
       writeInputWrapper.style.cssText = 'border-style: dotted;'
       writeButtonsContainer.style.cssText = 'border-style: dotted;'
       noteousSettings.priority = 'dotted'
       localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
     } else if (priority == 'dotted') {
-      writeOptions.style.cssText = 'border-style: solid;'
-      writeInputWrapper.style.cssText = 'border-style: solid;'
-      writeButtonsContainer.style.cssText = 'border-style: solid;'
-      noteousSettings.priority = 'solid'
+      priorityButton.style.cssText = 'border-style: double;'
+      writeInputWrapper.style.cssText = 'border-style: double;'
+      writeButtonsContainer.style.cssText = 'border-style: double;'
+      noteousSettings.priority = 'double'
       localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
     }
   }
@@ -1152,17 +1152,17 @@ writeInput.addEventListener('blur', () => {
 
     //Ao clicar no botão para trocar Prioridade, write-input perde o foco --> botão de Prioridade desaparece.
     //Esse teste verifica primeiro se write-input perde o foco. Se está sem foco --> desaparecer botão Prioridade
-    //1.5 --> Ao adicionar tabindex e focalizar botão de prioridade ele desaparece (pois o foco sai de write-input). Agora o teste inclui se write-options também está focalizado. Se está, ele não desaparece.
+    //1.5 --> Ao adicionar tabindex e focalizar botão de prioridade ele desaparece (pois o foco sai de write-input). Agora o teste inclui se priority-button também está focalizado. Se está, ele não desaparece.
     setTimeout(() => {
       if (
         document.activeElement.id != 'write-input' &&
-        document.activeElement.id != 'write-options'
+        document.activeElement.id != 'priority-button'
       )
         notePriority('retrievePriorityBlurInput', noteousSettings.priority)
     }, 500)
 })
 
-writeOptions.addEventListener('click', () => {
+priorityButton.addEventListener('click', () => {
   writeInput.focus()
   notePriority('changePriority', noteousSettings.priority)
 })
@@ -2131,7 +2131,7 @@ function copyNote(noteId) {
 function setEditMode(context) {
   if (context == 'edit-mode-on') {
     editMode = true
-    writeOptions.classList.add('edit-mode')
+    priorityButton.classList.add('edit-mode')
     writeLabel.style.opacity = 0
     writeInputWrapper.classList.add('orb-done')
     writeInputWrapper.classList.add('rounded-bottom')
@@ -2141,7 +2141,7 @@ function setEditMode(context) {
     syncWriteInputRender()
   } else if (context == 'edit-mode-off') {
     editMode = false
-    writeOptions.classList.remove('edit-mode')
+    priorityButton.classList.remove('edit-mode')
     writeLabel.style.opacity = 1
     writeInputWrapper.classList.remove('orb-done')
     writeInput.value != '' ? writeInputWrapper.classList.remove('rounded-bottom') : null
