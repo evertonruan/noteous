@@ -696,8 +696,21 @@ copyOpenButton.addEventListener('click', () => {
 
 //FUNÇÃO PARA EXIBIR MODAL COM AS NOTAS DA CÓPIA
 function showNotesModal(notesData, context = 'copy') {
+  const previousBodyOverflow = document.body.style.overflow
+  const previousHtmlOverflow = document.documentElement.style.overflow
+
+  const closeModal = () => {
+    document.body.style.overflow = previousBodyOverflow
+    document.documentElement.style.overflow = previousHtmlOverflow
+
+    if (modalOverlay.parentNode) {
+      document.body.removeChild(modalOverlay)
+    }
+  }
+
   // Cria o overlay do modal
   const modalOverlay = document.createElement('div')
+  modalOverlay.id = 'modal-overlay'
   modalOverlay.style.cssText = `
     position: fixed;
     top: 0;
@@ -710,6 +723,9 @@ function showNotesModal(notesData, context = 'copy') {
     align-items: center;
     z-index: 1000;
   `
+
+  document.body.style.overflow = 'hidden'
+  document.documentElement.style.overflow = 'hidden'
 
   // Cria o modal
   const modal = document.createElement('div')
@@ -756,13 +772,16 @@ function showNotesModal(notesData, context = 'copy') {
 
   // Container das notas
   const notesContainer = document.createElement('div')
+  notesContainer.id = 'modal-notes-container'
   notesContainer.style.cssText = `
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
     margin-bottom: 1.5rem;
     max-height: 400px;
     overflow-y: auto;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
     padding-bottom: 1rem;
   `
 
@@ -789,6 +808,7 @@ function showNotesModal(notesData, context = 'copy') {
     display: flex;
     gap: 1rem;
     justify-content: flex-end;
+    margin-bottom: 10px;
   `
 
   // Botão Fechar
@@ -796,7 +816,7 @@ function showNotesModal(notesData, context = 'copy') {
   closeButton.textContent = 'Fechar'
   closeButton.classList.add('option-point')
   closeButton.addEventListener('click', () => {
-    document.body.removeChild(modalOverlay)
+    closeModal()
   })
 
   // Monta o modal baseado no contexto
@@ -816,7 +836,7 @@ function showNotesModal(notesData, context = 'copy') {
     importButton.addEventListener('click', () => {
       if (confirm('Tem certeza que deseja importar estas notas? Isso substituirá todas as suas notas atuais.')) {
         importNotes(notesData.notes)
-        document.body.removeChild(modalOverlay)
+        closeModal()
       }
     })
 
@@ -831,7 +851,7 @@ function showNotesModal(notesData, context = 'copy') {
   // Fecha o modal ao clicar no overlay
   modalOverlay.addEventListener('click', (e) => {
     if (e.target === modalOverlay) {
-      document.body.removeChild(modalOverlay)
+      closeModal()
     }
   })
 }
@@ -846,7 +866,7 @@ function createNotePreview(note, index, context = 'copy') {
 
   //BORDER/PRIORITY
   if (note.priority == 'solid') {
-    noteContainer.style.borderStyle = 'none'
+    noteContainer.style.borderStyle = 'solid'
   } else if (note.priority == 'double') {
     noteContainer.style.borderStyle = 'double'
   } else if (note.priority == 'dotted') {
