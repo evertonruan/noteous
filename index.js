@@ -938,6 +938,10 @@ function loadNoteous(context) {
 
         orblendEngine('on-change-input')
 
+        if (window.location.search.includes('share=true')) {
+          writeLabel.innerHTML = 'Esse texto foi recebido'
+          window.history.replaceState({}, document.title, window.location.pathname)
+        }
         //Aplica borda como double
         noteousSettings.priority = noteousSettings.priorityOrder[0]
         localStorage.setItem(
