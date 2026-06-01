@@ -687,21 +687,21 @@ function welcomeToNoteous(context, subcontext) {
       greetingTitle3.append(document.createTextNode('2ª Geração'))
       greetingDescriptionTitle.append(
         document.createTextNode(
-          'Atualização concluída com algumas melhorias: este é o noteous preview 2.2. Confira os destaques da 2º Geração'
+          'Atualização concluída: Esse é o incrível noteous preview 2.3'
         )
       )
         
-      greetingDescription1.innerHTML = `<span class="greeting-description-intro">Design incrível</span>Esta é a 2ª Geração do noteous preview, e seu design foi completamente reimaginado, como você nunca viu! <br>🍩 Agora, o <strong>donut design</strong> traz experiências incríveis para sua anotação`
+      greetingDescription1.innerHTML = `<span class="greeting-description-intro">Nova função inteligente</span>Tá anotando algo e quer fazer um cálculo rápido? Experimente o <strong>Cálculo Inteligente</strong>: é só escrever uma conta e o orblend engine calcula automaticamente!`
 
-      greetingDescription2.innerHTML = `<span class="greeting-description-intro">Apresentando Orbs do noteous</span><strong>Orbs</strong> são uma novidade disruptiva da 2ª Geração do noteous. Com eles você organiza suas notas de uma forma única. E em próximas atualizações, você até mesmo poderá trocar as cores dos Orbs`
+      greetingDescription2.innerHTML = `<span class="greeting-description-intro">Apresentando Orbs Links</span>Agora, sempre que você salvar algum link em uma nota, ela será exibida também em um orb separado`
 
-      greetingDescription3.innerHTML = `Por trás do noteous está a inteligência do <strong>orblend engine</strong><br>✨São recursos muito úteis. Por exemplo, se você esquecer de salvar uma nota, ele recupera automaticamente para você. 🟠 Além disso, os <strong>Orbs</strong> estão profundamente integrados ao orblend engine`
+      greetingDescription3.innerHTML = `<span class="greeting-description-intro">donut design melhorado</span>Você nunca viu nada igual: o design do noteous foi melhorado, agora com novas animações`
 
       greetingDescription4.innerHTML = `<span class="greeting-description-intro">Sempre em dia</span>noteous preview está em constante melhoria 🍩 As atualizações da 2ª Geração chegam de forma instantânea e gratuita`
 
-      greetingDescription1Image.setAttribute('src', './assets/images/greeting-donut.webp')
-      greetingDescription2Image.setAttribute('src', './assets/images/greeting-orbs.webp')
-      greetingDescription3Image.setAttribute('src', './assets/images/greeting-orblend-engine.webp')
+      greetingDescription1Image.setAttribute('src', './assets/images/greeting-smart-calc.webp')
+      greetingDescription2Image.setAttribute('src', './assets/images/greeting-orb-links.webp')
+      greetingDescription3Image.setAttribute('src', './assets/images/greeting-design.webp')
       greetingDescription4Image.setAttribute('src', './assets/images/greeting-update.webp')
 
       greetingDescriptionContainer1.append(
