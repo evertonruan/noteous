@@ -14,12 +14,24 @@
 
       if (event.data.content !== '') {
         fileContent = event.data.content
-        fileContent = JSON.parse(fileContent)
-        noteousSettings.fileId = fileContent.exportDate
-        localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
-        
-        resolve(fileContent)
-        
+
+        let parsed = null
+        try {
+          parsed = JSON.parse(fileContent)
+        } catch (e) {
+          parsed = null
+        }
+
+        if (parsed && Array.isArray(parsed.notes)) {
+          // Valid noteous backup
+          noteousSettings.fileId = parsed.exportDate
+          localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
+          resolve(parsed)
+        } else {
+          // Not a valid backup: treat as plain text
+          resolve({ isPlainText: true, text: fileContent })
+        }
+
       } else if (event.data.content === '') {
         resolve(null)
       }

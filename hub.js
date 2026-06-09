@@ -11,7 +11,14 @@ if (noteousSettings == null || noteousSettings?.noteousApp?.noteousVersion < 1.6
       try {
         const fileLoaded = await fileLoad()
         if (fileLoaded != null) {
-          showNotesModal(fileLoaded)
+          if (fileLoaded.isPlainText) {
+            // Not a backup file: save text to write-input and open index
+            noteousSettings.input = fileLoaded.text
+            localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
+            window.location.replace('./index.html?share=true')
+          } else {
+            showNotesModal(fileLoaded)
+          }
         }
       } catch (error) {
         alert('Erro ao carregar arquivo:' + error)
