@@ -1,5 +1,5 @@
-//noteous 2.0 SW version
-//20260531
+//noteous 2.3.1 SW version
+//20260609
 /*
 When the user accepts the terms, the Service Worker is installed and adds resources to the cache.
 Once they are cached, noteous will use only this local content and will no longer connect to the server to update content.
@@ -98,9 +98,26 @@ async function handlePostRequest(event) {
     const formData = await event.request.formData();
     const files = formData.getAll('texts');
 
+    if (files.length === 0) {
+      const sharedText = formData.get('link') || formData.get('description') || formData.get('name') || formData.get('text');
+
+      if (typeof sharedText === 'string' && sharedText.trim() !== '') {
+        lastUploadedFileContent = sharedText;
+
+        // Redirects to hub.html so the existing plain-text flow can load the shared link/text
+        return Response.redirect('/hub.html', 303);
+      }
+
+      // No files or share text in the payload
+      return new Response('Nenhum arquivo recebido', {
+        status: 400,
+        headers: { 'Content-Type': 'text/plain' }
+      });
+    }
+
     if (files.length > 0) {
       for (let file of files) {
-        if (file.type === 'text/plain') {
+        if (file.type === 'text/plain' || file.name?.endsWith('.txt')) {
           const content = await readFile(file);
           lastUploadedFileContent = content;
 
@@ -110,6 +127,11 @@ async function handlePostRequest(event) {
           console.warn('Tipo de arquivo não suportado:', file.type);
         }
       }
+      // No supported file found
+      return new Response('Tipo de arquivo não suportado', {
+        status: 415,
+        headers: { 'Content-Type': 'text/plain' }
+      });
     }
   } catch (error) {
     console.error('Error ao processar o arquivo:', error);
@@ -132,4 +154,3 @@ self.addEventListener('message', event => {
     lastUploadedFileContent = '';
   }
 });
-
