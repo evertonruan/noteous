@@ -25,12 +25,6 @@
       "type": "image/png",
       "sizes": "192x192",
       "purpose": "any"
-    },
-    {
-      "src": "/assets/icons/maskable-monochrome-icon-noteous.png",
-      "type": "image/png",
-      "sizes": "512x512",
-      "purpose": "monochrome maskable"
     }
   ],
   "id": "/index.html",
