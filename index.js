@@ -948,7 +948,7 @@ function loadNoteous(context) {
           'noteous-settings',
           JSON.stringify(noteousSettings)
         )
-        notePriority('retrievePriority', noteousSettings.priority)
+        notePriority('retrieve-priority', noteousSettings.priority)
 
         runInitialLoadSequence()
       }
@@ -1071,76 +1071,34 @@ window.addEventListener('appinstalled', () => {
 function notePriority(context, priority) {
 
   //context ==> (1) recuperarPrioridade, (2)recuperarPrioridadeAoDesfocarInput (ao tirar foco define opacidade = 0 de Opções da Nota. Mas, é necessário também definir junto a borda, pois ao contrário um sobrescreve o outro), (3) trocarPrioridade
-  if (context == 'retrievePriority') {
-    if (priority == 'solid') {
-      priorityButton.disabled = false
-      priorityButton.classList.remove('blur')
-      priorityButton.style.cssText = 'border-style: solid;'
-      writeInputWrapper.style.cssText = 'border-style: solid;'
-      writeButtonsContainer.style.cssText = 'border-style: solid;'
-      noteousSettings.priority = 'solid'
-    } else if (priority == 'double') {
-      priorityButton.disabled = false
-      priorityButton.classList.remove('blur')
-      priorityButton.style.cssText = 'border-style: double;'
-      writeInputWrapper.style.cssText = 'border-style: double;'
-      writeButtonsContainer.style.cssText = 'border-style: double;'
-      noteousSettings.priority = 'double'
-    } else if (priority == 'dotted') {
-      priorityButton.disabled = false
-      priorityButton.classList.remove('blur')
-      priorityButton.style.cssText = 'border-style: dotted;'
-      writeInputWrapper.style.cssText = 'border-style: dotted;'
-      writeButtonsContainer.style.cssText = 'border-style: dotted;'
-      noteousSettings.priority = 'dotted'
-    }
-  } else if (context == 'retrievePriorityBlurInput') {
-    if (priority == 'solid') {
-      priorityButton.classList.add('blur')
-      priorityButton.style.cssText = 'border-style: solid;'
-      setTimeout(() => {
-        priorityButton.disabled = true
-      }, 100)
-    } else if (priority == 'double') {
-      priorityButton.classList.add('blur')
-      priorityButton.style.cssText = 'border-style: double;'
-      setTimeout(() => {
-        priorityButton.disabled = true
-      }, 100)
-    } else if (priority == 'dotted') {
-      priorityButton.classList.add('blur')
-      priorityButton.style.cssText = 'border-style: dotted;'
-      setTimeout(() => {
-        priorityButton.disabled = true
-      }, 100)
-    }
-  } else if (context == 'changePriority') {
-    if (priority == 'double') {
-      priorityButton.style.cssText = 'border-style: solid;'
-      writeInputWrapper.style.cssText = 'border-style: solid;'
-      writeButtonsContainer.style.cssText = 'border-style: solid;'
-      noteousSettings.priority = 'solid'
-      localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
-    } else if (priority == 'solid') {
-      priorityButton.style.cssText = 'border-style: dotted;'
-      writeInputWrapper.style.cssText = 'border-style: dotted;'
-      writeButtonsContainer.style.cssText = 'border-style: dotted;'
-      noteousSettings.priority = 'dotted'
-      localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
-    } else if (priority == 'dotted') {
-      priorityButton.style.cssText = 'border-style: double;'
-      writeInputWrapper.style.cssText = 'border-style: double;'
-      writeButtonsContainer.style.cssText = 'border-style: double;'
-      noteousSettings.priority = 'double'
-      localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
-    }
+  if (context == 'retrieve-priority') {
+    priorityButton.disabled = false
+    priorityButton.classList.remove('blur')
+    priorityButton.style.cssText = `border-style: ${priority};`
+    writeInputWrapper.style.cssText = `border-style: ${priority};`
+    writeButtonsContainer.style.cssText = `border-style: ${priority};`
+    noteousSettings.priority = priority
+  } else if (context == 'retrieve-priority-blur-input') {
+    priorityButton.classList.add('blur')
+    priorityButton.style.cssText = `border-style: ${priority};`
+    setTimeout(() => {
+      priorityButton.disabled = true
+    }, 100)
+  } else if (context == 'change-priority') {
+    const order = noteousSettings.priorityOrder
+    const next = order[(order.indexOf(priority) + 1) % order.length]
+    priorityButton.style.cssText = `border-style: ${next};`
+    writeInputWrapper.style.cssText = `border-style: ${next};`
+    writeButtonsContainer.style.cssText = `border-style: ${next};`
+    noteousSettings.priority = next
+    localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
   }
 }
 
 writeInput.addEventListener('focus', () => {
     writeButtonAdd.classList.add('focus-input')
     writeButtonsContainer.classList.add('focus-input')
-    notePriority('retrievePriority', noteousSettings.priority)
+    notePriority('retrieve-priority', noteousSettings.priority)
 })
 
 writeInput.focus()
@@ -1162,13 +1120,13 @@ writeInput.addEventListener('blur', () => {
         document.activeElement.id != 'write-input' &&
         document.activeElement.id != 'priority-button'
       )
-        notePriority('retrievePriorityBlurInput', noteousSettings.priority)
+        notePriority('retrieve-priority-blur-input', noteousSettings.priority)
     }, 500)
 })
 
 priorityButton.addEventListener('click', () => {
   writeInput.focus()
-  notePriority('changePriority', noteousSettings.priority)
+  notePriority('change-priority', noteousSettings.priority)
 })
 
 //////////
