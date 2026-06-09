@@ -125,7 +125,7 @@ html {
     flex: 1;
   }
 
-  #section-write #write-options {
+  #section-write #priority-button {
     left: 34px;
     width: 2.5rem;
     height: 2.5rem;
@@ -169,7 +169,7 @@ html {
 }
 
 @media (max-width: 500px) {
-  #section-write #write-options {
+  #section-write #priority-button {
     left: 26px;
   }
 
@@ -192,7 +192,7 @@ html {
     justify-content: flex-end;
   }
 
-  #section-write #write-options {
+  #section-write #priority-button {
     left: 22px;
     width: 2.5rem;
     height: 2.5rem;
@@ -208,7 +208,7 @@ html {
 }
 
 @media (max-width: 380px) {
-  #section-write #write-options {
+  #section-write #priority-button {
     left: 14px;
   }
 }
@@ -429,7 +429,7 @@ a {
   user-select: none;
 }
 
-#write-options {
+#priority-button {
   position: absolute;
   top: 22px;
   left: 20px;
@@ -448,13 +448,13 @@ a {
   transition: all 0.2s cubic-bezier(0.075, 0.82, 0.165, 1);
 }
 
-#write-options.blur {
+#priority-button.blur {
    opacity: 0;
    transform: scale(60%);
    pointer-events: none;
 }
 
-#write-options.edit-mode {
+#priority-button.edit-mode {
   transition: none;
   top: 20px;
 }
