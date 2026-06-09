@@ -568,7 +568,7 @@ function loadNoteous(context) {
         orblendEngine('on-change-input')
 
         noteousTheme('retrieve-theme')
-        noteousSettings.priority = 'solid'
+        noteousSettings.priority = noteousSettings.priorityOrder[0]
         localStorage.setItem(
           'noteous-settings',
           JSON.stringify(noteousSettings)
