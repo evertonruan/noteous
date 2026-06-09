@@ -328,13 +328,13 @@ function welcomeToNoteous(context, subcontext) {
       greetingTitle3.append(document.createTextNode('2ª Geração'))
       greetingDescriptionTitle.append(
         document.createTextNode(
-          '✨ Você recebeu a atualização de Maio de 2026 do noteous, com várias melhorias'
+          '✨ Você recebeu a atualização de Junho de 2026 do noteous, com várias correções'
         )
       )
 
       greetingDescription1.innerHTML = `<span class="greeting-description-intro">Design incrível</span>Esta é a 2ª Geração do noteous, e seu design foi completamente reimaginado, como você nunca viu! <br>🍩 Agora, o <strong>donut design</strong> traz experiências incríveis para sua anotação`
 
-      greetingDescription2.innerHTML = `<span class="greeting-description-intro">Orbs do noteous</span><strong>Orbs</strong> são uma novidade disruptiva da 2ª Geração do noteous. Com eles você organiza suas notas de uma forma única. E em próximas atualizações, você até mesmo poderá trocar as cores dos Orbs`
+      greetingDescription2.innerHTML = `<span class="greeting-description-intro">Orbs do noteous</span><strong>Orbs</strong> são uma novidade disruptiva da 2ª Geração do noteous. Com eles você organiza suas notas de uma forma única. E em próximas atualizações no futuro, você até mesmo poderá trocar as cores dos Orbs`
 
       greetingDescription3.innerHTML = `<span class="greeting-description-intro">Recursos úteis</span>Por trás do noteous está a inteligência do <strong>orblend engine</strong><br>São recursos muito úteis ✨ Por exemplo, se você esquecer de salvar uma nota, ele recupera automaticamente para você. 🟠 Além disso, os <strong>Orbs</strong> estão profundamente integrados ao orblend engine`
 

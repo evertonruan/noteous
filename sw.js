@@ -1,5 +1,5 @@
 //noteous 2.2.1 SW version
-//20260609-1
+//20260609-2
 /*
 When the user accepts the terms, the Service Worker is installed and adds resources to the cache.
 Once they are cached, noteous will use only this local content and will no longer connect to the server to update content.
