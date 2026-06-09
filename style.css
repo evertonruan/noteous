@@ -854,6 +854,10 @@ a {
   transition: all 0.4s cubic-bezier(0.075, 0.82, 0.165, 1);
 }
 
+#modal .note-container {
+  flex-shrink: 0;
+}
+
 .note-container.row-orientation {
   height: 250px;
 }
@@ -881,6 +885,23 @@ a {
   resize: none;
   outline: none;
   transition: all 0.4s cubic-bezier(0.075, 0.82, 0.165, 1);
+}
+
+#modal .note-text-container {
+  width: min(100%, 360px);
+  padding: 0.75rem 1rem 3.4rem 1rem;
+  color: var(--base-text);
+  background-color: var(--base-color);
+  font-family: 'Source Sans 3', sans-serif;
+  font-size: 1.2rem;
+  letter-spacing: -0.01em;
+  box-sizing: border-box;
+}
+
+#modal .note-text-container p {
+  margin: 0;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
 }
 
 .editing-buttons-container {

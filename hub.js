@@ -684,8 +684,21 @@ copyOpenButton.addEventListener('click', () => {
 
 //FUNÇÃO PARA EXIBIR MODAL COM AS NOTAS DA CÓPIA
 function showNotesModal(notesData, context = 'copy') {
+  const previousBodyOverflow = document.body.style.overflow
+  const previousHtmlOverflow = document.documentElement.style.overflow
+
+  const closeModal = () => {
+    document.body.style.overflow = previousBodyOverflow
+    document.documentElement.style.overflow = previousHtmlOverflow
+
+    if (modalOverlay.parentNode) {
+      document.body.removeChild(modalOverlay)
+    }
+  }
+
   // Cria o overlay do modal
   const modalOverlay = document.createElement('div')
+  modalOverlay.id = 'modal-overlay'
   modalOverlay.style.cssText = `
     position: fixed;
     top: 0;
@@ -698,6 +711,9 @@ function showNotesModal(notesData, context = 'copy') {
     align-items: center;
     z-index: 1000;
   `
+
+  document.body.style.overflow = 'hidden'
+  document.documentElement.style.overflow = 'hidden'
 
   // Cria o modal
   const modal = document.createElement('div')
@@ -744,13 +760,16 @@ function showNotesModal(notesData, context = 'copy') {
 
   // Container das notas
   const notesContainer = document.createElement('div')
+  notesContainer.id = 'modal-notes-container'
   notesContainer.style.cssText = `
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
     margin-bottom: 1.5rem;
     max-height: 400px;
     overflow-y: auto;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
     padding-bottom: 1rem;
   `
 
@@ -777,6 +796,7 @@ function showNotesModal(notesData, context = 'copy') {
     display: flex;
     gap: 1rem;
     justify-content: flex-end;
+    margin-bottom: 10px;
   `
 
   // Botão Fechar
@@ -784,7 +804,7 @@ function showNotesModal(notesData, context = 'copy') {
   closeButton.textContent = 'Fechar'
   closeButton.classList.add('option-point')
   closeButton.addEventListener('click', () => {
-    document.body.removeChild(modalOverlay)
+    closeModal()
   })
 
   // Monta o modal baseado no contexto
@@ -804,7 +824,7 @@ function showNotesModal(notesData, context = 'copy') {
     importButton.addEventListener('click', () => {
       if (confirm('Tem certeza que deseja importar estas notas? Isso substituirá todas as suas notas atuais.')) {
         importNotes(notesData.notes)
-        document.body.removeChild(modalOverlay)
+        closeModal()
       }
     })
 
@@ -819,7 +839,7 @@ function showNotesModal(notesData, context = 'copy') {
   // Fecha o modal ao clicar no overlay
   modalOverlay.addEventListener('click', (e) => {
     if (e.target === modalOverlay) {
-      document.body.removeChild(modalOverlay)
+      closeModal()
     }
   })
 }
@@ -828,22 +848,13 @@ function showNotesModal(notesData, context = 'copy') {
 function createNotePreview(note, index, context = 'copy') {
   const noteContainer = document.createElement('div')
   noteContainer.classList.add('note-container')
-  
 
+  noteContainer.style.minWidth = 'auto'
 
-  // Responsividade baseada no CSS original
-  if (window.innerWidth <= 450) {
-    noteContainer.style.maxWidth = 'none'
-    noteContainer.style.flexBasis = '90%'
-  } else if (window.innerWidth <= 600) {
-    noteContainer.style.maxWidth = '40vw'
-  } else {
-    noteContainer.style.maxWidth = '40%'
-  }
 
   //BORDER/PRIORITY
   if (note.priority == 'solid') {
-    noteContainer.style.borderStyle = 'none'
+    noteContainer.style.borderStyle = 'solid'
   } else if (note.priority == 'double') {
     noteContainer.style.borderStyle = 'double'
   } else if (note.priority == 'dotted') {
@@ -856,7 +867,25 @@ function createNotePreview(note, index, context = 'copy') {
 
   let textElement = document.createElement('p')
 
-  textElement.appendChild(document.createTextNode(note.text))
+  let noteChar = note.text
+  if (noteChar.length < 300) {
+    //Se tamanho da nota for menor que 300, escrever nota inteira
+    textElement.appendChild(document.createTextNode(noteChar))
+  } else if (noteChar.length >= 300) {
+    //Se tamanho da nota for maior que 300, escrever apenas até o 300º caractere e acrescentar "..."
+    let count = 0
+    for (let noteCharAt of noteChar) {
+      textElement.appendChild(document.createTextNode(noteCharAt))
+      count = count + 1
+      //"Ir escrevendo" cada caractere até chegar o 300º
+      if (count == 300) {
+        textElement.append(document.createTextNode(' ...'))
+        textElement.append(document.createElement('br'))
+        textElement.append(document.createTextNode('[VER MAIS]'))
+        break
+      }
+    }
+  }
 
   //DATE
   let noteDateContainer = document.createElement('div')
@@ -866,7 +895,7 @@ function createNotePreview(note, index, context = 'copy') {
   
   dateElement.appendChild(
     document.createTextNode(
-      `Criado em ${new Date(note.id).getDate()}/${findMonth(
+      `+ ${new Date(note.id).getDate()}/${findMonth(
         new Date(note.id).getMonth()
       )}/${new Date(note.id).getUTCFullYear()} às ${setTimeNumber(
         new Date(note.id).getHours()
@@ -943,7 +972,7 @@ function createNotePreview(note, index, context = 'copy') {
     // Botão Excluir Permanentemente
     const deleteButton = document.createElement('button')
     deleteButton.classList.add('action-buttons', 'material-icons')
-    deleteButton.textContent = 'clear'
+    deleteButton.textContent = 'delete_forever'
     deleteButton.style.cssText = `
       font-size: 2rem;
       background-color: transparent;
