@@ -1,3 +1,19 @@
+import { noteousVersion, termsVersion } from './noteousParams.js'
+import { orblendEngine } from './orblendEngine.js'
+
+// Exposições Globais (Window)
+window.welcomeToNoteous = welcomeToNoteous
+window.loadNoteous = loadNoteous
+window.findMonth = findMonth
+window.findWeek = findWeek
+window.showInstallButton = showInstallButton
+window.renderNote = renderNote
+window.syncReadOptionsVisibility = syncReadOptionsVisibility
+window.queuePriorityListsOrbAnimation = queuePriorityListsOrbAnimation
+window.notePriority = notePriority
+window.priorityListsOrientation = priorityListsOrientation
+window.setTimeNumber = setTimeNumber
+
 function serviceWorkerRegister() {
     if (noteousSettings?.noteousApp?.noteousVersion >= 1.5) {
       if ('serviceWorker' in navigator) {
@@ -96,7 +112,7 @@ function waitForAnimationEnd(element, fallbackDuration) {
 
       hasResolved = true
       element.removeEventListener('animationend', onAnimationEnd)
-      window.clearTimeout(fallbackTimeoutId)
+      clearTimeout(fallbackTimeoutId)
       resolve()
     }
 
@@ -106,7 +122,7 @@ function waitForAnimationEnd(element, fallbackDuration) {
       }
     }
 
-    const fallbackTimeoutId = window.setTimeout(finish, fallbackDuration)
+    const fallbackTimeoutId = setTimeout(finish, fallbackDuration)
     element.addEventListener('animationend', onAnimationEnd)
   })
 }
@@ -173,7 +189,7 @@ async function playOrbButtonsLoadSequence() {
 
 async function runInitialLoadSequence() {
   if (!hasPendingInitialLoadSequence) {
-    sortNotes('set-sort', `${selectedOrb}`)
+    sortNotes('set-sort', `${window.selectedOrb}`)
     return
   }
 
@@ -187,10 +203,10 @@ async function runInitialLoadSequence() {
   }
 
   if (typeof queuePriorityListsOrbAnimation == 'function') {
-    queuePriorityListsOrbAnimation(document.getElementById(`${selectedOrb}-orb-button`))
+    queuePriorityListsOrbAnimation(document.getElementById(`${window.selectedOrb}-orb-button`))
   }
 
-  sortNotes('set-sort', `${selectedOrb}`)
+  sortNotes('set-sort', `${window.selectedOrb}`)
 }
 
 function queuePriorityListsOrbAnimation(orbButton) {
@@ -250,7 +266,7 @@ function animateNoteIntoDoneOrb(noteContainer) {
 
   const noteRect = noteContainer.getBoundingClientRect()
   const orbRect = doneOrbButton.getBoundingClientRect()
-  const noteComputedStyle = window.getComputedStyle(noteContainer)
+  const noteComputedStyle = getComputedStyle(noteContainer)
   const flightClone = noteContainer.cloneNode(true)
   const translateX = (orbRect.left + (orbRect.width / 2)) - (noteRect.left + (noteRect.width / 2))
   const translateY = (orbRect.top + (orbRect.height / 2)) - (noteRect.top + (noteRect.height / 2))
@@ -290,13 +306,13 @@ function animateNoteIntoDoneOrb(noteContainer) {
     flightClone.remove()
   }
 
-  window.setTimeout(() => {
+  setTimeout(() => {
     orblendEngine('orb-animation', '', '', 'done')
   }, Math.round(doneNoteFlightDuration * 0.72))
 
   if (typeof flightClone.animate != 'function') {
     return new Promise(resolve => {
-      window.setTimeout(() => {
+      setTimeout(() => {
         cleanup()
         resolve()
       }, doneNoteFlightDuration)
@@ -358,17 +374,25 @@ const readNotesActionButtonsIcons = {
   restore: 'undo'
 }
 
+const readNotesActionHandlers = {
+  done: doneNote,
+  share: shareNote,
+  copy: copyNote,
+  delete: deleteNote,
+  restore: restoreNote
+}
+
 
 // VARIÁVEIS IMPORTANTES /////////////////////////////////////
 
 let currentVersion = noteousVersion
-let noteIdEdit //usada para confirmar qual nota está sendo editada
-let editMode = false
+window.noteIdEdit = 0 //usada para confirmar qual nota está sendo editada
+window.editMode = false
 let tabIndexCounter = 10
 let sortActionSelection = ''
 let labelTimeoutId = null // Para controlar o timeout da label
 let readOptionsLabelSwapTimeoutId = null
-let selectedOrb = 'donutdough'
+window.selectedOrb = 'donutdough'
 let readOptionsVisible = false
 
 const defaultReadOptionsLabel = 'Opções de organização'
@@ -501,8 +525,9 @@ function syncReadOptionsVisibility() {
 ////////
 
 function navLink() {
-  window.location.replace('./hub.html')
+  location.replace('./hub.html')
 }
+document.querySelector('#nav-link')?.addEventListener('click', navLink)
 
 ////
 
@@ -515,6 +540,23 @@ renderNoteousVersionLabel()
 
 let noteousMain = JSON.parse(localStorage.getItem('noteous-main')) || []
 let noteousSettings = JSON.parse(localStorage.getItem('noteous-settings'))
+
+if (noteousSettings != null && noteousSettings?.noteousApp?.noteousVersion >= 1.5) {
+  let link = document.createElement('link')
+  link.setAttribute('rel', 'manifest')
+  link.setAttribute('href', 'manifest.json')
+  document.getElementsByTagName('head')[0].appendChild(link)
+
+  let script = document.createElement('script')
+  script.setAttribute('defer', 'true')
+  script.setAttribute('src', '/_vercel/insights/script.js')
+  document.getElementsByTagName('body')[0].appendChild(script)
+
+  let script2 = document.createElement('script')
+  script2.setAttribute('defer', 'true')
+  script2.setAttribute('src', '/_vercel/speed-insights/script.js')
+  document.getElementsByTagName('body')[0].appendChild(script2)
+}
 
 serviceWorkerRegister()
 loadNoteous('check-settings')
@@ -609,7 +651,7 @@ function welcomeToNoteous(context, subcontext) {
     greetingDescription4.classList.add('greeting-description-point')
 
     //Next Button
-    btnNext = document.createElement('button')
+    let btnNext = document.createElement('button')
     btnNext.classList.add('greeting-buttons')
     btnNext.appendChild(document.createTextNode('Continuar →'))
     btnNext.addEventListener('click', () => {
@@ -617,7 +659,7 @@ function welcomeToNoteous(context, subcontext) {
         welcomeToNoteous('render-policies')
       } else {
         loadNoteous('set-settings')
-        window.location.reload()
+        location.reload()
       }
     })
 
@@ -741,7 +783,7 @@ function welcomeToNoteous(context, subcontext) {
     let greetingTitle1 = document.createElement('p')
     greetingTitle1.classList.add('greeting-title1')
 
-    greetingTitle2 = document.createElement('p')
+    let greetingTitle2 = document.createElement('p')
     greetingTitle2.classList.add('greeting-title2')
     greetingTitleContainer.append(greetingTitle2)
 
@@ -768,7 +810,7 @@ function welcomeToNoteous(context, subcontext) {
     greetingPoliciesNoticeLink.classList.add('greeting-policies-text-link')
     greetingPoliciesNoticeLink.innerHTML = `<strong>Se preferir, acesse a versão estável do noteous ↗ <strong> <br> <br>`
     greetingPoliciesNoticeLink.addEventListener('click', () => {
-      window.location.replace('https://noteous.app')
+      location.replace('https://noteous.app')
     })
 
     let greetingPoliciesTermsUse = document.createElement('p')
@@ -792,7 +834,7 @@ function welcomeToNoteous(context, subcontext) {
         greetingPoliciesTitle2.classList.add('greeting-description-title')
         greetingPoliciesTitle2.append('Termos de Uso')
 
-        for (char of noteousPolicies.termsUse) {
+        for (let char of noteousPolicies.termsUse) {
           greetingPoliciesTermsUse.append(char)
           if (char == '\n') {
             greetingPoliciesTermsUse.append(
@@ -806,7 +848,7 @@ function welcomeToNoteous(context, subcontext) {
         greetingPoliciesTitle3.classList.add('greeting-description-title')
         greetingPoliciesTitle3.append('Política de Privacidade')
 
-        for (char of noteousPolicies.privacyPolicy) {
+        for (let char of noteousPolicies.privacyPolicy) {
           greetingPoliciesPrivacyPolicy.append(char)
           if (char == '\n') {
             greetingPoliciesPrivacyPolicy.append(
@@ -838,13 +880,13 @@ function welcomeToNoteous(context, subcontext) {
       })
 
     //Next Button
-    btnAccept = document.createElement('button')
+    let btnAccept = document.createElement('button')
     btnAccept.classList.add('greeting-buttons')
     document.querySelector('.greeting-panel').append(btnAccept)
     btnAccept.appendChild(document.createTextNode('Aceito ✔'))
     btnAccept.addEventListener('click', () => {
       loadNoteous('set-settings')
-      window.location.reload()
+      location.reload()
     })
   }
 }
@@ -938,9 +980,9 @@ function loadNoteous(context) {
 
         orblendEngine('on-change-input')
 
-        if (window.location.search.includes('share=true')) {
+        if (location.search.includes('share=true')) {
           writeLabel.innerHTML = 'Esse texto foi recebido'
-          window.history.replaceState({}, document.title, window.location.pathname)
+          history.replaceState({}, document.title, location.pathname)
         }
         //Aplica borda como double
         noteousSettings.priority = noteousSettings.priorityOrder[0]
@@ -956,11 +998,11 @@ function loadNoteous(context) {
       //NÃO HÁ CONFIGURAÇÕES --> PRIMEIRO ACESSO AO NOTEOUS
       //1.5 --> não armazenar noteousSettings: aguardar usuário aceitar
 
-      let domain = window.location.hostname
+      let domain = location.hostname
       if (domain == "noteous.vercel.app") {
-        window.location.replace('https://noteous.app')
+        location.replace('https://noteous.app')
       } else if (domain == 'noteouspreview.vercel.app'){
-        window.location.replace('https://preview.noteous.app')
+        location.replace('https://preview.noteous.app')
       }
 
       welcomeToNoteous('render-welcome', 'first-access')
@@ -1024,7 +1066,7 @@ let deferredInstallPrompt = null
 let installNoteousButton = document.createElement('button')
 
 function showInstallButton() {
-  window.addEventListener('beforeinstallprompt', (e) => {
+  addEventListener('beforeinstallprompt', (e) => {
     e.preventDefault()
     deferredInstallPrompt = e
     
@@ -1032,7 +1074,7 @@ function showInstallButton() {
       noteousSettings.noteousApp.installPrompt++
       localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
       
-      if ((window.matchMedia && window.matchMedia('(display-mode: standalone)').matches
+      if ((typeof matchMedia == 'function' && matchMedia('(display-mode: standalone)').matches
     ) || (navigator.standalone === true) || !deferredInstallPrompt) {
       if (installNoteousButton) installNoteousButton.remove()
     } else {
@@ -1060,7 +1102,7 @@ function showInstallButton() {
   })
 }
 
-window.addEventListener('appinstalled', () => {
+addEventListener('appinstalled', () => {
   deferredInstallPrompt = null
   if (installNoteousButton) installNoteousButton.remove()
 })
@@ -1425,7 +1467,7 @@ function sortNotes(context, subcontext) {
         localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
         readOptionsMessage('Ordenar por: Edição')
       }
-      sortNotes('set-sort', `${selectedOrb}`)
+      sortNotes('set-sort', `${window.selectedOrb}`)
 
   } else if (context == 'change-sort-time') {
     if (noteousSettings.sort.time == 'recent') {
@@ -1443,7 +1485,7 @@ function sortNotes(context, subcontext) {
       readOptionsSort.append(document.createTextNode('arrow_downward'))
       readOptionsMessage('Ordem: Mais recentes primeiro')
     }
-    sortNotes('set-sort', `${selectedOrb}`)
+    sortNotes('set-sort', `${window.selectedOrb}`)
   }
 }
 
@@ -1453,7 +1495,7 @@ function setSortAction(action) {
     localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
   }
 
-  sortNotes('set-sort', `${selectedOrb}`)
+  sortNotes('set-sort', `${window.selectedOrb}`)
 }
 
 function setSortTime(time) {
@@ -1462,7 +1504,7 @@ function setSortTime(time) {
     localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
   }
 
-  sortNotes('set-sort', `${selectedOrb}`)
+  sortNotes('set-sort', `${window.selectedOrb}`)
 }
 
 readOptionsSort.addEventListener('click', () => {
@@ -1546,7 +1588,7 @@ function renderNote(context, noteId, orb, searchTerm) {
         actionButtonsContainer.classList.add('action-buttons-container')
 
         const actionButtonsToRender =
-          selectedOrb === 'done'
+          window.selectedOrb === 'done'
             ? ['delete', 'restore']
             : noteousSettings.actionButtons.filter(
                 (b) => b !== 'delete' && b !== 'restore'
@@ -1556,45 +1598,27 @@ function renderNote(context, noteId, orb, searchTerm) {
           
             readNotesActionButtons[actionButton] = document.createElement('button')
             readNotesActionButtons[actionButton].classList.add('action-buttons', 'material-icons')
-            readNotesActionButtons[actionButton].setAttribute('onclick', `${actionButton}Note(${note.id})`)
+            readNotesActionButtons[actionButton].addEventListener('click', () => {
+              readNotesActionHandlers[actionButton](note.id)
+            })
             readNotesActionButtons[actionButton].appendChild(document.createTextNode(readNotesActionButtonsIcons[actionButton]))
 
             //ACESSIBILIDADE
             readNotesActionButtons[actionButton].tabIndex = tabIndexCounter += 1
             if (actionButton == 'done') {
               readNotesActionButtons[actionButton].setAttribute('aria-label', 'Concluir nota')
-              readNotesActionButtons[actionButton].setAttribute(
-                'onkeyup',
-                `if (event.key === 'Enter') { doneNote(${note.id}); }`
-              )
             } else if (actionButton == 'share') {
               readNotesActionButtons[actionButton].setAttribute('aria-label', 'Compartilhar nota')
-              readNotesActionButtons[actionButton].setAttribute(
-                'onkeyup',
-                `if (event.key === 'Enter') { shareNote(${note.id}); }`
-              )
             }
             else if (actionButton == 'copy') {
               readNotesActionButtons[actionButton].classList.add('action-button-copy')
               readNotesActionButtons[actionButton].setAttribute('aria-label', 'Copiar nota')
-              readNotesActionButtons[actionButton].setAttribute(
-                'onkeyup',
-                `if (event.key === 'Enter') { copyNote(${note.id}); }`
-              )
             }
             else if (actionButton == 'delete') {
               readNotesActionButtons[actionButton].setAttribute('aria-label', 'Apagar nota')
-              readNotesActionButtons[actionButton].setAttribute(
-                'onkeyup',
-                `if (event.key === 'Enter') { deleteNote(${note.id}); }`
-              )
             }
             else if (actionButton == 'restore') {
               readNotesActionButtons[actionButton].setAttribute('aria-label', 'Restaurar nota')
-              readNotesActionButtons[actionButton].setAttribute(
-                'onkeyup',
-                `if (event.key === 'Enter') { restoreNote(${note.id}); }`
-              )
             }
 
             actionButtonsContainer.appendChild(readNotesActionButtons[actionButton])
@@ -1606,7 +1630,11 @@ function renderNote(context, noteId, orb, searchTerm) {
         noteTextContainer.id = note.id + '-text-container'
         noteTextContainer.classList.add('note-text-container')
         noteTextContainer.setAttribute('readonly', true)
-        noteTextContainer.setAttribute('onclick', `editNote(${note.id})`)
+        noteTextContainer.addEventListener('click', () => {
+          if (noteTextContainer.hasAttribute('readonly')) {
+            editNote(note.id)
+          }
+        })
         noteTextContainer.value = `\n\n${note.text}\n`
 
         //DATE
@@ -1642,10 +1670,11 @@ function renderNote(context, noteId, orb, searchTerm) {
 
         noteTextContainer.tabIndex = tabIndexCounter += 1
         noteTextContainer.setAttribute('aria-label', 'Anotação:' + note.text)
-        noteTextContainer.setAttribute(
-          'onkeyup',
-          `if (event.key === 'Enter' && this.hasAttribute('readonly')) { editNote(${note.id}); }`
-        )
+        noteTextContainer.addEventListener('keyup', (event) => {
+          if (event.key === 'Enter' && noteTextContainer.hasAttribute('readonly')) {
+            editNote(note.id)
+          }
+        })
 
         
 
@@ -1725,7 +1754,7 @@ function renderNote(context, noteId, orb, searchTerm) {
           actionButtonsContainer.classList.add('action-buttons-container')
 
           const actionButtonsToRender =
-            selectedOrb === 'done'
+            window.selectedOrb === 'done'
               ? ['delete', 'restore']
               : noteousSettings.actionButtons.filter(
                   (b) => b !== 'delete' && b !== 'restore'
@@ -1734,45 +1763,27 @@ function renderNote(context, noteId, orb, searchTerm) {
           for (let actionButton of actionButtonsToRender) {
             readNotesActionButtons[actionButton] = document.createElement('button')
             readNotesActionButtons[actionButton].classList.add('action-buttons', 'material-icons')
-            readNotesActionButtons[actionButton].setAttribute('onclick', `${actionButton}Note(${note.id})`)
+            readNotesActionButtons[actionButton].addEventListener('click', () => {
+              readNotesActionHandlers[actionButton](note.id)
+            })
             readNotesActionButtons[actionButton].appendChild(document.createTextNode(readNotesActionButtonsIcons[actionButton]))
 
             //ACESSIBILIDADE
             readNotesActionButtons[actionButton].tabIndex = tabIndexCounter += 1
             if (actionButton == 'done') {
               readNotesActionButtons[actionButton].setAttribute('aria-label', 'Concluir nota')
-              readNotesActionButtons[actionButton].setAttribute(
-                'onkeyup',
-                `if (event.key === 'Enter') { doneNote(${note.id}); }`
-              )
             } else if (actionButton == 'share') {
               readNotesActionButtons[actionButton].setAttribute('aria-label', 'Compartilhar nota')
-              readNotesActionButtons[actionButton].setAttribute(
-                'onkeyup',
-                `if (event.key === 'Enter') { shareNote(${note.id}); }`
-              )
             }
             else if (actionButton == 'copy') {
               readNotesActionButtons[actionButton].classList.add('action-button-copy')
               readNotesActionButtons[actionButton].setAttribute('aria-label', 'Copiar nota')
-              readNotesActionButtons[actionButton].setAttribute(
-                'onkeyup',
-                `if (event.key === 'Enter') { copyNote(${note.id}); }`
-              )
             }
             else if (actionButton == 'delete') {
               readNotesActionButtons[actionButton].setAttribute('aria-label', 'Apagar nota')
-              readNotesActionButtons[actionButton].setAttribute(
-                'onkeyup',
-                `if (event.key === 'Enter') { deleteNote(${note.id}); }`
-              )
             }
             else if (actionButton == 'restore') {
               readNotesActionButtons[actionButton].setAttribute('aria-label', 'Restaurar nota')
-              readNotesActionButtons[actionButton].setAttribute(
-                'onkeyup',
-                `if (event.key === 'Enter') { restoreNote(${note.id}); }`
-              )
             }
 
             actionButtonsContainer.appendChild(readNotesActionButtons[actionButton])
@@ -1784,7 +1795,11 @@ function renderNote(context, noteId, orb, searchTerm) {
           noteTextContainer.id = note.id + '-text-container'
           noteTextContainer.classList.add('note-text-container')
           noteTextContainer.setAttribute('readonly', true)
-          noteTextContainer.setAttribute('onclick', `editNote(${note.id})`)
+          noteTextContainer.addEventListener('click', () => {
+            if (noteTextContainer.hasAttribute('readonly')) {
+              editNote(note.id)
+            }
+          })
           noteTextContainer.value = `\n \n ${note.text}\n`
 
           //DATE
@@ -1820,10 +1835,11 @@ function renderNote(context, noteId, orb, searchTerm) {
 
           noteTextContainer.tabIndex = tabIndexCounter += 1
           noteTextContainer.setAttribute('aria-label', 'Anotação:' + note.text)
-          noteTextContainer.setAttribute(
-            'onkeyup',
-            `if (event.key === 'Enter' && this.hasAttribute('readonly')) { editNote(${note.id}); }`
-          )
+          noteTextContainer.addEventListener('keyup', (event) => {
+            if (event.key === 'Enter' && noteTextContainer.hasAttribute('readonly')) {
+              editNote(note.id)
+            }
+          })
 
           //APPENDS
 
@@ -1936,7 +1952,7 @@ function addNote() {
 
     renderNote('add', objNote.id)
     writeInput.value = ''
-    if (window.screen.width > 450) {
+    if (screen.width > 450) {
       writeInput.focus()
     }
     orblendEngine('on-change-input')
@@ -2092,7 +2108,7 @@ function copyNote(noteId) {
 
 function setEditMode(context) {
   if (context == 'edit-mode-on') {
-    editMode = true
+    window.editMode = true
     priorityButton.classList.add('edit-mode')
     writeLabel.style.opacity = 0
     writeInputWrapper.classList.add('orb-done')
@@ -2102,7 +2118,7 @@ function setEditMode(context) {
     writeInput.disabled = true
     syncWriteInputRender()
   } else if (context == 'edit-mode-off') {
-    editMode = false
+    window.editMode = false
     priorityButton.classList.remove('edit-mode')
     writeLabel.style.opacity = 1
     writeInputWrapper.classList.remove('orb-done')
@@ -2126,9 +2142,8 @@ function editNote(noteId) {
       let isEditing = false
       let editedNoteText = note.text
       
-      noteTextContainer.removeAttribute('onclick')
       noteTextContainer.removeAttribute('readonly')
-      noteTextContainer.oninput = () => {
+      noteTextContainer.addEventListener('input', () => {
         editedNoteText = noteTextContainer.value
         isEditing = true
         if (isEditing) {
@@ -2136,18 +2151,18 @@ function editNote(noteId) {
           actionButtonsContainer.classList.add('hidden-element')
           editingButtonsContainer.classList.remove('hidden-element')
         }
-      }
+      })
 
-      noteTextContainer.onblur = () => {
+      noteTextContainer.addEventListener('blur', () => {
         if (isEditing && editedNoteText == note.text) {
           isEditing = false
           actionButtonsContainer.classList.remove('hidden-element')
           editingButtonsContainer.classList.add('hidden-element')
           setEditMode('edit-mode-off')
         }
-      }
+      })
 
-      acceptEditingButton.onclick = () => {
+      acceptEditingButton.addEventListener('click', () => {
         if (noteTextContainer.value != '' && noteTextContainer.value != null) {
           note.text = editedNoteText.startsWith('\n\n')
             ? editedNoteText.slice(2)
@@ -2168,16 +2183,15 @@ function editNote(noteId) {
             orblendEngine('load')
           }
         }
-        renderNote('render-all', '', `${selectedOrb}`)
-      }
+        renderNote('render-all', '', `${window.selectedOrb}`)
+      })
 
-      discardEditingButton.onclick = () => {
+      discardEditingButton.addEventListener('click', () => {
         noteTextContainer.value = `\n\n${note.text}`
         actionButtonsContainer.classList.remove('hidden-element')
         editingButtonsContainer.classList.add('hidden-element')
         setEditMode('edit-mode-off')
-      }
+      })
     }
   }
 }
-

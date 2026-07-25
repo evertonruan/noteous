@@ -1,4 +1,4 @@
-    function fileLoad() {
+export function fileLoad() {
   return new Promise((resolve, reject) => {
     let fileContent
 

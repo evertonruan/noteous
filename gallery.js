@@ -1,6 +1,7 @@
 function navLink() {
-  window.location.replace('./hub.html')
+  location.replace('./hub.html')
 }
+document.querySelector('#nav-link')?.addEventListener('click', navLink)
 
 const galleryData = [
   {

@@ -1,9 +1,30 @@
+import { noteousVersion, termsVersion } from './noteousParams.js'
+import { fileLoad } from './fileLoad.js'
+
 let noteousSettings = JSON.parse(localStorage.getItem('noteous-settings'))
+
+if (noteousSettings != null && noteousSettings?.noteousApp?.noteousVersion >= 1.5) {
+  let link = document.createElement('link')
+  link.setAttribute('rel', 'manifest')
+  link.setAttribute('href', 'manifest.json')
+  document.getElementsByTagName('head')[0].appendChild(link)
+
+  let script = document.createElement('script')
+  script.setAttribute('defer', 'true')
+  script.setAttribute('src', '/_vercel/insights/script.js')
+  document.getElementsByTagName('body')[0].appendChild(script)
+
+  let script2 = document.createElement('script')
+  script2.setAttribute('defer', 'true')
+  script2.setAttribute('src', '/_vercel/speed-insights/script.js')
+  document.getElementsByTagName('body')[0].appendChild(script2)
+}
+
 let noteousMain = JSON.parse(localStorage.getItem('noteous-main')) || []
 
 if (noteousSettings == null || noteousSettings?.noteousApp?.noteousVersion < 1.6) {
   //Redireciona a página inicial se Termos não foram aceitos
-  window.location.replace('./index.html')
+  location.replace('./index.html')
 } else {
   if ('serviceWorker' in navigator) {
     ;(async () => {
@@ -14,7 +35,7 @@ if (noteousSettings == null || noteousSettings?.noteousApp?.noteousVersion < 1.6
             // Not a backup file: save text to write-input and open index
             noteousSettings.input = fileLoaded.text
             localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
-            window.location.replace('./index.html?share=true')
+            location.replace('./index.html?share=true')
           } else {
             showNotesModal(fileLoaded)
           }
@@ -61,8 +82,10 @@ let aboutOrbsList = document.querySelector('#about-orbs-list')
 ///////
 
 function navLink() {
-  window.location.replace('./index.html')
+  location.replace('./index.html')
 }
+document.querySelector('#nav-link')?.addEventListener('click', navLink)
+document.querySelector('#about-button-gallery')?.addEventListener('click', () => location.href='gallery.html')
 
 ///////
 
@@ -85,11 +108,11 @@ let deferredInstallPrompt = null
 let installNoteousButton = document.createElement('button')
 
 function showInstallButton() {
-  window.addEventListener('beforeinstallprompt', (e) => {
+  addEventListener('beforeinstallprompt', (e) => {
     e.preventDefault()
     deferredInstallPrompt = e
       
-      if ((window.matchMedia && window.matchMedia('(display-mode: standalone)').matches
+      if ((typeof matchMedia == 'function' && matchMedia('(display-mode: standalone)').matches
     ) || (navigator.standalone === true) || !deferredInstallPrompt) {
       if (installNoteousButton) installNoteousButton.remove()
     } else {
@@ -118,7 +141,7 @@ function showInstallButton() {
 
 showInstallButton()
 
-window.addEventListener('appinstalled', () => {
+addEventListener('appinstalled', () => {
   deferredInstallPrompt = null
   if (installNoteousButton) installNoteousButton.remove()
 })
@@ -1092,7 +1115,7 @@ function importNotes(notes) {
   localStorage.setItem('noteous-main', JSON.stringify(noteousMain))
   
   alert('Notas importadas com sucesso!')
-  window.location.reload()
+  location.reload()
 }
 
 aboutOrbsList.addEventListener('click', () => {

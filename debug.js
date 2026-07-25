@@ -1,3 +1,5 @@
+import { noteousVersion } from './noteousParams.js'
+
 let noteousMain = JSON.parse(localStorage.getItem('noteous-main')) || []
 let noteousSettings = JSON.parse(localStorage.getItem('noteous-settings'))
 
@@ -46,7 +48,7 @@ if ('serviceWorker' in navigator) {
   br()  
 
   
-  buttonUnregisterServiceWorker.setAttribute('onclick','unRegisterServiceWorker()')
+  buttonUnregisterServiceWorker.addEventListener('click', unRegisterServiceWorker)
   buttonUnregisterServiceWorker.innerText = 'Remover Service Worker'
   body.append(buttonUnregisterServiceWorker)
 
@@ -96,7 +98,7 @@ function unRegisterServiceWorker() {
 
       noteousSettings.debug = 'SW'
       localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
-      window.location.reload()
+      location.reload()
     }, 2000);
   }, 2000);
 }

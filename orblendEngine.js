@@ -1,4 +1,4 @@
-//✨ ORBLEND ENGINE 2.3
+//✨ ORBLEND ENGINE 2.3.1
 
 const smartCalcExpressionPattern =
   /\d+(?:[.,]\d+)?(?:\s*[+\-*/]\s*\d+(?:[.,]\d+)?)+/g
@@ -255,7 +255,7 @@ function positionSmartCalcPopup(highlightElement) {
 
   popupLeft = Math.min(
     Math.max(8, popupLeft),
-    Math.max(8, window.innerWidth - popupRectangle.width - 8)
+    Math.max(8, innerWidth - popupRectangle.width - 8)
   )
 
   if (popupTop < 8) {
@@ -308,6 +308,8 @@ function showSmartCalcPopup(highlightElement, visibilityMode) {
 }
 
 function findSmartCalcHighlightElementAtPointer(clientX, clientY) {
+  const writeInputRender = document.querySelector('#write-input-render')
+
   if (!writeInputRender) return null
 
   let highlightElementList = writeInputRender.querySelectorAll(
@@ -409,6 +411,8 @@ function handleSmartCalcClick(event) {
 }
 
 function enableSmartCalcEvents() {
+  const writeInput = document.querySelector('#write-input')
+
   if (smartCalcEventsBound || !writeInput) return
 
   writeInput.addEventListener('mousemove', (event) => {
@@ -438,7 +442,7 @@ function enableSmartCalcEvents() {
     orblendEngine('hide-smart-calc-popup')
   })
 
-  window.addEventListener('resize', () => {
+  addEventListener('resize', () => {
     orblendEngine('hide-smart-calc-popup')
   })
 
@@ -451,7 +455,28 @@ function hasLink(text) {
   return urlPattern.test(text)
 }
 
-function orblendEngine(context, labelMessage, note, orb) {
+export function orblendEngine(context, labelMessage, note, orb) {
+  const infoPanel = document.querySelector('#info-panel')
+  const writeLabel = document.querySelector('#write-label')
+  const writeInput = document.querySelector('#write-input')
+  const writeInputWrapper = document.querySelector('#write-input-wrapper')
+  const writeInputRender = document.querySelector('#write-input-render')
+  const writeButtonsContainer = document.querySelector('#write-buttons-container')
+  const writeButtonAdd = document.querySelector('#write-button-add')
+  const writeButtonDismiss = document.querySelector('#write-button-dismiss')
+  const orbsList = document.querySelector('#orbs-list')
+  const orbPanel = document.querySelector('#orb-panel')
+  const orbInfoLabel = document.querySelector('#orb-panel-label')
+  const orbInfoCount = document.querySelector('#orb-panel-count')
+  const readHeader = document.querySelector('#read-header')
+  const readOptionsSort = document.querySelector('#read-options-sort')
+  const orbsListLabel = document.querySelector('#orbs-list-label')
+  const readOptions = document.querySelector('#read-options')
+
+  const noteousSettings = JSON.parse(localStorage.getItem('noteous-settings'))
+  const noteousMain = JSON.parse(localStorage.getItem('noteous-main')) || []
+  let selectedOrb = noteousSettings?.selectedOrb
+  
   let subcontext
 
   let dateElement = function makeDateElement() {
@@ -459,9 +484,9 @@ function orblendEngine(context, labelMessage, note, orb) {
     let infoElementDate = document.createElement('p')
     infoElementDate.classList.add('info-element')
     let infoElementDateText = document.createTextNode(
-      `Olá! Hoje é ${findWeek(new Date(dateNow).getDay())}, ${new Date(
+      `Olá! Hoje é ${window.findWeek(new Date(dateNow).getDay())}, ${new Date(
         dateNow
-      ).getDate()} de ${findMonth(new Date(dateNow).getMonth())}`
+      ).getDate()} de ${window.findMonth(new Date(dateNow).getMonth())}`
     )
     infoElementDate.append(infoElementDateText)
     return infoElementDate
@@ -554,7 +579,7 @@ function orblendEngine(context, labelMessage, note, orb) {
     const contentHeight = writeInput.scrollHeight
     const maxInputHeight =
       parseFloat(getComputedStyle(writeInputWrapper).maxHeight) ||
-      window.innerHeight * 0.6
+      innerHeight * 0.6
 
     if (contentHeight > maxInputHeight) {
       writeInput.style.height = maxInputHeight + 'px'
@@ -618,7 +643,7 @@ function orblendEngine(context, labelMessage, note, orb) {
     //Configurar informações
     infoPanel.innerHTML = ''
     infoPanel.append(dateElement(), infoElement(subcontext))
-    showInstallButton()
+    window.showInstallButton()
   } else if (context == 'load') {
     const hasActiveLinkNotes = noteousMain.some(
       note => note.link === true && note.done !== true
@@ -658,14 +683,14 @@ function orblendEngine(context, labelMessage, note, orb) {
         selectedOrb = orb
         noteousSettings.selectedOrb = selectedOrb
         localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
-        if (typeof queuePriorityListsOrbAnimation == 'function') {
-          queuePriorityListsOrbAnimation(orbButton)
+        if (typeof window.queuePriorityListsOrbAnimation == 'function') {
+          window.queuePriorityListsOrbAnimation(orbButton)
         }
         orbPanel.classList.remove('orb-panel-animate')
         void orbPanel.offsetWidth
         orbPanel.classList.add('orb-panel-animate')
         orblendEngine('update-orb-info')
-        renderNote('render-all','', orb)
+        window.renderNote('render-all','', orb)
       })
       orbsList.appendChild(orbButton)
     }
@@ -707,7 +732,7 @@ function orblendEngine(context, labelMessage, note, orb) {
     infoPanel.innerHTML = ''
     infoPanel.append(dateElement(), infoElement(subcontext))
     
-    showInstallButton()
+    window.showInstallButton()
     orblendEngine('change')
   } else if (context == 'on-change-input') {
     //Habilitar/Desabilitar Botão Adicionar Nota
@@ -729,12 +754,12 @@ function orblendEngine(context, labelMessage, note, orb) {
     }
 
     //✨ Backup Inteligente de Nota
-    if (editMode == false) {
+    if (window.editMode == false) {
       noteousSettings.input = writeInput.value
       localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
-    } else if (editMode == true) {
+    } else if (window.editMode == true) {
       noteousSettings.input = writeInput.value
-      noteousSettings.noteId = noteIdEdit
+      noteousSettings.noteId = window.noteIdEdit
       localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
     }
 
