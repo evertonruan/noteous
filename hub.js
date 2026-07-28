@@ -1,26 +1,12 @@
 import { noteousVersion, termsVersion } from './noteousParams.js'
 import { fileLoad } from './fileLoad.js'
+import * as storage from './modules/storage-service.js'
 
-let noteousSettings = JSON.parse(localStorage.getItem('noteous-settings'))
+const initialSettings = storage.getSettings()
+const initialNotes = await storage.getAllNotes()
 
-if (noteousSettings != null && noteousSettings?.noteousApp?.noteousVersion >= 1.5) {
-  let link = document.createElement('link')
-  link.setAttribute('rel', 'manifest')
-  link.setAttribute('href', 'manifest.json')
-  document.getElementsByTagName('head')[0].appendChild(link)
-
-  let script = document.createElement('script')
-  script.setAttribute('defer', 'true')
-  script.setAttribute('src', '/_vercel/insights/script.js')
-  document.getElementsByTagName('body')[0].appendChild(script)
-
-  let script2 = document.createElement('script')
-  script2.setAttribute('defer', 'true')
-  script2.setAttribute('src', '/_vercel/speed-insights/script.js')
-  document.getElementsByTagName('body')[0].appendChild(script2)
-}
-
-let noteousMain = JSON.parse(localStorage.getItem('noteous-main')) || []
+let noteousSettings = initialSettings
+let userNotes = initialNotes.sort((a, b) => (b.createdAt || b.id || 0) - (a.createdAt || a.id || 0))
 
 if (noteousSettings == null || noteousSettings?.noteousApp?.noteousVersion < 1.6) {
   //Redireciona a página inicial se Termos não foram aceitos
@@ -34,7 +20,7 @@ if (noteousSettings == null || noteousSettings?.noteousApp?.noteousVersion < 1.6
           if (fileLoaded.isPlainText) {
             // Not a backup file: save text to write-input and open index
             noteousSettings.input = fileLoaded.text
-            localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
+            storage.saveSettings(noteousSettings)
             location.replace('./index.html?share=true')
           } else {
             showNotesModal(fileLoaded)
@@ -178,8 +164,7 @@ function noteousTheme(context) {
     noteousSettings.look.accentLum = '--accent-lum: 60%;'
     noteousSettings.look.lumAccentContainer = '--lum-accent-container: 65%;'
 
-    localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
-    noteousSettings = JSON.parse(localStorage.getItem('noteous-settings'))
+    storage.saveSettings(noteousSettings)
     injectCSSOnRoot()
   } else if (context == 'set-theme-dark') {
     noteousSettings.look.luminosity = 'dark'
@@ -193,8 +178,7 @@ function noteousTheme(context) {
     noteousSettings.look.accentLum = '--accent-lum: 60%;'
     noteousSettings.look.lumAccentContainer = '--lum-accent-container: 32%;'
 
-    localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
-    noteousSettings = JSON.parse(localStorage.getItem('noteous-settings'))
+    storage.saveSettings(noteousSettings)
     injectCSSOnRoot()
   }
 }
@@ -209,7 +193,7 @@ function activeOptionVerifier() {
   toggleActionButtonCopy.checked = noteousSettings.actionButtons.includes('copy')
   
   // Exibe o botão "Criar Cópia" apenas se houver ao menos 1 nota salva
-  if (noteousMain.length == 0) {
+  if (userNotes.length == 0) {
     copyCreateButton.classList.add('hidden-element')
   }
   
@@ -261,7 +245,7 @@ activeOptionVerifier()
 
 // SISTEMA DE DRAG-DROP PARA PRIORIDADES //////
 
-if (noteousMain.length == 0) {
+if (userNotes.length == 0) {
   prioritySettingsContainer.classList.add('hidden-element')
 }
 
@@ -314,8 +298,8 @@ function swapPriorities(from, to) {
   from.dataset.priority = toPriority
   to.dataset.priority = fromPriority
   
-  // Salva no localStorage
-  localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
+  // Salva no IndexedDB
+  storage.saveSettings(noteousSettings)
   
   // Atualiza apenas os números
   updatePriorityNumbers()
@@ -361,21 +345,21 @@ function loadPriorityOrder() {
 
 baseRemOptionNormal.addEventListener('click', () => {
   noteousSettings.look.baseRem = '--base-rem: 100%;'
-  localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
+  storage.saveSettings(noteousSettings)
   injectCSSOnRoot()
   activeOptionVerifier()
 })
 
 baseRemOptionBig.addEventListener('click', () => {
   noteousSettings.look.baseRem = '--base-rem: 106.25%;'
-  localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
+  storage.saveSettings(noteousSettings)
   injectCSSOnRoot()
   activeOptionVerifier()
 })
 
 baseRemOptionSmall.addEventListener('click', () => {
   noteousSettings.look.baseRem = '--base-rem: 93.75%;'
-  localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
+  storage.saveSettings(noteousSettings)
   injectCSSOnRoot()
   activeOptionVerifier()
 })
@@ -393,7 +377,7 @@ optionDark.addEventListener('click', () => {
 
 // BOTÕES DE AÇÃO //////
 
-if (noteousMain.length == 0 || null) {
+if (userNotes.length == 0 || null) {
   actionButtonsSettingsContainer.classList.add('hidden-element')
 }
 
@@ -404,7 +388,7 @@ toggleActionButtonShare.addEventListener('change', () => {
       noteousSettings.actionButtons = noteousSettings.actionButtons.filter(actionButton => actionButton != 'share')
     }
   
-  localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
+  storage.saveSettings(noteousSettings)
   activeOptionVerifier()
 })
 
@@ -415,7 +399,7 @@ toggleActionButtonCopy.addEventListener('change', () => {
       noteousSettings.actionButtons = noteousSettings.actionButtons.filter(actionButton => actionButton != 'copy')
     }
   
-  localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
+  storage.saveSettings(noteousSettings)
   activeOptionVerifier()
 })
 
@@ -481,7 +465,7 @@ buttonPolicies.addEventListener('click', () => {
 //BOTÃO CRIAR CÓPIA
 copyCreateButton.addEventListener('click', () => {
   // Segurança adicional: não permite abrir se não houver notas
-  if (!noteousMain || noteousMain.length === 0) return
+  if (!userNotes || userNotes.length === 0) return
   if (copyDetailsSwitchVar == 0 || copyDetailsSwitchVar == 2) {
     copyDetailsSwitchVar = 1
     copyDetailsContainer.innerHTML = ''
@@ -493,12 +477,12 @@ copyCreateButton.addEventListener('click', () => {
     // Informação sobre quantidade de notas
     let notesInfo = document.createElement('p')
 
-    const doneNotesCount = noteousMain.filter(note => note.done === true).length
+    const doneNotesCount = userNotes.filter(note => note.done === true).length
     const doneNotesText = doneNotesCount > 0
       ? `, incluindo ${doneNotesCount} nota${doneNotesCount !== 1 ? 's' : ''} concluída${doneNotesCount !== 1 ? 's' : ''}`
       : ''
 
-    notesInfo.textContent = `Você tem ${noteousMain.length} nota${noteousMain.length !== 1 ? 's' : ''}${doneNotesText}`
+    notesInfo.textContent = `Você tem ${userNotes.length} nota${userNotes.length !== 1 ? 's' : ''}${doneNotesText}`
 
     // Container para os botões
     let buttonsContainer = document.createElement('div')
@@ -609,9 +593,9 @@ function formatDate(context, timestamp) {
 async function createNoteCopyShare() {
   
   const notesData = {
-    notes: noteousMain,
+    notes: userNotes,
     exportDate: Date.now(),
-    totalNotes: noteousMain.length,
+    totalNotes: userNotes.length,
     noteousVersion: noteousVersion
   }
 
@@ -635,9 +619,9 @@ async function createNoteCopyShare() {
 function createNoteCopyDownload() {
   
   const notesData = {
-    notes: noteousMain,
+    notes: userNotes,
     exportDate: Date.now(),
-    totalNotes: noteousMain.length,
+    totalNotes: userNotes.length,
     noteousVersion: noteousVersion
   }
 
@@ -937,11 +921,11 @@ function createNotePreview(note, index, context = 'copy') {
   
   dateElement.appendChild(
     document.createTextNode(
-      `+ ${new Date(note.id).getDate()}/${findMonth(
-        new Date(note.id).getMonth()
-      )}/${new Date(note.id).getUTCFullYear()} às ${setTimeNumber(
-        new Date(note.id).getHours()
-      )}:${setTimeNumber(new Date(note.id).getMinutes())}`
+      `+ ${new Date(note.createdAt || note.id).getDate()}/${findMonth(
+        new Date(note.createdAt || note.id).getMonth()
+      )}/${new Date(note.createdAt || note.id).getUTCFullYear()} às ${setTimeNumber(
+        new Date(note.createdAt || note.id).getHours()
+      )}:${setTimeNumber(new Date(note.createdAt || note.id).getMinutes())}`
     )
   )
   if (note.editedAt != undefined) {
@@ -1109,10 +1093,13 @@ function setTimeNumber(number) {
 }
 
 //FUNÇÃO PARA IMPORTAR NOTAS
-function importNotes(notes) {
+async function importNotes(notes) {
+  // Limpa as notas atuais antes de importar
+  await storage.clearAllNotes()
+
   // Substitui as notas atuais pelas importadas
-  noteousMain = notes
-  localStorage.setItem('noteous-main', JSON.stringify(noteousMain))
+  userNotes = notes
+  await storage.saveAllNotes(userNotes)
   
   alert('Notas importadas com sucesso!')
   location.reload()

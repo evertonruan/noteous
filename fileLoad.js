@@ -1,3 +1,5 @@
+import * as storage from './modules/storage-service.js'
+
 export function fileLoad() {
   return new Promise((resolve, reject) => {
     let fileContent
@@ -25,7 +27,7 @@ export function fileLoad() {
         if (parsed && Array.isArray(parsed.notes)) {
           // Valid noteous backup
           noteousSettings.fileId = parsed.exportDate
-          localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
+          storage.saveSettings(noteousSettings)
           resolve(parsed)
         } else {
           // Not a valid backup: treat as plain text

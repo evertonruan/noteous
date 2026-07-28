@@ -1,4 +1,4 @@
-//✨ ORBLEND ENGINE 2.3.1
+//✨ ORBLEND ENGINE 2.3.2
 
 const smartCalcExpressionPattern =
   /\d+(?:[.,]\d+)?(?:\s*[+\-*/]\s*\d+(?:[.,]\d+)?)+/g
@@ -455,7 +455,9 @@ function hasLink(text) {
   return urlPattern.test(text)
 }
 
-export function orblendEngine(context, labelMessage, note, orb) {
+import * as storage from './modules/storage-service.js'
+
+export async function orblendEngine(context, labelMessage, note, orb) {
   const infoPanel = document.querySelector('#info-panel')
   const writeLabel = document.querySelector('#write-label')
   const writeInput = document.querySelector('#write-input')
@@ -473,9 +475,21 @@ export function orblendEngine(context, labelMessage, note, orb) {
   const orbsListLabel = document.querySelector('#orbs-list-label')
   const readOptions = document.querySelector('#read-options')
 
-  const noteousSettings = JSON.parse(localStorage.getItem('noteous-settings'))
-  const noteousMain = JSON.parse(localStorage.getItem('noteous-main')) || []
-  let selectedOrb = noteousSettings?.selectedOrb
+  let noteousSettings
+  let selectedOrb
+  let initialNotes
+  let userNotes
+
+  // Se o contexto for apenas checagem, podemos tentar usar dados globais ou evitar carregar tudo se possível.
+  // No entanto, para manter a consistência com o restante do código que espera dados atualizados do storage:
+  if (context === 'check-selected-orb') {
+    selectedOrb = window.selectedOrb
+  } else if (context !== 'render-smart-calc' && context !== 'hide-smart-calc-popup' && context !== 'smart-input-resize' && context !== 'enable-smart-calc' && context !== 'has-link') {
+    noteousSettings = storage.getSettings()
+    selectedOrb = noteousSettings?.selectedOrb
+    initialNotes = await storage.getAllNotes()
+    userNotes = initialNotes.sort((a, b) => (b.createdAt || b.id || 0) - (a.createdAt || a.id || 0))
+  }
   
   let subcontext
 
@@ -594,12 +608,12 @@ export function orblendEngine(context, labelMessage, note, orb) {
   }
 
   if (context == 'update-orb-info') {
-    if (noteousMain.length == 0) {
+    if (userNotes.length == 0) {
       readHeader.classList.add('invisible-element')
     } else {
-      const doneNotesCount = noteousMain.filter(note => note.done === true).length
-      const activeNotesCount = noteousMain.filter(note => note.done !== true).length
-      const linkNotesCount = noteousMain.filter(note => note.link === true && note.done !== true).length 
+      const doneNotesCount = userNotes.filter(note => note.done === true).length
+      const activeNotesCount = userNotes.filter(note => note.done !== true).length
+      const linkNotesCount = userNotes.filter(note => note.link === true && note.done !== true).length 
 
       readHeader.classList.remove('invisible-element')
       if (selectedOrb == 'done') {
@@ -620,7 +634,7 @@ export function orblendEngine(context, labelMessage, note, orb) {
 
   if (context == 'change') {
     //exibir/ocultar readOptions
-    if (noteousMain.length == 0) {
+    if (userNotes.length == 0) {
       orbsList.querySelectorAll('[id*="orb"]').forEach(element => {element.classList.add('hidden-element')})
       orbsListLabel.classList.add('hidden-element')
       if (typeof syncReadOptionsVisibility == 'function') {
@@ -645,7 +659,7 @@ export function orblendEngine(context, labelMessage, note, orb) {
     infoPanel.append(dateElement(), infoElement(subcontext))
     window.showInstallButton()
   } else if (context == 'load') {
-    const hasActiveLinkNotes = noteousMain.some(
+    const hasActiveLinkNotes = userNotes.some(
       note => note.link === true && note.done !== true
     )
 
@@ -679,10 +693,11 @@ export function orblendEngine(context, labelMessage, note, orb) {
         orbButton.innerHTML = 'link'
       }
       
-      orbButton.addEventListener('click', () => {
+      orbButton.addEventListener('click', async () => {
         selectedOrb = orb
+        window.selectedOrb = orb
         noteousSettings.selectedOrb = selectedOrb
-        localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
+        storage.saveSettings(noteousSettings)
         if (typeof window.queuePriorityListsOrbAnimation == 'function') {
           window.queuePriorityListsOrbAnimation(orbButton)
         }
@@ -690,7 +705,7 @@ export function orblendEngine(context, labelMessage, note, orb) {
         void orbPanel.offsetWidth
         orbPanel.classList.add('orb-panel-animate')
         orblendEngine('update-orb-info')
-        window.renderNote('render-all','', orb)
+        await window.renderNote('render-all','', orb)
       })
       orbsList.appendChild(orbButton)
     }
@@ -715,7 +730,7 @@ export function orblendEngine(context, labelMessage, note, orb) {
     ////////////////////////////
 
     //exibir/ocultar readOptions
-    if (noteousMain.length > 1) {
+    if (userNotes.length > 1) {
       readOptionsSort.style.cssText = 'opacity: 1'
     } else {
       readOptionsSort.style.cssText = 'opacity: 0'
@@ -724,7 +739,7 @@ export function orblendEngine(context, labelMessage, note, orb) {
     ////////////////////////////
 
     //Configurar informações
-    if (noteousMain.length > 0) {
+    if (userNotes.length > 0) {
       subcontext = 'has-notes'
     } else {
       subcontext = 'no-notes'
@@ -756,11 +771,11 @@ export function orblendEngine(context, labelMessage, note, orb) {
     //✨ Backup Inteligente de Nota
     if (window.editMode == false) {
       noteousSettings.input = writeInput.value
-      localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
+      storage.saveSettings(noteousSettings)
     } else if (window.editMode == true) {
       noteousSettings.input = writeInput.value
       noteousSettings.noteId = window.noteIdEdit
-      localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
+      storage.saveSettings(noteousSettings)
     }
 
   } else if (context == 'check-selected-orb') {

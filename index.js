@@ -1,5 +1,6 @@
 import { noteousVersion, termsVersion } from './noteousParams.js'
 import { orblendEngine } from './orblendEngine.js'
+import * as storage from './modules/storage-service.js'
 
 // Exposições Globais (Window)
 window.welcomeToNoteous = welcomeToNoteous
@@ -14,8 +15,8 @@ window.notePriority = notePriority
 window.priorityListsOrientation = priorityListsOrientation
 window.setTimeNumber = setTimeNumber
 
-function serviceWorkerRegister() {
-    if (noteousSettings?.noteousApp?.noteousVersion >= 1.5) {
+async function serviceWorkerRegister() {
+    if (noteousSettings) {
       if ('serviceWorker' in navigator) {
         navigator.serviceWorker.register('sw.js')
       }
@@ -189,7 +190,7 @@ async function playOrbButtonsLoadSequence() {
 
 async function runInitialLoadSequence() {
   if (!hasPendingInitialLoadSequence) {
-    sortNotes('set-sort', `${window.selectedOrb}`)
+    await sortNotes('set-sort', `${window.selectedOrb}`)
     return
   }
 
@@ -206,7 +207,7 @@ async function runInitialLoadSequence() {
     queuePriorityListsOrbAnimation(document.getElementById(`${window.selectedOrb}-orb-button`))
   }
 
-  sortNotes('set-sort', `${window.selectedOrb}`)
+  await sortNotes('set-sort', `${window.selectedOrb}`)
 }
 
 function queuePriorityListsOrbAnimation(orbButton) {
@@ -407,7 +408,7 @@ let writeInputEdit = function (event) {
 
 /////
 
-function syncWriteInputRenderText() {
+async function syncWriteInputRenderText() {
   const inputValue = writeInput?.value || ''
 
   orblendEngine('hide-smart-calc-popup')
@@ -420,11 +421,14 @@ function syncWriteInputRenderText() {
   }
 
   if (writeInputRender) {
-    writeInputRender.innerHTML = orblendEngine(
+    const renderedInput = await orblendEngine(
       'render-smart-calc',
       '',
       inputValue
     )
+    if (writeInput.value === inputValue) {
+      writeInputRender.innerHTML = renderedInput
+    }
   }
 }
 
@@ -505,7 +509,7 @@ function syncReadOptionsVisibility() {
     return
   }
 
-  const hasNotes = Array.isArray(noteousMain) && noteousMain.length > 0
+  const hasNotes = Array.isArray(userNotes) && userNotes.length > 0
 
   if (!hasNotes) {
     readOptions.classList.add('hidden-element')
@@ -538,24 +542,18 @@ renderNoteousVersionLabel()
 
 //INICIALIZAÇÃO //////////////////////////////////////////////
 
-let noteousMain = JSON.parse(localStorage.getItem('noteous-main')) || []
-let noteousSettings = JSON.parse(localStorage.getItem('noteous-settings'))
+let noteousSettings = storage.getSettings()
+let userNotes = []
 
-if (noteousSettings != null && noteousSettings?.noteousApp?.noteousVersion >= 1.5) {
-  let link = document.createElement('link')
-  link.setAttribute('rel', 'manifest')
-  link.setAttribute('href', 'manifest.json')
-  document.getElementsByTagName('head')[0].appendChild(link)
+const databases = (indexedDB && indexedDB.databases) ? await indexedDB.databases() : []
+const hasNoteousIDB = databases.some(db => db.name === 'NoteousIDB')
 
-  let script = document.createElement('script')
-  script.setAttribute('defer', 'true')
-  script.setAttribute('src', '/_vercel/insights/script.js')
-  document.getElementsByTagName('body')[0].appendChild(script)
+if (hasNoteousIDB) {
+  userNotes = await storage.getAllNotes('createdAt', 'prev')
+}
 
-  let script2 = document.createElement('script')
-  script2.setAttribute('defer', 'true')
-  script2.setAttribute('src', '/_vercel/speed-insights/script.js')
-  document.getElementsByTagName('body')[0].appendChild(script2)
+if (noteousSettings?.selectedOrb) {
+  window.selectedOrb = noteousSettings.selectedOrb
 }
 
 serviceWorkerRegister()
@@ -770,8 +768,112 @@ function welcomeToNoteous(context, subcontext) {
         greetingDescriptionContainer4
       )
 
+  } else if (subcontext == 'update-storage') {
+      const localNotesData = JSON.parse(localStorage.getItem('noteous-main') || '[]')
+      const notesCount = localNotesData.length
+      window.scrollTo(0, 0)
 
-    }
+      greetingPanel.classList.remove('orbs-glow')
+      greetingPanel.innerHTML = ''
+      greetingTitle1.append(document.createTextNode('Boas-vindas ao'))
+      greetingTitle2.append(document.createTextNode('noteous preview'))
+      greetingTitle3.append(document.createTextNode('2ª Geração'))
+      greetingDescriptionTitle.append(
+        document.createTextNode(
+          'Atualização importante'
+        )
+      )
+      greetingDescription1.classList.add('no-image')
+      greetingDescription1.innerHTML = `✨ noteous foi atualizado com uma nova arquitetura interna, que usa uma tecnologia de armazenamento mais eficiente`
+
+      greetingDescription2.classList.add('no-image')
+      greetingDescription2.innerHTML = `📝 Para continuar a usar o noteous, suas notas precisam ser atualizadas para o novo armazenamento. <br> <br> Você tem ${notesCount} notas. Nenhum dado será perdido. <br> <br>  Clique em Atualizar notas para iniciar`
+
+      greetingDescription3.classList.add('no-image')
+      greetingDescription3.innerHTML = `Por segurança, será baixada uma Cópia das suas notas. Clique em <strong>Atualizar notas para iniciar</strong>`
+
+      greetingDescriptionContainer1.append(
+        greetingDescription1
+      )
+      greetingDescriptionContainer2.append(
+        greetingDescription2
+      )
+      greetingDescriptionContainer3.append(
+        greetingDescription3
+      )
+
+      greetingDescriptionContainerAll.append(
+        greetingDescriptionContainer1,
+        greetingDescriptionContainer2,
+        greetingDescriptionContainer3
+      )
+
+    let btnUpdate = document.createElement('button')
+    btnUpdate.classList.add('greeting-buttons')
+    btnUpdate.textContent = 'Atualizar notas'
+    btnUpdate.addEventListener('click', async () => {
+
+      const notesData = {
+        notes: localNotesData,
+        exportDate: Date.now(),
+        totalNotes: localNotesData.length,
+        noteousVersion: currentVersion
+      }
+
+      const dataStr = JSON.stringify(notesData, null, 2)
+      
+      const date = new Date()
+      const day = String(date.getDate()).padStart(2, '0')
+      const month = String(date.getMonth() + 1).padStart(2, '0')
+      const year = String(date.getFullYear()).slice(-2)
+      const hours = String(date.getHours()).padStart(2, '0')
+      const minutes = String(date.getMinutes()).padStart(2, '0')
+      const seconds = String(date.getSeconds()).padStart(2, '0')
+      const dateFormatted = `${day}${month}${year}-${hours}${minutes}${seconds}`
+      
+      const fileName = `noteous - ${dateFormatted} - Cópia de Notas.txt`
+
+      const dataBlob = new Blob([dataStr], { type: 'text/plain' })
+      const link = document.createElement('a')
+      link.href = URL.createObjectURL(dataBlob)
+      link.download = fileName
+      document.body.appendChild(link)
+      link.click()
+      document.body.removeChild(link)
+      URL.revokeObjectURL(link.href)
+
+      btnUpdate.disabled = true
+      
+      try {
+        await storage.saveAllNotes(localNotesData)
+        
+        localStorage.removeItem('noteous-main')
+      
+        btnUpdate.textContent = '✅ Notas atualizadas'
+        
+        setTimeout(() => {
+          loadNoteous('set-settings')
+          location.reload()
+        }, 2000)
+      } catch (err) {
+        console.error(err)
+        btnUpdate.disabled = false
+        btnUpdate.textContent = 'Erro ao atualizar. Tente novamente.'
+      }
+    })
+    
+    greetingPanel.append(
+      greetingTitle1,
+      greetingTitle2,
+      greetingTitle3,
+      greetingTitleContainer,
+      greetingDescriptionTitle,
+      greetingDescriptionContainerAll,
+      btnUpdate
+    )
+    greetingSection.append(greetingPanel)
+    body.append(greetingSection)
+  }
   } else if (context == 'render-policies') {
     let greetingPanel = document.querySelector('.greeting-panel')
     greetingPanel.classList.remove('orbs-glow')
@@ -885,8 +987,13 @@ function welcomeToNoteous(context, subcontext) {
     document.querySelector('.greeting-panel').append(btnAccept)
     btnAccept.appendChild(document.createTextNode('Aceito ✔'))
     btnAccept.addEventListener('click', () => {
-      loadNoteous('set-settings')
-      location.reload()
+      const localNotes = localStorage.getItem('noteous-main')
+      if (localNotes && JSON.parse(localNotes).length > 0) {
+        welcomeToNoteous('render-welcome','update-storage')
+      } else {
+        loadNoteous('set-settings')
+        location.reload()
+      }
     })
   }
 }
@@ -920,8 +1027,7 @@ function noteousTheme(context) {
     noteousSettings.look.accentLum = '--accent-lum: 60%;'
     noteousSettings.look.lumAccentContainer = '--lum-accent-container: 65%;'
 
-    localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
-    noteousSettings = JSON.parse(localStorage.getItem('noteous-settings'))
+    storage.saveSettings(noteousSettings)
     injectCSSOnRoot()
   } else if (context == 'set-theme-dark') {
     noteousSettings.look.luminosity = 'dark'
@@ -935,8 +1041,7 @@ function noteousTheme(context) {
     noteousSettings.look.accentLum = '--accent-lum: 60%;'
     noteousSettings.look.lumAccentContainer = '--lum-accent-container: 32%;'
 
-    localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
-    noteousSettings = JSON.parse(localStorage.getItem('noteous-settings'))
+    storage.saveSettings(noteousSettings)
     injectCSSOnRoot()
   }
 }
@@ -986,10 +1091,7 @@ function loadNoteous(context) {
         }
         //Aplica borda como double
         noteousSettings.priority = noteousSettings.priorityOrder[0]
-        localStorage.setItem(
-          'noteous-settings',
-          JSON.stringify(noteousSettings)
-        )
+        storage.saveSettings(noteousSettings)
         notePriority('retrieve-priority', noteousSettings.priority)
 
         runInitialLoadSequence()
@@ -1035,7 +1137,7 @@ function loadNoteous(context) {
 
     //1.Limpar configurações (elimina propriedades de versões antigas, como :theme)
     noteousSettings = {}
-    localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
+    storage.saveSettings(noteousSettings)
 
     //2.Aplicar novas configurações
     //preview 1.8: sort agora é objeto com time e action
@@ -1053,7 +1155,7 @@ function loadNoteous(context) {
       fileId: 0,
       look: { baseRem: '--base-rem: 100%;' }
     }
-    localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
+    storage.saveSettings(noteousSettings)
 
     //2.1. Aplicar configurações de tema
     noteousTheme('set-theme-dark')
@@ -1072,7 +1174,7 @@ function showInstallButton() {
     
     if (noteousSettings?.noteousApp?.installPrompt <= 6) {
       noteousSettings.noteousApp.installPrompt++
-      localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
+      storage.saveSettings(noteousSettings)
       
       if ((typeof matchMedia == 'function' && matchMedia('(display-mode: standalone)').matches
     ) || (navigator.standalone === true) || !deferredInstallPrompt) {
@@ -1133,7 +1235,7 @@ function notePriority(context, priority) {
     writeInputWrapper.style.cssText = `border-style: ${next};`
     writeButtonsContainer.style.cssText = `border-style: ${next};`
     noteousSettings.priority = next
-    localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
+    storage.saveSettings(noteousSettings)
   }
 }
 
@@ -1173,8 +1275,8 @@ priorityButton.addEventListener('click', () => {
 
 //////////
 
-readOptionsSearchInput.addEventListener('input', () => {
-  renderNote('render-all', '', readOptionsSearchInput.value)
+readOptionsSearchInput.addEventListener('input', async () => {
+  await renderNote('render-all', '', readOptionsSearchInput.value)
 })
 
 readOptionsSearchInput.addEventListener('focus', () => {
@@ -1386,7 +1488,7 @@ function priorityListsOrientation(context) {
     } else {
       noteousSettings.priorityOrientation = 'row';
     }
-    localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings));
+    storage.saveSettings(noteousSettings);
     // Atualiza a interface após a troca
     priorityListsOrientation('retrieveOrientation');
     
@@ -1401,7 +1503,7 @@ function priorityListsOrientation(context) {
 function setPriorityListsOrientation(orientation) {
   if (noteousSettings.priorityOrientation != orientation) {
     noteousSettings.priorityOrientation = orientation
-    localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
+    storage.saveSettings(noteousSettings)
   }
 
   priorityListsOrientation('retrieveOrientation')
@@ -1431,7 +1533,7 @@ function readOptionsSortButtonText(context) {
   }
 }
 
-function sortNotes(context, subcontext) {
+async function sortNotes(context, subcontext) {
 
   // previous noteous version: notes were ordened by flex-reverse. It was not real ordering.
   // noteous preview 1.7.1: updated sortNotes(). Now, it performs a real inversion, sorting the array of notes.
@@ -1440,39 +1542,37 @@ function sortNotes(context, subcontext) {
 
   if (context == 'set-sort') {
     const getSortValue = (note) => {
-      if (noteousSettings.sort.action === 'editedAt') {
-        return note.editedAt ?? note.id
-      }
-      return note.id
+      const action = noteousSettings.sort.action === 'editedAt' ? 'editedAt' : 'createdAt'
+      return note[action] ?? note.createdAt ?? note.id
     }
 
     if (noteousSettings.sort.time == 'recent') {
-      noteousMain.sort((a, b) => getSortValue(b) - getSortValue(a))
+      userNotes.sort((a, b) => getSortValue(b) - getSortValue(a))
     } else if (noteousSettings.sort.time == 'old') {
-      noteousMain.sort((a, b) => getSortValue(a) - getSortValue(b))
+      userNotes.sort((a, b) => getSortValue(a) - getSortValue(b))
     }
     
     readOptionsSortButtonText('sort-time')
     readOptionsSortButtonText('sort-action')
-    renderNote('render-all', '', `${subcontext}`)
+    await renderNote('render-all', '', `${subcontext}`)
 
   } else if (context == 'change-sort-action') {
       if (noteousSettings.sort.action == 'editedAt') {
-        noteousSettings.sort.action = 'id' // Change to sort by creation date
-        localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
+        noteousSettings.sort.action = 'createdAt' // Change to sort by creation date
+        storage.saveSettings(noteousSettings)
         readOptionsMessage('Ordenar por: Criação')
         
-      } else if (noteousSettings.sort.action == 'id') {
+      } else if (noteousSettings.sort.action == 'createdAt' || noteousSettings.sort.action == 'id') {
         noteousSettings.sort.action = 'editedAt' // Change to sort by edited date
-        localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
+        storage.saveSettings(noteousSettings)
         readOptionsMessage('Ordenar por: Edição')
       }
-      sortNotes('set-sort', `${window.selectedOrb}`)
+      await sortNotes('set-sort', `${window.selectedOrb}`)
 
   } else if (context == 'change-sort-time') {
     if (noteousSettings.sort.time == 'recent') {
       noteousSettings.sort.time = 'old' // Change to old notes first
-      localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
+      storage.saveSettings(noteousSettings)
       readOptionsSort.innerHTML = ''
       readOptionsSort.append(
         document.createTextNode('arrow_upward')
@@ -1480,31 +1580,31 @@ function sortNotes(context, subcontext) {
       readOptionsMessage('Ordem: Mais antigas primeiro')
     } else if (noteousSettings.sort.time == 'old') {
       noteousSettings.sort.time = 'recent' // Change to recent notes first
-      localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
+      storage.saveSettings(noteousSettings)
       readOptionsSort.innerHTML = ''
       readOptionsSort.append(document.createTextNode('arrow_downward'))
       readOptionsMessage('Ordem: Mais recentes primeiro')
     }
-    sortNotes('set-sort', `${window.selectedOrb}`)
+    await sortNotes('set-sort', `${window.selectedOrb}`)
   }
 }
 
-function setSortAction(action) {
+async function setSortAction(action) {
   if (noteousSettings.sort.action != action) {
     noteousSettings.sort.action = action
-    localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
+    storage.saveSettings(noteousSettings)
   }
 
-  sortNotes('set-sort', `${window.selectedOrb}`)
+  await sortNotes('set-sort', `${window.selectedOrb}`)
 }
 
-function setSortTime(time) {
+async function setSortTime(time) {
   if (noteousSettings.sort.time != time) {
     noteousSettings.sort.time = time
-    localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
+    storage.saveSettings(noteousSettings)
   }
 
-  sortNotes('set-sort', `${window.selectedOrb}`)
+  await sortNotes('set-sort', `${window.selectedOrb}`)
 }
 
 readOptionsSort.addEventListener('click', () => {
@@ -1516,7 +1616,7 @@ readOptionsSortActionButton.addEventListener('click', () => {
 
 //////////
 
-function renderNote(context, noteId, orb, searchTerm) {
+async function renderNote(context, noteId, orb, searchTerm) {
 
   //ESSE CONTEXTO É USADO AO CARREGAR A PÁGINA, RENDERIZANDO TODAS AS NOTAS
 
@@ -1537,11 +1637,11 @@ function renderNote(context, noteId, orb, searchTerm) {
         readNotesContainer.append(readNotesLists[priority])
       }
 
-      for (let note of noteousMain) {
-        // Verifica se a nota atual pertence à lista de prioridade que está sendo criada. A ordem das notas dentro da lista é definida por sortNotes(). Ou seja: noteousMain já vem ordenado pelo sortNotes()
+      for (let note of userNotes) {
+        // Verifica se a nota atual pertence à lista de prioridade que está sendo criada. A ordem das notas dentro da lista é definida por sortNotes(). Ou seja: userNotes já vem ordenado pelo sortNotes()
         //noteous preview 1.9: ao renderizar todas as notas, se houver termo de busca, filtra as notas que contêm o termo (sem diferenciar maiúsculas e minúsculas)
         //noteous preview 2.0: ao renderizar todas as notas, verifica qual orb está selecionada
-        if (note.priority == priority && orblendEngine('check-selected-orb', '', note, orb) && (searchTerm == undefined || note.text.toLowerCase().includes(searchTerm.toLowerCase()))) {
+        if (note.priority == priority && await orblendEngine('check-selected-orb', '', note, orb) && (searchTerm == undefined || note.text.toLowerCase().includes(searchTerm.toLowerCase()))) {
           let noteContainer = document.createElement('div')
           noteContainer.id = note.id + '-note-container'
           noteContainer.classList.add('note-container')
@@ -1644,13 +1744,14 @@ function renderNote(context, noteId, orb, searchTerm) {
 
         let dateElement = document.createElement('p')
         dateElement.id = note.id + '-date-element'
+        console.log(dateElement.id)
         dateElement.appendChild(
           document.createTextNode(
-            `+ ${new Date(note.id).getDate()}/${findMonth(
-              new Date(note.id).getMonth()
-            )}/${new Date(note.id).getUTCFullYear()} às ${setTimeNumber(
-              new Date(note.id).getHours()
-            )}:${setTimeNumber(new Date(note.id).getMinutes())}`
+            `+ ${new Date(note.createdAt).getDate()}/${findMonth(
+              new Date(note.createdAt).getMonth()
+            )}/${new Date(note.createdAt).getUTCFullYear()} às ${setTimeNumber(
+              new Date(note.createdAt).getHours()
+            )}:${setTimeNumber(new Date(note.createdAt).getMinutes())}`
           )
         )
         if (note.editedAt != undefined) {
@@ -1705,7 +1806,7 @@ function renderNote(context, noteId, orb, searchTerm) {
   
   else if (context == 'add') {
     for (let priority of noteousSettings.priorityOrder) {
-      for (let note of noteousMain) {
+      for (let note of userNotes) {
         if (note.id == noteId) {
           if (note.priority == priority) {
           let noteContainer = document.createElement('div')
@@ -1811,11 +1912,11 @@ function renderNote(context, noteId, orb, searchTerm) {
           dateElement.id = note.id + '-date-element'
           dateElement.appendChild(
             document.createTextNode(
-              `+ ${new Date(note.id).getDate()}/${findMonth(
-                new Date(note.id).getMonth()
-              )}/${new Date(note.id).getUTCFullYear()} às ${setTimeNumber(
-                new Date(note.id).getHours()
-              )}:${setTimeNumber(new Date(note.id).getMinutes())}`
+              `+ ${new Date(note.createdAt).getDate()}/${findMonth(
+                new Date(note.createdAt).getMonth()
+              )}/${new Date(note.createdAt).getUTCFullYear()} às ${setTimeNumber(
+                new Date(note.createdAt).getHours()
+              )}:${setTimeNumber(new Date(note.createdAt).getMinutes())}`
             )
           )
           if (note.editedAt != undefined) {
@@ -1930,27 +2031,25 @@ function setTimeNumber(number) {
 
 //////////
 
-function addNote() {
+async function addNote() {
   if (writeInput.value || '') {
-    let objNote = {
-      id: Date.now(),
+    const noteData = {
       text: writeInput.value,
       priority: noteousSettings.priority,
-      link: orblendEngine('has-link', '', writeInput.value)
+      link: await orblendEngine('has-link', '', writeInput.value)
     }
 
-    noteousMain.unshift(objNote)
-
-    localStorage.setItem('noteous-main', JSON.stringify(noteousMain))
+    const objNote = await storage.addNote(noteData)
+    userNotes.unshift(objNote)
 
     // If this note contains a link, ensure the 'link' orb is available
     if (objNote.link && !noteousSettings.orbsIndex.includes('link')) {
       noteousSettings.orbsIndex.push('link')
-      localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
+      storage.saveSettings(noteousSettings)
       orblendEngine('load')
     }
 
-    renderNote('add', objNote.id)
+    await renderNote('add', objNote.id)
     writeInput.value = ''
     if (screen.width > 450) {
       writeInput.focus()
@@ -1970,12 +2069,12 @@ writeInput.addEventListener('input', () => {
 })
 
 // noteous preview 1.9: nova experiência ao sair sem salvar uma nota
-writeButtonDismiss.addEventListener('click', () => {
+writeButtonDismiss.addEventListener('click', async () => {
   writeInput.value = ''
   noteousSettings.input = ''
   orblendEngine('on-change-input')
   syncWriteInputRender()
-  localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
+  storage.saveSettings(noteousSettings)
   writeButtonDismiss.classList.add('hidden-element')
   writeInput.focus()
 })
@@ -1997,46 +2096,46 @@ async function doneNote(noteId) {
     noteContainer.remove()
   }
 
-  for (let note of noteousMain) {
+  for (let note of userNotes) {
     if (note.id === noteId) {
       note.done = true
+      await storage.updateNote(note)
     }
   }
 
-  localStorage.setItem('noteous-main', JSON.stringify(noteousMain))
   orblendEngine('change')
   orblendEngine('update-orb-info')
 }
 
-function deleteNote(noteId) {
+async function deleteNote(noteId) {
   setTimeout(() => {
     let noteContainer = document.getElementById(noteId + '-note-container')
     noteContainer.style.cssText = 'opacity: 0;  transform: scale(70%);'
-    setTimeout(() => {
+    setTimeout(async () => {
       noteContainer.remove()
-      noteousMain = noteousMain.filter(note => note.id !== noteId)
-      localStorage.setItem('noteous-main', JSON.stringify(noteousMain))
+      userNotes = userNotes.filter(note => note.id !== noteId)
+      await storage.deleteNote(noteId)
       orblendEngine('change')
       orblendEngine('update-orb-info')
     }, 100)
   }, 100)
 }
 
-function restoreNote(noteId) {
-  for (let note of noteousMain) {
+async function restoreNote(noteId) {
+  for (let note of userNotes) {
     if (note.id === noteId) {
       note.done = false
+      await storage.updateNote(note)
       break
     }
   }
-  localStorage.setItem('noteous-main', JSON.stringify(noteousMain))
   location.reload()
 }
 
 //////////
 //SHARE NOTE
 function shareNote(noteId) {
-  for (let note of noteousMain) {
+  for (let note of userNotes) {
     if (note.id === noteId) {
       if (navigator.share) {
         navigator
@@ -2074,7 +2173,7 @@ function shareNote(noteId) {
 
 //COPY NOTE
 function copyNote(noteId) {
-  for (let note of noteousMain) {
+  for (let note of userNotes) {
     if (note.id === noteId) {
       navigator.clipboard.writeText(note.text)
         .then(() => {
@@ -2131,7 +2230,7 @@ function setEditMode(context) {
 }
 
 function editNote(noteId) {
-  for (let note of noteousMain) {
+  for (let note of userNotes) {
     if (note.id === noteId) {
       const editingButtonsContainer = document.getElementById(noteId + '-editing-buttons-container')
       const acceptEditingButton = document.getElementById(noteId + '-accept-editing-button')
@@ -2162,7 +2261,7 @@ function editNote(noteId) {
         }
       })
 
-      acceptEditingButton.addEventListener('click', () => {
+      acceptEditingButton.addEventListener('click', async () => {
         if (noteTextContainer.value != '' && noteTextContainer.value != null) {
           note.text = editedNoteText.startsWith('\n\n')
             ? editedNoteText.slice(2)
@@ -2172,18 +2271,18 @@ function editNote(noteId) {
           note.editedAt = Date.now()
           note.priority = noteousSettings.priority
           // Update link flag for this note
-          note.link = orblendEngine('has-link', '', note.text)
+          note.link = await orblendEngine('has-link', '', note.text)
 
-          localStorage.setItem('noteous-main', JSON.stringify(noteousMain))
+          await storage.updateNote(note)
 
           // If this note contains a link, ensure the 'link' orb is available
           if (note.link && !noteousSettings.orbsIndex.includes('link')) {
             noteousSettings.orbsIndex.push('link')
-            localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
+            storage.saveSettings(noteousSettings)
             orblendEngine('load')
           }
         }
-        renderNote('render-all', '', `${window.selectedOrb}`)
+        await renderNote('render-all', '', `${window.selectedOrb}`)
       })
 
       discardEditingButton.addEventListener('click', () => {

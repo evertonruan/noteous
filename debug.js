@@ -1,7 +1,11 @@
 import { noteousVersion } from './noteousParams.js'
+import * as storage from './modules/storage-service.js'
 
-let noteousMain = JSON.parse(localStorage.getItem('noteous-main')) || []
-let noteousSettings = JSON.parse(localStorage.getItem('noteous-settings'))
+const initialSettings = storage.getSettings()
+const initialNotes = await storage.getAllNotes()
+
+let userNotes = initialNotes.sort((a, b) => (b.createdAt || b.id || 0) - (a.createdAt || a.id || 0))
+let noteousSettings = initialSettings
 
 let body = document.querySelector('body')
 let br = function (event) {body.append(document.createElement('br'))}
@@ -97,7 +101,7 @@ function unRegisterServiceWorker() {
       });
 
       noteousSettings.debug = 'SW'
-      localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
+      storage.saveSettings(noteousSettings)
       location.reload()
     }, 2000);
   }, 2000);
@@ -119,7 +123,7 @@ function reinstallServiceWorker() {
       buttonUnregisterServiceWorker.innerText = '✅ Service Worker reinstalado'
 
       noteousSettings.debug = ''
-      localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
+      storage.saveSettings(noteousSettings)
 
       body.append(document.createElement('br'))
       let notice = document.createElement('p')
