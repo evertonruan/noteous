@@ -727,45 +727,21 @@ function welcomeToNoteous(context, subcontext) {
       greetingTitle3.append(document.createTextNode('2ª Geração'))
       greetingDescriptionTitle.append(
         document.createTextNode(
-          'Atualização Secundária concluída com algumas correções. Confira abaixo os destaques da última Atualização Principal'
+          'Você recebeu a atualização principal 2.4 do noteous preview'
         )
       )
         
-      greetingDescription1.innerHTML = `<span class="greeting-description-intro">Nova função inteligente</span>Tá anotando algo e quer fazer um cálculo rápido? Experimente o <strong>Cálculo Inteligente</strong>: é só escrever uma conta e o orblend engine calcula automaticamente!`
+      greetingDescription1.innerHTML = `<span class="greeting-description-intro">Nova arquitetura interna</span>✨ noteous foi atualizado com uma nova arquitetura interna, que usa uma tecnologia de armazenamento mais eficiente`
 
-      greetingDescription2.innerHTML = `<span class="greeting-description-intro">Apresentando Orbs Links</span>Agora, sempre que você salvar algum link em uma nota, ela será exibida também em um orb separado`
-
-      greetingDescription3.innerHTML = `<span class="greeting-description-intro">donut design melhorado</span>Você nunca viu nada igual: o design do noteous foi melhorado, agora com novas animações`
-
-      greetingDescription4.innerHTML = `<span class="greeting-description-intro">Sempre em dia</span>noteous preview está em constante melhoria 🍩 As atualizações da 2ª Geração chegam de forma instantânea e gratuita`
-
-      greetingDescription1Image.setAttribute('src', './assets/images/greeting-smart-calc.webp')
-      greetingDescription2Image.setAttribute('src', './assets/images/greeting-orb-links.webp')
-      greetingDescription3Image.setAttribute('src', './assets/images/greeting-design.webp')
-      greetingDescription4Image.setAttribute('src', './assets/images/greeting-update.webp')
+      greetingDescription1Image.setAttribute('src', './assets/images/greeting-blueprint.webp')
 
       greetingDescriptionContainer1.append(
         greetingDescription1Image,
         greetingDescription1
       )
-      greetingDescriptionContainer2.append(
-        greetingDescription2Image,
-        greetingDescription2
-      )
-      greetingDescriptionContainer3.append(
-        greetingDescription3Image,
-        greetingDescription3
-      )
-      greetingDescriptionContainer4.append(
-        greetingDescription4Image,
-        greetingDescription4
-      )
 
       greetingDescriptionContainerAll.append(
-        greetingDescriptionContainer1,
-        greetingDescriptionContainer2,
-        greetingDescriptionContainer3,
-        greetingDescriptionContainer4
+        greetingDescriptionContainer1
       )
 
   } else if (subcontext == 'update-storage') {
@@ -963,7 +939,7 @@ function welcomeToNoteous(context, subcontext) {
         let greetingPoliciesTitle4 = document.createElement('p')
         greetingPoliciesTitle4.classList.add('greeting-policies-warning')
         greetingPoliciesTitle4.innerHTML =
-        '⚠️ Conforme explicado na Política de Privacidade, suas anotações são salvas localmente no dispositivo. Ou seja: se você limpar os dados, suas notas serão  apagadas. <strong>Para evitar perda de dados, use o recurso Cópias de Notas em Ajustes&Info</strong>'
+        '⚠️ Conforme explicado na Política de Privacidade, suas anotações são salvas localmente no dispositivo. Ou seja: se você limpar os dados, suas notas serão  apagadas. <strong>Para evitar perda de dados, use o recurso Cópias de Notas na Central de Recursos</strong>'
 
         let greetingPoliciesTitle5 = document.createElement('p')
         greetingPoliciesTitle5.classList.add('greeting-policies-description')
