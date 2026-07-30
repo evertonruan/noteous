@@ -689,7 +689,7 @@ function welcomeToNoteous(context, subcontext) {
 
       greetingDescription2.innerHTML = `<span class="greeting-description-intro">Suas notas sempre à mão</span><br>noteous é totalmente privado e pessoal 📝 Você não precisa de internet para acessar suas notas (*em navegadores compatíveis)`
 
-      greetingDescription3.innerHTML = `<span class="greeting-description-intro">Design incrível</span> <br>noteous tem um design inovador: você nunca viu nada igual ✨ Além disso, a inteligência do <strong>orblend engine</strong> pode recuperar uma nota que você esqueceu de salvar`
+      greetingDescription3.innerHTML = `<span class="greeting-description-intro">Design incrível</span> <br>noteous tem um design inovador: você nunca viu nada igual ✨ Além disso, a inteligência do <strong>orblend engine</strong> até mesmo mostra o total de uma conta que você escrever`
 
       greetingDescription4.innerHTML = `<span class="greeting-description-intro">Sempre em dia</span><br>noteous preview está em constante melhoria 🍩 As atualizações da 2ª Geração chegam de forma instantânea e gratuita`
 

@@ -440,6 +440,11 @@ a {
   font-weight: bold;
   font-size: 2.5rem;
   padding-bottom: 7px;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+#gallery nav h2 {
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 #nav-link {
@@ -1771,7 +1776,7 @@ footer p span {
   padding: 2rem;
   font-size: 110%;
 
-  border: 1px solid hsl(45, 80%, 50%);
+  border: 2px solid hsl(45, 80%, 50%);
   border-radius: 10px;
 }
 
@@ -1821,6 +1826,19 @@ footer p span {
   border-bottom: 1px dotted var(--base-text);
 }
 
+#gallery header {
+  background-color: hsla(var(--hue), var(--saturation), var(--lum-back), 0.3);
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.6);
+}
+
+#hub-section-gallery h2 {
+  margin-bottom: 0.5rem;
+}
+
+#hub-section-gallery .update-chip {
+  margin-bottom: 1rem;
+}
+
 .about nav {
   display: flex;
   flex-direction: column;
@@ -1859,7 +1877,7 @@ footer p span {
   border: 3px solid;
   border-color: var(--base-accent-color);
   border-radius: 2rem;
-  clip-path: inset(0 round 2rem);
+  overflow: hidden;
 }
 
 .hub-section-title {
@@ -1876,6 +1894,9 @@ footer p span {
   font-size: 1.2rem;
   letter-spacing: -0.03em;
   color: var(--base-text);
+  -webkit-backdrop-filter: blur(5px);
+  backdrop-filter: blur(5px);
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.6);
   box-shadow: -2px 6px 15px var(--base-accent-color);
 }
 
@@ -1930,6 +1951,26 @@ footer p span {
 
 .option-point:hover {
   border-width: 1.2px;
+}
+
+#about-button-gallery {
+  border: 2px solid transparent !important;
+  background-image: 
+    linear-gradient(var(--base-color), var(--base-color)), 
+    linear-gradient(90deg, hsl(45, 80%, 65%), hsl(145, 86%, 65%), hsl(203, 86%, 65%), hsl(45, 80%, 65%));
+  background-origin: border-box;
+  background-clip: padding-box, border-box;
+  background-size: 100% 100%, 200% 100%;
+  animation: orbs-border-glow-animation 5s linear infinite;
+}
+
+@keyframes orbs-border-glow-animation {
+  from {
+    background-position: 0% 0%, 0% 0%;
+  }
+  to {
+    background-position: 0% 0%, 200% 0%;
+  }
 }
 
 /* Priority Order Drag and Drop */
@@ -2193,12 +2234,28 @@ footer p span {
 #gallery {
   display: flex;
   flex-direction: column;
+  min-height: 100vh;
   font-family: 'DM Sans', sans-serif;
-  background-color: var(--base-color);
   color: var(--base-text);
   -webkit-user-select: none;
   user-select: none;
   cursor: default;
+}
+
+#gallery main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+#gallery section#gallery {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+#gallery.orbs-glow {
+  animation: greeting-panel-bg-fade 30s ease-in-out infinite;
 }
 
 #gallery p {
@@ -2210,12 +2267,20 @@ footer p span {
 
 #gallery-banners-container {
   display: flex;
+  position: sticky;
+  top: 78.6px;
+  z-index: 2;
+  -webkit-backdrop-filter: blur(5px);
+  background-color: hsla(var(--hue), var(--saturation), var(--lum-back), 0.3);
+  backdrop-filter: blur(5px);
   flex-direction: row;
+  justify-content: left;
   gap: 1rem;
   overflow-x: auto;
   padding: 0.5rem 0.25rem;
   scrollbar-width: thin;
   scrollbar-color: var(--base-text) transparent;
+  scroll-snap-type: x proximity;
 }
 
 #gallery-banners-container::-webkit-scrollbar {
@@ -2233,27 +2298,32 @@ footer p span {
 
 .gallery-banner {
   flex: 0 0 auto;
-  border-radius: 1rem;
+  width: 6rem;
+  height: 8rem;
+  border-radius: 1.25rem;
   overflow: hidden;
   cursor: pointer;
   border: 2px solid transparent;
-  transition: border-color 0.2s ease, transform 0.2s ease;
-}
-
-.gallery-banner:hover {
-  transform: scale(1.03);
+  transition: width 0.5s ease, height 0.5s ease, border-radius 0.5s ease, border-color 0.2s ease;
 }
 
 .gallery-banner.active {
-  border-color: var(--base-text);
+  width: 8rem;
+  height: 8rem;
+  border-radius: 50%;
 }
 
 .gallery-banner img {
   display: block;
-  height: 250px;
-  width: auto;
+  height: 100%;
+  width: 100%;
   object-fit: cover;
   border-radius: inherit;
+  transition: transform 0.3s ease;
+}
+
+.gallery-banner.active img {
+  transform: scale(1.02);
 }
 
 #banner-description {
@@ -2261,23 +2331,116 @@ footer p span {
   flex-direction: column;
   align-items: center;
   gap: 1rem;
-  margin-top: 2rem;
-  animation: fadeIn 0.3s ease;
+  flex: 1;
+  margin-top: 3rem;
+  padding: 20px 20px;
+  border-radius: 60px 60px 0 0;
+  background-color: hsla(var(--hue), var(--saturation), var(--lum-back), 0.2);
+  animation: fadeIn 0.8s ease;
+  transition: opacity 0.3s ease, transform 0.3s ease;
 }
 
 #banner-description h3 {
-  font-size: 1.5rem;
-  font-family: 'DM Sans', sans-serif;
+  font-size: 2rem;
+  font-family: 'DM Serif Text', serif;
   text-align: center;
   letter-spacing: -0.03em;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
 }
 
-#banner-description p {
-  font-size: 1.5rem;
-  line-height: 1.3;
+#gallery .description-text {
+  font-size: clamp(1.5rem, 4vw, 2rem);
+  font-family: 'DM Sans', sans-serif;
+  letter-spacing: -0.03em;
+  text-align: center;
+  line-height: 1.2;
   width: 100%;
   max-width: 500px;
   margin-bottom: 1.5rem;
+}
+
+.description-link-github {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.4rem 1rem;
+  border-radius: 20px;
+  border: 0.5px solid var(--base-accent-color);
+  color: var(--base-text);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 700;
+  text-decoration: none;
+  margin: 0 0 1rem 0;
+  transition: transform 0.2s ease, opacity 0.2s ease, border-color 0.2s ease;
+}
+
+.description-link-basticodes {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.4rem 1rem;
+  border-radius: 20px;
+  border: 0.5px solid var(--base-accent-color);
+  color: var(--base-text);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 700;
+  text-decoration: none;
+  margin: 0 0 1rem 0;
+  transition: transform 0.2s ease, opacity 0.2s ease, border-color 0.2s ease;
+}
+
+.description-highlight {
+  font-size: 1.1rem;
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 700;
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  opacity: 0.8;
+  margin: 0 0 0.5rem 0;
+}
+
+.description-link-github:hover {
+  transform: translateY(-1px);
+  opacity: 0.95;
+}
+
+.gallery-links-buttons-container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+@media (min-width: 600px) {
+  .gallery-links-buttons-container {
+    flex-direction: row;
+    justify-content: center;
+  }
+}
+
+.gallery-figures-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: start;
+  gap: 1.25rem;
+  width: 100%;
+  max-width: 1000px;
+}
+
+.gallery-figures-grid > .hub-section {
+  flex: 1 1 450px;
+  max-width: 500px;
+}
+
+.gallery-figures-grid > .hub-section {
+  flex: 1 1 450px;
+  max-width: 500px;
 }
 
 .gallery-figure {
@@ -2285,7 +2448,7 @@ footer p span {
   flex-direction: column;
   align-items: center;
   gap: 0.4rem;
-  margin: 0 0 50px 0;
+  margin: 0;
 }
 
 .gallery-figure img {
@@ -2304,6 +2467,24 @@ footer p span {
   opacity: 0.9;
   font-family: 'DM Sans', sans-serif;
   letter-spacing: -0.03em;
+  line-height: 1.2;
+}
+
+.update-chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 0.35rem 0.25rem 0;
+  padding: 0.12rem 0.6rem;
+  border-radius: 999px;
+  background-color: var(--base-accent-color);
+  color: var(--base-text);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 700;
+  vertical-align: middle;
+  line-height: 1.2;
+  width: fit-content;
 }
 
 @keyframes fadeIn {
