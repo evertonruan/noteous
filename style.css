@@ -132,6 +132,32 @@ html {
   }
 
   #index #orbs-list-container {
+    position: fixed;
+    left: 50%;
+    bottom: 1rem;
+    z-index: 10;
+    width: min(calc(100vw - 1rem), 28rem);
+    margin: 0;
+    padding: 0.85rem 1rem 1rem;
+    border: 0;
+    border-radius: 1.4rem;
+    background-color: transparent;
+    box-shadow: none;
+    transform: translateX(-50%);
+  }
+
+  #index #orbs-list {
+    flex-direction: row;
+    justify-content: center;
+    flex-wrap: wrap;
+    width: 100%;
+  }
+
+  #index #read-header {
+    margin-top: 20px;
+  }
+
+  #index #orbs-list-container {
     margin: 50px 0 30px 0;
   }
 
