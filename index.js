@@ -25,7 +25,9 @@ let writeButtonsContainer = document.querySelector('#write-buttons-container')
 let writeButtonAdd = document.querySelector('#write-button-add')
 let writeButtonDismiss = document.querySelector('#write-button-dismiss')
 
+let orbsListContainer = document.querySelector('#orbs-list-container')
 let orbsList = document.querySelector('#orbs-list')
+let orbsListLabel = document.querySelector('#orbs-list-label')
 let orbPanel = document.querySelector('#orb-panel')
 let orbInfo = document.querySelector('#orb-panel')
 let orbInfoLabel = document.querySelector('#orb-panel-label')
@@ -33,6 +35,7 @@ let orbInfoCount = document.querySelector('#orb-panel-count')
 
 //READ-SECTION
 let readSection = document.querySelector('#section-read')
+let readHeader = document.querySelector('#read-header')
 let readPanel = document.querySelector('#read-panel')
 let readOptions = document.querySelector('#read-options')
 let readOptionsContainer = document.querySelector('#read-options-container')
