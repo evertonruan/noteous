@@ -292,7 +292,7 @@ function welcomeToNoteous(context, subcontext) {
       )
 
       greetingDescription1.innerHTML = `<span class="greeting-description-intro">Suas notas sempre à mão</span><br>noteous é totalmente privado e pessoal 📝 Você não precisa de internet para acessar suas notas (*em navegadores compatíveis)`
-      greetingDescription2.innerHTML = `<span class="greeting-description-intro">Design incrível</span> <br>noteous tem um design inovador: você nunca viu nada igual`
+      greetingDescription2.innerHTML = `<span class="greeting-description-intro">Design incrível</span> <br>noteous tem um design inovador e útil: você nunca viu nada igual`
       greetingDescription3.innerHTML = `<span class="greeting-description-intro">Recursos úteis</span>✨ Vários recursos ajudam em sua anotação. Por exemplo, a inteligência do <strong>orblend engine</strong> pode recuperar uma nota que você esqueceu de salvar`
       greetingDescription4.innerHTML = `<span class="greeting-description-intro">Sempre em dia</span><br>noteous está em constante melhoria 🍩 As atualizações da 2ª Geração chegam de forma instantânea e gratuita`
 
@@ -331,22 +331,19 @@ function welcomeToNoteous(context, subcontext) {
       greetingTitle3.append(document.createTextNode('2ª Geração'))
       greetingDescriptionTitle.append(
         document.createTextNode(
-          '✨ Você recebeu a atualização de Junho de 2026 do noteous, com várias correções'
+          '✨ Você recebeu a atualização de Julho de 2026 do noteous'
         )
       )
 
-      greetingDescription1.innerHTML = `<span class="greeting-description-intro">Design incrível</span>Esta é a 2ª Geração do noteous, e seu design foi completamente reimaginado, como você nunca viu! <br>🍩 Agora, o <strong>donut design</strong> traz experiências incríveis para sua anotação`
+      greetingDescription1.innerHTML = `<span class="greeting-description-intro">Design atualizado</span>Se você estiver num celular ou tablet, agora os Orbs aparecem na parte de baixo da tela, facilitando a navegação`
 
-      greetingDescription2.innerHTML = `<span class="greeting-description-intro">Orbs do noteous</span><strong>Orbs</strong> são uma novidade disruptiva da 2ª Geração do noteous. Com eles você organiza suas notas de uma forma única. E em próximas atualizações no futuro, você até mesmo poderá trocar as cores dos Orbs`
+      greetingDescription2.innerHTML = `<span class="greeting-description-intro">Galeria de Atualizações</span>Quer ver como foram as atualizações recentes do noteous? Veja na Galeria de Atualizações!`
 
-      greetingDescription3.innerHTML = `<span class="greeting-description-intro">Recursos úteis</span>Por trás do noteous está a inteligência do <strong>orblend engine</strong><br>São recursos muito úteis ✨ Por exemplo, se você esquecer de salvar uma nota, ele recupera automaticamente para você. 🟠 Além disso, os <strong>Orbs</strong> estão profundamente integrados ao orblend engine`
+      greetingDescription3.innerHTML = `<span class="greeting-description-intro">Sempre em dia</span>noteous está em constante melhoria 🍩 As atualizações da 2ª Geração chegam de forma instantânea e gratuita`
 
-      greetingDescription4.innerHTML = `<span class="greeting-description-intro">Sempre em dia</span>noteous está em constante melhoria 🍩 As atualizações da 2ª Geração chegam de forma instantânea e gratuita`
-
-      greetingDescription1Image.setAttribute('src', './assets/images/greeting-donut.webp')
-      greetingDescription2Image.setAttribute('src', './assets/images/greeting-orbs.webp')
-      greetingDescription3Image.setAttribute('src', './assets/images/greeting-orbs-orblend-engine.webp')
-      greetingDescription4Image.setAttribute('src', './assets/images/greeting-update.webp')
+      greetingDescription1Image.setAttribute('src', './assets/images/greeting-usage-orbs.webp')
+      greetingDescription2Image.setAttribute('src', './assets/images/greeting-gallery.webp')
+      greetingDescription3Image.setAttribute('src', './assets/images/greeting-update.webp')
 
       greetingDescriptionContainer1.append(
         greetingDescription1Image,
@@ -360,16 +357,11 @@ function welcomeToNoteous(context, subcontext) {
         greetingDescription3Image,
         greetingDescription3
       )
-      greetingDescriptionContainer4.append(
-        greetingDescription4Image,
-        greetingDescription4
-      )
 
       greetingDescriptionContainerAll.append(
         greetingDescriptionContainer1,
         greetingDescriptionContainer2,
-        greetingDescriptionContainer3,
-        greetingDescriptionContainer4
+        greetingDescriptionContainer3
 
       )
     }

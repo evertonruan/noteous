@@ -64,6 +64,7 @@ let copyDetailsSwitchVar = 0
 function navLink() {
   window.location.replace('./index.html')
 }
+document.querySelector('#about-button-gallery')?.addEventListener('click', () => location.href='gallery.html')
 
 ///////
 
