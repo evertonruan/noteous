@@ -1,2 +1,2 @@
-export const noteousVersion = 2.4
+export const noteousVersion = 2.41
 export const termsVersion = 2607
