@@ -29,10 +29,10 @@
   ],
   "id": "/index.html",
   "start_url": "/index.html",
-  "background_color": "#f5993d",
+  "background_color": "#0C0B08",
   "display": "standalone",
   "scope": "/",
-  "theme_color": "#f5993d",
+  "theme_color": "#0C0B08",
   "description": "Suas notas sempre à mão",
   "share_target": {
     "action": "/fileload",
