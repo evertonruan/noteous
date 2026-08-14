@@ -6,79 +6,20 @@ function navLink() {
 }
 document.querySelector('#nav-link')?.addEventListener('click', navLink)
 
-function noteousTheme(context) {
-  let settings = getSettings()
-
-  if (!settings) {
-    settings = {
-      look: {
-        baseRem: '--base-rem: 100%;',
-        hue: '--hue: 45;',
-        saturation: '--saturation: 20%;',
-        lumBack: '--lum-back: 4%;',
-        lumMid: '--lum-mid: 30%;',
-        lumFront: '--lum-front: 90%;',
-        lumFrontInverse: '--lum-front-inverse: 15%;',
-        accentSaturation: '--accent-saturation: 10%;',
-        accentLum: '--accent-lum: 60%;',
-        lumAccentContainer: '--lum-accent-container: 32%;',
-        luminosity: 'dark'
-      }
-    }
-  }
-
-  if (!settings.look) {
-    settings.look = {}
-  }
-
-  const applyThemeToRoot = () => {
-    const root = document.querySelector(':root')
-    if (!root) return
-
-    root.style.cssText = `${settings.look.baseRem || '--base-rem: 100%;'} ${settings.look.hue || '--hue: 45;'} ${settings.look.saturation || '--saturation: 20%;'} ${settings.look.lumBack || '--lum-back: 4%;'} ${settings.look.lumMid || '--lum-mid: 30%;'} ${settings.look.lumFront || '--lum-front: 90%;'} ${settings.look.lumFrontInverse || '--lum-front-inverse: 15%;'} ${settings.look.accentSaturation || '--accent-saturation: 10%;'} ${settings.look.accentLum || '--accent-lum: 60%;'} ${settings.look.lumAccentContainer || '--lum-accent-container: 32%;'}`
-  }
-
-  if (context === 'retrieve-theme') {
-    if (settings.look.luminosity === 'light') {
-      noteousTheme('set-theme-light')
-    } else {
-      noteousTheme('set-theme-dark')
-    }
-  } else if (context === 'change-theme') {
-    if (settings.look.luminosity === 'light') {
-      noteousTheme('set-theme-dark')
-    } else {
-      noteousTheme('set-theme-light')
-    }
-  } else if (context === 'set-theme-light') {
-    settings.look.luminosity = 'light'
-    settings.look.hue = '--hue: 45;'
-    settings.look.saturation = '--saturation: 20%;'
-    settings.look.lumBack = '--lum-back: 95%;'
-    settings.look.lumMid = '--lum-mid: 70%;'
-    settings.look.lumFront = '--lum-front: 15%;'
-    settings.look.lumFrontInverse = '--lum-front-inverse: 95%;'
-    settings.look.accentSaturation = '--accent-saturation: 20%;'
-    settings.look.accentLum = '--accent-lum: 60%;'
-    settings.look.lumAccentContainer = '--lum-accent-container: 65%;'
-
-    saveSettings(settings)
-    applyThemeToRoot()
-  } else if (context === 'set-theme-dark') {
-    settings.look.luminosity = 'dark'
-    settings.look.hue = '--hue: 45;'
-    settings.look.saturation = '--saturation: 20%;'
-    settings.look.lumBack = '--lum-back: 4%;'
-    settings.look.lumMid = '--lum-mid: 30%;'
-    settings.look.lumFront = '--lum-front: 90%;'
-    settings.look.lumFrontInverse = '--lum-front-inverse: 15%;'
-    settings.look.accentSaturation = '--accent-saturation: 10%;'
-    settings.look.accentLum = '--accent-lum: 60%;'
-    settings.look.lumAccentContainer = '--lum-accent-container: 32%;'
-
-    saveSettings(settings)
-    applyThemeToRoot()
-  }
+function applyThemeToRoot() {
+  document.querySelector(
+    ':root'
+  ).style.cssText = 
+  `--base-rem: 100%;
+  --hue: 45;
+  --saturation: 20%;
+  --lum-back: 4%;
+  --lum-mid: 30%;
+  --lum-front: 90%;
+  --lum-front-inverse: 15%;
+  --accent-saturation: 10%;
+  --accent-lum: 60%;
+  --lum-accent-container: 32%;`
 }
 
 function renderBannerDescription(entry) {
@@ -187,8 +128,7 @@ function renderBannerDescription(entry) {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-  noteousTheme('retrieve-theme')
-
+  applyThemeToRoot()
   const gallery = document.getElementById('gallery')
   if (gallery) {
     gallery.classList.add('orbs-glow')
