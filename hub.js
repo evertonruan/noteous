@@ -424,7 +424,7 @@ buttonPolicies.addEventListener('click', () => {
 
         let policiesDescriptionTerms = document.createElement('p')
 
-        for (char of noteousPolicies.termsUse) {
+        for (const char of noteousPolicies.termsUse) {
           policiesDescriptionTerms.append(char)
           if (char == '\n') {
             policiesDescriptionTerms.append(
@@ -440,7 +440,7 @@ buttonPolicies.addEventListener('click', () => {
 
         let policiesDescriptionPrivacy = document.createElement('p')
 
-        for (char of noteousPolicies.privacyPolicy) {
+        for (const char of noteousPolicies.privacyPolicy) {
           policiesDescriptionPrivacy.append(char)
           if (char == '\n') {
             policiesDescriptionPrivacy.append(
