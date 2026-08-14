@@ -4,7 +4,6 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <meta name="theme-color" content="#f5993d" />
         <!--MATERIAL ICONS-->
         <link
         href="https://fonts.googleapis.com/icon?family=Material+Icons"
@@ -137,12 +136,29 @@
 </section>
 </main>
 
-
     <script>
       window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments) };
       window.si = window.si || function () { (window.siq = window.siq || []).push(arguments) };
+      let settings = JSON.parse(localStorage.getItem('noteous-settings') || '{}');
 
-        if (localStorage.getItem('noteous-settings')) {
+        if (settings) {
+
+            let meta = document.querySelector('meta[name="theme-color"]')
+            if (!meta) {
+              meta = document.createElement('meta');
+              meta.id = 'theme-color';
+              meta.name = 'theme-color';
+              
+              if (settings?.look?.luminosity === 'dark') {
+                meta.setAttribute('content', '#0C0B08')
+                console.log(settings?.look?.luminosity)
+              } else {
+                console.log(settings?.look?.luminosity)
+                meta.setAttribute('content', '#D6D1C2')
+              }
+              document.getElementsByTagName('head')[0].appendChild(meta);
+            }
+      
           let link = document.createElement('link');
           link.setAttribute('rel', 'manifest');
           link.setAttribute('href', 'manifest.json');
