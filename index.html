@@ -108,23 +108,24 @@
     </footer>
 
     <script>
-      window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments) };
-      window.si = window.si || function () { (window.siq = window.siq || []).push(arguments) };
-
         if (localStorage.getItem('noteous-settings')) {
           let link = document.createElement('link');
           link.setAttribute('rel', 'manifest');
           link.setAttribute('href', 'manifest.json');
           document.getElementsByTagName('head')[0].appendChild(link);
     
+          window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments) };
+          
           let script = document.createElement('script');
           script.setAttribute('defer', 'true');
-          script.setAttribute('src', '/<unique-path>/script.js');
+          script.setAttribute('src', '/_vercel/insights/script.js');
           document.getElementsByTagName('body')[0].appendChild(script);
 
+          window.si = window.si || function () { (window.siq = window.siq || []).push(arguments) };
+          
           let script2 = document.createElement('script');
           script2.setAttribute('defer', 'true');
-          script2.setAttribute('src', '/<unique-path>/script.js');
+          script2.setAttribute('src', '/_vercel/speed-insights/script.js');
           document.getElementsByTagName('body')[0].appendChild(script2);
         }
     </script>
