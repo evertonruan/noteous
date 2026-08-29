@@ -568,9 +568,6 @@ if (hasNoteousIDB) {
   userNotes = await storage.getAllNotes('createdAt', 'prev')
 }
 
-console.log(userNotes)
-console.log(userNotes.length)
-
 if (userNotes.length == 0) {
   window.scrollTo(0, 0)
 }
@@ -748,13 +745,13 @@ function welcomeToNoteous(context, subcontext) {
       greetingTitle3.append(document.createTextNode('2ª Geração'))
       greetingDescriptionTitle.append(
         document.createTextNode(
-          'Você recebeu a atualização principal 2.4 do noteous preview'
+          'Você recebeu a atualização 2.4.2 do noteous preview'
         )
       )
         
-      greetingDescription1.innerHTML = `<span class="greeting-description-intro">Nova arquitetura interna</span>✨ noteous foi atualizado com uma nova arquitetura interna, que usa uma tecnologia de armazenamento mais eficiente`
+      greetingDescription1.innerHTML = `<span class="greeting-description-intro">Nova arquitetura interna</span>✨ Essa atualização melhorou a nova arquitetura interna: o orblend engine, responsável pela inteligência do noteous, foi reestruturado com um design modular.`
 
-      greetingDescription1Image.setAttribute('src', './assets/images/greeting-blueprint.webp')
+      greetingDescription1Image.setAttribute('src', './assets/images/greeting-orblend-engine-modular.webp')
 
       greetingDescriptionContainer1.append(
         greetingDescription1Image,

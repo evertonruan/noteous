@@ -11,10 +11,32 @@ export const galleryData = [
     ]
   },
   {
+    id: 'v2.4.2',
+    banner: '/assets/images/gallery-v242.webp',
+    title: 'noteous preview 2.4.2',
+    latest: true,
+    description: 'Orblend Engine modular, e uma série de melhorias',
+    github: 'https://github.com/evertonruan/noteous/releases/tag/v2.4.2-preview',
+    images: [
+      { src: '/assets/images/greeting-orblend-engine-modular.webp', alt: 'Orblend engine com modular', caption: 'O Orblend Engine foi reestruturado em módulos, deixando a base do noteous mais preparada para evoluir. Esse é mais um passo da nova arquitetura, lançada no noteous preview 2.4', type: 'Nova arquitetura' },
+      { src: '/assets/images/greeting-orbs-design.webp', alt: 'Refinamento dos Orbs', caption: 'Nessa atualização, os orbs recebem um refinamento no design', type: 'Orbs' },
+      { caption: 'Uma série de melhorias de experiência foi realizada, como o novo formato de exibição da data das notas, redesenhado de dentro para fora', type: 'Melhorias' }
+    ]
+  },
+  {
+    id: 'v2.4.1',
+    banner: '/assets/images/gallery-v241.webp',
+    title: 'noteous preview 2.4.1',
+    description: 'Uma melhoria no tema',
+    github: 'https://github.com/evertonruan/noteous/releases/tag/v2.4.1-preview',
+    images: [
+      { caption: 'Nessa atualização, em navegadores compatíveis, a barra de título recebe a cor do tema escolhido (claro/escuro). Além disso, a Galeria de Atualizações do noteous preview agora estará no tema escuro', type: 'Tema' },
+    ]
+  },
+  {
     id: 'v2.4',
     banner: '/assets/images/gallery-v24.webp',
     title: 'noteous preview 2.4',
-    latest: true,
     description: 'Nova arquitetura interna com módulos ES6, notas no IndexedDB e a Galeria de Atualizações com donut design e acesso aos bastiCodes e Releases do GitHub. Essa é uma atualização que prepara o noteous para o futuro',
     github: 'https://github.com/evertonruan/noteous/releases/tag/v2.4-preview',
     images: [
