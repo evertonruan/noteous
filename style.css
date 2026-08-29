@@ -1584,16 +1584,16 @@ a {
 #section-read .note-date-container,
 #modal .note-date-container {
   position: absolute;
-  bottom: 0;
-  right: 0;
-  left: 0;
-  padding: 0.3rem 0.8rem;
+  bottom: 0.3rem;
+  right: 0.8rem;
+  width: fit-content;
+  padding: 0.1rem 0.8rem;
   pointer-events: none;
   z-index: 1;
-  text-align: right;
+  text-align: center;
   -webkit-backdrop-filter: blur(4px);
   backdrop-filter: blur(4px);
-  border-radius: 0 0 14px 14px;
+  border-radius: 12px;
   color: var(--base-text);
 }
 
