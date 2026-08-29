@@ -1855,7 +1855,7 @@ async function renderNote(context, noteId, orb, searchTerm) {
               editNote(note.id)
             }
           })
-          noteTextContainer.value = `\n \n ${note.text}\n`
+          noteTextContainer.value = `\n\n${note.text}\n`
 
           //DATE
           let noteDateContainer = document.createElement('div')
@@ -2136,11 +2136,15 @@ function editNote(noteId) {
 
       acceptEditingButton.addEventListener('click', async () => {
         if (noteTextContainer.value != '' && noteTextContainer.value != null) {
-          note.text = editedNoteText.startsWith('\n\n')
+          const unpaddedText = editedNoteText.startsWith('\n\n')
             ? editedNoteText.slice(2)
             : editedNoteText.startsWith('\n')
               ? editedNoteText.slice(1)
               : editedNoteText
+          // strip the trailing padding newline too, otherwise it accumulates on every save
+          note.text = unpaddedText.endsWith('\n')
+            ? unpaddedText.slice(0, -1)
+            : unpaddedText
           note.editedAt = Date.now()
           note.priority = noteousSettings.priority
           // Update link flag for this note
