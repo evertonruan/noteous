@@ -1202,6 +1202,7 @@ function notePriority(context, priority) {
 }
 
 writeInput.addEventListener('focus', () => {
+    writeInputWrapper.classList.add('focus-input')
     writeButtonAdd.classList.add('focus-input')
     writeButtonsContainer.classList.add('focus-input')
     notePriority('retrieve-priority', noteousSettings.priority)
@@ -1214,6 +1215,7 @@ writeInput.addEventListener('scroll', () => {
 })
 
 writeInput.addEventListener('blur', () => {
+    writeInputWrapper.classList.remove('focus-input')
     writeButtonAdd.classList.remove('focus-input')
     writeButtonsContainer.classList.remove('focus-input')
 

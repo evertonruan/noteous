@@ -641,7 +641,8 @@ a {
 }
 
 /* focus styles follow the contained textarea state */
-#write-input-wrapper:focus-within {
+#write-input-wrapper:focus-within,
+#write-input-wrapper.focus-input {
   width: 80%;
   min-height: 7rem;
   outline: 0;
@@ -654,7 +655,8 @@ a {
   border-radius: 20px;
 }
 
-#write-input-wrapper:focus-within.rounded-bottom {
+#write-input-wrapper:focus-within.rounded-bottom,
+#write-input-wrapper.focus-input.rounded-bottom {
   border-width: 7px;
   border-radius: 20px;
 }

@@ -219,6 +219,7 @@ export async function orblendEngine(context, labelMessage, note, orb, action) {
       writeInput,
       writeButtonsContainer,
       writeButtonDismiss,
+      writeInputWrapper,
       () => {
         setWriteLabel('restore-note')
       }
