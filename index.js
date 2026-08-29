@@ -988,6 +988,8 @@ function noteousTheme(context) {
     noteousSettings.look.accentSaturation = '--accent-saturation: 20%;'
     noteousSettings.look.accentLum = '--accent-lum: 60%;'
     noteousSettings.look.lumAccentContainer = '--lum-accent-container: 65%;'
+    noteousSettings.look.orbBackdropBlur = '--orb-backdrop-blur: 2.5px;'
+    noteousSettings.look.orbBackdropBrightness = '--orb-backdrop-brightness: 108%;'
 
     storage.saveSettings(noteousSettings)
     injectCSSOnRoot()
@@ -1002,6 +1004,8 @@ function noteousTheme(context) {
     noteousSettings.look.accentSaturation = '--accent-saturation: 10%;'
     noteousSettings.look.accentLum = '--accent-lum: 60%;'
     noteousSettings.look.lumAccentContainer = '--lum-accent-container: 32%;'
+    noteousSettings.look.orbBackdropBlur = '--orb-backdrop-blur: 3px;'
+    noteousSettings.look.orbBackdropBrightness = '--orb-backdrop-brightness: 150%;'
 
     storage.saveSettings(noteousSettings)
     injectCSSOnRoot()
@@ -1020,7 +1024,9 @@ ${noteousSettings.look.lumFront}
 ${noteousSettings.look.lumFrontInverse}
 ${noteousSettings.look.accentSaturation}
 ${noteousSettings.look.accentLum}
-${noteousSettings.look.lumAccentContainer}`
+${noteousSettings.look.lumAccentContainer}
+${noteousSettings.look.orbBackdropBlur}
+${noteousSettings.look.orbBackdropBrightness}`
 }
 
 //loadNoteous --> ao carregar noteous, realiza verificações

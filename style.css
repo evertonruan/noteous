@@ -156,8 +156,8 @@ html {
     left: 50%;
     bottom: 50%;
     transform: translate(-50%, 50%);
-    width: 300px;
-    height: 150px;
+    width: 600px;
+    height: 300px;
     border-radius: 50%;
     pointer-events: none;
     /* use theme base color for the halo and keep it subtle */
@@ -186,8 +186,8 @@ html {
     --orb-button-load-start-blur: 14px;
     width: 56px;
     height: 56px;
-    -webkit-backdrop-filter: blur(3px) brightness(120%);
-    backdrop-filter: blur(3px) brightness(120%);
+    -webkit-backdrop-filter: blur(var(--orb-backdrop-blur)) brightness(var(--orb-backdrop-brightness));
+    backdrop-filter: blur(var(--orb-backdrop-blur)) brightness(var(--orb-backdrop-brightness));
   }
 
   #section-read {
@@ -886,7 +886,6 @@ a {
   overflow: visible;
 }
 
-/* colored ring using a pseudo-element; center remains transparent */
 .about-orb-button::before,
 .orb-button::before {
   content: '';
@@ -895,7 +894,7 @@ a {
   border-radius: 50%;
   pointer-events: none;
   background: radial-gradient(circle at center, transparent 40%, var(--base-accent-color-soft) 70%);
-  box-shadow: inset 0 1px 6px rgba(255, 255, 255, 0.7);
+  box-shadow: inset 0 1px 6px rgba(255, 255, 255, 0.2);
   z-index: 0;
 }
 
@@ -939,16 +938,15 @@ a {
   pointer-events: auto;
   background-color: var(--base-color);
   border-radius: 20px;
-  -webkit-backdrop-filter: blur(5px);
-  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(4px) brightness(110%);
+  backdrop-filter: blur(4px) brightness(110%);
   background-color: var(--base-color-transparent);
   background-image: linear-gradient(
     180deg,
-    rgba(255, 255, 255, 0.18) 0%,
-    rgba(255, 255, 255, 0.1) 55%,
+    rgba(255, 255, 255, 0.12) 0%,
+    rgba(255, 255, 255, 0.07) 55%,
     rgba(255, 255, 255, 0.03) 80%
   );
-  background-blend-mode: screen;
   box-shadow:
     0 10px 26px var(--base-accent-shadow),
     inset 0 1px 6px rgba(255, 255, 255, 0.3);
@@ -1090,18 +1088,17 @@ a {
   opacity: 1;
   filter: blur(0);
   transform: translateY(0) scale(1);
-  transform-origin: top center;
+  transform-origin: bottom center;
   visibility: visible;
-  -webkit-backdrop-filter: blur(5px);
-  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(7px) brightness(105%);
+  backdrop-filter: blur(7px) brightness(105%);
   background-color: var(--base-color-transparent);
   background-image: linear-gradient(
     180deg,
-    rgba(255, 255, 255, 0.18) 0%,
+    rgba(255, 255, 255, 0.20) 0%,
     rgba(255, 255, 255, 0.1) 55%,
     rgba(255, 255, 255, 0.03) 80%
   );
-  background-blend-mode: screen;
   box-shadow:
     0 10px 26px var(--base-accent-shadow),
     inset 0 0.5px 10px rgba(255, 255, 255, 0.3);
@@ -1111,8 +1108,8 @@ a {
     padding-top 0.4s ease,
     padding-bottom 0.4s ease,
     border-color 0.4s ease,
-    opacity 0.4s ease,
-    filter 0.4s ease,
+    opacity 0.5s ease,
+    filter 0.4s cubic-bezier(0.22, 1, 0.36, 1),
     transform 0.4s cubic-bezier(0.22, 1, 0.36, 1),
     visibility 0s linear;
 }
@@ -1125,8 +1122,9 @@ a {
   padding-bottom: 0;
   border-color: transparent;
   opacity: 0;
-  filter: blur(14px);
-  transform: translateY(-0.75rem) scale(0.985);
+  transform: translateY(1.5rem);
+  transform: scale(0.2);
+  transform-origin: bottom center;
   pointer-events: none;
   visibility: hidden;
   transition:
@@ -1135,9 +1133,9 @@ a {
     padding-top 0.28s ease,
     padding-bottom 0.28s ease,
     border-color 0.28s ease,
-    opacity 0.2s ease,
-    filter 0.3s ease,
-    transform 0.38s cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 0.2s cubic-bezier(0.22, 0.5, 0.1, 0.6),
+    transform 0.4s cubic-bezier(0.22, 0.5, 0.36, 1),
+    scale 0.2s cubic-bezier(0.22, 0.5, 0.36, 1),
     visibility 0s linear 0.38s;
 }
 
