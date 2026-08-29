@@ -849,6 +849,8 @@ a {
   flex-direction: column;
   align-items: center;
   margin: 10px;
+  -webkit-user-select: none;
+  user-select: none;
 }
 
 #orbs-list-container.load-stage-hidden {
@@ -932,6 +934,7 @@ a {
   padding: 5px 10px;
   top: 0;
   z-index: 2;
+  pointer-events: auto;
   background-color: var(--base-color);
   border-radius: 20px;
   -webkit-backdrop-filter: blur(5px);
@@ -1046,6 +1049,12 @@ a {
   position: sticky;
   top: 0;
   z-index: 2;
+  align-self: center;
+  align-items: center;
+  width: 100%;
+  pointer-events: none;
+  -webkit-user-select: none;
+  user-select: none;
 }
 
 #read-panel {
@@ -1070,9 +1079,11 @@ a {
   margin: 0 10px 10px 10px;
   padding: 0.5rem 0 0.6rem;
   overflow: hidden;
+  width: min(calc(100% - 20px), 400px);
   max-width: 400px;
   max-height: 14rem;
   height: fit-content;
+  pointer-events: auto;
   border-radius: 20px;
   opacity: 1;
   filter: blur(0);
