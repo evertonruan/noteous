@@ -4,6 +4,7 @@ export const orbParams = {
   done: {
     label: 'Notas Concluídas',
     icon: 'check',
+    color: 45,
     hasInput: false,
     order: 0,
     messages: {
@@ -14,6 +15,7 @@ export const orbParams = {
   donutdough: {
     label: 'Notas',
     icon: 'article',
+    color: 45,
     hasInput: true,
     messages: {
     panel: { one: '1 nota salva', many: '{count} notas salvas' }
@@ -24,6 +26,7 @@ export const orbParams = {
   link: {
     label: 'Links',
     icon: 'link',
+    color: 45,
     hasInput: false,
     messages: {
     panel: { one: '1 link encontrado', many: '{count} links encontrados' }

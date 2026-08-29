@@ -149,6 +149,31 @@ html {
     transform: translateX(-50%);
   }
 
+  /* circular blurred halo behind the orbs for small screens (no backdrop-filter) */
+  #index #orbs-list-container::before {
+    content: '';
+    position: absolute;
+    left: 50%;
+    bottom: 50%;
+    transform: translate(-50%, 50%);
+    width: 300px;
+    height: 150px;
+    border-radius: 50%;
+    pointer-events: none;
+    /* use theme base color for the halo and keep it subtle */
+    background: linear-gradient(to bottom, transparent 10%, var(--base-color) 80%);
+    filter: blur(10px);
+    z-index: 0;
+    opacity: 0.8;
+  }
+
+  /* ensure orb contents stay above the halo */
+  #index #orbs-list .orb-button,
+  #index #orbs-list .orb-button > * {
+    position: relative;
+    z-index: 1;
+  }
+
   #index #orbs-list {
     flex-direction: row;
     justify-content: center;
@@ -161,8 +186,8 @@ html {
     --orb-button-load-start-blur: 14px;
     width: 56px;
     height: 56px;
-    -webkit-backdrop-filter: blur(14px);
-    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(3px) brightness(120%);
+    backdrop-filter: blur(3px) brightness(120%);
   }
 
   #section-read {
@@ -850,21 +875,33 @@ a {
   height: 50px;
   margin: 5px;
   border-radius: 50%;
-  background-color: var(--base-accent-color);
-  background-image: linear-gradient(
-    180deg,
-    rgba(255, 255, 255, 0.18) 0%,
-    rgba(255, 255, 255, 0.1) 55%,
-    rgba(255, 255, 255, 0.03) 80%
-  );
-  background-blend-mode: screen;
   color: var(--base-text);
-  transition: all 0.2s cubic-bezier(0.075, 0.82, 0.165, 1);
+  transition: all 0.3s cubic-bezier(0.075, 0.82, 0.165, 1);
+  background: transparent;
+  position: relative;
+  overflow: visible;
 }
 
-.orb-button:hover {
-  cursor: pointer;
-  filter: brightness(90%);
+/* colored ring using a pseudo-element; center remains transparent */
+.about-orb-button::before,
+.orb-button::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  pointer-events: none;
+  background: radial-gradient(circle at center, transparent 40%, var(--base-accent-color-soft) 70%);
+  box-shadow: inset 0 1px 6px rgba(255, 255, 255, 0.7);
+  z-index: 0;
+}
+
+.orb-button > * {
+  position: relative;
+  z-index: 1;
+}
+
+.orb-button:active {
+  transform: scale(1.1);
 }
 
 .orb-button.selected-orb {
@@ -879,11 +916,6 @@ a {
 
 #index .orb-button.get-note {
   transform: scale(115%);
-}
-
-#done-orb-button {
-  background-color: var(--base-color);
-  border: 3px solid var(--base-accent-color);
 }
 
 #orb-panel {
@@ -2199,9 +2231,11 @@ footer p span {
   height: 50px;
   margin: 5px;
   border-radius: 50%;
-  background-color: var(--base-accent-color);
   color: var(--base-text);
-  transition: all 0.2s cubic-bezier(0.075, 0.82, 0.165, 1);
+  transition: all 0.3s cubic-bezier(0.075, 0.82, 0.165, 1);
+  background: transparent;
+  position: relative;
+  overflow: visible;
 }
 
 .about-orb-button.material-icons {
