@@ -767,6 +767,9 @@ function toggleReadOptionsSearch() {
       readOptionsSearchInput.style.opacity = '0'
       setTimeout(() => {
         readOptionsSearchInput.style.opacity = '1'
+        if (window.matchMedia('(min-width: 600px)').matches) {
+          readOptionsSearchInput.focus()
+        }
       }, 10)
     }, 200)
   } else {
@@ -795,7 +798,7 @@ readOptionsSearch.addEventListener('click', () => {
 })
 
 readOptionsSearchInput.addEventListener('input', () => {
-  renderNote('render-all', '', readOptionsSearchInput.value)
+  renderNote('render-all', '', selectedOrb, readOptionsSearchInput.value)
 })
 
 //////////
