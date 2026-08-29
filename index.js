@@ -9,7 +9,6 @@ window.findMonth = findMonth
 window.findWeek = findWeek
 window.showInstallButton = showInstallButton
 window.renderNote = renderNote
-window.syncReadOptionsVisibility = syncReadOptionsVisibility
 window.queuePriorityListsOrbAnimation = queuePriorityListsOrbAnimation
 window.notePriority = notePriority
 window.priorityListsOrientation = priorityListsOrientation
@@ -394,10 +393,12 @@ let sortActionSelection = ''
 let labelTimeoutId = null // Para controlar o timeout da label
 let readOptionsLabelSwapTimeoutId = null
 window.selectedOrb = 'donutdough'
+window.orbNotesCount = 0
 let readOptionsVisible = false
 
 const defaultReadOptionsLabel = 'Opções de organização'
 let activeReadOptionsMenu = null
+let userNotes = []
 
 //função em variável para 'desbloquear' writeInput se tela é pequena
 //usado em openNote() e exitEditMode()
@@ -503,12 +504,7 @@ function setReadOptionsLabelText(text) {
     readOptionsLabelSwapTimeoutId = null
   }, 180)
 }
-
-function syncReadOptionsVisibility() {
-  if (!readOptions || !readOptionsToggleButton) {
-    return
-  }
-
+function updateReadOptionsUI() {
   const hasNotes = Array.isArray(userNotes) && userNotes.length > 0
 
   if (!hasNotes) {
@@ -525,6 +521,10 @@ function syncReadOptionsVisibility() {
     readOptionsVisible ? 'Ocultar opções de leitura' : 'Mostrar opções de leitura'
   )
 }
+
+// Apply initial state
+updateReadOptionsUI()
+
 
 ////////
 
@@ -543,7 +543,6 @@ renderNoteousVersionLabel()
 //INICIALIZAÇÃO //////////////////////////////////////////////
 
 let noteousSettings = storage.getSettings()
-let userNotes = []
 
 const databases = (indexedDB && indexedDB.databases) ? await indexedDB.databases() : []
 const hasNoteousIDB = databases.some(db => db.name === 'NoteousIDB')
@@ -552,9 +551,7 @@ if (hasNoteousIDB) {
   userNotes = await storage.getAllNotes('createdAt', 'prev')
 }
 
-if (noteousSettings?.selectedOrb) {
-  window.selectedOrb = noteousSettings.selectedOrb
-}
+window.selectedOrb = 'donutdough'
 
 serviceWorkerRegister()
 loadNoteous('check-settings')
@@ -980,12 +977,10 @@ function noteousTheme(context) {
   if (context == 'retrieve-theme') {
     if (noteousSettings.look.luminosity == 'light') {
       noteousTheme('set-theme-light')
-      console.log(context)
     } else if (noteousSettings.look.luminosity == 'dark') {
       noteousTheme('set-theme-dark')
     }
   } else if (context == 'change-theme') {
-    console.log(context)
     if (noteousSettings.look.luminosity == 'light') {
       noteousTheme('set-theme-dark')
     } else if (noteousSettings.look.luminosity == 'dark') {
@@ -1057,7 +1052,7 @@ function loadNoteous(context) {
         //Aplica última orientação de listas de prioridade
         priorityListsOrientation('retrieveOrientation')
 
-        orblendEngine('load')
+        orblendEngine('app-load')
 
         orblendEngine('on-change-input')
 
@@ -1252,7 +1247,7 @@ priorityButton.addEventListener('click', () => {
 //////////
 
 readOptionsSearchInput.addEventListener('input', async () => {
-  await renderNote('render-all', '', readOptionsSearchInput.value)
+  await renderNote('render-all', '', window.selectedOrb, readOptionsSearchInput.value)
 })
 
 readOptionsSearchInput.addEventListener('focus', () => {
@@ -1266,10 +1261,8 @@ readOptionsToggleButton.addEventListener('click', () => {
 
   closeReadOptionsMenu()
   readOptionsVisible = !readOptionsVisible
-  syncReadOptionsVisibility()
+  updateReadOptionsUI()
 })
-
-syncReadOptionsVisibility()
 
 //////////
 
@@ -1601,6 +1594,7 @@ async function renderNote(context, noteId, orb, searchTerm) {
     readNotesListSolid.innerHTML = ''
     readNotesListDouble.innerHTML = ''
     readNotesListDotted.innerHTML = ''
+    await orblendEngine('update-orb-info', '', '', '', 'clean-notes-count')
 
     // noteous preview 1.7.1: Listas de Prioridade. Criação primeiro das notas e depois ver qual lista vai. Problema: cada nova nota reordena a Lista de Prioridade. Por exemplo, uma nova nota com prioridade dotted joga a Lista de Prioridade dotted para o primeiro lugar.
 
@@ -1617,7 +1611,9 @@ async function renderNote(context, noteId, orb, searchTerm) {
         // Verifica se a nota atual pertence à lista de prioridade que está sendo criada. A ordem das notas dentro da lista é definida por sortNotes(). Ou seja: userNotes já vem ordenado pelo sortNotes()
         //noteous preview 1.9: ao renderizar todas as notas, se houver termo de busca, filtra as notas que contêm o termo (sem diferenciar maiúsculas e minúsculas)
         //noteous preview 2.0: ao renderizar todas as notas, verifica qual orb está selecionada
+        await orblendEngine('get-storage-data')
         if (note.priority == priority && await orblendEngine('check-selected-orb', '', note, orb) && (searchTerm == undefined || note.text.toLowerCase().includes(searchTerm.toLowerCase()))) {
+          await orblendEngine('update-orb-info', '', '', '', 'increase-notes-count')
           let noteContainer = document.createElement('div')
           noteContainer.id = note.id + '-note-container'
           noteContainer.classList.add('note-container')
@@ -1720,7 +1716,6 @@ async function renderNote(context, noteId, orb, searchTerm) {
 
         let dateElement = document.createElement('p')
         dateElement.id = note.id + '-date-element'
-        console.log(dateElement.id)
         dateElement.appendChild(
           document.createTextNode(
             `+ ${new Date(note.createdAt).getDate()}/${findMonth(
@@ -1815,7 +1810,7 @@ async function renderNote(context, noteId, orb, searchTerm) {
           const acceptEditingButton = document.createElement('button')
           acceptEditingButton.id = note.id + '-accept-editing-button'
           acceptEditingButton.classList.add('action-buttons')
-          acceptEditingButton.appendChild(document.createTextNode('Aceitar edição'))
+          acceptEditingButton.appendChild(document.createTextNode('Salvar edição'))
 
           const discardEditingButton = document.createElement('button')
           discardEditingButton.id = note.id + '-discard-editing-button'
@@ -2022,7 +2017,7 @@ async function addNote() {
     if (objNote.link && !noteousSettings.orbsIndex.includes('link')) {
       noteousSettings.orbsIndex.push('link')
       storage.saveSettings(noteousSettings)
-      orblendEngine('load')
+      orblendEngine('app-load')
     }
 
     await renderNote('add', objNote.id)
@@ -2032,8 +2027,7 @@ async function addNote() {
     }
     orblendEngine('on-change-input')
     syncWriteInputRender()
-    orblendEngine('update-orb-info')
-    syncReadOptionsVisibility()
+    orblendEngine('update-orb-info', '', '', '', 'increase-notes-count')
   }
 }
 
@@ -2066,6 +2060,10 @@ async function doneNote(noteId) {
     return
   }
 
+  if (!document.getElementById(`done-orb-button`)) {
+    orblendEngine('create-orb', '', '', 'done')
+  }
+
   await animateNoteIntoDoneOrb(noteContainer)
 
   if (noteContainer != null) {
@@ -2080,7 +2078,7 @@ async function doneNote(noteId) {
   }
 
   orblendEngine('change')
-  orblendEngine('update-orb-info')
+  orblendEngine('update-orb-info', '', '', '', 'decrease-notes-count')
 }
 
 async function deleteNote(noteId) {
@@ -2255,9 +2253,10 @@ function editNote(noteId) {
           if (note.link && !noteousSettings.orbsIndex.includes('link')) {
             noteousSettings.orbsIndex.push('link')
             storage.saveSettings(noteousSettings)
-            orblendEngine('load')
+            orblendEngine('app-load')
           }
         }
+        setEditMode('edit-mode-off')
         await renderNote('render-all', '', `${window.selectedOrb}`)
       })
 

@@ -77,6 +77,8 @@ export async function getNote(id) {
   });
 }
 
+
+
 /**
  * Gets all notes from the database.
  * @param {string} [indexName] - Optional index name to sort by (e.g., 'createdAt', 'editedAt').
@@ -112,6 +114,22 @@ export async function getAllNotes(indexName, direction = 'next') {
 }
 
 /**
+ * Returns the number of notes stored in the database.
+ * @returns {Promise<number>}
+ */
+export async function getNotesCount() {
+  const database = await initDB();
+  return new Promise((resolve, reject) => {
+    const transaction = database.transaction(NOTES_STORE, 'readonly');
+    const store = transaction.objectStore(NOTES_STORE);
+    const request = store.count();
+
+    request.onsuccess = () => resolve(request.result);
+    request.onerror = () => reject(request.error);
+  });
+}
+
+/**
  * Adds a new note to the database.
  */
 export async function addNote(noteData) {
@@ -120,7 +138,6 @@ export async function addNote(noteData) {
     ...noteData,
     id: crypto.randomUUID(),
     createdAt: Date.now(),
-    editedAt: Date.now()
   };
 
   return new Promise((resolve, reject) => {
