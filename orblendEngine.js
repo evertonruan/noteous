@@ -91,7 +91,7 @@ export async function orblendEngine(context, labelMessage, note, orb, action) {
 //info-element
 
   const infoElement = function makeInfoElement(subcontext) {
-    let infoText
+    let infoText = ''
 
     if (subcontext == 'no-notes') {
       infoText = 'Você ainda não tem anotações \n Escreva sua primeira nota ✏️'
@@ -200,6 +200,12 @@ export async function orblendEngine(context, labelMessage, note, orb, action) {
 
   if (context == 'change') {
     
+    const userNotesCount = await getNotesCount()
+    if (userNotesCount > 0) {
+      subcontext = 'has-notes'
+    } else {
+      subcontext = 'no-notes'
+    }
     infoPanel.innerHTML = ''
     infoPanel.append(dateElement(), infoElement(subcontext))
     window.showInstallButton()
