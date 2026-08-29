@@ -1,18 +1,11 @@
 import { noteousVersion, termsVersion } from './noteousParams.js'
 import { orblendEngine } from './orblendEngine.js'
 import * as storage from './modules/storage-service.js'
+import { getDateString } from './modules/note-helpers.js'
 
 // Exposições Globais (Window)
-window.welcomeToNoteous = welcomeToNoteous
-window.loadNoteous = loadNoteous
-window.findMonth = findMonth
-window.findWeek = findWeek
 window.showInstallButton = showInstallButton
 window.renderNote = renderNote
-window.queuePriorityListsOrbAnimation = queuePriorityListsOrbAnimation
-window.notePriority = notePriority
-window.priorityListsOrientation = priorityListsOrientation
-window.setTimeNumber = setTimeNumber
 
 async function serviceWorkerRegister() {
     if (noteousSettings) {
@@ -202,9 +195,7 @@ async function runInitialLoadSequence() {
     readSection.classList.remove('load-stage-hidden')
   }
 
-  if (typeof queuePriorityListsOrbAnimation == 'function') {
-    queuePriorityListsOrbAnimation(document.getElementById(`${window.selectedOrb}-orb-button`))
-  }
+  queuePriorityListsOrbAnimation(document.getElementById(`${window.selectedOrb}-orb-button`))
 
   await sortNotes('set-sort', `${window.selectedOrb}`)
 }
@@ -1716,25 +1707,17 @@ async function renderNote(context, noteId, orb, searchTerm) {
 
         let dateElement = document.createElement('p')
         dateElement.id = note.id + '-date-element'
-        dateElement.appendChild(
-          document.createTextNode(
-            `+ ${new Date(note.createdAt).getDate()}/${findMonth(
-              new Date(note.createdAt).getMonth()
-            )}/${new Date(note.createdAt).getUTCFullYear()} às ${setTimeNumber(
-              new Date(note.createdAt).getHours()
-            )}:${setTimeNumber(new Date(note.createdAt).getMinutes())}`
-          )
-        )
-        if (note.editedAt != undefined) {
-          dateElement.appendChild(document.createElement('br'))
+
+        //preview 2.4.2: dateElement show date dinamically
+
+        if (noteousSettings.sort.action == 'id' || note.editedAt == undefined) {
           dateElement.appendChild(
-            document.createTextNode(
-              `Última edição: ${new Date(note.editedAt).getDate()}/${findMonth(
-                new Date(note.editedAt).getMonth()
-              )}/${new Date(note.editedAt).getUTCFullYear()} às ${setTimeNumber(
-                new Date(note.editedAt).getHours()
-              )}:${setTimeNumber(new Date(note.editedAt).getMinutes())}`
-            )
+            document.createTextNode(getDateString(note.createdAt))
+          )
+        } else if (note.editedAt != undefined && noteousSettings.sort.action == 'editedAt') {
+          //if note was already edited
+          dateElement.appendChild(
+            document.createTextNode(getDateString(note.editedAt))
           )
         }
 
@@ -1762,9 +1745,7 @@ async function renderNote(context, noteId, orb, searchTerm) {
 
     syncWriteInputRender()
 
-    if (typeof priorityListsOrientation == 'function') {
-      priorityListsOrientation('retrieveOrientation')
-    }
+    priorityListsOrientation('retrieveOrientation')
     playPriorityListsOrbAnimation()
 
     setTimeout(() => {
@@ -1881,25 +1862,14 @@ async function renderNote(context, noteId, orb, searchTerm) {
 
           let dateElement = document.createElement('p')
           dateElement.id = note.id + '-date-element'
-          dateElement.appendChild(
-            document.createTextNode(
-              `+ ${new Date(note.createdAt).getDate()}/${findMonth(
-                new Date(note.createdAt).getMonth()
-              )}/${new Date(note.createdAt).getUTCFullYear()} às ${setTimeNumber(
-                new Date(note.createdAt).getHours()
-              )}:${setTimeNumber(new Date(note.createdAt).getMinutes())}`
-            )
-          )
-          if (note.editedAt != undefined) {
-            dateElement.appendChild(document.createElement('br'))
+
+          if (note.editedAt == undefined) {
             dateElement.appendChild(
-              document.createTextNode(
-                `Última edição: ${new Date(note.editedAt).getDate()}/${findMonth(
-                  new Date(note.editedAt).getMonth()
-                )}/${new Date(note.editedAt).getUTCFullYear()} às ${setTimeNumber(
-                  new Date(note.editedAt).getHours()
-                )}:${setTimeNumber(new Date(note.editedAt).getMinutes())}`
-              )
+              document.createTextNode(getDateString(note.createdAt))
+            )
+          } else if (note.editedAt != undefined) {
+            dateElement.appendChild(
+              document.createTextNode(getDateString(note.editedAt))
             )
           }
 
@@ -1924,79 +1894,6 @@ async function renderNote(context, noteId, orb, searchTerm) {
         }
       }    
     }
-  }
-}
-
-function findMonth(number) {
-  if (number == 0) {
-    return 'Janeiro'
-  } else if (number == 1) {
-    return 'Fevereiro'
-  } else if (number == 2) {
-    return 'Março'
-  } else if (number == 3) {
-    return 'Abril'
-  } else if (number == 4) {
-    return 'Maio'
-  } else if (number == 5) {
-    return 'Junho'
-  } else if (number == 6) {
-    return 'Julho'
-  } else if (number == 7) {
-    return 'Agosto'
-  } else if (number == 8) {
-    return 'Setembro'
-  } else if (number == 9) {
-    return 'Outubro'
-  } else if (number == 10) {
-    return 'Novembro'
-  } else if (number == 11) {
-    return 'Dezembro'
-  }
-}
-
-function findWeek(number) {
-  if (number == 0) {
-    return 'Domingo'
-  } else if (number == 1) {
-    return 'Segunda-feira'
-  } else if (number == 2) {
-    return 'Terça-feira'
-  } else if (number == 3) {
-    return 'Quarta-feira'
-  } else if (number == 4) {
-    return 'Quinta-feira'
-  } else if (number == 5) {
-    return 'Sexta-feira'
-  } else if (number == 6) {
-    return 'Sábado'
-  }
-}
-
-//função para retornar número com 00 --> Exmpl: 09:05 (pois Date.getMinutes, .getHours retorna hora/minuto apenas com '0' --> Exmpl: 9:5, mas é preciso ser com '00'
-function setTimeNumber(number) {
-  if (number == 0) {
-    return '00'
-  } else if (number == 1) {
-    return '01'
-  } else if (number == 2) {
-    return '02'
-  } else if (number == 3) {
-    return '03'
-  } else if (number == 4) {
-    return '04'
-  } else if (number == 5) {
-    return '05'
-  } else if (number == 6) {
-    return '06'
-  } else if (number == 7) {
-    return '07'
-  } else if (number == 8) {
-    return '08'
-  } else if (number == 9) {
-    return '09'
-  } else if (number >= 10) {
-    return number
   }
 }
 

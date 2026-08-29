@@ -23,6 +23,8 @@ import {
   getNotesCount,
 } from './modules/orblend-engine/orb-helpers.js'
 
+import { findWeek, findMonth } from './modules/note-helpers.js'
+
 export async function orblendEngine(context, labelMessage, note, orb, action) {
   const infoPanel = document.querySelector('#info-panel')
   const writeLabel = document.querySelector('#write-label')
@@ -117,9 +119,7 @@ export async function orblendEngine(context, labelMessage, note, orb, action) {
     let infoElementDate = document.createElement('p')
     infoElementDate.classList.add('info-element')
     let infoElementDateText = document.createTextNode(
-      `Olá! Hoje é ${window.findWeek(new Date(dateNow).getDay())}, ${new Date(
-        dateNow
-      ).getDate()} de ${window.findMonth(new Date(dateNow).getMonth())}`
+      `Olá! Hoje é ${findWeek(dateNow.getDay())}, ${dateNow.getDate()} de ${findMonth(dateNow.getMonth())}`
     )
     infoElementDate.append(infoElementDateText)
     return infoElementDate

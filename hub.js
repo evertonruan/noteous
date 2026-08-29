@@ -1,6 +1,7 @@
 import { noteousVersion, termsVersion } from './noteousParams.js'
 import { fileLoad } from './fileLoad.js'
 import * as storage from './modules/storage-service.js'
+import { getDateString } from './modules/note-helpers.js'
 
 const initialSettings = storage.getSettings()
 const initialNotes = await storage.getAllNotes()
@@ -919,25 +920,13 @@ function createNotePreview(note, index, context = 'copy') {
 
   let dateElement = document.createElement('p')
   
-  dateElement.appendChild(
-    document.createTextNode(
-      `+ ${new Date(note.createdAt || note.id).getDate()}/${findMonth(
-        new Date(note.createdAt || note.id).getMonth()
-      )}/${new Date(note.createdAt || note.id).getUTCFullYear()} às ${setTimeNumber(
-        new Date(note.createdAt || note.id).getHours()
-      )}:${setTimeNumber(new Date(note.createdAt || note.id).getMinutes())}`
-    )
-  )
-  if (note.editedAt != undefined) {
-    dateElement.appendChild(document.createElement('br'))
+  if (note.editedAt == undefined) {
     dateElement.appendChild(
-      document.createTextNode(
-        `Última edição: ${new Date(note.editedAt).getDate()}/${findMonth(
-          new Date(note.editedAt).getMonth()
-        )}/${new Date(note.editedAt).getUTCFullYear()} às ${setTimeNumber(
-          new Date(note.editedAt).getHours()
-        )}:${setTimeNumber(new Date(note.editedAt).getMinutes())}`
-      )
+      document.createTextNode(getDateString(note.createdAt || note.id))
+    )
+  } else if (note.editedAt != undefined) {
+    dateElement.appendChild(
+      document.createTextNode(getDateString(note.editedAt))
     )
   }
 
@@ -1035,61 +1024,6 @@ function createNotePreview(note, index, context = 'copy') {
   }
 
   return noteContainer
-}
-
-//FUNÇÕES AUXILIARES PARA FORMATAÇÃO DE DATA
-function findMonth(number) {
-  if (number == 0) {
-    return 'Janeiro'
-  } else if (number == 1) {
-    return 'Fevereiro'
-  } else if (number == 2) {
-    return 'Março'
-  } else if (number == 3) {
-    return 'Abril'
-  } else if (number == 4) {
-    return 'Maio'
-  } else if (number == 5) {
-    return 'Junho'
-  } else if (number == 6) {
-    return 'Julho'
-  } else if (number == 7) {
-    return 'Agosto'
-  } else if (number == 8) {
-    return 'Setembro'
-  } else if (number == 9) {
-    return 'Outubro'
-  } else if (number == 10) {
-    return 'Novembro'
-  } else if (number == 11) {
-    return 'Dezembro'
-  }
-}
-
-function setTimeNumber(number) {
-  if (number == 0) {
-    return '00'
-  } else if (number == 1) {
-    return '01'
-  } else if (number == 2) {
-    return '02'
-  } else if (number == 3) {
-    return '03'
-  } else if (number == 4) {
-    return '04'
-  } else if (number == 5) {
-    return '05'
-  } else if (number == 6) {
-    return '06'
-  } else if (number == 7) {
-    return '07'
-  } else if (number == 8) {
-    return '08'
-  } else if (number == 9) {
-    return '09'
-  } else if (number >= 10) {
-    return number
-  }
 }
 
 //FUNÇÃO PARA IMPORTAR NOTAS
