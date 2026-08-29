@@ -568,6 +568,13 @@ if (hasNoteousIDB) {
   userNotes = await storage.getAllNotes('createdAt', 'prev')
 }
 
+console.log(userNotes)
+console.log(userNotes.length)
+
+if (userNotes.length == 0) {
+  window.scrollTo(0, 0)
+}
+
 window.selectedOrb = 'donutdough'
 
 serviceWorkerRegister()
