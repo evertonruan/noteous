@@ -83,9 +83,10 @@ const readNotesLists = {
 let pendingPriorityListsOrbAnimation = null
 let priorityListsOrbAnimationFrame = null
 const loadSequenceDurations = {
-  writePanel: 520,
-  orbButtons: 460,
-  orbButtonStagger: 90
+  writePanel: 200,
+  orbButtons: 100,
+  orbButtonStagger: 90,
+  orbPanel: 200
 }
 const doneNoteFlightDuration = 500
 let hasPendingInitialLoadSequence = false
@@ -181,6 +182,20 @@ async function playOrbButtonsLoadSequence() {
   await animationEnded
 }
 
+async function playOrbPanelLoadSequence() {
+  if (!orbPanel) {
+    return
+  }
+
+  orbPanel.classList.remove('orb-panel-animate')
+  void orbPanel.offsetWidth
+
+  const animationEnded = waitForAnimationEnd(orbPanel, loadSequenceDurations.orbPanel)
+  orbPanel.classList.add('orb-panel-animate')
+  await animationEnded
+  orbPanel.classList.remove('orb-panel-animate')
+}
+
 async function runInitialLoadSequence() {
   if (!hasPendingInitialLoadSequence) {
     await sortNotes('set-sort', `${window.selectedOrb}`)
@@ -195,6 +210,8 @@ async function runInitialLoadSequence() {
   if (readSection) {
     readSection.classList.remove('load-stage-hidden')
   }
+
+  await playOrbPanelLoadSequence()
 
   queuePriorityListsOrbAnimation(document.getElementById(`${window.selectedOrb}-orb-button`))
 
