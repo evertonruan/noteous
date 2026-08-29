@@ -8,10 +8,11 @@ const galleryData = [
       { src: '/assets/images/greeting-donut.webp', alt: 'donut design', caption: 'O novo donut design é delicioso e inovador. Desde quando você abre o noteous você percebe que há uma atenção especial aos detalhes'},
       { src: '/assets/images/greeting-orblend-engine.webp', alt: 'Orblend Engine', caption: 'O orblend engine é a inteligência por trás do noteous. Ele habilita recursos úteis, além de criar os Orbs, que aumentam a organização'},
       { src: '/assets/images/greeting-orbs.webp', alt: 'Orbs', caption: 'Os Orbs são uma novidade da 2ª Geração. É uma forma de organizar suas notas. Por exemplo, as notas concluídas ficam em um Orb específico delas. E no futuro será possível desbloquear novas cores de Orbs'},
-      { src: '/assets/images/greeting-usage-orbs.webp', alt: 'Melhor navegação nos Orbs', caption: '<strong>Esta é a atualização mais recente</strong>. Ao usar o noteous no celular, os Orbs aparecem na parte de baixo, facilitando a navegação', type: 'noteous 2.3' },
+      { src: '/assets/images/greeting-orbs-light.webp', alt: 'Melhor navegação nos Orbs', caption: '<strong>Esta é a atualização mais recente</strong>. Os Orbs receberam melhorias visuais, ficando mais evidentes', type: 'noteous 2.3.1' },
+      { src: '/assets/images/greeting-usage-orbs.webp', alt: 'Melhor navegação nos Orbs', caption: '<strong>Ao usar o noteous no celular, os Orbs aparecem na parte de baixo, facilitando a navegação', type: 'noteous 2.3' },
       { src: '/assets/images/greeting-usage-edit.webp', alt: 'Melhor edição de notas', caption: 'O noteous 2.2 melhorou a experiência e legibilidade. Por exemplo, ficou mais fácil de perceber quando uma nota está sendo editada', type: 'noteous 2.2' },
       { src: '/assets/images/greeting-update.webp', alt: 'Design assets', caption: 'Essa foi a primeira grande atualização da 2ª Geração do noteous. Como destaques, trouxe um ícone atualizado, e a Central de Recursos (antiga página Ajustes&Info)', type: 'noteous 2.1' },
-      { src: '/assets/images/greeting-orbs-light.webp', alt: '2ª Geração do noteous', caption: 'O noteous 2.0 inaugurou a 2ª Geração, com os inovadores Orbs e o novo donut design', type: 'noteous 2.0' }
+      { src: '/assets/images/greeting-gallery.webp', alt: '2ª Geração do noteous', caption: 'O noteous 2.0 inaugurou a 2ª Geração, com os inovadores Orbs e o novo donut design', type: 'noteous 2.0' }
     ]
   }
 ]
