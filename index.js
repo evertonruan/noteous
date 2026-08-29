@@ -2183,6 +2183,10 @@ function editNote(noteId) {
             storage.saveSettings(noteousSettings)
             orblendEngine('app-load')
           }
+
+          setEditMode('edit-mode-off')
+          await sortNotes('set-sort', `${window.selectedOrb}`)
+          return
         }
         setEditMode('edit-mode-off')
         await renderNote('render-all', '', `${window.selectedOrb}`)
