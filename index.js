@@ -48,6 +48,7 @@ let orbInfoCount = document.querySelector('#orb-panel-count')
 let readSection = document.querySelector('#section-read')
 let readHeader = document.querySelector('#read-header')
 let readPanel = document.querySelector('#read-panel')
+
 let readOptions = document.querySelector('#read-options')
 let readOptionsLabel = document.querySelector('#read-options-label')
 let readOptionsButtonsContainer = document.querySelector('#read-options-buttons-container')
@@ -495,6 +496,11 @@ function setReadOptionsLabelText(text) {
     readOptionsLabelSwapTimeoutId = null
   }, 180)
 }
+
+let readOptionsOverlay = document.createElement('div')
+readOptionsOverlay.id = 'read-options-overlay'
+readSection?.insertBefore(readOptionsOverlay, readHeader)
+
 function updateReadOptionsUI() {
   const hasNotes = Array.isArray(userNotes) && userNotes.length > 0
 
@@ -511,6 +517,9 @@ function updateReadOptionsUI() {
     'aria-label',
     readOptionsVisible ? 'Ocultar opções de leitura' : 'Mostrar opções de leitura'
   )
+  if (readOptionsOverlay) {
+    readOptionsOverlay.classList.toggle('active', hasNotes && readOptionsVisible)
+  }
 }
 
 // Apply initial state
@@ -1261,6 +1270,16 @@ readOptionsToggleButton.addEventListener('click', () => {
   closeReadOptionsMenu()
   readOptionsVisible = !readOptionsVisible
   updateReadOptionsUI()
+})
+
+readOptionsOverlay?.addEventListener('click', (event) => {
+  event.preventDefault()
+  event.stopPropagation()
+  if (readOptionsVisible) {
+    closeReadOptionsMenu()
+    readOptionsVisible = false
+    updateReadOptionsUI()
+  }
 })
 
 //////////

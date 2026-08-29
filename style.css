@@ -196,6 +196,20 @@ html {
     padding-bottom: 14rem;
   }
 
+  #index #read-options-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 10;
+    display: none;
+  }
+
+  #index #read-options-overlay.active {
+    display: block;
+  }
+
   #index #read-header {
     position: fixed;
     display: flex;
