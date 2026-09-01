@@ -1,5 +1,5 @@
-let noteousSettings = JSON.parse(localStorage.getItem('noteous-settings'))
-let noteousMain = JSON.parse(localStorage.getItem('noteous-main')) || []
+let noteousSettings = getValidatedStorage('noteous-settings')
+let noteousMain = getValidatedStorage('noteous-main', { type: 'array' }) || []
 
 if (noteousSettings == null || noteousSettings?.noteousApp?.noteousVersion < 1.6) {
   //Redireciona a página inicial se Termos não foram aceitos
@@ -289,7 +289,7 @@ function reorderPriorityItems() {
   const items = Array.from(priorityContainer.children)
   
   // Limpa o container
-  priorityContainer.innerHTML = ''
+      priorityContainer.replaceChildren()
   
   // Reordena baseado no priorityOrder
   noteousSettings.priorityOrder.forEach((priority, index) => {
@@ -436,7 +436,7 @@ buttonPolicies.addEventListener('click', () => {
       })
   } else if (policiesSwitchVar == 1) {
     policiesSwitchVar = 0
-    policiesContainerData.innerHTML = ''
+    clearElement(policiesContainerData)
   }
 })
 
@@ -446,7 +446,7 @@ buttonPolicies.addEventListener('click', () => {
 copyCreateButton.addEventListener('click', () => {
   if (copyDetailsSwitchVar == 0 || copyDetailsSwitchVar == 2) {
     copyDetailsSwitchVar = 1
-    copyDetailsContainer.innerHTML = ''
+    clearElement(copyDetailsContainer)
 
     // Descrição sobre a funcionalidade
     let copyDescription = document.createElement('p')
@@ -510,7 +510,7 @@ copyCreateButton.addEventListener('click', () => {
 
   } else if (copyDetailsSwitchVar == 1) {
     copyDetailsSwitchVar = 0
-    copyDetailsContainer.innerHTML = ''
+    clearElement(copyDetailsContainer)
     }
 
   activeOptionVerifier()
@@ -621,7 +621,7 @@ function createNoteCopyDownload() {
 copyOpenButton.addEventListener('click', () => {
   if (copyDetailsSwitchVar == 0 || copyDetailsSwitchVar == 1) {
     copyDetailsSwitchVar = 2
-    copyDetailsContainer.innerHTML = ''
+    clearElement(copyDetailsContainer)
 
     // Descrição sobre a funcionalidade
     let copyDescription = document.createElement('p')
@@ -676,7 +676,7 @@ copyOpenButton.addEventListener('click', () => {
 
   } else if (copyDetailsSwitchVar == 2) {
     copyDetailsSwitchVar = 0
-    copyDetailsContainer.innerHTML = ''
+    clearElement(copyDetailsContainer)
   }
 
   activeOptionVerifier()

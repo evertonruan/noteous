@@ -5,8 +5,8 @@ function orblendEngine(context, labelMessage, note, orb) {
 
   let dateElement = function makeDateElement() {
     let dateNow = new Date()
-    let infoElementDate = document.createElement('p')
-    infoElementDate.classList.add('info-element')
+    let infoPanel = document.createElement('div')
+    infoPanel.classList.add('info-element')
     let infoElementDateText = document.createTextNode(
       `Olá! Hoje é ${findWeek(new Date(dateNow).getDay())}, ${new Date(
         dateNow
@@ -48,17 +48,17 @@ function orblendEngine(context, labelMessage, note, orb) {
   function setWriteLabel(labelMessage) {
     // noteous preview 1.9: writeLabel agora é controlado pelo Orblend Engine
     if (labelMessage == 'continue-editing') {
-      writeLabel.innerHTML = '✏️ Continue escrevendo sua nota'
+      setTextContent(writeLabel, '✏️ Continue escrevendo sua nota')
     } else if (labelMessage == 'add-note'){
-      writeLabel.innerHTML = 'Adicione sua próxima nota'
+      setTextContent(writeLabel, 'Adicione sua próxima nota')
     } else if (labelMessage == 'edit-note') {
-      writeLabel.innerHTML = '✏️ Edite aqui sua nota'
+      setTextContent(writeLabel, '✏️ Edite aqui sua nota')
     } else if (labelMessage == 'open-note') {
-      writeLabel.innerHTML = '📃 Veja sua nota'
+      setTextContent(writeLabel, '📃 Veja sua nota')
     } else if (labelMessage == 'start-note') {
-      writeLabel.innerHTML = 'Escreva sua próxima anotação'
+      setTextContent(writeLabel, 'Escreva sua próxima anotação')
     } else if (labelMessage == 'restore-note') {
-      writeLabel.innerHTML = '📝 Essa nota não foi adicionada'
+      setTextContent(writeLabel, '📝 Essa nota não foi adicionada')
     }
   }
 
