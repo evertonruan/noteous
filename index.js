@@ -151,14 +151,14 @@ function navLink() {
 ////
 
 function renderNoteousVersionLabel() {
-  noteousVersionLabel.innerHTML = `<span>noteous</span> 2ª Geração`
+  setTextContent(noteousVersionLabel, 'noteous 2ª Geração')
 }
 renderNoteousVersionLabel()
 
 //INICIALIZAÇÃO //////////////////////////////////////////////
 
-let noteousMain = JSON.parse(localStorage.getItem('noteous-main')) || []
-let noteousSettings = JSON.parse(localStorage.getItem('noteous-settings'))
+let noteousMain = getValidatedStorage('noteous-main', { type: 'array' }) || []
+let noteousSettings = getValidatedStorage('noteous-settings')
 
 serviceWorkerRegister()
 loadNoteous('check-settings')
@@ -178,7 +178,7 @@ function welcomeToNoteous(context, subcontext) {
   //context --> renderizar 'elementos de boas vindas'/renderizar tela de policies
   //subcontext --> primeiro acesso ou nova versão
   if (context == 'render-welcome') {
-    body.innerHTML = ''
+    clearElement(body)
 
     //Section, Panel, TitleContainer
     let greetingSection = document.createElement('div')
@@ -812,7 +812,7 @@ readOptionsSearchInput.addEventListener('input', () => {
 function priorityListsOrientation(context) {
   if (context == 'retrieveOrientation') {
     if (noteousSettings.priorityOrientation == 'row') {
-      readOptionsOrientationButton.innerHTML = ''
+      clearElement(readOptionsOrientationButton)
       readOptionsOrientationButton.append(document.createTextNode('view_agenda'))
   readOptionsOrientationButton.style.transform = 'rotate(90deg)'
       readNotesContainer.style.cssText = 'flex-direction: row;'
@@ -820,7 +820,7 @@ function priorityListsOrientation(context) {
         priorityList.style.cssText = 'flex-direction: column;  min-width: fit-content;'
       }
     } else if (noteousSettings.priorityOrientation == 'column') {
-      readOptionsOrientationButton.innerHTML = ''
+      clearElement(readOptionsOrientationButton)
       readOptionsOrientationButton.append(document.createTextNode('view_agenda'))
   readOptionsOrientationButton.style.transform = 'rotate(0deg)'
       readNotesContainer.style.cssText = 'flex-direction: column;'
@@ -854,10 +854,10 @@ readOptionsOrientationButton.addEventListener('click', () => {
 function readOptionsSortButtonText(context) {
   if (context == 'sort-action') {
     if (noteousSettings.sort.action == 'editedAt') {
-      readOptionsSortActionButton.innerHTML = ''
+      clearElement(readOptionsSortActionButton)
       readOptionsSortActionButton.append(document.createTextNode('edit_note'))
     } else if (noteousSettings.sort.action == 'id') {
-      readOptionsSortActionButton.innerHTML = ''
+      clearElement(readOptionsSortActionButton)
       readOptionsSortActionButton.append(document.createTextNode('post_add'))
     }
   } else if (context == 'sort-time') {
@@ -865,7 +865,7 @@ function readOptionsSortButtonText(context) {
       readOptionsSort.innerHTML = ''
       readOptionsSort.append(document.createTextNode('arrow_downward'))
     } else if (noteousSettings.sort.time == 'old') {
-      readOptionsSort.innerHTML = ''
+      clearElement(readOptionsSort)
       readOptionsSort.append(document.createTextNode('arrow_upward'))
     }
   }
@@ -912,7 +912,7 @@ function sortNotes(context, subcontext) {
     if (noteousSettings.sort.time == 'recent') {
       noteousSettings.sort.time = 'old' // Change to old notes first
       localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
-      readOptionsSort.innerHTML = ''
+      clearElement(readOptionsSort)
       readOptionsSort.append(
         document.createTextNode('arrow_upward')
       )
@@ -920,7 +920,7 @@ function sortNotes(context, subcontext) {
     } else if (noteousSettings.sort.time == 'old') {
       noteousSettings.sort.time = 'recent' // Change to recent notes first
       localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
-      readOptionsSort.innerHTML = ''
+      clearElement(readOptionsSort)
       readOptionsSort.append(document.createTextNode('arrow_downward'))
       readOptionsMessage('Ordem: Mais recentes primeiro')
     }
@@ -941,10 +941,10 @@ function renderNote(context, noteId, orb, searchTerm) {
   //ESSE CONTEXTO É USADO AO CARREGAR A PÁGINA, RENDERIZANDO TODAS AS NOTAS
 
   if (context == 'render-all') {
-    readNotesContainer.innerHTML = ''
-    readNotesListSolid.innerHTML = ''
-    readNotesListDouble.innerHTML = ''
-    readNotesListDotted.innerHTML = ''
+    clearElement(readNotesContainer)
+    clearElement(readNotesListSolid)
+    clearElement(readNotesListDouble)
+    clearElement(readNotesListDotted)
 
     // noteous 1.9: Listas de Prioridade. renderNote() primeiro verifica a ordem das listas e as adiciona. Depois, adiciona a nota em sua respectiva lista
 
