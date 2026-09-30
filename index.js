@@ -2132,6 +2132,7 @@ function setEditMode(context) {
     writeInputWrapper.classList.add('orb-done')
     writeInputWrapper.classList.add('rounded-bottom')
     writeButtonsContainer.classList.add('hidden-buttons')
+    orbsListContainer.classList.add('invisible-element')
     writeInput.placeholder = ''
     writeInput.disabled = true
     syncWriteInputRender()
@@ -2142,6 +2143,7 @@ function setEditMode(context) {
     writeInputWrapper.classList.remove('orb-done')
     writeInput.value != '' ? writeInputWrapper.classList.remove('rounded-bottom') : null
     writeInput.value != '' ? writeButtonsContainer.classList.remove('hidden-buttons') : null
+    orbsListContainer.classList.remove('invisible-element')
     writeInput.placeholder = '✏️ Anote aqui'
     writeInput.disabled = false
     syncWriteInputRender()
