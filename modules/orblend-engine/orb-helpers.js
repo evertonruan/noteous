@@ -8,6 +8,7 @@ function createOrbButton(orbKey, noteousSettings) {
   orbButton.id = `${orbKey}-orb-button`
   orbButton.textContent = getOrbIcon(orbKey)
   orbButton.addEventListener('click', async () => {
+    if (navigator.vibrate) navigator.vibrate(20)
     const orb = orbKey
     window.selectedOrb = orb
     if (noteousSettings) {
