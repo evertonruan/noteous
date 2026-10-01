@@ -2161,6 +2161,7 @@ function editNote(noteId) {
       const discardEditingButton = document.getElementById(noteId + '-discard-editing-button')
       const actionButtonsContainer = document.getElementById(noteId + '-action-buttons-container')
       const noteTextContainer = document.getElementById(noteId + '-text-container')
+      const noteDateContainer = document.getElementById(noteId + '-note-date-container')
       
       let isEditing = false
       let editedNoteText = note.text
@@ -2173,6 +2174,7 @@ function editNote(noteId) {
           setEditMode('edit-mode-on')
           actionButtonsContainer.classList.add('hidden-element')
           editingButtonsContainer.classList.remove('hidden-element')
+          noteDateContainer.classList.add('hidden-element')
         }
       })
 
@@ -2181,6 +2183,7 @@ function editNote(noteId) {
           isEditing = false
           actionButtonsContainer.classList.remove('hidden-element')
           editingButtonsContainer.classList.add('hidden-element')
+          noteDateContainer.classList.remove('hidden-element')
           setEditMode('edit-mode-off')
         }
       })
@@ -2222,6 +2225,7 @@ function editNote(noteId) {
         noteTextContainer.value = `\n\n${note.text}`
         actionButtonsContainer.classList.remove('hidden-element')
         editingButtonsContainer.classList.add('hidden-element')
+        noteDateContainer.classList.remove('hidden-element')
         setEditMode('edit-mode-off')
       })
     }
