@@ -1238,6 +1238,9 @@ function notePriority(context, priority) {
 }
 
 writeInput.addEventListener('focus', () => {
+    if (window.selectedOrb == 'done') {
+      document.getElementById('donutdough-orb-button')?.click()
+    }
     writeInputWrapper.classList.add('focus-input')
     writeButtonAdd.classList.add('focus-input')
     writeButtonsContainer.classList.add('focus-input')
