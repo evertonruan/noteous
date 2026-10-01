@@ -1536,6 +1536,7 @@ function copyNote(noteId) {
 function setEditMode(context) {
   if (context == 'edit-mode-on') {
     editMode = true
+    orbsListContainer.classList.add('invisible-element')
     priorityButton.classList.add('edit-mode')
     writeLabel.style.opacity = 0
     writeInput.classList.add('orb-done')
@@ -1545,6 +1546,7 @@ function setEditMode(context) {
     writeInput.disabled = true
   } else if (context == 'edit-mode-off') {
     editMode = false
+    orbsListContainer.classList.remove('invisible-element')
     priorityButton.classList.remove('edit-mode')
     writeLabel.style.opacity = 1
     writeInput.classList.remove('orb-done')
