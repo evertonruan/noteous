@@ -218,7 +218,7 @@ function orblendEngine(context, labelMessage, note, orb) {
         
         writeLabel.style.opacity = 0
         writeInput.placeholder = ''
-        writeInput.disabled = true
+        writeInput.readOnly = true
         writeInput.classList.add('orb-done')
         writeInput.classList.add('rounded-bottom')
         writeButtonsContainer.classList.add('hidden-buttons')
@@ -231,10 +231,10 @@ function orblendEngine(context, labelMessage, note, orb) {
           document.getElementById(`done-orb-button`).classList.remove('selected-orb')
         }
 
-        if (writeInput.disabled == true && writeInput.classList.contains('orb-done')) {
+        if (writeInput.readOnly == true && writeInput.classList.contains('orb-done')) {
           writeLabel.style.opacity = 100
           writeInput.placeholder = '✏️ Anote aqui'
-          writeInput.disabled = false
+          writeInput.readOnly = false
           writeInput.classList.remove('orb-done')
           if (writeInput.classList.contains('rounded-bottom') && writeInput.value != '') {
             writeInput.classList.remove('rounded-bottom')
