@@ -331,17 +331,17 @@ function welcomeToNoteous(context, subcontext) {
       greetingTitle3.append(document.createTextNode('2ª Geração'))
       greetingDescriptionTitle.append(
         document.createTextNode(
-          '✨ Você recebeu a atualização de Agosto de 2026 do noteous'
+          '✨ Você recebeu a atualização de Setembro de 2026 do noteous'
         )
       )
 
-      greetingDescription1.innerHTML = `<span class="greeting-description-intro">Design atualizado</span>Os Orbs receberam melhorias visuais`
+      greetingDescription1.innerHTML = `<span class="greeting-description-intro">Algumas melhorias</span>Algumas correções e melhorias de experiência foram feitas`
 
       greetingDescription2.innerHTML = `<span class="greeting-description-intro">Galeria de Atualizações</span>Quer ver como foram as atualizações recentes do noteous? Veja na Galeria de Atualizações!`
 
       greetingDescription3.innerHTML = `<span class="greeting-description-intro">Sempre em dia</span>noteous está em constante melhoria 🍩 As atualizações da 2ª Geração chegam de forma instantânea e gratuita`
 
-      greetingDescription1Image.setAttribute('src', './assets/images/greeting-orbs-light.webp')
+      greetingDescription1Image.setAttribute('src', './assets/images/greeting-usage.webp')
       greetingDescription2Image.setAttribute('src', './assets/images/greeting-gallery.webp')
       greetingDescription3Image.setAttribute('src', './assets/images/greeting-update.webp')
 
