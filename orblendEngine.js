@@ -109,6 +109,9 @@ function orblendEngine(context, labelMessage, note, orb) {
       }
 
       orbButton.addEventListener('click', () => {
+        if (navigator.vibrate) {
+          navigator.vibrate(20)
+        }
         selectedOrb = orb
         noteousSettings.selectedOrb = selectedOrb
         localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
