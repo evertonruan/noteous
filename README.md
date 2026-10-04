@@ -41,7 +41,7 @@
 <br>
 <br>
 
-## Gostaria de contribuir com o noteous preview? Veja como acessando as <a href="https://github.com/evertonruan/noteous/blob/main-preview-2.3.1/CONTRIBUTING.md">Informações para contribuir</a>
+## Gostaria de contribuir com o noteous preview? Veja como acessando as <a href="https://github.com/evertonruan/noteous/blob/8d10b9737971c8462db67c7680e9f164ddd6f8e0/CONTRIBUTING.md">Informações para contribuir</a>
 
 
 - 📃 Fique à vontade para explorar o código
