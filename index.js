@@ -160,6 +160,10 @@ renderNoteousVersionLabel()
 let noteousMain = JSON.parse(localStorage.getItem('noteous-main')) || []
 let noteousSettings = JSON.parse(localStorage.getItem('noteous-settings'))
 
+if (noteousMain.length == 0) {
+  window.scrollTo(0, 0)
+}
+
 serviceWorkerRegister()
 loadNoteous('check-settings')
 
