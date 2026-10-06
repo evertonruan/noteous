@@ -17,79 +17,27 @@ const galleryData = [
   }
 ]
 
-
-let noteousSettings = JSON.parse(localStorage.getItem('noteous-settings'))
-
 function navLink() {
   location.replace('./hub.html')
 }
 document.querySelector('#nav-link')?.addEventListener('click', navLink)
 
-// CONFIGURAÇÕES DE TEMA ////////////////////////////////////
 
-function injectCSSOnRoot() {
+function applyThemeToRoot() {
   document.querySelector(
     ':root'
-  ).style.cssText = `${noteousSettings.look.baseRem} ${noteousSettings.look.hue} ${noteousSettings.look.saturation}
-${noteousSettings.look.lumBack}
-${noteousSettings.look.lumMid}
-${noteousSettings.look.lumFront}
-${noteousSettings.look.lumFrontInverse}
-${noteousSettings.look.accentSaturation}
-${noteousSettings.look.accentLum}
-${noteousSettings.look.lumAccentContainer}`
-}
-
-function noteousTheme(context) {
-  //context => recuperar tema, trocar tema, aplicar tema claro, aplicar tema escuro
-  if (context == 'retrieve-theme') {
-    if (noteousSettings.look.luminosity == 'light') {
-      noteousTheme('set-theme-light')
-      console.log(context)
-    } else if (noteousSettings.look.luminosity == 'dark') {
-      noteousTheme('set-theme-dark')
-    }
-  } else if (context == 'change-theme') {
-    console.log(context)
-    if (noteousSettings.look.luminosity == 'light') {
-      noteousTheme('set-theme-dark')
-    } else if (noteousSettings.look.luminosity == 'dark') {
-      noteousTheme('set-theme-light')
-    }
-  } else if (context == 'set-theme-light') {
-    noteousSettings.look.luminosity = 'light'
-    noteousSettings.look.hue = '--hue: 45;'
-    noteousSettings.look.saturation = '--saturation: 20%;'
-    noteousSettings.look.lumBack = '--lum-back: 95%;'
-    noteousSettings.look.lumMid = '--lum-mid: 70%;'
-    noteousSettings.look.lumFront = '--lum-front: 15%;'
-    noteousSettings.look.lumFrontInverse = '--lum-front-inverse: 95%;'
-    noteousSettings.look.accentSaturation = '--accent-saturation: 20%;'
-    noteousSettings.look.accentLum = '--accent-lum: 60%;'
-    noteousSettings.look.lumAccentContainer = '--lum-accent-container: 65%;'
-
-    localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
-    noteousSettings = JSON.parse(localStorage.getItem('noteous-settings'))
-    injectCSSOnRoot()
-  } else if (context == 'set-theme-dark') {
-    noteousSettings.look.luminosity = 'dark'
-    noteousSettings.look.hue = '--hue: 45;'
-    noteousSettings.look.saturation = '--saturation: 20%;'
-    noteousSettings.look.lumBack = '--lum-back: 4%;'
-    noteousSettings.look.lumMid = '--lum-mid: 30%;'
-    noteousSettings.look.lumFront = '--lum-front: 90%;'
-    noteousSettings.look.lumFrontInverse = '--lum-front-inverse: 15%;'
-    noteousSettings.look.accentSaturation = '--accent-saturation: 10%;'
-    noteousSettings.look.accentLum = '--accent-lum: 60%;'
-    noteousSettings.look.lumAccentContainer = '--lum-accent-container: 32%;'
-
-    localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
-    noteousSettings = JSON.parse(localStorage.getItem('noteous-settings'))
-    injectCSSOnRoot()
+  ).style.cssText = 
+  `--base-rem: 100%;
+  --hue: 45;
+  --saturation: 20%;
+  --lum-back: 95%;
+  --lum-mid: 70%;
+  --lum-front: 15%;
+  --lum-front-inverse: 95%;
+  --accent-saturation: 20%;
+  --accent-lum: 60%;
+  --lum-accent-container: 65%;`
   }
-}
-noteousTheme('retrieve-theme')
-
 ///////
 
 function renderBannerDescription(entry) {
@@ -198,7 +146,7 @@ function renderBannerDescription(entry) {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-  noteousTheme('retrieve-theme')
+  applyThemeToRoot()
 
   const gallery = document.getElementById('gallery')
   if (gallery) {
