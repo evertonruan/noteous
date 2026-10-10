@@ -18,7 +18,7 @@ const galleryData = [
 ]
 
 
-let noteousSettings = JSON.parse(localStorage.getItem('noteous-settings'))
+let noteousSettings = getValidatedStorage('noteous-settings')
 
 function navLink() {
   location.replace('./hub.html')
@@ -69,7 +69,7 @@ function noteousTheme(context) {
     noteousSettings.look.lumAccentContainer = '--lum-accent-container: 65%;'
 
     localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
-    noteousSettings = JSON.parse(localStorage.getItem('noteous-settings'))
+    noteousSettings = getValidatedStorage('noteous-settings')
     injectCSSOnRoot()
   } else if (context == 'set-theme-dark') {
     noteousSettings.look.luminosity = 'dark'
@@ -84,7 +84,7 @@ function noteousTheme(context) {
     noteousSettings.look.lumAccentContainer = '--lum-accent-container: 32%;'
 
     localStorage.setItem('noteous-settings', JSON.stringify(noteousSettings))
-    noteousSettings = JSON.parse(localStorage.getItem('noteous-settings'))
+    noteousSettings = getValidatedStorage('noteous-settings')
     injectCSSOnRoot()
   }
 }
@@ -98,7 +98,7 @@ function renderBannerDescription(entry) {
   container.style.transform = 'translateY(8px)'
 
   window.setTimeout(() => {
-    container.innerHTML = ''
+    clearElement(container)
 
     const title = document.createElement('h3')
     title.textContent = entry.title
@@ -181,7 +181,7 @@ function renderBannerDescription(entry) {
       captionContainer.style.alignItems = 'center'
 
       const caption = document.createElement('figcaption')
-      caption.innerHTML = imgData.caption
+      setTextContent(caption, imgData.caption)
       caption.style.textAlign = 'center'
       caption.style.fontSize = '1.1rem'
       captionContainer.appendChild(caption)
@@ -207,7 +207,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const bannersContainer = document.getElementById('gallery-banners-container')
   if (bannersContainer) {
-    bannersContainer.innerHTML = ''
+    clearElement(bannersContainer)
 
     for (const [index, entry] of galleryData.entries()) {
       const banner = document.createElement('div')
