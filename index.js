@@ -1,6 +1,8 @@
 import { noteousVersion, termsVersion } from './noteousParams.js'
 import { orblendEngine } from './orblendEngine.js'
+import { syncSmartInputRenderScroll } from './modules/orblend-engine/smart-input-resize.js'
 import * as storage from './modules/storage-service.js'
+import { enableOverlayDismiss } from './modules/overlay-dismiss.js'
 import { getDateString } from './modules/note-helpers.js'
 
 // Exposições Globais (Window)
@@ -196,8 +198,9 @@ async function playOrbPanelLoadSequence() {
   orbPanel.classList.remove('orb-panel-animate')
 }
 
-async function runInitialLoadSequence() {
+async function runInitialLoadSequence(focusRestoredInput = false) {
   if (!hasPendingInitialLoadSequence) {
+    if (focusRestoredInput) writeInput.focus({ preventScroll: true })
     await sortNotes('set-sort', `${window.selectedOrb}`)
     return
   }
@@ -205,6 +208,7 @@ async function runInitialLoadSequence() {
   hasPendingInitialLoadSequence = false
 
   await playWritePanelLoadSequence()
+  if (focusRestoredInput) writeInput.focus({ preventScroll: true })
   await playOrbButtonsLoadSequence()
 
   if (readSection) {
@@ -442,22 +446,10 @@ async function syncWriteInputRenderText() {
   }
 }
 
-function syncWriteInputRenderScroll() {
-  if (!writeInput || !writeInputRender) return
-
-  const inputPaddingRight =
-    parseFloat(getComputedStyle(writeInput).paddingRight) || 0
-  const scrollbarWidth = Math.max(writeInput.offsetWidth - writeInput.clientWidth, 0)
-
-  writeInputRender.style.paddingRight =
-    inputPaddingRight + scrollbarWidth + 'px'
-  writeInputRender.style.transform = `translate(${-writeInput.scrollLeft}px, -${writeInput.scrollTop}px)`
-}
-
 function syncWriteInputRender() {
   syncWriteInputRenderText()
   orblendEngine('smart-input-resize')
-  syncWriteInputRenderScroll()
+  syncSmartInputRenderScroll()
 }
 
 /////
@@ -1092,7 +1084,7 @@ function loadNoteous(context) {
         storage.saveSettings(noteousSettings)
         notePriority('retrieve-priority', noteousSettings.priority)
 
-        runInitialLoadSequence()
+        runInitialLoadSequence(noteousSettings.input !== '' && noteousSettings.noteId == 0)
       }
     } else if (noteousSettings == null) {
       //NÃO HÁ CONFIGURAÇÕES --> PRIMEIRO ACESSO AO NOTEOUS
@@ -1210,28 +1202,24 @@ addEventListener('appinstalled', () => {
 
 ////
 
+function applyWritePanelPriority(priority, elements) {
+  for (const element of elements) {
+    for (const option of ['solid', 'double', 'dotted']) {
+      element.classList.toggle(`priority-${option}`, priority === option)
+    }
+  }
+}
+
 function notePriority(context, priority) {
 
-  //context ==> (1) recuperarPrioridade, (2)recuperarPrioridadeAoDesfocarInput (ao tirar foco define opacidade = 0 de Opções da Nota. Mas, é necessário também definir junto a borda, pois ao contrário um sobrescreve o outro), (3) trocarPrioridade
   if (context == 'retrieve-priority') {
     priorityButton.disabled = false
-    priorityButton.classList.remove('blur')
-    priorityButton.style.cssText = `border-style: ${priority};`
-    writeInputWrapper.style.cssText = `border-style: ${priority};`
-    writeButtonsContainer.style.cssText = `border-style: ${priority};`
+    applyWritePanelPriority(priority, [priorityButton, writeInputWrapper, writeButtonsContainer])
     noteousSettings.priority = priority
-  } else if (context == 'retrieve-priority-blur-input') {
-    priorityButton.classList.add('blur')
-    priorityButton.style.cssText = `border-style: ${priority};`
-    setTimeout(() => {
-      priorityButton.disabled = true
-    }, 100)
   } else if (context == 'change-priority') {
     const order = noteousSettings.priorityOrder
     const next = order[(order.indexOf(priority) + 1) % order.length]
-    priorityButton.style.cssText = `border-style: ${next};`
-    writeInputWrapper.style.cssText = `border-style: ${next};`
-    writeButtonsContainer.style.cssText = `border-style: ${next};`
+    applyWritePanelPriority(next, [priorityButton, writeInputWrapper, writeButtonsContainer])
     noteousSettings.priority = next
     storage.saveSettings(noteousSettings)
   }
@@ -1247,10 +1235,10 @@ writeInput.addEventListener('focus', () => {
     notePriority('retrieve-priority', noteousSettings.priority)
 })
 
-writeInput.focus()
+if (!window.matchMedia('(max-width: 600px)').matches) writeInput.focus()
 
 writeInput.addEventListener('scroll', () => {
-  syncWriteInputRenderScroll()
+  syncSmartInputRenderScroll()
 })
 
 writeInput.addEventListener('blur', () => {
@@ -1259,16 +1247,6 @@ writeInput.addEventListener('blur', () => {
     writeButtonsContainer.classList.remove('focus-input')
 
 
-    //Ao clicar no botão para trocar Prioridade, write-input perde o foco --> botão de Prioridade desaparece.
-    //Esse teste verifica primeiro se write-input perde o foco. Se está sem foco --> desaparecer botão Prioridade
-    //1.5 --> Ao adicionar tabindex e focalizar botão de prioridade ele desaparece (pois o foco sai de write-input). Agora o teste inclui se priority-button também está focalizado. Se está, ele não desaparece.
-    setTimeout(() => {
-      if (
-        document.activeElement.id != 'write-input' &&
-        document.activeElement.id != 'priority-button'
-      )
-        notePriority('retrieve-priority-blur-input', noteousSettings.priority)
-    }, 500)
 })
 
 priorityButton.addEventListener('click', () => {
@@ -1296,9 +1274,7 @@ readOptionsToggleButton.addEventListener('click', () => {
   updateReadOptionsUI()
 })
 
-readOptionsOverlay?.addEventListener('click', (event) => {
-  event.preventDefault()
-  event.stopPropagation()
+enableOverlayDismiss(readOptionsOverlay, () => {
   if (readOptionsVisible) {
     closeReadOptionsMenu()
     readOptionsVisible = false
@@ -2131,7 +2107,7 @@ function setEditMode(context) {
   if (context == 'edit-mode-on') {
     window.editMode = true
     priorityButton.classList.add('edit-mode')
-    writeLabel.style.opacity = 0
+    writeLabel.classList.add('write-label-hidden')
     writeInputWrapper.classList.add('orb-done')
     writeInputWrapper.classList.add('rounded-bottom')
     writeButtonsContainer.classList.add('hidden-buttons')
@@ -2142,7 +2118,7 @@ function setEditMode(context) {
   } else if (context == 'edit-mode-off') {
     window.editMode = false
     priorityButton.classList.remove('edit-mode')
-    writeLabel.style.opacity = 1
+    writeLabel.classList.remove('write-label-hidden')
     writeInputWrapper.classList.remove('orb-done')
     writeInput.value != '' ? writeInputWrapper.classList.remove('rounded-bottom') : null
     writeInput.value != '' ? writeButtonsContainer.classList.remove('hidden-buttons') : null

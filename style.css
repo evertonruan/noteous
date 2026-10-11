@@ -149,25 +149,48 @@ html {
     transform: translateX(-50%);
   }
 
-  /* circular blurred halo behind the orbs for small screens (no backdrop-filter) */
-  #index #orbs-list-container::before {
+  /* Independent overlays stay visible when the orb controls fade away. */
+  #index::before,
+  #index::after {
     content: '';
-    position: absolute;
+    position: fixed;
+    pointer-events: none;
+  }
+
+  #index::before {
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: clamp(9rem, 24vh, 14rem);
+    z-index: 11;
+    background: linear-gradient(to bottom, var(--base-color) 35%, transparent 100%);
+    opacity: var(--write-panel-scroll-progress, 0);
+  }
+
+  #index::after {
     left: 50%;
-    bottom: 50%;
-    transform: translate(-50%, 50%);
+    bottom: -4rem;
     width: 600px;
     height: 300px;
     border-radius: 50%;
-    pointer-events: none;
-    /* use theme base color for the halo and keep it subtle */
     background: linear-gradient(to bottom, transparent 10%, var(--base-color) 80%);
     filter: blur(10px);
-    z-index: 0;
+    transform: translateX(-50%);
+    z-index: 9;
     opacity: 0.8;
   }
 
-  /* ensure orb contents stay above the halo */
+  #index #orbs-list-container,
+  #index #orb-panel {
+    transition: opacity 240ms ease, visibility 0s;
+  }
+
+  #index #orbs-list-container.invisible-element,
+  #index #orb-panel.invisible-element {
+    transition: opacity 240ms ease, visibility 0s linear 240ms;
+  }
+
+  /* Ensure orb contents stay above the independent lower overlay. */
   #index #orbs-list .orb-button,
   #index #orbs-list .orb-button > * {
     position: relative;
@@ -190,10 +213,12 @@ html {
     backdrop-filter: blur(var(--orb-backdrop-blur)) brightness(var(--orb-backdrop-brightness));
   }
 
-  #section-read {
+  #index #section-read {
+    flex: initial;
     flex-direction: column;
-    min-height: 100vh;
-    padding-bottom: 14rem;
+    min-height: 0;
+    max-height: none;
+    overflow: visible;
   }
 
   #index #read-options-overlay {
@@ -202,12 +227,17 @@ html {
     left: 0;
     width: 100vw;
     height: 100vh;
-    z-index: 10;
+    z-index: 14;
     display: none;
   }
 
-  #index #read-options-overlay.active {
+  #index #read-options-overlay.active,
+  #index #read-options-overlay.overlay-dismissing {
     display: block;
+  }
+
+  #index #read-options-overlay.active + #read-header {
+    z-index: 15;
   }
 
   #index #read-header {
@@ -250,8 +280,6 @@ html {
 
   #section-read #read-notes-container {
     justify-content: flex-start;
-    max-height: max-content;
-    overflow-y: hidden;
   }
 
   #section-read #read-notes-container .note-container {
@@ -618,12 +646,6 @@ a {
   transition: all 0.2s cubic-bezier(0.075, 0.82, 0.165, 1);
 }
 
-#priority-button.blur {
-   opacity: 0;
-   transform: scale(60%);
-   pointer-events: none;
-}
-
 #priority-button.edit-mode {
   transition: none;
   top: 20px;
@@ -639,7 +661,7 @@ a {
   margin: 6px 10px 0 10px;
   background-color: var(--base-write-input-inside);
   border-style: solid;
-  border-width: 3px 3px 0 3px;
+  border-width: 7px 7px 0 7px;
   border-radius: 20px 20px 0 0;
   border-color: var(--base-accent-color);
   transition: all 0.5s cubic-bezier(0.075, 0.82, 0.165, 1);
@@ -665,7 +687,7 @@ a {
 }
 
 #write-input-wrapper.rounded-bottom {
-  border-width: 3px;
+  border-width: 7px;
   border-radius: 20px;
 }
 
@@ -675,6 +697,17 @@ a {
   border-radius: 20px;
 }
 
+/* Keep the receiver and visible text typography in sync. */
+#write-input,
+#write-input-render {
+  padding: 10px 10px 10px 20px;
+  font-family: 'Source Sans 3', sans-serif;
+  letter-spacing: -0.01em;
+  font-size: 1.2rem;
+  box-sizing: border-box;
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
+}
 /* textarea itself becomes an invisible text receiver (caret only) */
 #write-input {
   display: block;
@@ -683,31 +716,22 @@ a {
   overflow-y: hidden;
   width: 100%;
   margin: 0;
-  padding: 10px 10px 10px 20px;
   resize: none;
-  font-family: 'Source Sans 3', sans-serif;
-  letter-spacing: -0.01em;
-  font-size: 1.2rem;
   color: transparent;
   caret-color: var(--base-accent-color);
   background: transparent;
   border: none;
   outline: none;
   z-index: 3;
-  box-sizing: border-box;
 }
 
 /* render surface: visible formatted text sits here */
 #write-input-render {
   position: absolute;
   inset: 0;
-  padding: 10px 10px 10px 20px;
   pointer-events: none;
   white-space: pre-wrap;
   overflow-wrap: anywhere;
-  font-family: 'Source Sans 3', sans-serif;
-  letter-spacing: -0.01em;
-  font-size: 1.2rem;
   color: var(--base-text);
   z-index: 2;
 }
@@ -788,7 +812,7 @@ a {
   gap: 0.5rem;
 
   background: var(--base-accent-color);
-  border-width: 0 3px 3px 3px;
+  border-width: 0 7px 7px 7px;
   border-color: var(--base-note-action-container);
   border-radius: 0 0 20px 20px;
 
@@ -834,7 +858,7 @@ a {
 
 #section-write #write-button-add.focus-input {
   width: 100%;
-  border-width: 7px;
+  border-width: 3px;
 }
 
 .write-buttons:active:enabled {
@@ -2549,4 +2573,211 @@ footer p span {
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(8px); }
   to   { opacity: 1; transform: translateY(0); }
+}
+/* Smart Input Resize: class-based layout, measurement and state. */
+#index #write-focus-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 12;
+  background: transparent;
+}
+
+#index #write-focus-overlay.active,
+#index #write-focus-overlay.overlay-dismissing {
+  display: block;
+}
+
+#index #section-write #write-panel.write-panel-focus-active {
+  z-index: 13;
+}
+
+.write-panel-spacer {
+  display: none;
+  height: var(--write-panel-reserved-height, 0px);
+}
+
+#index #write-panel.smart-input-resize-values #write-input {
+  height: var(--write-input-height, 6rem);
+}
+
+#index #write-panel #write-input.write-input-scrollable {
+  overflow-y: auto;
+}
+
+#index #write-panel.smart-input-resize-values #write-input-render {
+  padding-right: var(--write-input-render-padding-right, 10px);
+  transform: translate(var(--write-input-render-x, 0px), var(--write-input-render-y, 0px));
+}
+
+/* Applied only while reading text height; removed before the browser paints. */
+#index #write-panel.smart-input-resize-values #write-input-render.write-input-render-measuring {
+  inset: 0 auto auto 0;
+  width: var(--write-input-render-measure-width);
+  height: auto;
+  min-height: 0;
+  max-height: none;
+  padding-right: var(--write-input-render-measure-padding-right);
+  overflow-wrap: break-word;
+  visibility: hidden;
+  transform: none;
+  transition: none;
+}
+
+#index #write-label.write-label-hidden {
+  opacity: 0;
+}
+
+#index #write-panel .priority-double {
+  border-style: double;
+}
+
+#index #write-panel .priority-solid {
+  border-style: solid;
+}
+
+#index #write-panel .priority-dotted {
+  border-style: dotted;
+}
+
+@media (max-width: 600px) {
+  #index #write-panel.smart-input-resize-values #write-input-wrapper,
+  #index #write-panel.smart-input-resize-values #write-input {
+    min-height: 0;
+    max-height: none;
+  }
+
+  #index #write-input-wrapper {
+    transition: width var(--write-panel-focus-motion), box-shadow var(--write-panel-focus-motion), background-color var(--write-panel-focus-motion), border-width var(--write-panel-focus-motion), border-radius var(--write-panel-focus-motion);
+  }
+
+  #index #write-buttons-container {
+    transition: width var(--write-panel-focus-motion), border-width var(--write-panel-focus-motion), opacity var(--write-panel-focus-motion), transform var(--write-panel-focus-motion), filter var(--write-panel-focus-motion);
+  }
+
+  #index .write-panel-spacer.active {
+    display: block;
+    flex-shrink: 0;
+  }
+
+  #index #write-panel {
+    --write-panel-width: 65%;
+    --write-panel-focus-duration: 320ms;
+    --write-panel-focus-motion: var(--write-panel-focus-duration) cubic-bezier(0.075, 0.82, 0.165, 1);
+  }
+
+  #index #write-panel.write-panel-expanded,
+  #index #write-panel.edit-mode {
+    --write-panel-width: 80%;
+  }
+
+  /* Keep both halves joined, including native focus restoration on reload. */
+  #index #write-panel #write-input-wrapper,
+  #index #write-panel #write-buttons-container {
+    width: var(--write-panel-width);
+  }
+
+  #index #write-panel #priority-button {
+    left: calc((100% - var(--write-panel-width)) / 2 - 1.25rem);
+    transition: left var(--write-panel-focus-motion), opacity var(--write-panel-focus-motion), transform var(--write-panel-focus-motion);
+  }
+
+  #index #write-panel.write-panel-floating {
+    position: fixed;
+    left: 0;
+    top: var(--write-panel-top, 12px);
+    width: 100%;
+    z-index: 12;
+    animation: none;
+    transform: none;
+    transition: none;
+  }
+
+  #index #write-panel.write-panel-floating #write-input-wrapper {
+    border-width: 7px 7px calc(7px * var(--write-panel-collapse-progress, 0));
+    border-radius: 20px 20px calc(20px * var(--write-panel-collapse-progress, 0)) calc(20px * var(--write-panel-collapse-progress, 0));
+    box-shadow: 0 6px 24px rgba(0, 0, 0, calc(0.2 * var(--write-panel-collapse-progress, 0)));
+    transition: none;
+  }
+
+  #index #write-panel.write-panel-floating #write-input-wrapper.rounded-bottom {
+    border-width: 7px;
+    border-radius: 20px;
+  }
+
+  #index #write-panel.write-panel-floating #write-buttons-container {
+    max-height: calc(var(--write-buttons-container-height, 0px) * (1 - var(--write-panel-collapse-progress, 0)));
+    min-height: 0;
+    border-width: 0 7px calc(7px * (1 - var(--write-panel-collapse-progress, 0))) 7px;
+    overflow: hidden;
+    transition: none;
+  }
+
+  #index #write-panel.write-panel-floating #write-buttons-container:not(.hidden-buttons) {
+    opacity: calc(1 - var(--write-panel-collapse-progress, 0));
+  }
+
+  #index #write-panel.write-panel-compact #write-buttons-container {
+    pointer-events: none;
+  }
+
+  #index #write-panel.write-panel-floating.write-panel-expanded #write-input-wrapper {
+    transition: border-bottom-width var(--write-panel-focus-motion), border-radius var(--write-panel-focus-motion);
+    border-width: 7px 7px 0;
+    border-radius: 20px 20px 0 0;
+    box-shadow: 0 0 30px var(--base-accent-color);
+  }
+
+  #index #write-panel.write-panel-floating.write-panel-expanded #write-buttons-container {
+    border-width: 0 7px 7px;
+  }
+
+  #index #write-panel.write-panel-floating.write-panel-expanded #write-input-wrapper.rounded-bottom {
+    border-width: 7px;
+    border-radius: 20px;
+  }
+
+  #index #write-panel.write-panel-floating #priority-button {
+    transition: none;
+  }
+
+  #index #write-panel.write-panel-has-text #write-input {
+    scrollbar-gutter: stable;
+  }
+
+  #index #write-panel.write-panel-floating.write-panel-focus-transition #write-input-wrapper {
+    transition: width var(--write-panel-focus-motion), border-width var(--write-panel-focus-motion), border-radius var(--write-panel-focus-motion), box-shadow var(--write-panel-focus-motion);
+  }
+
+  #index #write-panel.write-panel-floating.write-panel-focus-transition #write-input {
+    transition: height var(--write-panel-focus-motion);
+  }
+
+  #index #write-panel.write-panel-floating.write-panel-focus-transition #write-buttons-container {
+    transition: width var(--write-panel-focus-motion), max-height var(--write-panel-focus-motion), border-width var(--write-panel-focus-motion), opacity var(--write-panel-focus-motion);
+  }
+
+  #index #write-panel.write-panel-floating.write-panel-focus-transition #priority-button {
+    transition: left var(--write-panel-focus-motion), opacity var(--write-panel-focus-motion), transform var(--write-panel-focus-motion);
+  }
+
+  #index #write-panel.smart-input-resize-values.write-panel-scroll-handoff #write-input-wrapper,
+  #index #write-panel.smart-input-resize-values.write-panel-scroll-handoff #write-input,
+  #index #write-panel.smart-input-resize-values.write-panel-scroll-handoff #write-buttons-container,
+  #index #write-panel.smart-input-resize-values.write-panel-scroll-handoff #priority-button {
+    transition: none;
+  }
+}
+
+@media (max-width: 600px) and (prefers-reduced-motion: reduce) {
+  #index #write-panel {
+    --write-panel-focus-duration: 0ms;
+  }
+
+  #index #orbs-list-container,
+  #index #orb-panel,
+  #index #orbs-list-container.invisible-element,
+  #index #orb-panel.invisible-element {
+    transition: none;
+  }
 }

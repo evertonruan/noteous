@@ -217,9 +217,7 @@ export async function orblendEngine(context, labelMessage, note, orb, action) {
     smartNoteBackup(
       noteousSettings,
       writeInput,
-      writeButtonsContainer,
       writeButtonDismiss,
-      writeInputWrapper,
       () => {
         setWriteLabel('restore-note')
       }
