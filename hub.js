@@ -1039,6 +1039,14 @@ async function importNotes(notes) {
   location.reload()
 }
 
+// Endereço de destino a ser definido
+const ORBS_REDIRECT_URL = 'https://noteous-lost-notes.vercel.app'
+
 aboutOrbsList.addEventListener('click', () => {
-  alert('Em atualizações futuras, será possível desbloquear novas cores de orbs')
+  const params = new URLSearchParams(location.search)
+  params.set('from', 'hub')
+
+  const url = new URL(ORBS_REDIRECT_URL || location.href, location.href)
+  params.forEach((value, key) => url.searchParams.set(key, value))
+  location.href = url.toString()
 })
