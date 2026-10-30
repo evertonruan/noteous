@@ -24,6 +24,13 @@ Você pode conferir 3 locais para ter uma ideia do projeto: Issues, Milestones e
 - Milestones: Esses são grandes objetivos a serem atingidos, às vezes mostrados de forma um pouco abstrata, afinal esse caminho vai se definindo com o tempo
 - Releases: Cada nova versão ganha uma release, que agrupa todos os commits feitos, e alguns contém explicações detalhadas.
 
+#### Testando localmente
+O noteous precisa ser servido por HTTP (não funciona abrindo o arquivo direto). Com o [Node.js](https://nodejs.org) instalado, rode na raiz do projeto:
+```
+node dev-server.js
+```
+e acesse `http://localhost:5500`. O servidor não usa dependências e escuta apenas em `127.0.0.1`. Atenção: LocalStorage e IndexedDB são separados por origem (host e porta), então trocar de porta mostra um conjunto de dados diferente.
+
 ### 4. Encontrei algo para contribuir. E agora?
 a. Faça um **Fork** deste repositório para seu GitHub. <br>
 b. Clone o seu fork na sua máquina. <br>
