@@ -884,6 +884,7 @@ function createNotePreview(note, index, context = 'copy') {
     noteContainer.style.borderStyle = 'solid'
   } else if (note.priority == 'double') {
     noteContainer.style.borderStyle = 'double'
+    noteContainer.style.borderWidth = '9px'
   } else if (note.priority == 'dotted') {
     noteContainer.style.borderStyle = 'dotted'
   }

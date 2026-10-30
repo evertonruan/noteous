@@ -1687,7 +1687,7 @@ async function renderNote(context, noteId, orb, searchTerm) {
         if (note.priority == 'solid') {
           noteContainer.style.cssText = 'border-style: solid;'
         } else if (note.priority == 'double') {
-          noteContainer.style.cssText = 'border-style: double;'
+          noteContainer.style.cssText = 'border-style: double; border-width: 9px;'
         } else if (note.priority == 'dotted') {
           noteContainer.style.cssText = 'border-style: dotted;'
         }
@@ -1845,7 +1845,7 @@ async function renderNote(context, noteId, orb, searchTerm) {
           if (note.priority == 'solid') {
             noteContainer.style.cssText = 'border-style: solid;'
           } else if (note.priority == 'double') {
-            noteContainer.style.cssText = 'border-style: double;'
+            noteContainer.style.cssText = 'border-style: double; border-width: 9px;'
           } else if (note.priority == 'dotted') {
             noteContainer.style.cssText = 'border-style: dotted;'
           }
