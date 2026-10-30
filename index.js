@@ -3,7 +3,7 @@ import { orblendEngine } from './orblendEngine.js'
 import { syncSmartInputRenderScroll } from './modules/orblend-engine/smart-input-resize.js'
 import * as storage from './modules/storage-service.js'
 import { enableOverlayDismiss } from './modules/overlay-dismiss.js'
-import { getDateString } from './modules/note-helpers.js'
+import { getDateString, sortNotesByDynamicScore } from './modules/note-helpers.js'
 
 // Exposições Globais (Window)
 window.showInstallButton = showInstallButton
@@ -76,10 +76,30 @@ readNotesListDotted.classList.add('read-notes-priority-container')
 
 // noteous preview 1.8: Personalização de Listas de Prioridade 
 // Objeto usado em renderNote para retornar a variável conforme a chamada ao construir a lista
+// noteous preview 2.5: Ordenação Dinâmica. Em vez de listas de prioridade, as notas aparecem em uma única grade
+let readNotesListDynamic = document.createElement('div')
+readNotesListDynamic.id = 'read-notes-list-dynamic'
+readNotesListDynamic.classList.add('read-notes-dynamic-grid')
+
 const readNotesLists = {
   solid: readNotesListSolid,
   double: readNotesListDouble,
-  dotted: readNotesListDotted
+  dotted: readNotesListDotted,
+  dynamic: readNotesListDynamic
+}
+
+function isDynamicSort() {
+  return noteousSettings.sort.action == 'dynamic'
+}
+
+function setDynamicNoteSize(noteContainer, note) {
+  if (!isDynamicSort()) {
+    return
+  }
+
+  const textLength = note.text?.length ?? 0
+  const height = Math.min(360, Math.max(190, 170 + Math.ceil(textLength / 90) * 28))
+  noteContainer.style.setProperty('--dynamic-note-height', `${height}px`)
 }
 
 let pendingPriorityListsOrbAnimation = null
@@ -1301,7 +1321,8 @@ const readOptionsMenus = {
     getActiveValue: () => noteousSettings.sort.action,
     options: [
       { value: 'editedAt', label: 'Ordenar por Edição', icon: 'edit_note' },
-      { value: 'id', label: 'Ordenar por Criação', icon: 'post_add' }
+      { value: 'id', label: 'Ordenar por Criação', icon: 'post_add' },
+      { value: 'dynamic', label: 'Ordenação Dinâmica', icon: 'auto_awesome' }
     ],
     onSelect: (value) => {
       setSortAction(value)
@@ -1457,7 +1478,9 @@ function priorityListsOrientation(context) {
     readOptionsOrientationButton.append(document.createTextNode(orientationIcon))
     readOptionsOrientationButton.style.transform = getPriorityOrientationTransform(noteousSettings.priorityOrientation)
 
-    if (noteousSettings.priorityOrientation == 'row') {
+    if (isDynamicSort()) {
+      readNotesContainer.style.cssText = 'flex-direction: column;'
+    } else if (noteousSettings.priorityOrientation == 'row') {
       readNotesContainer.style.cssText = 'flex-direction: row;'
       for (let priorityList of readNotesContainer.querySelectorAll('.read-notes-priority-container')) {
         priorityList.style.cssText = 'flex-direction: column;  min-width: fit-content;'
@@ -1508,7 +1531,14 @@ function readOptionsSortButtonText(context) {
     } else if (noteousSettings.sort.action == 'id') {
       readOptionsSortActionButton.innerHTML = ''
       readOptionsSortActionButton.append(document.createTextNode('post_add'))
+    } else if (noteousSettings.sort.action == 'dynamic') {
+      readOptionsSortActionButton.innerHTML = ''
+      readOptionsSortActionButton.append(document.createTextNode('auto_awesome'))
     }
+
+    // Dynamic sorting has no direction and no priority lists, so these controls don't apply
+    readOptionsSort.classList.toggle('hidden-element', isDynamicSort())
+    readOptionsOrientationButton.classList.toggle('hidden-element', isDynamicSort())
   } else if (context == 'sort-time') {
     if (noteousSettings.sort.time == 'recent') {
       readOptionsSort.innerHTML = ''
@@ -1533,7 +1563,10 @@ async function sortNotes(context, subcontext) {
       return note[action] ?? note.createdAt ?? note.id
     }
 
-    if (noteousSettings.sort.time == 'recent') {
+    if (isDynamicSort()) {
+      // Notes are already in memory (loaded once at startup), so the score is computed here without extra IndexedDB reads
+      sortNotesByDynamicScore(userNotes, noteousSettings.priorityOrder)
+    } else if (noteousSettings.sort.time == 'recent') {
       userNotes.sort((a, b) => getSortValue(b) - getSortValue(a))
     } else if (noteousSettings.sort.time == 'old') {
       userNotes.sort((a, b) => getSortValue(a) - getSortValue(b))
@@ -1612,14 +1645,18 @@ async function renderNote(context, noteId, orb, searchTerm) {
     readNotesListSolid.innerHTML = ''
     readNotesListDouble.innerHTML = ''
     readNotesListDotted.innerHTML = ''
+    readNotesListDynamic.innerHTML = ''
     await orblendEngine('update-orb-info', '', '', '', 'clean-notes-count')
 
     // noteous preview 1.7.1: Listas de Prioridade. Criação primeiro das notas e depois ver qual lista vai. Problema: cada nova nota reordena a Lista de Prioridade. Por exemplo, uma nova nota com prioridade dotted joga a Lista de Prioridade dotted para o primeiro lugar.
 
     //noteous preview 1.8: personalização de ordem de Listas de Prioridade. Revisão do código para criar as listas na ordem definida pelo usuário. Agora, renderNote() primeiro verifica a ordem das listas e depois, adiciona a nota em sua respectiva lista.
 
-   
-    for (let priority of noteousSettings.priorityOrder) {
+    // Na ordenação dinâmica existe apenas uma lista (grade) que recebe todas as notas
+    const dynamicSort = isDynamicSort()
+    readNotesContainer.classList.toggle('dynamic-sort', dynamicSort)
+
+    for (let priority of (dynamicSort ? ['dynamic'] : noteousSettings.priorityOrder)) {
       if (!readNotesContainer.querySelector(`#read-notes-list-${priority}`)) { //Se não há lista com essa prioridade, cria seguindo a ordem salva em pelo usuário em priorityOrder
         readNotesLists[priority].classList.add('hidden-element')
         readNotesContainer.append(readNotesLists[priority])
@@ -1630,11 +1667,12 @@ async function renderNote(context, noteId, orb, searchTerm) {
         //noteous preview 1.9: ao renderizar todas as notas, se houver termo de busca, filtra as notas que contêm o termo (sem diferenciar maiúsculas e minúsculas)
         //noteous preview 2.0: ao renderizar todas as notas, verifica qual orb está selecionada
         await orblendEngine('get-storage-data')
-        if (note.priority == priority && await orblendEngine('check-selected-orb', '', note, orb) && (searchTerm == undefined || note.text.toLowerCase().includes(searchTerm.toLowerCase()))) {
+        if ((dynamicSort || note.priority == priority) && await orblendEngine('check-selected-orb', '', note, orb) && (searchTerm == undefined || note.text.toLowerCase().includes(searchTerm.toLowerCase()))) {
           await orblendEngine('update-orb-info', '', '', '', 'increase-notes-count')
           let noteContainer = document.createElement('div')
           noteContainer.id = note.id + '-note-container'
           noteContainer.classList.add('note-container')
+          setDynamicNoteSize(noteContainer, note)
           if (!noteContainer.classList.contains('row-orientation') && noteousSettings.priorityOrientation == 'row') {
             noteContainer.classList.add('row-orientation')
           } else if (!noteContainer.classList.contains('column-orientation') && noteousSettings.priorityOrientation == 'column') {
@@ -1741,7 +1779,7 @@ async function renderNote(context, noteId, orb, searchTerm) {
           dateElement.appendChild(
             document.createTextNode(getDateString(note.createdAt))
           )
-        } else if (note.editedAt != undefined && noteousSettings.sort.action == 'editedAt') {
+        } else if (note.editedAt != undefined && noteousSettings.sort.action != 'id') {
           //if note was already edited
           dateElement.appendChild(
             document.createTextNode(getDateString(note.editedAt))
@@ -1784,13 +1822,15 @@ async function renderNote(context, noteId, orb, searchTerm) {
   // ESSE CONTEXTO É USADO AO ADICIONAR NOTA, PARA RENDERIZÁ-LA
   
   else if (context == 'add') {
-    for (let priority of noteousSettings.priorityOrder) {
+    // A new note is always the freshest one, so it goes first in both modes
+    for (let priority of (isDynamicSort() ? ['dynamic'] : noteousSettings.priorityOrder)) {
       for (let note of userNotes) {
         if (note.id == noteId) {
-          if (note.priority == priority) {
+          if (isDynamicSort() || note.priority == priority) {
           let noteContainer = document.createElement('div')
           noteContainer.id = note.id + '-note-container'
           noteContainer.classList.add('note-container')
+          setDynamicNoteSize(noteContainer, note)
           if (!noteContainer.classList.contains('row-orientation') && noteousSettings.priorityOrientation == 'row') {
             noteContainer.classList.add('row-orientation')
           } else if (!noteContainer.classList.contains('column-orientation') && noteousSettings.priorityOrientation == 'column') {
@@ -2132,6 +2172,11 @@ function setEditMode(context) {
 function editNote(noteId) {
   for (let note of userNotes) {
     if (note.id === noteId) {
+      // Opening a note makes it more relevant in dynamic sorting. The visual order only changes on the next
+      // render, so the note doesn't jump around while the user is editing it.
+      note.lastActivityAt = Date.now()
+      storage.updateNote(note).catch((error) => console.error('Falha ao registrar abertura da nota', error))
+
       const editingButtonsContainer = document.getElementById(noteId + '-editing-buttons-container')
       const acceptEditingButton = document.getElementById(noteId + '-accept-editing-button')
       const discardEditingButton = document.getElementById(noteId + '-discard-editing-button')
@@ -2176,6 +2221,7 @@ function editNote(noteId) {
             ? unpaddedText.slice(0, -1)
             : unpaddedText
           note.editedAt = Date.now()
+          note.lastActivityAt = note.editedAt
           note.priority = noteousSettings.priority
           // Update link flag for this note
           note.link = await orblendEngine('has-link', '', note.text)

@@ -1403,6 +1403,52 @@ a {
   height: 300px;
 }
 
+/* Dynamic sorting: masonry columns instead of priority lists */
+.read-notes-dynamic-grid {
+  column-width: 220px;
+  column-count: auto;
+  column-gap: 1rem;
+  width: 100%;
+  padding: 10px 20px;
+  box-sizing: border-box;
+}
+
+#section-read #read-notes-container .read-notes-dynamic-grid .note-container {
+  display: flex;
+  width: 100%;
+  min-width: 0;
+  max-width: none;
+  height: var(--dynamic-note-height, 250px);
+  min-height: 190px;
+  margin: 0 0 1rem;
+  break-inside: avoid;
+  -webkit-column-break-inside: avoid;
+}
+
+@media (max-width: 600px) {
+  .read-notes-dynamic-grid {
+    column-width: 170px;
+    column-gap: 0.75rem;
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+
+  .read-notes-dynamic-grid .action-buttons-container,
+  .read-notes-dynamic-grid .editing-buttons-container {
+    gap: 0.5rem;
+  }
+}
+
+@media (max-width: 450px) {
+  .read-notes-dynamic-grid {
+    column-count: 2;
+    column-width: auto;
+    column-gap: 0.5rem;
+    padding-left: 8px;
+    padding-right: 8px;
+  }
+}
+
 .read-notes-priority-container::-webkit-scrollbar {
   height: 8px;
   width: 8px;

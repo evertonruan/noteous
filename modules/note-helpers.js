@@ -83,4 +83,56 @@ function findWeek(number) {
   }
 }
 
-export { getDateString, findMonth, findWeek, setTimeNumber }
+function getNoteLastActivity(note) {
+  return Math.max(note.lastActivityAt ?? 0, note.editedAt ?? 0, note.createdAt ?? 0)
+}
+
+/**
+ * Sorts notes in place by dynamic relevance (most relevant first).
+ *
+ * The ordering is intentionally hierarchical instead of one large weighted score:
+ * the newest created note is always first, followed by opening/editing activity,
+ * the user's priority order, and finally the age of the activity. This prevents
+ * an old priority bonus from overtaking a newer user action.
+ * @param {Array} notes
+ * @param {string[]} priorityOrder - Priorities from most to least important (user-defined in Hub).
+ */
+function sortNotesByDynamicScore(notes, priorityOrder) {
+  const newestCreatedAt = notes.reduce((newest, note) => {
+    return Math.max(newest, note.createdAt ?? 0)
+  }, 0)
+
+  const decorated = notes.map((note) => {
+    const lastActivity = getNoteLastActivity(note)
+    const position = priorityOrder.indexOf(note.priority)
+    return {
+      note,
+      isNewestCreatedNote: (note.createdAt ?? 0) === newestCreatedAt,
+      lastActivity,
+      priorityPosition: position === -1 ? priorityOrder.length : position
+    }
+  })
+
+  decorated.sort((a, b) => {
+    if (a.isNewestCreatedNote !== b.isNewestCreatedNote) {
+      return a.isNewestCreatedNote ? -1 : 1
+    }
+
+    if (a.lastActivity !== b.lastActivity) {
+      return b.lastActivity - a.lastActivity
+    }
+
+    if (a.priorityPosition !== b.priorityPosition) {
+      return a.priorityPosition - b.priorityPosition
+    }
+
+    return (b.note.createdAt ?? 0) - (a.note.createdAt ?? 0)
+  })
+
+  decorated.forEach((entry, index) => {
+    notes[index] = entry.note
+  })
+  return notes
+}
+
+export { getDateString, findMonth, findWeek, setTimeNumber, getNoteLastActivity, sortNotesByDynamicScore }
