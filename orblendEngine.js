@@ -15,6 +15,8 @@ import { smartInputResize } from './modules/orblend-engine/smart-input-resize.js
 
 import { smartNoteBackup } from './modules/orblend-engine/smart-note-backup.js'
 
+import { refreshSmartInfoHandler } from './modules/orblend-engine/smart-info-handler.js'
+
 import {
   getOrbLabel,
   getOrbMessage,
@@ -23,10 +25,7 @@ import {
   getNotesCount,
 } from './modules/orblend-engine/orb-helpers.js'
 
-import { findWeek, findMonth } from './modules/note-helpers.js'
-
 export async function orblendEngine(context, labelMessage, note, orb, action) {
-  const infoPanel = document.querySelector('#info-panel')
   const writeLabel = document.querySelector('#write-label')
   const writeInput = document.querySelector('#write-input')
   const writeInputWrapper = document.querySelector('#write-input-wrapper')
@@ -41,7 +40,6 @@ export async function orblendEngine(context, labelMessage, note, orb, action) {
 ////////
 
   let noteousSettings
-  let subcontext
 
 ////////
 
@@ -87,46 +85,6 @@ export async function orblendEngine(context, labelMessage, note, orb, action) {
 
 ////////
 
-//info-panel
-//info-element
-
-  const infoElement = function makeInfoElement(subcontext) {
-    let infoText = ''
-
-    if (subcontext == 'no-notes') {
-      infoText = 'Você ainda não tem anotações \n Escreva sua primeira nota ✏️'
-    } else if (subcontext == 'has-notes') {
-      infoText = ''
-    }
-    
-    let infoElementTip = document.createElement('p')
-    infoElementTip.classList.add('info-element')
-    let infoElementTipText = document.createTextNode(`${infoText}`)
-    infoElementTip.append(infoElementTipText)
-
-    if (infoText == '') {
-      infoElementTip.style.marginBottom = '0;'
-      infoPanel.style.cssText = 'margin-bottom: 0;'
-    } else {
-      infoPanel.style.cssText = ''
-    }
-
-    return infoElementTip
-  }
-
-  let dateElement = function makeDateElement() {
-    let dateNow = new Date()
-    let infoElementDate = document.createElement('p')
-    infoElementDate.classList.add('info-element')
-    let infoElementDateText = document.createTextNode(
-      `Olá! Hoje é ${findWeek(dateNow.getDay())}, ${dateNow.getDate()} de ${findMonth(dateNow.getMonth())}`
-    )
-    infoElementDate.append(infoElementDateText)
-    return infoElementDate
-  }
-
-////////
-
 //write-label
   if (context == '' && labelMessage != '') {
     setWriteLabel(labelMessage)
@@ -136,14 +94,6 @@ export async function orblendEngine(context, labelMessage, note, orb, action) {
     // noteous preview 1.9: writeLabel now is controlled by Orblend Engine
     if (labelMessage == 'continue-editing') {
       writeLabel.innerHTML = '✏️ Continue escrevendo sua nota'
-    } else if (labelMessage == 'add-note'){
-      writeLabel.innerHTML = 'Adicione sua próxima nota'
-    } else if (labelMessage == 'edit-note') {
-      writeLabel.innerHTML = '✏️ Edite aqui sua nota'
-    } else if (labelMessage == 'open-note') {
-      writeLabel.innerHTML = '📃 Veja sua nota'
-    } else if (labelMessage == 'start-note') {
-      writeLabel.innerHTML = 'Escreva sua próxima anotação'
     } else if (labelMessage == 'restore-note') {
       writeLabel.innerHTML = '📝 Essa nota não foi adicionada'
     }
@@ -199,16 +149,7 @@ export async function orblendEngine(context, labelMessage, note, orb, action) {
   }
 
   if (context == 'change') {
-    
-    const userNotesCount = await getNotesCount()
-    if (userNotesCount > 0) {
-      subcontext = 'has-notes'
-    } else {
-      subcontext = 'no-notes'
-    }
-    infoPanel.innerHTML = ''
-    infoPanel.append(dateElement(), infoElement(subcontext))
-    window.showInstallButton()
+    await refreshSmartInfoHandler()
 
   } else if (context == 'app-load') {
   noteousSettings = getStorageData()
@@ -232,33 +173,18 @@ export async function orblendEngine(context, labelMessage, note, orb, action) {
       }
     await orblendEngine('update-orb-info')
 
-    //info-panel
-    
-    const userNotesCount = await getNotesCount()
-    if (userNotesCount > 0) {
-      subcontext = 'has-notes'
-    } else {
-      subcontext = 'no-notes'
-    }
-    infoPanel.innerHTML = ''
-    infoPanel.append(dateElement(), infoElement(subcontext))
-    
-    window.showInstallButton()
+    await refreshSmartInfoHandler()
     
   } else if (context == 'on-change-input') {
     //Toggle Write Buttons
     if (writeInput.value == '') {
-      setWriteLabel('start-note')
+      writeLabel.textContent = ''
       writeButtonDismiss.classList.add('hidden-element')
       writeButtonAdd.disabled = true
       writeButtonsContainer.classList.add('hidden-buttons')
       writeInputWrapper.classList.add('rounded-bottom')
       writeButtonAdd.setAttribute('aria-hidden', 'true')
     } else {
-      noteousSettings = getStorageData()
-      if (noteousSettings.input == '') {
-        setWriteLabel('add-note')
-      } 
       writeButtonAdd.disabled = false
       writeButtonsContainer.classList.remove('hidden-buttons')
       writeInputWrapper.classList.remove('rounded-bottom')

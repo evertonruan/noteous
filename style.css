@@ -129,7 +129,6 @@ html {
   }
 
   #section-write #priority-button {
-    left: 34px;
     width: 2.5rem;
     height: 2.5rem;
   }
@@ -332,10 +331,6 @@ html {
 }
 
 @media (max-width: 500px) {
-  #section-write #priority-button {
-    left: 26px;
-  }
-
   #about #logo {
     font-size: 1.4rem;
     padding-top: 2px;
@@ -359,24 +354,12 @@ html {
     justify-content: flex-end;
   }
 
-  #section-write #priority-button {
-    left: 22px;
-    width: 2.5rem;
-    height: 2.5rem;
-  }
-
   #section-read #read-notes-container .note-container {
     max-width: 80vw;
   }
 
   #about #about-dev-name {
     font-size: 1.2rem;
-  }
-}
-
-@media (max-width: 380px) {
-  #section-write #priority-button {
-    left: 14px;
   }
 }
 
@@ -571,6 +554,10 @@ a {
   opacity: 0;
 }
 
+#info-panel:empty {
+  margin-bottom: 0;
+}
+
 .info-element {
   margin-left: 0.5rem;
   margin-bottom: 0.5rem;
@@ -587,6 +574,30 @@ a {
 
   filter: opacity(80%);
   transition: all cubic-bezier(0.075, 0.82, 0.165, 1) 0.2s;
+}
+
+#info-panel .info-fade-out {
+  opacity: 0;
+  transition: opacity 350ms ease;
+}
+
+#info-panel .info-fade-in {
+  animation: info-fade-in 350ms ease both;
+}
+
+@keyframes info-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #info-panel .info-fade-out {
+    transition-duration: 0s;
+  }
+
+  #info-panel .info-fade-in {
+    animation-duration: 0s;
+  }
 }
 
 #install-button:hover {
@@ -628,10 +639,22 @@ a {
   user-select: none;
 }
 
+#write-input-area {
+  position: relative;
+  width: 65%;
+  margin: 6px 10px 0 10px;
+  transition: width 0.5s cubic-bezier(0.075, 0.82, 0.165, 1);
+}
+
+#write-input-area.focus-input {
+  width: 80%;
+}
+
 #priority-button {
   position: absolute;
-  top: 22px;
-  left: 20px;
+  top: 6px;
+  left: 0;
+  transform: translate(-50%, -50%);
   width: 2.2rem;
   height: 2.2rem;
   z-index: 3;
@@ -648,7 +671,6 @@ a {
 
 #priority-button.edit-mode {
   transition: none;
-  top: 20px;
 }
 
 /* write input wrapper: handles size, border and background */
@@ -656,9 +678,8 @@ a {
   position: relative;
   min-height: 6rem;
   max-height: 60vh;
-  width: 65%;
+  width: 100%;
   z-index: 1;
-  margin: 6px 10px 0 10px;
   background-color: var(--base-write-input-inside);
   border-style: solid;
   border-width: 7px 7px 0 7px;
@@ -672,14 +693,9 @@ a {
   background-color: var(--base-color);
 }
 
-#write-input-wrapper.edit-mode {
-  width: 80%;
-}
-
 /* focus styles follow the contained textarea state */
 #write-input-wrapper:focus-within,
 #write-input-wrapper.focus-input {
-  width: 80%;
   min-height: 7rem;
   outline: 0;
   border-width: 7px 7px 0 7px;
@@ -2697,6 +2713,10 @@ footer p span {
     transition: width var(--write-panel-focus-motion), box-shadow var(--write-panel-focus-motion), background-color var(--write-panel-focus-motion), border-width var(--write-panel-focus-motion), border-radius var(--write-panel-focus-motion);
   }
 
+  #index #write-input-area {
+    transition: width var(--write-panel-focus-motion);
+  }
+
   #index #write-buttons-container {
     transition: width var(--write-panel-focus-motion), border-width var(--write-panel-focus-motion), opacity var(--write-panel-focus-motion), transform var(--write-panel-focus-motion), filter var(--write-panel-focus-motion);
   }
@@ -2718,20 +2738,20 @@ footer p span {
   }
 
   /* Keep both halves joined, including native focus restoration on reload. */
-  #index #write-panel #write-input-wrapper,
+  #index #write-panel #write-input-area,
   #index #write-panel #write-buttons-container {
     width: var(--write-panel-width);
   }
 
   #index #write-panel #priority-button {
-    left: calc((100% - var(--write-panel-width)) / 2 - 1.25rem);
-    transition: left var(--write-panel-focus-motion), opacity var(--write-panel-focus-motion), transform var(--write-panel-focus-motion);
+    transition: opacity var(--write-panel-focus-motion), transform var(--write-panel-focus-motion);
   }
 
   #index #write-panel.write-panel-floating {
     position: fixed;
     left: 0;
-    top: var(--write-panel-top, 12px);
+    /* Leave room for the priority button above an empty label. */
+    top: max(var(--write-panel-top, 12px), calc(1.25rem - 2px));
     width: 100%;
     z-index: 12;
     animation: none;
@@ -2804,10 +2824,11 @@ footer p span {
   }
 
   #index #write-panel.write-panel-floating.write-panel-focus-transition #priority-button {
-    transition: left var(--write-panel-focus-motion), opacity var(--write-panel-focus-motion), transform var(--write-panel-focus-motion);
+    transition: opacity var(--write-panel-focus-motion), transform var(--write-panel-focus-motion);
   }
 
   #index #write-panel.smart-input-resize-values.write-panel-scroll-handoff #write-input-wrapper,
+  #index #write-panel.smart-input-resize-values.write-panel-scroll-handoff #write-input-area,
   #index #write-panel.smart-input-resize-values.write-panel-scroll-handoff #write-input,
   #index #write-panel.smart-input-resize-values.write-panel-scroll-handoff #write-buttons-container,
   #index #write-panel.smart-input-resize-values.write-panel-scroll-handoff #priority-button {

@@ -1,13 +1,14 @@
 import { noteousVersion, termsVersion } from './noteousParams.js'
 import { orblendEngine } from './orblendEngine.js'
 import { syncSmartInputRenderScroll } from './modules/orblend-engine/smart-input-resize.js'
+import { listenForInstallPrompt, startSmartInfoHandler } from './modules/orblend-engine/smart-info-handler.js'
 import * as storage from './modules/storage-service.js'
 import { enableOverlayDismiss } from './modules/overlay-dismiss.js'
 import { getDateString, sortNotesByDynamicScore } from './modules/note-helpers.js'
 
 // Exposições Globais (Window)
-window.showInstallButton = showInstallButton
 window.renderNote = renderNote
+listenForInstallPrompt()
 
 async function serviceWorkerRegister() {
     if (noteousSettings) {
@@ -26,12 +27,11 @@ let noteousVersionLabel = document.querySelector('#noteous-version-label')
 let writeSection = document.querySelector('#section-write')
 let writePanel = document.querySelector('#write-panel')
 
-let infoPanel = document.querySelector('#info-panel')
-
 let priorityButton = document.querySelector('#priority-button')
 
 let writeLabel = document.querySelector('#write-label')
 let writeInput = document.querySelector('#write-input')
+let writeInputArea = document.querySelector('#write-input-area')
 let writeInputWrapper = document.querySelector('#write-input-wrapper')
 let writeInputRender = document.querySelector('#write-input-render')
 let writeButtonsContainer = document.querySelector('#write-buttons-container')
@@ -1091,6 +1091,7 @@ function loadNoteous(context) {
         //Aplica última orientação de listas de prioridade
         priorityListsOrientation('retrieveOrientation')
 
+        startSmartInfoHandler(noteousSettings)
         orblendEngine('app-load')
 
         orblendEngine('on-change-input')
@@ -1174,54 +1175,6 @@ function loadNoteous(context) {
 
 ////
 
-let deferredInstallPrompt = null
-let installNoteousButton = document.createElement('button')
-
-function showInstallButton() {
-  addEventListener('beforeinstallprompt', (e) => {
-    e.preventDefault()
-    deferredInstallPrompt = e
-    
-    if (noteousSettings?.noteousApp?.installPrompt <= 6) {
-      noteousSettings.noteousApp.installPrompt++
-      storage.saveSettings(noteousSettings)
-      
-      if ((typeof matchMedia == 'function' && matchMedia('(display-mode: standalone)').matches
-    ) || (navigator.standalone === true) || !deferredInstallPrompt) {
-      if (installNoteousButton) installNoteousButton.remove()
-    } else {
-      installNoteousButton.classList.add('write-buttons')
-      installNoteousButton.style.cssText = 'margin-bottom: 2rem;'
-      installNoteousButton.innerHTML = '<span style="font-style: normal;"></span> Instalar noteous preview'
-      infoPanel.appendChild(installNoteousButton)
-      installNoteousButton.addEventListener('click', async () => {
-      try {
-        installNoteousButton.disabled = true
-        deferredInstallPrompt.prompt()
-        const { outcome } = await deferredInstallPrompt.userChoice
-        deferredInstallPrompt = null
-        if (outcome === 'accepted') {
-          installNoteousButton.remove()
-        } else {
-          installNoteousButton.disabled = false
-        }
-      } catch (e) {
-        installNoteousButton.disabled = false
-      }
-    })
-    }
-    }
-  })
-}
-
-addEventListener('appinstalled', () => {
-  deferredInstallPrompt = null
-  if (installNoteousButton) installNoteousButton.remove()
-})
-
-
-////
-
 function applyWritePanelPriority(priority, elements) {
   for (const element of elements) {
     for (const option of ['solid', 'double', 'dotted']) {
@@ -1249,6 +1202,7 @@ writeInput.addEventListener('focus', () => {
     if (window.selectedOrb == 'done') {
       document.getElementById('donutdough-orb-button')?.click()
     }
+    writeInputArea.classList.add('focus-input')
     writeInputWrapper.classList.add('focus-input')
     writeButtonAdd.classList.add('focus-input')
     writeButtonsContainer.classList.add('focus-input')
@@ -1262,6 +1216,7 @@ writeInput.addEventListener('scroll', () => {
 })
 
 writeInput.addEventListener('blur', () => {
+    writeInputArea.classList.remove('focus-input')
     writeInputWrapper.classList.remove('focus-input')
     writeButtonAdd.classList.remove('focus-input')
     writeButtonsContainer.classList.remove('focus-input')
@@ -1976,6 +1931,7 @@ async function addNote() {
 
     const objNote = await storage.addNote(noteData)
     userNotes.unshift(objNote)
+    orblendEngine('change')
 
     // If this note contains a link, ensure the 'link' orb is available
     if (objNote.link && !noteousSettings.orbsIndex.includes('link')) {
