@@ -1,7 +1,6 @@
 import * as storage from '../storage-service.js'
 import { findMonth, findWeek } from '../note-helpers.js'
 
-const LAST_OPENED_KEY = 'noteous-info-last-opened'
 const TEN_MINUTES = 10 * 60 * 1000
 const TWELVE_HOURS = 12 * 60 * 60 * 1000
 const GREETING_DURATION = 3000
@@ -158,13 +157,14 @@ export function startSmartInfoHandler(noteousSettings) {
   registerInstallPrompt()
 
   const now = new Date()
-  const previousValue = localStorage.getItem(LAST_OPENED_KEY)
-  const previousOpening = previousValue === null ? null : Number(previousValue)
+  const previousValue = settings.noteousApp.lastAccess
+  const previousOpening = previousValue == null ? null : Number(previousValue)
   const elapsed = previousOpening === null || !Number.isFinite(previousOpening)
     ? Infinity
     : now.getTime() - previousOpening
   const skipGreeting = cameFromHub() || (elapsed >= 0 && elapsed < TEN_MINUTES)
-  localStorage.setItem(LAST_OPENED_KEY, String(now.getTime()))
+  settings.noteousApp.lastAccess = now.getTime()
+  storage.saveSettings(settings)
 
   if (skipGreeting) {
     phase = 'information'
