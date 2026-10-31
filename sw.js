@@ -1,5 +1,5 @@
 //noteous 2.3.1 SW version
-//20261031-15
+//20261031
 /*
 When the user accepts the terms, the Service Worker is installed and adds resources to the cache.
 Once they are cached, noteous will use only this local content and will no longer connect to the server to update content.
@@ -38,12 +38,22 @@ const noteousResources = [
   'reset.css',
   'policies.json',
   'orblendEngine.js',
+  'modules/note-helpers.js',
+  'modules/overlay-dismiss.js',
+  'modules/storage-service.js',
+  'modules/orblend-engine/orb-helpers.js',
+  'modules/orblend-engine/orb-params.js',
+  'modules/orblend-engine/smart-calc.js',
+  'modules/orblend-engine/smart-info-handler.js',
+  'modules/orblend-engine/smart-input-resize.js',
+  'modules/orblend-engine/smart-note-backup.js',
   'assets/fonts/dm-sans-400.woff2',
   'assets/fonts/dm-sans-800.woff2',
   'assets/fonts/dm-serif-text-italic.woff2',
   'assets/fonts/source-sans-3-500.woff2',
-  '/assets/icons/favicon.png',
-  '/assets/images/donut.webp',]
+  'assets/icons/orblend-pop-icon.webp',
+  '/assets/images/donut.webp',
+]
 
 //ACTIVATION
 //Limpeza de cache

@@ -772,11 +772,11 @@ function welcomeToNoteous(context, subcontext) {
       greetingTitle3.append(document.createTextNode('2ª Geração'))
       greetingDescriptionTitle.append(
         document.createTextNode(
-          'Você recebeu a atualização 2.4.3 do noteous preview'
+          'Atualização especial: noteous série 2.5'
         )
       )
         
-      greetingDescription1.innerHTML = `✨ Essa atualização trouxe algumas correções e melhorias de experiência`
+      greetingDescription1.innerHTML = `✨ Essa atualização é a primeira da série 2.5 e traz muitas melhorias de experiência`
 
       greetingDescription1Image.setAttribute('src', './assets/images/greeting-blueprint.webp')
 

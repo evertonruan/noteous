@@ -74,8 +74,8 @@ html {
 }
 
 @media (max-width: 1000px) {
-  #index .greeting-description-container-all {
-    grid-template-columns: repeat(2, 1fr);
+  #index .greeting-description-container {
+    flex-basis: calc(50% - 2rem);
   }
 
   #about main {
@@ -116,8 +116,8 @@ html {
 }
 
 @media (max-width: 600px) {
-  #index .greeting-description-container-all {
-    grid-template-columns: repeat(1, 1fr);
+  #index .greeting-description-container {
+    flex-basis: calc(100% - 2rem);
   }
 
   .greeting-policies-container {
@@ -2230,15 +2230,18 @@ footer p span {
 }
 
 .greeting-description-container-all {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  grid-auto-rows: minmax(auto, auto);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  width: 100%;
 }
 
 .greeting-description-container {
   background-color: hsla(0, 0%, 10%, 0.4);
   display: flex;
+  flex: 0 0 calc(25% - 2rem);
   flex-direction: column;
+  min-width: 0;
   margin: 1rem;
   border-radius: 1rem;
 }
