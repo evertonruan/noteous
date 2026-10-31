@@ -46,6 +46,12 @@ let orbInfo = document.querySelector('#orb-panel')
 let orbInfoLabel = document.querySelector('#orb-panel-label')
 let orbInfoCount = document.querySelector('#orb-panel-count')
 
+function updateOrbsLabelVisibility() {
+  orbsListLabel.classList.toggle('hidden-element', window.innerWidth <= 500)
+}
+window.addEventListener('resize', updateOrbsLabelVisibility)
+updateOrbsLabelVisibility()
+
 //READ-SECTION
 let readSection = document.querySelector('#section-read')
 let readHeader = document.querySelector('#read-header')
@@ -62,6 +68,11 @@ let readOptionsSortActionButton = document.querySelector('#read-options-sort-act
 let readOptionsOrientationButton = document.querySelector('#read-options-orientation')
 
 let readNotesContainer = document.querySelector('#read-notes-container')
+const selectedListContainer = document.createElement('div')
+selectedListContainer.id = 'selected-list-container'
+const priorityPillsContainer = document.createElement('div')
+priorityPillsContainer.className = 'priority-pills-container'
+let highlightedNote = null
 
 //noteous preview 1.7.1: Cria listas de prioridade para depois adicioná-las ao readNotesContainer caso haja notas
 let readNotesListSolid = document.createElement('div')
@@ -534,6 +545,7 @@ function updateReadOptionsUI() {
   const hasNotes = Array.isArray(userNotes) && userNotes.length > 0
 
   if (!hasNotes) {
+    readOptionsVisible = false
     readOptions.classList.add('hidden-element')
     readOptions.classList.remove('read-options-collapsed')
   } else {
@@ -542,9 +554,11 @@ function updateReadOptionsUI() {
   }
 
   readOptionsToggleButton.classList.toggle('read-options-toggle-active', hasNotes && readOptionsVisible)
-  readOptionsToggleButton.setAttribute(
+  orbPanel.setAttribute('aria-expanded', String(hasNotes && readOptionsVisible))
+  orbPanel.setAttribute('aria-disabled', String(!hasNotes))
+  orbPanel.setAttribute(
     'aria-label',
-    readOptionsVisible ? 'Ocultar opções de leitura' : 'Mostrar opções de leitura'
+    hasNotes && readOptionsVisible ? 'Ocultar opções de leitura' : 'Mostrar opções de leitura'
   )
   if (readOptionsOverlay) {
     readOptionsOverlay.classList.toggle('active', hasNotes && readOptionsVisible)
@@ -579,6 +593,7 @@ const hasNoteousIDB = databases.some(db => db.name === 'NoteousIDB')
 if (hasNoteousIDB) {
   userNotes = await storage.getAllNotes('createdAt', 'prev')
 }
+updateReadOptionsUI()
 
 if (userNotes.length == 0) {
   window.scrollTo(0, 0)
@@ -1196,6 +1211,183 @@ function notePriority(context, priority) {
     noteousSettings.priority = next
     storage.saveSettings(noteousSettings)
   }
+  if (!window.editMode && !highlightedNote && !isDynamicSort() && readNotesContainer.isConnected && selectedListContainer.isConnected) {
+    showSelectedPriorityList(true)
+  }
+}
+
+let prioritySwapAnimations = []
+let prioritySwapLayers = []
+
+function clearPrioritySwap() {
+  prioritySwapAnimations.forEach(animation => animation.cancel())
+  prioritySwapLayers.forEach(layer => layer.remove())
+  prioritySwapAnimations = []
+  prioritySwapLayers = []
+}
+
+function prioritySwapFrame(element) {
+  const rect = element.getBoundingClientRect()
+  const style = getComputedStyle(element)
+  const viewport = element.parentElement === selectedListContainer
+    ? selectedListContainer.getBoundingClientRect()
+    : rect
+  const left = Math.max(rect.left, viewport.left)
+  const top = Math.max(rect.top, viewport.top)
+  const right = Math.min(rect.right, viewport.right)
+  const bottom = Math.min(rect.bottom, viewport.bottom)
+  return {
+    left: `${left}px`,
+    top: `${top}px`,
+    width: `${Math.max(0, right - left)}px`,
+    height: `${Math.max(0, bottom - top)}px`,
+    borderWidth: style.borderWidth,
+    borderRadius: element.classList.contains('priority-list-pill')
+      ? `${Math.min(parseFloat(style.borderTopLeftRadius), rect.width / 2, rect.height / 2)}px`
+      : style.borderRadius
+  }
+}
+
+function animatePrioritySwap(selected, destinationPill, before, stationaryPills) {
+  const duration = 650
+  const easing = 'cubic-bezier(0.2, 0, 0, 1)'
+  const createShell = (style, start, end) => {
+    const shell = document.createElement('div')
+    shell.className = 'priority-swap-layer'
+    shell.style.borderStyle = style.borderStyle
+    shell.style.borderColor = style.borderColor
+    shell.style.backgroundColor = style.backgroundColor
+    document.body.append(shell)
+    prioritySwapLayers.push(shell)
+    prioritySwapAnimations.push(shell.animate([
+      { ...start, opacity: 1, offset: 0 },
+      { ...end, opacity: 1, offset: 0.8 },
+      { ...end, opacity: 0, offset: 1 }
+    ], { duration, easing, fill: 'both' }))
+  }
+
+  createShell(before.listStyle, before.list, prioritySwapFrame(destinationPill))
+  createShell(before.pillStyle, before.pill, prioritySwapFrame(selected))
+  prioritySwapAnimations.push(before.snapshot.animate(
+    [{ opacity: 1 }, { opacity: 0 }],
+    { duration: 220, easing: 'ease-out', fill: 'both' }
+  ))
+  prioritySwapAnimations.push(selected.animate(
+    [{ opacity: 0, offset: 0 }, { opacity: 0, offset: 0.45 }, { opacity: 1, offset: 1 }],
+    { duration, easing: 'ease-out', fill: 'both' }
+  ))
+  prioritySwapAnimations.push(destinationPill.animate(
+    [{ opacity: 0 }, { opacity: 0, offset: 0.8 }, { opacity: 1 }],
+    { duration, fill: 'both' }
+  ))
+  for (const [pill, rect] of stationaryPills) {
+    const end = pill.getBoundingClientRect()
+    prioritySwapAnimations.push(pill.animate([
+      { transform: `translate(${rect.left - end.left}px, ${rect.top - end.top}px)` },
+      { transform: 'translate(0, 0)' }
+    ], { duration, easing }))
+  }
+  const animations = prioritySwapAnimations
+  Promise.allSettled(animations.map(animation => animation.finished)).then(() => {
+    if (prioritySwapAnimations === animations) clearPrioritySwap()
+  })
+}
+
+function showSelectedPriorityList(animate = false) {
+  clearPrioritySwap()
+  if (isDynamicSort()) return
+
+  const previous = selectedListContainer.firstElementChild
+  const selected = readNotesLists[noteousSettings.priority]
+  if (!selected) return
+  const previousPriority = Object.keys(readNotesLists).find(priority => readNotesLists[priority] === previous)
+  const sourcePill = readNotesContainer.querySelector(`[data-priority-pill="${noteousSettings.priority}"]`)
+  const shouldAnimate = animate && previous && previous !== selected && previous.querySelector('.note-container') && sourcePill && !sourcePill.hidden &&
+    typeof selected.animate === 'function' && !window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  let before
+  let stationaryPills = []
+  if (shouldAnimate) {
+    const listStyle = getComputedStyle(previous)
+    const pillStyle = getComputedStyle(sourcePill)
+    const captureStyle = style => ({
+      borderStyle: style.borderStyle,
+      borderColor: style.borderColor,
+      backgroundColor: style.backgroundColor
+    })
+    const snapshotContent = previous.cloneNode(true)
+    const originals = [previous, ...previous.querySelectorAll('*')]
+    const copies = [snapshotContent, ...snapshotContent.querySelectorAll('*')]
+    originals.forEach((original, index) => {
+      const computed = getComputedStyle(original)
+      for (const property of computed) {
+        copies[index].style.setProperty(property, computed.getPropertyValue(property))
+      }
+      copies[index].style.animation = 'none'
+      copies[index].style.transition = 'none'
+    })
+    snapshotContent.removeAttribute('id')
+    snapshotContent.querySelectorAll('[id]').forEach(element => element.removeAttribute('id'))
+    const snapshot = document.createElement('div')
+    snapshot.classList.add('priority-swap-snapshot')
+    snapshot.setAttribute('aria-hidden', 'true')
+    snapshot.inert = true
+    const list = prioritySwapFrame(previous)
+    const listRect = previous.getBoundingClientRect()
+    snapshotContent.style.setProperty('position', 'absolute', 'important')
+    Object.assign(snapshotContent.style, {
+      left: `${listRect.left - parseFloat(list.left)}px`,
+      top: `${listRect.top - parseFloat(list.top)}px`,
+      width: `${listRect.width}px`,
+      height: `${listRect.height}px`,
+      margin: '0'
+    })
+    snapshot.append(snapshotContent)
+    Object.assign(snapshot.style, {
+      left: list.left, top: list.top, width: list.width, height: list.height,
+      overflow: 'hidden', pointerEvents: 'none', zIndex: '98'
+    })
+    document.body.append(snapshot)
+    prioritySwapLayers.push(snapshot)
+    before = {
+      list, pill: prioritySwapFrame(sourcePill), snapshot,
+      listStyle: captureStyle(listStyle), pillStyle: captureStyle(pillStyle)
+    }
+    stationaryPills = Array.from(readNotesContainer.querySelectorAll('.priority-list-pill:not([hidden])'))
+      .filter(pill => pill !== sourcePill)
+      .map(pill => [pill, pill.getBoundingClientRect()])
+  }
+  if (previous !== selected) selectedListContainer.replaceChildren(selected)
+  selected.classList.remove('hidden-element')
+  selectedListContainer.hidden = !selected.querySelector('.note-container')
+
+  for (const priority of noteousSettings.priorityOrder) {
+    if (priority !== noteousSettings.priority) readNotesLists[priority].remove()
+    let pill = readNotesContainer.querySelector(`[data-priority-pill="${priority}"]`)
+    if (!pill) {
+      pill = document.createElement('button')
+      pill.type = 'button'
+      pill.dataset.priorityPill = priority
+      pill.className = `priority-list-pill priority-${priority}`
+      pill.addEventListener('click', () => {
+        if (window.editMode || highlightedNote) return
+        noteousSettings.priority = priority
+        applyWritePanelPriority(priority, [priorityButton, writeInputWrapper, writeButtonsContainer])
+        storage.saveSettings(noteousSettings)
+        showSelectedPriorityList(true)
+      })
+      priorityPillsContainer.append(pill)
+    }
+    const labels = { solid: 'Sólida', double: 'Dupla', dotted: 'Pontilhada' }
+    const count = readNotesLists[priority].querySelectorAll('.note-container').length
+    pill.textContent = `${labels[priority]} · ${count}`
+    pill.setAttribute('aria-label', `Selecionar lista de prioridade ${labels[priority].toLowerCase()}`)
+    pill.hidden = priority === noteousSettings.priority || count === 0
+  }
+  priorityPillsContainer.hidden = !priorityPillsContainer.querySelector('.priority-list-pill:not([hidden])')
+  if (shouldAnimate) {
+    const destinationPill = readNotesContainer.querySelector(`[data-priority-pill="${previousPriority}"]`)
+    animatePrioritySwap(selected, destinationPill, before, stationaryPills)
+  }
 }
 
 writeInput.addEventListener('focus', () => {
@@ -1239,14 +1431,22 @@ readOptionsSearchInput.addEventListener('focus', () => {
   closeReadOptionsMenu()
 })
 
-readOptionsToggleButton.addEventListener('click', () => {
-  if (readHeader.classList.contains('invisible-element')) {
+function toggleReadOptions() {
+  if (readHeader.classList.contains('invisible-element') || !Array.isArray(userNotes) || userNotes.length === 0) {
     return
   }
 
   closeReadOptionsMenu()
   readOptionsVisible = !readOptionsVisible
   updateReadOptionsUI()
+}
+
+orbPanel.addEventListener('click', toggleReadOptions)
+orbPanel.addEventListener('keydown', event => {
+  if (event.key === 'Enter' || event.key === ' ') {
+    event.preventDefault()
+    if (!event.repeat) toggleReadOptions()
+  }
 })
 
 enableOverlayDismiss(readOptionsOverlay, () => {
@@ -1432,17 +1632,19 @@ function priorityListsOrientation(context) {
     readOptionsOrientationButton.innerHTML = ''
     readOptionsOrientationButton.append(document.createTextNode(orientationIcon))
     readOptionsOrientationButton.style.transform = getPriorityOrientationTransform(noteousSettings.priorityOrientation)
+    selectedListContainer.classList.toggle('vertical-orientation', !isDynamicSort() && noteousSettings.priorityOrientation == 'column')
+    readNotesContainer.classList.toggle('horizontal-orientation', !isDynamicSort() && noteousSettings.priorityOrientation == 'row')
 
     if (isDynamicSort()) {
       readNotesContainer.style.cssText = 'flex-direction: column;'
     } else if (noteousSettings.priorityOrientation == 'row') {
       readNotesContainer.style.cssText = 'flex-direction: row;'
-      for (let priorityList of readNotesContainer.querySelectorAll('.read-notes-priority-container')) {
-        priorityList.style.cssText = 'flex-direction: column;  min-width: fit-content;'
+      for (let priorityList of [readNotesListSolid, readNotesListDouble, readNotesListDotted]) {
+        priorityList.style.cssText = 'flex-direction: column; min-width: 0;'
       }
     } else if (noteousSettings.priorityOrientation == 'column') {
       readNotesContainer.style.cssText = 'flex-direction: column;'
-      for (let priorityList of readNotesContainer.querySelectorAll('.read-notes-priority-container')) {
+      for (let priorityList of [readNotesListSolid, readNotesListDouble, readNotesListDotted]) {
         priorityList.style.cssText = 'flex-direction: row;'
       }
     }
@@ -1505,6 +1707,21 @@ function readOptionsSortButtonText(context) {
   }
 }
 
+function sortNotesInMemory() {
+  const getSortValue = (note) => {
+    const action = noteousSettings.sort.action === 'editedAt' ? 'editedAt' : 'createdAt'
+    return note[action] ?? note.createdAt ?? note.id
+  }
+
+  if (isDynamicSort()) {
+    sortNotesByDynamicScore(userNotes, noteousSettings.priorityOrder)
+  } else if (noteousSettings.sort.time == 'recent') {
+    userNotes.sort((a, b) => getSortValue(b) - getSortValue(a))
+  } else if (noteousSettings.sort.time == 'old') {
+    userNotes.sort((a, b) => getSortValue(a) - getSortValue(b))
+  }
+}
+
 async function sortNotes(context, subcontext) {
 
   // previous noteous version: notes were ordened by flex-reverse. It was not real ordering.
@@ -1513,19 +1730,7 @@ async function sortNotes(context, subcontext) {
   // noteous preview 2.0.1: refactored sortNotes() to simplify code and improve efficiency. Sorting logic is now handled by the 'set-sort' context.
 
   if (context == 'set-sort') {
-    const getSortValue = (note) => {
-      const action = noteousSettings.sort.action === 'editedAt' ? 'editedAt' : 'createdAt'
-      return note[action] ?? note.createdAt ?? note.id
-    }
-
-    if (isDynamicSort()) {
-      // Notes are already in memory (loaded once at startup), so the score is computed here without extra IndexedDB reads
-      sortNotesByDynamicScore(userNotes, noteousSettings.priorityOrder)
-    } else if (noteousSettings.sort.time == 'recent') {
-      userNotes.sort((a, b) => getSortValue(b) - getSortValue(a))
-    } else if (noteousSettings.sort.time == 'old') {
-      userNotes.sort((a, b) => getSortValue(a) - getSortValue(b))
-    }
+    sortNotesInMemory()
     
     readOptionsSortButtonText('sort-time')
     readOptionsSortButtonText('sort-action')
@@ -1596,6 +1801,7 @@ async function renderNote(context, noteId, orb, searchTerm) {
   //ESSE CONTEXTO É USADO AO CARREGAR A PÁGINA, RENDERIZANDO TODAS AS NOTAS
 
   if (context == 'render-all') {
+    if (highlightedNote) closeHighlightedNote(false)
     readNotesContainer.innerHTML = ''
     readNotesListSolid.innerHTML = ''
     readNotesListDouble.innerHTML = ''
@@ -1639,12 +1845,13 @@ async function renderNote(context, noteId, orb, searchTerm) {
           readNotesLists[priority].append(noteContainer)
           
         //BORDER/PRIORITY
-        if (note.priority == 'solid') {
-          noteContainer.style.cssText = 'border-style: solid;'
-        } else if (note.priority == 'double') {
-          noteContainer.style.cssText = 'border-style: double; border-width: 9px;'
-        } else if (note.priority == 'dotted') {
-          noteContainer.style.cssText = 'border-style: dotted;'
+        if (dynamicSort && note.priority == 'solid') {
+          noteContainer.style.borderStyle = 'solid'
+        } else if (dynamicSort && note.priority == 'double') {
+          noteContainer.style.borderStyle = 'double'
+          noteContainer.style.borderWidth = '9px'
+        } else if (dynamicSort && note.priority == 'dotted') {
+          noteContainer.style.borderStyle = 'dotted'
         }
 
         //EDITING BUTTONS
@@ -1713,11 +1920,6 @@ async function renderNote(context, noteId, orb, searchTerm) {
         noteTextContainer.id = note.id + '-text-container'
         noteTextContainer.classList.add('note-text-container')
         noteTextContainer.setAttribute('readonly', true)
-        noteTextContainer.addEventListener('click', () => {
-          if (noteTextContainer.hasAttribute('readonly')) {
-            editNote(note.id)
-          }
-        })
         noteTextContainer.value = `\n\n${note.text}\n`
 
         //DATE
@@ -1747,7 +1949,7 @@ async function renderNote(context, noteId, orb, searchTerm) {
         noteTextContainer.setAttribute('aria-label', 'Anotação:' + note.text)
         noteTextContainer.addEventListener('keyup', (event) => {
           if (event.key === 'Enter' && noteTextContainer.hasAttribute('readonly')) {
-            editNote(note.id)
+            openOrEditNote(note.id)
           }
         })
 
@@ -1759,12 +1961,20 @@ async function renderNote(context, noteId, orb, searchTerm) {
         noteContainer.appendChild(actionButtonsContainer)
         noteContainer.appendChild(noteTextContainer)
         noteContainer.appendChild(noteDateContainer)
+        noteContainer.addEventListener('click', event => {
+          if (!event.target.closest('.action-buttons-container, .editing-buttons-container')) openOrEditNote(note.id)
+        })
         }
       }
   }
 
     syncWriteInputRender()
 
+    if (!dynamicSort) {
+      readNotesContainer.append(priorityPillsContainer)
+      readNotesContainer.append(selectedListContainer)
+      showSelectedPriorityList()
+    }
     priorityListsOrientation('retrieveOrientation')
     playPriorityListsOrbAnimation()
 
@@ -1777,6 +1987,8 @@ async function renderNote(context, noteId, orb, searchTerm) {
   // ESSE CONTEXTO É USADO AO ADICIONAR NOTA, PARA RENDERIZÁ-LA
   
   else if (context == 'add') {
+    await renderNote('render-all', '', window.selectedOrb, readOptionsSearchInput.value || undefined)
+    return
     // A new note is always the freshest one, so it goes first in both modes
     for (let priority of (isDynamicSort() ? ['dynamic'] : noteousSettings.priorityOrder)) {
       for (let note of userNotes) {
@@ -1872,7 +2084,7 @@ async function renderNote(context, noteId, orb, searchTerm) {
           noteTextContainer.setAttribute('readonly', true)
           noteTextContainer.addEventListener('click', () => {
             if (noteTextContainer.hasAttribute('readonly')) {
-              editNote(note.id)
+              openOrEditNote(note.id)
             }
           })
           noteTextContainer.value = `\n\n${note.text}\n`
@@ -1901,7 +2113,7 @@ async function renderNote(context, noteId, orb, searchTerm) {
           noteTextContainer.setAttribute('aria-label', 'Anotação:' + note.text)
           noteTextContainer.addEventListener('keyup', (event) => {
             if (event.key === 'Enter' && noteTextContainer.hasAttribute('readonly')) {
-              editNote(note.id)
+              openOrEditNote(note.id)
             }
           })
 
@@ -1931,6 +2143,7 @@ async function addNote() {
 
     const objNote = await storage.addNote(noteData)
     userNotes.unshift(objNote)
+    updateReadOptionsUI()
     orblendEngine('change')
 
     // If this note contains a link, ensure the 'link' orb is available
@@ -1989,6 +2202,7 @@ async function doneNote(noteId) {
   if (noteContainer != null) {
     noteContainer.remove()
   }
+  if (!isDynamicSort()) showSelectedPriorityList()
 
   for (let note of userNotes) {
     if (note.id === noteId) {
@@ -2009,6 +2223,8 @@ async function deleteNote(noteId) {
       noteContainer.remove()
       userNotes = userNotes.filter(note => note.id !== noteId)
       await storage.deleteNote(noteId)
+      updateReadOptionsUI()
+      if (!isDynamicSort()) showSelectedPriorityList()
       orblendEngine('change')
       orblendEngine('update-orb-info')
     }, 100)
@@ -2125,87 +2341,180 @@ function setEditMode(context) {
   }
 }
 
-function editNote(noteId) {
-  for (let note of userNotes) {
-    if (note.id === noteId) {
-      // Opening a note makes it more relevant in dynamic sorting. The visual order only changes on the next
-      // render, so the note doesn't jump around while the user is editing it.
-      note.lastActivityAt = Date.now()
-      storage.updateNote(note).catch((error) => console.error('Falha ao registrar abertura da nota', error))
+async function updateSavedNoteInList(note, element) {
+  sortNotesInMemory()
+  const text = element.querySelector('.note-text-container')
+  const date = element.querySelector('.note-date-container p')
+  text.setAttribute('aria-label', 'Anotação:' + note.text)
+  date.textContent = getDateString(
+    noteousSettings.sort.action == 'id' ? note.createdAt : note.editedAt
+  )
 
-      const editingButtonsContainer = document.getElementById(noteId + '-editing-buttons-container')
-      const acceptEditingButton = document.getElementById(noteId + '-accept-editing-button')
-      const discardEditingButton = document.getElementById(noteId + '-discard-editing-button')
-      const actionButtonsContainer = document.getElementById(noteId + '-action-buttons-container')
-      const noteTextContainer = document.getElementById(noteId + '-text-container')
-      const noteDateContainer = document.getElementById(noteId + '-note-date-container')
-      
-      let isEditing = false
-      let editedNoteText = note.text
-      
-      noteTextContainer.removeAttribute('readonly')
-      noteTextContainer.addEventListener('input', () => {
-        editedNoteText = noteTextContainer.value
-        isEditing = true
-        if (isEditing) {
-          setEditMode('edit-mode-on')
-          actionButtonsContainer.classList.add('hidden-element')
-          editingButtonsContainer.classList.remove('hidden-element')
-          noteDateContainer.classList.add('hidden-element')
-        }
-      })
+  const matchesOrb = await orblendEngine('check-selected-orb', '', note, window.selectedOrb)
+  const matchesSearch = note.text.toLowerCase().includes(readOptionsSearchInput.value.toLowerCase())
+  if (!matchesOrb || !matchesSearch) {
+    element.remove()
+    await orblendEngine('update-orb-info', '', '', '', 'decrease-notes-count')
+  } else {
+    const target = readNotesLists[isDynamicSort() ? 'dynamic' : note.priority]
+    if (isDynamicSort()) {
+      setDynamicNoteSize(element, note)
+      element.style.borderStyle = note.priority
+      element.style.borderWidth = note.priority === 'double' ? '9px' : '6px'
+    }
+    const followingIds = new Set(userNotes.slice(userNotes.indexOf(note) + 1).map(item => `${item.id}-note-container`))
+    const next = Array.from(target.children).find(child => followingIds.has(child.id)) || null
+    if (element.parentElement !== target || element.nextElementSibling !== next) {
+      target.insertBefore(element, next)
+    }
+    target.classList.remove('hidden-element')
+  }
+  if (!isDynamicSort()) showSelectedPriorityList()
+}
 
-      noteTextContainer.addEventListener('blur', () => {
-        if (isEditing && editedNoteText == note.text) {
-          isEditing = false
-          actionButtonsContainer.classList.remove('hidden-element')
-          editingButtonsContainer.classList.add('hidden-element')
-          noteDateContainer.classList.remove('hidden-element')
-          setEditMode('edit-mode-off')
-        }
-      })
+function openOrEditNote(noteId) {
+  if (highlightedNote) {
+    if (highlightedNote.note.id !== noteId || highlightedNote.editing) return
+    highlightedNote.editing = true
+    highlightedNote.initialText = highlightedNote.text.value
+    highlightedNote.text.removeAttribute('readonly')
+    highlightedNote.date.classList.add('hidden-element')
+    setEditMode('edit-mode-on')
+    highlightedNote.text.focus()
+    return
+  }
 
-      acceptEditingButton.addEventListener('click', async () => {
-        if (noteTextContainer.value != '' && noteTextContainer.value != null) {
-          const unpaddedText = editedNoteText.startsWith('\n\n')
-            ? editedNoteText.slice(2)
-            : editedNoteText.startsWith('\n')
-              ? editedNoteText.slice(1)
-              : editedNoteText
-          // strip the trailing padding newline too, otherwise it accumulates on every save
-          note.text = unpaddedText.endsWith('\n')
-            ? unpaddedText.slice(0, -1)
-            : unpaddedText
-          note.editedAt = Date.now()
-          note.lastActivityAt = note.editedAt
-          note.priority = noteousSettings.priority
-          // Update link flag for this note
-          note.link = await orblendEngine('has-link', '', note.text)
-
-          await storage.updateNote(note)
-
-          // If this note contains a link, ensure the 'link' orb is available
-          if (note.link && !noteousSettings.orbsIndex.includes('link')) {
-            noteousSettings.orbsIndex.push('link')
-            storage.saveSettings(noteousSettings)
-            orblendEngine('app-load')
-          }
-
-          setEditMode('edit-mode-off')
-          await sortNotes('set-sort', `${window.selectedOrb}`)
-          return
-        }
-        setEditMode('edit-mode-off')
-        await renderNote('render-all', '', `${window.selectedOrb}`)
-      })
-
-      discardEditingButton.addEventListener('click', () => {
-        noteTextContainer.value = `\n\n${note.text}`
-        actionButtonsContainer.classList.remove('hidden-element')
-        editingButtonsContainer.classList.add('hidden-element')
-        noteDateContainer.classList.remove('hidden-element')
-        setEditMode('edit-mode-off')
-      })
+  const note = userNotes.find(item => item.id === noteId)
+  const element = document.getElementById(`${noteId}-note-container`)
+  if (!note || !element) return
+  const text = document.getElementById(`${noteId}-text-container`)
+  text.classList.remove('note-text-return')
+  const buttons = document.getElementById(`${noteId}-editing-buttons-container`)
+  const accept = document.getElementById(`${noteId}-accept-editing-button`)
+  const discard = document.getElementById(`${noteId}-discard-editing-button`)
+  const actions = document.getElementById(`${noteId}-action-buttons-container`)
+  actions.classList.remove('note-actions-return')
+  const date = document.getElementById(`${noteId}-note-date-container`)
+  const rect = element.getBoundingClientRect()
+  const placeholder = document.createElement('div')
+  placeholder.className = 'note-placeholder'
+  placeholder.style.width = `${rect.width}px`
+  placeholder.style.height = `${rect.height}px`
+  element.before(placeholder)
+  const originalStyle = element.getAttribute('style')
+  const overlay = document.createElement('div')
+  overlay.className = 'highlighted-note-overlay'
+  document.body.append(overlay)
+  document.body.append(element)
+  const backgroundElements = Array.from(document.body.children)
+    .filter(child => child !== element && child !== overlay)
+    .map(child => ({ element: child, inert: child.inert }))
+  for (const background of backgroundElements) background.element.inert = true
+  element.classList.add('highlighted')
+  element.setAttribute('role', 'dialog')
+  element.setAttribute('aria-modal', 'true')
+  element.setAttribute('aria-label', 'Nota em destaque')
+  element.style.borderStyle = note.priority
+  element.style.borderWidth = note.priority === 'double' ? '9px' : '6px'
+  Object.assign(element.style, { left: `${rect.left}px`, top: `${rect.top}px`, width: `${rect.width}px`, height: `${rect.height}px` })
+  buttons.classList.remove('hidden-element')
+  actions.classList.add('hidden-element')
+  accept.textContent = 'Fechar nota'
+  discard.classList.add('hidden-element')
+  highlightedNote = { note, element, text, buttons, accept, discard, actions, date, placeholder, originalStyle, overlay, backgroundElements, editing: false, hasEdited: false }
+  text.oninput = () => {
+    if (highlightedNote?.element === element && highlightedNote.editing && !highlightedNote.hasEdited && text.value !== highlightedNote.initialText) {
+      highlightedNote.hasEdited = true
+      accept.textContent = 'Salvar nota'
+      discard.classList.remove('hidden-element')
     }
   }
+  enableOverlayDismiss(overlay, () => {
+    if (highlightedNote?.element === element && !highlightedNote.editing) closeHighlightedNote()
+  })
+  accept.focus({ preventScroll: true })
+  note.lastActivityAt = Date.now()
+  storage.updateNote(note).catch(error => console.error('Falha ao registrar abertura da nota', error))
+
+  const height = Math.min(Math.max(rect.height, text.scrollHeight), window.innerHeight - 32)
+  const width = Math.min(rect.width * 1.1, window.innerWidth - 16)
+  const left = (window.innerWidth - width) / 2
+  const top = Math.max(8, (window.innerHeight - height) / 2)
+  void element.offsetWidth
+  requestAnimationFrame(() => {
+    if (highlightedNote?.element === element) {
+      element.classList.add('highlighted-visible')
+      overlay.classList.add('highlighted-note-overlay-visible')
+      Object.assign(element.style, { left: `${left}px`, top: `${top}px`, width: `${width}px`, height: `${height}px` })
+    }
+  })
+  accept.onclick = async () => {
+    if (!highlightedNote || highlightedNote.element !== element) return
+    if (highlightedNote.editing && highlightedNote.hasEdited) {
+      let value = text.value
+      if (value.startsWith('\n\n')) value = value.slice(2)
+      if (value.endsWith('\n')) value = value.slice(0, -1)
+      if (value) {
+        note.text = value
+        note.editedAt = Date.now()
+        note.lastActivityAt = note.editedAt
+        note.link = await orblendEngine('has-link', '', note.text)
+        await storage.updateNote(note)
+        if (note.link && !noteousSettings.orbsIndex.includes('link')) {
+          noteousSettings.orbsIndex.push('link')
+          storage.saveSettings(noteousSettings)
+          orblendEngine('app-load')
+        }
+        await closeHighlightedNote()
+        await updateSavedNoteInList(note, element)
+        return
+      }
+      await closeHighlightedNote()
+    } else {
+      await closeHighlightedNote()
+    }
+  }
+  discard.onclick = () => closeHighlightedNote()
 }
+
+async function closeHighlightedNote(animate = true) {
+  const state = highlightedNote
+  if (!state) return
+  highlightedNote = null
+  if (state.editing) setEditMode('edit-mode-off')
+  state.text.setAttribute('readonly', true)
+  state.buttons.classList.add('hidden-element')
+  state.date.classList.remove('hidden-element')
+  state.element.classList.remove('highlighted-visible')
+  state.overlay.classList.remove('highlighted-note-overlay-visible')
+  if (animate && state.placeholder.isConnected) {
+    state.element.classList.add('note-returning')
+    const rect = state.placeholder.getBoundingClientRect()
+    Object.assign(state.element.style, { left: `${rect.left}px`, top: `${rect.top}px`, width: `${rect.width}px`, height: `${rect.height}px` })
+    await new Promise(resolve => setTimeout(resolve, 300))
+  }
+  state.text.value = `\n\n${state.note.text}\n`
+  if (state.placeholder.isConnected) state.placeholder.replaceWith(state.element)
+  else state.element.remove()
+  state.element.classList.remove('highlighted', 'highlighted-visible', 'note-returning')
+  state.element.removeAttribute('role')
+  state.element.removeAttribute('aria-modal')
+  state.element.removeAttribute('aria-label')
+  state.overlay.remove()
+  for (const background of state.backgroundElements) background.element.inert = background.inert
+  if (state.originalStyle === null) state.element.removeAttribute('style')
+  else state.element.setAttribute('style', state.originalStyle)
+  if (animate && state.element.isConnected) {
+    state.actions.classList.add('note-actions-return')
+    state.text.classList.add('note-text-return')
+  }
+  state.actions.classList.remove('hidden-element')
+  if (!isDynamicSort() && selectedListContainer.isConnected) showSelectedPriorityList()
+  if (animate && state.element.isConnected) state.text.focus({ preventScroll: true })
+}
+
+document.addEventListener('keydown', event => {
+  if (event.key === 'Escape' && highlightedNote && !highlightedNote.editing) {
+    closeHighlightedNote()
+  }
+})

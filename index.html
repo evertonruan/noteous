@@ -94,10 +94,10 @@
           <input type="search" name="read-options-search-input" id="read-options-search-input"
             placeholder="Buscar notas" tabindex="4"/>
         </div>
-          <div id="orb-panel">
+          <div id="orb-panel" role="button" tabindex="9" aria-controls="read-options" aria-expanded="false" aria-label="Mostrar opções de leitura">
             <p id="orb-panel-count"></p>
             <p id="orb-panel-label"></p>
-            <button id="read-options-toggle" class="material-icons-outlined" type="button" aria-label="Mostrar ou ocultar opções de leitura" tabindex="9">manage_search</button>
+            <span id="read-options-toggle" class="material-icons-outlined" aria-hidden="true">manage_search</span>
           </div>
         </div>
         <div id="read-panel">
