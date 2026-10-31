@@ -1107,7 +1107,7 @@ function loadNoteous(context) {
         priorityListsOrientation('retrieveOrientation')
 
         startSmartInfoHandler(noteousSettings)
-        orblendEngine('app-load')
+        orblendEngine('app-load', '', userNotes)
 
         orblendEngine('on-change-input')
 
@@ -2150,7 +2150,7 @@ async function addNote() {
     if (objNote.link && !noteousSettings.orbsIndex.includes('link')) {
       noteousSettings.orbsIndex.push('link')
       storage.saveSettings(noteousSettings)
-      orblendEngine('app-load')
+      orblendEngine('app-load', '', userNotes)
     }
 
     await renderNote('add', objNote.id)
@@ -2223,6 +2223,12 @@ async function deleteNote(noteId) {
       noteContainer.remove()
       userNotes = userNotes.filter(note => note.id !== noteId)
       await storage.deleteNote(noteId)
+      if (!userNotes.some(note => note.done === true)) {
+        document.getElementById('done-orb-button')?.remove()
+        if (window.selectedOrb === 'done') {
+          document.getElementById('donutdough-orb-button')?.click()
+        }
+      }
       updateReadOptionsUI()
       if (!isDynamicSort()) showSelectedPriorityList()
       orblendEngine('change')
@@ -2463,7 +2469,7 @@ function openOrEditNote(noteId) {
         if (note.link && !noteousSettings.orbsIndex.includes('link')) {
           noteousSettings.orbsIndex.push('link')
           storage.saveSettings(noteousSettings)
-          orblendEngine('app-load')
+          orblendEngine('app-load', '', userNotes)
         }
         await closeHighlightedNote()
         await updateSavedNoteInList(note, element)

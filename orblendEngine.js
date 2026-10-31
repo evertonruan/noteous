@@ -123,6 +123,10 @@ export async function orblendEngine(context, labelMessage, note, orb, action) {
     return note?.done !== true
   }
 
+  if (context == 'create-orb') {
+    orbsList.prepend(createOrbButton(orb, getStorageData()))
+  }
+
   if (context == 'update-orb-info') {
     if (action == 'clean-notes-count') {
       window.orbNotesCount = 0
@@ -168,6 +172,7 @@ export async function orblendEngine(context, labelMessage, note, orb, action) {
 
     if (orbsList) orbsList.innerHTML = ''
       for (let orb of noteousSettings.orbsIndex) {
+        if (orb === 'done' && !note.some(item => item.done === true)) continue
         const orbButton = createOrbButton(orb, noteousSettings)
         orbsList.appendChild(orbButton)
       }
