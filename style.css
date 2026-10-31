@@ -516,7 +516,6 @@ a {
   max-width: 100vw;
   font-family: 'DM Sans', sans-serif;
   background-color: var(--base-color);
-  transition: all 0.8s cubic-bezier(0.075, 0.82, 0.165, 1);
   -webkit-font-smoothing: antialiased;
 }
 

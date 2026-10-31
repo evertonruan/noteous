@@ -3,6 +3,20 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script>
+      try {
+        const settings = JSON.parse(localStorage.getItem('noteous-settings'));
+        const luminosity = settings?.look?.luminosity;
+        if (luminosity === 'dark' || luminosity === 'light') {
+          const style = document.documentElement.style;
+          style.setProperty('--hue', '45');
+          style.setProperty('--saturation', '20%');
+          style.setProperty('--lum-back', luminosity === 'dark' ? '4%' : '95%');
+        }
+      } catch (error) {
+        console.error('Erro ao carregar a cor de fundo:', error);
+      }
+    </script>
     
     <link rel="stylesheet" href="reset.css" />
     <link rel="stylesheet" href="style.css" />
