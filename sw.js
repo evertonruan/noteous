@@ -4,8 +4,8 @@
 When the user accepts the terms, the Service Worker is installed and adds resources to the cache.
 Once they are cached, noteous will use only this local content and will no longer connect to the server to update content.
 To update any content: 1. Upload the resource; 2. Change the value in the Service Worker version.
-When there are changes in the sw.js file, it will force the Service Worker to update, subsequently updating all resources
-(First, in page load, it will update the resources changed and activate (not install) SW new version. When tab is closed and reopened, then new SW version will be installed)
+When sw.js changes, the new Service Worker updates the cached resources during installation
+and activates without waiting for existing tabs to close.
 */
 
 
@@ -19,6 +19,7 @@ self.addEventListener('install', event => {
       } catch (error) {
         console.error('SW CACHE ERROR:', error);
       }
+      await self.skipWaiting();
     })()
   );
 });
